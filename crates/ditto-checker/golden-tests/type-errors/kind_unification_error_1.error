@@ -1,0 +1,11 @@
+
+  × kinds don't unify
+   ╭─[golden:1:1]
+ 1 │ module Test exports (..);
+ 2 │ 
+ 3 │ fives : Array = [1, 2, 3];
+   ·         ──┬──
+   ·           ╰── here
+   ╰────
+  help: expected Type
+        got (Type) -> Type

@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "dependencies": {
+    "prettier": "2.6.0"
+  },
+  "optionalDependencies": {
+    "husky": "7.0.4",
+    "lint-staged": "12.3.5"
+  },
+  "scripts": {
+    "postinstall": "husky install",
+    "prettier": "prettier",
+    "format": "prettier --write '**/*.{yaml,yml,md,js,ts,json}'",
+    "format:check": "prettier --check '**/*.{yaml,yml,md,js,ts,json}'"
+  },
+  "prettier": {
+    "arrowParens": "avoid",
+    "trailingComma": "all"
+  }
+}

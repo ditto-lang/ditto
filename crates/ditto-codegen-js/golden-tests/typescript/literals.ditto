@@ -1,0 +1,11 @@
+module Test exports (..);
+
+string = "string";
+int = 5;
+float = 4.2;
+unit_ = unit;
+empty_array = [];
+int_array = [1, 2, 3, 4, 5];
+nested_array = [[], [2]];
+yes = true;
+no = false;

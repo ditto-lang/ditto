@@ -1,0 +1,11 @@
+module Value.Declarations exports (..);
+
+
+-- Documentation lorem ipsum whatever
+type Dunno;
+
+type Maybe(a) =
+    -- comment
+    | Just(a)
+    -- comment
+    | Nothing;

@@ -1,0 +1,12 @@
+
+  × types don't unify
+   ╭─[golden:2:1]
+ 2 │ 
+ 3 │ my_fn = (n : Int) -> n;
+ 4 │ 
+ 5 │ five = my_fn(5.0);
+   ·              ─┬─
+   ·               ╰── here
+   ╰────
+  help: expected Int
+        got Float

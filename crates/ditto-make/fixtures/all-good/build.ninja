@@ -1,0 +1,44 @@
+builddir = builddir
+
+rule ast
+  command = ditto compile ast --build-dir builddir -i ${in} -o ${out}
+
+rule js
+  command = ditto compile js -i ${in} -o ${out}
+
+rule package_json
+  command = ditto compile package_json -i ${in} -o ${out}
+
+build builddir/A.ast builddir/A.ast-exports builddir/A.checker-warnings: ast ./src/A.ditto
+  description = Checking A
+
+build builddir/B.ast builddir/B.ast-exports builddir/B.checker-warnings: ast ./src/B.ditto
+  description = Checking B
+
+build builddir/C.ast builddir/C.ast-exports builddir/C.checker-warnings: ast ./src/C.ditto builddir/A.ast-exports builddir/B.ast-exports
+  description = Checking C
+
+build builddir/D.ast builddir/D.ast-exports builddir/D.checker-warnings: ast ./src/D.ditto builddir/C.ast-exports builddir/dep/Dep.ast-exports
+  description = Checking D
+
+build builddir/dep/Dep.ast builddir/dep/Dep.ast-exports: ast ./dep/src/Dep.ditto
+  description = Checking dep:Dep
+
+build dist/A.js: js builddir/A.ast
+  description = Generating JavaScript for A
+
+build dist/B.js: js builddir/B.ast
+  description = Generating JavaScript for B
+
+build dist/C.js: js builddir/C.ast
+  description = Generating JavaScript for C
+
+build dist/D.js: js builddir/D.ast
+  description = Generating JavaScript for D
+
+build packages/dep/Dep.js: js builddir/dep/Dep.ast
+  description = Generating JavaScript for dep:Dep
+
+build packages/dep/package.json: package_json dep/ditto.toml
+  description = Generating package.json for dep
+

@@ -1,0 +1,5 @@
+module Test exports (..);
+
+import Data.Stuff (id, id);
+
+my_id = id;

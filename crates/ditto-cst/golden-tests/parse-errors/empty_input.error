@@ -1,0 +1,7 @@
+
+  × syntax error
+   ╭─[golden:1:1]
+ 1 │ 
+   · ▲
+   · ╰── expected: module_keyword
+   ╰────

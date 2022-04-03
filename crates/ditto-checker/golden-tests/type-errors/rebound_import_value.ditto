@@ -1,0 +1,9 @@
+module Test exports (..);
+
+import Data.Stuff (
+    id
+);
+
+import (test-stuff) Data.Stuff as S (
+    id
+);

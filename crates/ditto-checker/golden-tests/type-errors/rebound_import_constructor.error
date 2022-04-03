@@ -1,0 +1,17 @@
+
+  × constructor `Just` imported multiple times
+   ╭─[golden:1:1]
+ 1 │ module Test exports (..);
+ 2 │ 
+ 3 │ import Data.Stuff (
+ 4 │     Maybe(..)
+   ·          ──┬─
+   ·            ╰── first imported here
+ 5 │ );
+ 6 │ import More.Stuff as S (
+ 7 │     Kinda(..)
+   ·          ──┬─
+   ·            ╰── imported again here
+ 8 │ );
+ 9 │ 
+   ╰────

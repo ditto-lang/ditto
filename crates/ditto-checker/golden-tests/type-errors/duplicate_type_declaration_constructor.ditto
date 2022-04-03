@@ -1,0 +1,4 @@
+module Test exports (..);
+
+type SomeType = A; 
+type SomeOtherType = A  | B;

@@ -1,0 +1,6 @@
+module Test exports (..);
+
+
+type Five = Five;
+
+suggest = Fide;

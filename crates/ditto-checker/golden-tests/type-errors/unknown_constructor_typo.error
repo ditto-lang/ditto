@@ -1,0 +1,11 @@
+
+  × unknown constructor
+   ╭─[golden:3:1]
+ 3 │ 
+ 4 │ type Five = Five;
+ 5 │ 
+ 6 │ suggest = Fide;
+   ·           ──┬─
+   ·             ╰── not in scope
+   ╰────
+  help: did you mean `Five`?

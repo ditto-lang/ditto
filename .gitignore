@@ -1,0 +1,8 @@
+# Cargo 
+target
+
+# Nix
+/result
+
+# NPM
+node_modules

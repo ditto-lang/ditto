@@ -1,0 +1,29 @@
+module Test exports (fives, curry);
+
+five : Int = 
+  -- this comment should get removed
+  5;
+
+floaty_five: Float = 5.0;
+
+fifth_string = "A";
+
+identity = (a: a) -> a;
+
+curry = (fn) -> (a) -> (b) -> fn(a, b);
+uncurry = (fn) -> (a, b) -> fn(a)(b);
+
+always = (a) -> (b) -> a;
+ 
+-- REVIEW `return undefined` is redundant
+denied = (a) -> unit;
+
+fives = [
+  5,
+  five, 
+  always(five)(floaty_five), 
+  uncurry(always)(five, true),
+  ((a) -> a)(5),
+  uncurry(always)(five, fifth_string),
+  always(identity)(false)(five),
+];

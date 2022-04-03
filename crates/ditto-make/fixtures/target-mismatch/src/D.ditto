@@ -1,0 +1,6 @@
+module D exports (..);
+
+import C (C);
+import (dep) Dep;
+
+type D = D(Dep.Dep, C);

@@ -1,0 +1,15 @@
+
+  ⚠ duplicate type export
+   ╭─[golden:1:1]
+ 1 │ module Test exports (
+ 2 │     Foo(..), 
+   ·     ─┬─
+   ·      ╰── previously exported here
+ 3 │     Bar(..),
+ 4 │     Foo(..),
+   ·     ─┬─
+   ·      ╰── already exported
+ 5 │ );
+ 6 │ 
+ 7 │ type Foo = Foo;
+   ╰────

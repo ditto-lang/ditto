@@ -1,0 +1,8 @@
+module Test exports (..);
+
+type Unknown;
+type Unit = Unit;
+type Maybe(a) = Just(a) | Nothing;
+type Result(a, e) = Ok(a) | Err(e);
+type Triple(a, b, c) = Triple(a, b, c);
+type Phantom(a) = Phantom(Int);

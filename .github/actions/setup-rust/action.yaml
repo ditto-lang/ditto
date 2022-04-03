@@ -1,0 +1,35 @@
+name: Setup Rust
+inputs:
+  cache-key:
+    description: "Unique key for caching"
+    required: false
+  components:
+    description: "Space-separated rustup components to add"
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - uses: ./.github/actions/rust-toolchain
+
+    # Won't be needed once the toml toolchain is supported(?)
+    # https://github.com/actions-rs/toolchain/issues/126
+    # https://github.com/actions-rs/toolchain/pull/166
+    - if: ${{ inputs.components }}
+      run: rustup component add ${{ inputs.components }}
+      shell: bash
+
+    # https://github.com/actions/cache/blob/main/examples.md#rust---cargo
+    - uses: actions/cache@v3
+      if: ${{ inputs.cache-key }}
+      with:
+        key: ${{ runner.os }}-cargo-${{ inputs.cache-key }}-${{ hashFiles('./Cargo.lock') }}
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        restore-keys: |
+          ${{ runner.os }}-cargo-${{ inputs.cache-key }}-
+
+# https://www.infinyon.com/blog/2021/04/github-actions-best-practices/

@@ -1,0 +1,7 @@
+name = "foo"
+targets = ["web"]
+
+[codegen-js.package-json]
+name = "ignored"
+type = "can't override this either"
+engines = { node = ">=16" }

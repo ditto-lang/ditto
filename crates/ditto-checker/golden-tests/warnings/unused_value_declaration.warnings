@@ -1,0 +1,10 @@
+
+  ⚠ unused top-level value
+   ╭─[golden:1:1]
+ 1 │ module Test exports (yes);
+ 2 │ 
+ 3 │ yes = true;
+ 4 │ no = false;
+   · ─┬
+   ·  ╰── this isn't referenced or exported
+   ╰────

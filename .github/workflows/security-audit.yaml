@@ -1,0 +1,23 @@
+name: Security audit
+
+on:
+  schedule:
+    # At 09:00 on Wednesday
+    - cron: "0 9 * * 3"
+  pull_request:
+    paths:
+      - "**/Cargo.toml"
+      - "**/Cargo.lock"
+      - "**/Cargo.lock"
+      - "**/package-lock.json"
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Audit dependencies 🕵️
+        uses: actions-rs/audit-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

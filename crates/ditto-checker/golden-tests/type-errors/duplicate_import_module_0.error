@@ -1,0 +1,13 @@
+
+  × duplicate imports for module `Stuff`
+   ╭─[golden:1:1]
+ 1 │ module Test exports (..);
+ 2 │ 
+ 3 │ import (test-stuff) Data.Stuff;
+   ·                          ──┬──
+   ·                            ╰── previous import
+ 4 │ import Data.Stuff;
+   ·             ──┬──
+   ·               ╰── imported again here
+   ╰────
+  help: try aliasing one of the imports?

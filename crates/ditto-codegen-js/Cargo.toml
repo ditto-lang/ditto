@@ -1,0 +1,21 @@
+[package]
+name = "ditto-codegen-js"
+version = "0.0.1"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[lib]
+doctest = false
+
+[dependencies]
+ditto-ast = { path = "../ditto-ast" }
+lazy_static = "1.4"
+convert_case = "0.5"
+#egg = "xx"  <-- should come in useful for optimizations later down the line
+
+[dev-dependencies]
+ditto-checker = { path = "../ditto-checker" }
+ditto-cst = { path = "../ditto-cst" }
+non-empty-vec = { version = "0.2" }
+snapshot-test = { path = "../snapshot-test" }
+similar-asserts = "1.2"

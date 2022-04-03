@@ -1,0 +1,277 @@
+use crate::{FullyQualifiedName, FullyQualifiedProperName, Name, PrimType, ProperName, Span, Type};
+use non_empty_vec::NonEmpty;
+use serde::{Deserialize, Serialize};
+
+/// The real business value.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "expression", content = "data")]
+pub enum Expression {
+    /// Everyone's favourite: the humble function
+    ///
+    /// ```ditto
+    /// (binder0, binder1) -> body
+    /// ```
+    Function {
+        /// The source span for this expression.
+        span: Span,
+
+        /// The arguments to be bound and added to the scope of `body`.
+        binders: Vec<FunctionBinder>, // REVIEW should this be a HashSet?
+        // ^ NOTE we probably don't want to allow pattern matching binders in function heads
+        /// The body of the function.
+        body: Box<Self>,
+    },
+    /// A function invocation
+    ///
+    /// ```ditto
+    /// function(argument0, argument1)
+    /// ```
+    Call {
+        /// The source span for this expression.
+        span: Span,
+
+        /// The return type of `function`.
+        call_type: Type, // REVIEW would `function_return_type` be a better field name?
+
+        /// The function expression to be called.
+        function: Box<Self>,
+
+        /// Arguments to pass to the function expression.
+        arguments: Vec<Argument>,
+    },
+    /// A value constructor local to the current module, e.g. `Just` and `Ok`.
+    LocalConstructor {
+        /// The source span for this expression.
+        span: Span,
+
+        /// The type of this constructor.
+        constructor_type: Type,
+
+        /// The constructor [ProperName].
+        constructor: ProperName,
+    },
+    /// An imported value constructor.
+    ImportedConstructor {
+        /// The source span for this expression.
+        span: Span,
+
+        /// The type of this constructor.
+        constructor_type: Type,
+
+        /// The canonical constructor.
+        constructor: FullyQualifiedProperName,
+    },
+    /// A value local to the current module, e.g. `foo`.
+    LocalVariable {
+        /// The source span for this expression.
+        span: Span,
+
+        /// The type of this variable.
+        variable_type: Type,
+
+        /// The variable [Name].
+        variable: Name,
+    },
+    /// A foreign value.
+    ForeignVariable {
+        /// The source span for this expression.
+        span: Span,
+        /// The type of this variable.
+        variable_type: Type,
+        /// The foreign variable [Name].
+        variable: Name,
+    },
+    /// A value that has been imported
+    ImportedVariable {
+        /// The source span for this expression.
+        span: Span,
+
+        /// The type of this variable.
+        variable_type: Type,
+
+        /// The canonical variable.
+        variable: FullyQualifiedName,
+    },
+    /// A string literal.
+    String {
+        /// The source span for this expression.
+        span: Span,
+        /// `"string"`
+        value: String,
+    },
+    /// An integer literal.
+    Int {
+        /// The source span for this expression.
+        span: Span,
+        /// `5`
+        ///
+        /// This value is a [String] because:
+        ///
+        /// 1. We want to avoid any compile-time evaluation that would result in parsing the string.
+        /// For example, if the integer appears in ditto source as "005" we want to preserve that in the
+        /// generated code.
+        /// 2. Storing as a string avoids overflow issues.
+        value: String,
+    },
+    /// A floating point number literal.
+    Float {
+        /// The source span for this expression.
+        span: Span,
+        /// `5.0`
+        ///
+        /// This value is a [String] because:
+        ///
+        /// 1. We want to avoid any compile-time evaluation that would result in parsing the string.
+        /// For example, if the float appears in ditto source as "5.00" we want to preserve that in the
+        /// generated code.
+        /// 2. Storing as a string avoids float overflow and precision issues.
+        value: String,
+    },
+    /// An array literal.
+    Array {
+        /// The source span for this expression.
+        span: Span,
+        /// The type of the elements.
+        element_type: Type,
+        /// Array elements.
+        elements: Vec<Self>,
+    },
+    /// `true`
+    True {
+        /// The source span for this expression.
+        span: Span,
+    },
+    /// `false`
+    False {
+        /// The source span for this expression.
+        span: Span,
+    },
+    /// `unit`
+    Unit {
+        /// The source span for this expression.
+        span: Span,
+    },
+    //
+    // TODO GeneratedVariable? (would be used for desugaring function sections?)
+}
+
+impl Expression {
+    /// Return the [Type] of this [Expression].
+    pub fn get_type(&self) -> Type {
+        // It'd be nice if we could call this `typeof` but that's a keyword in rust, sad face
+        match self {
+            Self::Call { call_type, .. } => call_type.clone(),
+            Self::Function { binders, body, .. } =>
+            // NOTE we derive a function type rather than storing it in a
+            // `function_type` field because a) we can, and b) it removes the
+            // opportunity for the derived and stored types to disagree...?
+            //
+            // BUT maybe we should just store it for efficiency?
+            {
+                Type::Function {
+                    parameters: binders.iter().map(|binder| binder.get_type()).collect(),
+                    return_type: Box::new(body.get_type()),
+                }
+            }
+            Self::LocalConstructor {
+                constructor_type, ..
+            } => constructor_type.clone(),
+            Self::ImportedConstructor {
+                constructor_type, ..
+            } => constructor_type.clone(),
+            Self::LocalVariable { variable_type, .. } => variable_type.clone(),
+            Self::ForeignVariable { variable_type, .. } => variable_type.clone(),
+            Self::ImportedVariable { variable_type, .. } => variable_type.clone(),
+            Self::String { .. } => Type::PrimConstructor(PrimType::String),
+            Self::Int { .. } => Type::PrimConstructor(PrimType::Int),
+            Self::Float { .. } => Type::PrimConstructor(PrimType::Float),
+            Self::Array { element_type, .. } => Type::Call {
+                function: Box::new(Type::PrimConstructor(PrimType::Array)),
+                arguments: NonEmpty::new(element_type.clone()),
+            },
+            Self::True { .. } => Type::PrimConstructor(PrimType::Bool),
+            Self::False { .. } => Type::PrimConstructor(PrimType::Bool),
+            Self::Unit { .. } => Type::PrimConstructor(PrimType::Unit),
+        }
+    }
+    /// Get the source span.
+    pub fn get_span(&self) -> Span {
+        match self {
+            Self::Function { span, .. } => *span,
+            Self::Call { span, .. } => *span,
+            Self::LocalConstructor { span, .. } => *span,
+            Self::ImportedConstructor { span, .. } => *span,
+            Self::LocalVariable { span, .. } => *span,
+            Self::ForeignVariable { span, .. } => *span,
+            Self::ImportedVariable { span, .. } => *span,
+            Self::String { span, .. } => *span,
+            Self::Int { span, .. } => *span,
+            Self::Float { span, .. } => *span,
+            Self::Array { span, .. } => *span,
+            Self::True { span, .. } => *span,
+            Self::False { span, .. } => *span,
+            Self::Unit { span, .. } => *span,
+        }
+    }
+}
+
+/// An "argument" is passed to a function call.
+///
+/// ```ditto
+/// some_function(argument)
+/// ```
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum Argument {
+    /// A standard expression argument.
+    /// Could be a variable, could be another function call.
+    Expression(Expression),
+    //
+    // TODO sections, e.g. `some_function(&1, True, &2, 5)`
+}
+
+impl Argument {
+    /// Return the [Type] of this [Argument].
+    pub fn get_type(&self) -> Type {
+        match self {
+            Self::Expression(expression) => expression.get_type(),
+        }
+    }
+    /// Return the source [Span] for this [Argument].
+    pub fn get_span(&self) -> Span {
+        match self {
+            Self::Expression(expression) => expression.get_span(),
+        }
+    }
+}
+
+/// Binds a variable as part of a function header.
+///
+/// After (successful) type-checking we should know the type of all binders,
+/// hence all variants mention a [Type].
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum FunctionBinder {
+    /// A standard name binder.
+    Name {
+        /// The source span for this binder.
+        span: Span,
+        /// The type of this binder.
+        binder_type: Type,
+        /// The name being bound.
+        value: Name,
+    },
+}
+
+impl FunctionBinder {
+    /// Return the [Type] of this [FunctionBinder].
+    pub fn get_type(&self) -> Type {
+        match self {
+            Self::Name { binder_type, .. } => binder_type.clone(),
+        }
+    }
+    /// Return the source [Span] for this [FunctionBinder].
+    pub fn get_span(&self) -> Span {
+        match self {
+            Self::Name { span, .. } => *span,
+        }
+    }
+}

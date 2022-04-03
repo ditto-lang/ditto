@@ -1,0 +1,16 @@
+[package]
+name = "ditto-fmt"
+version = "0.0.1"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[lib]
+doctest = false
+
+[dependencies]
+ditto-cst = { path = "../ditto-cst" }
+dprint-core = "0.51"
+
+[dev-dependencies]
+snapshot-test = { path = "../snapshot-test" }
+similar-asserts = "1.2"
