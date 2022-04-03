@@ -1,0 +1,9 @@
+
+  ⚠ unused import
+   ╭─[golden:1:1]
+ 1 │ module Test exports (..);
+ 2 │ 
+ 3 │ import Data.Stuff;
+   · ────────┬────────
+   ·         ╰── not needed
+   ╰────

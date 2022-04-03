@@ -1,0 +1,4 @@
+module Test exports (..);
+
+a = b;
+b = a;

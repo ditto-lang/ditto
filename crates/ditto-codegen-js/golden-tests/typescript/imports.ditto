@@ -1,0 +1,12 @@
+module Test.Imports exports (..);
+
+import (test-stuff) Data.Stuff as Package;
+import Data.Stuff;
+
+type MyFive = MyFive(Stuff.Five, Package.Five);
+
+five = Stuff.Five;
+another_five = Package.Five;
+maybe_five = Package.Just(Stuff.Five);
+my_five = MyFive(Stuff.Five, Package.Five);
+just_one_more = Stuff.id(my_five);

@@ -1,0 +1,32 @@
+[package]
+name = "ditto-make"
+version = "0.0.1"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[lib]
+doctest = false
+
+[dependencies]
+clap = "3.1"
+miette = { version = "4.2", features = ["fancy"] }
+ditto-cst = { path = "../ditto-cst" }
+ditto-ast = { path = "../ditto-ast" }
+ditto-checker = { path = "../ditto-checker" }
+ditto-codegen-js = { path = "../ditto-codegen-js" }
+ditto-config = { path = "../ditto-config" }
+walkdir = "2.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+petgraph = "0.6"
+ciborium = "0.2"
+pathdiff = "0.2"
+path-slash = "0.1"
+semver = { version = "1.0", features = ["serde"] }
+thiserror = "1.0"
+# camino = "xx"  <-- start using this ASAP, it's made for exactly this purpose (see the "makefile problem")
+# rayon = "xx"   <-- more concurrency?
+
+[dev-dependencies]
+similar-asserts = "1.2"
+lazy_static = "1.4"

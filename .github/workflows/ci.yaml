@@ -1,0 +1,140 @@
+name: CI
+
+# TODO: run some of these jobs conditionally based on what's been changed
+# https://github.com/dorny/paths-filter (there's an example for conditional _job_ execution)
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    name: Check 🕵️
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Rust 🦀
+        uses: ./.github/actions/setup-rust
+        with:
+          cache-key: check
+
+      - name: Run cargo check
+        uses: actions-rs/cargo@v1
+        with:
+          command: check
+
+  test:
+    name: Run tests 🧪
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Rust 🦀
+        uses: ./.github/actions/setup-rust
+        with:
+          cache-key: test
+
+      # Some tests depend on Nodejs + npm dependencies
+      - name: Setup Nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+          cache: "npm"
+
+      - name: Install required NPM packages
+        run: npm install --omit optional --ignore-scripts
+        shell: bash
+
+      - name: Run tests (without coverage)
+        if: matrix.os != 'ubuntu-latest'
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+        env:
+          DITTO_BUILD_GIT_DESCRIBE: "0.0.0-test"
+          #DITTO_NINJA  <-- would be nice to use this, along with https://github.com/marketplace/actions/setup-ninja
+
+      - name: Run tests (with coverage)
+        # Only run tests with coverage if running on Linux
+        if: matrix.os == 'ubuntu-latest'
+
+        # NOTE this action seems deprecated? https://github.com/actions-rs/tarpaulin/issues/6
+        uses: actions-rs/tarpaulin@v0.1
+
+        with:
+          version: "0.20.0"
+          args: "--skip-clean -- --test-threads 1"
+          #        ^^ beware, this might cause issues?
+        env:
+          DITTO_BUILD_GIT_DESCRIBE: "0.0.0-test"
+          #DITTO_NINJA  <-- would be nice to use this, along with https://github.com/marketplace/actions/setup-ninja
+
+      - name: Upload coverage results to codecov.io 📡
+        if: matrix.os == 'ubuntu-latest'
+        uses: codecov/codecov-action@v2.1.0
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+
+  rustfmt-check:
+    name: Check rustfmt 💅
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Rust 🦀
+        uses: ./.github/actions/setup-rust
+        with:
+          components: rustfmt
+
+      - name: Run cargo fmt --check --all
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --check --all
+
+  prettier-check:
+    name: Check prettier 💅
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+          cache: "npm"
+
+      - name: Install required NPM packages
+        run: npm install --omit optional --ignore-scripts
+
+      - run: npm run format:check
+
+  clippy:
+    name: Run clippy 📎
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Rust 🦀
+        uses: ./.github/actions/setup-rust
+        with:
+          cache-key: clippy
+          components: clippy
+
+      - name: Run clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features

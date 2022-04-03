@@ -1,0 +1,7 @@
+name = "javascript-project"
+targets = ["web"]
+dependencies = ["foo", "bar"]
+
+[package-set.packages]
+foo = { path = "./ditto-stuff/foo" }
+bar = { path = "./ditto-stuff/bar" }

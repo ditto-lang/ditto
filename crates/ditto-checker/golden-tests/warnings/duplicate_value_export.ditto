@@ -1,0 +1,8 @@
+module Test exports (
+    foo, 
+    bar,
+    foo,
+);
+
+foo = unit;
+bar = unit;

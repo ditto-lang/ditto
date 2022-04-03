@@ -1,0 +1,6 @@
+# Ignore Rust build stuff
+target
+
+# Don't format generated code that we check in for testing
+crates/ditto-cli/fixtures
+crates/ditto-codegen-js/golden-tests/

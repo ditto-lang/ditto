@@ -1,0 +1,15 @@
+
+  ⚠ duplicate value export
+   ╭─[golden:1:1]
+ 1 │ module Test exports (
+ 2 │     foo, 
+   ·     ─┬─
+   ·      ╰── previously exported here
+ 3 │     bar,
+ 4 │     foo,
+   ·     ─┬─
+   ·      ╰── already exported
+ 5 │ );
+ 6 │ 
+ 7 │ foo = unit;
+   ╰────

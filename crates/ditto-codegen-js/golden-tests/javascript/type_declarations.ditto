@@ -1,0 +1,20 @@
+module Test exports (
+  A(..), 
+  Maybe(..), 
+  Result(..), 
+  Private,
+);
+
+type A = A;
+
+type Maybe(a) = Just(a) | Nothing;
+
+type Result(a, e) = Ok(a) | Err(e);
+
+type Private = Private;
+
+type Internal(a, b, c) = Internal(a, b);
+
+nothing = Nothing;
+
+just_five = Just(5);

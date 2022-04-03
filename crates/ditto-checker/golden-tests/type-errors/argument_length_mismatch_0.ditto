@@ -1,0 +1,5 @@
+module Test exports (..);
+
+my_fn = (n : Int) -> n;
+
+five = my_fn();

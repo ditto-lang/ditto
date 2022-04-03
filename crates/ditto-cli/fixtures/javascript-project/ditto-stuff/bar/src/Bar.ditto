@@ -1,0 +1,7 @@
+module Bar exports (..);
+
+import (foo) Foo as F;
+
+type Bar = Bar;
+
+foo = F.Foo;

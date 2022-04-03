@@ -1,0 +1,7 @@
+module Test exports (..);
+
+curry = (fn) -> (a) -> (b) -> fn(a, b);
+uncurry = (fn) -> (a, b) -> fn(a)(b);
+always = (a) -> (b) -> a;
+lazy = () -> 5;
+void = (a) -> unit;

@@ -1,0 +1,14 @@
+
+  × duplicate type declaration
+   ╭─[golden:1:1]
+ 1 │ module Test exports (..);
+ 2 │ 
+ 3 │ type SomeType = A;
+   ·      ────┬───
+   ·          ╰── previously defined here
+ 4 │ 
+ 5 │ 
+ 6 │ type SomeType = B;
+   ·      ────┬───
+   ·          ╰── can't be redefined here
+   ╰────

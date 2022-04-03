@@ -1,0 +1,9 @@
+
+  × unknown type export
+   ╭─[golden:1:1]
+ 1 │ module Test exports (
+ 2 │     Huh
+   ·     ─┬─
+   ·      ╰── this type isn't defined?
+ 3 │ );
+   ╰────

@@ -1,0 +1,4 @@
+-- Waiting for https://github.com/zkat/miette/issues/130
+module Missing.Semicolon exports (..)
+
+import Some.Module;

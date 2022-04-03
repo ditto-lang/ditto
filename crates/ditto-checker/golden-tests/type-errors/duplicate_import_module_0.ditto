@@ -1,0 +1,4 @@
+module Test exports (..);
+
+import (test-stuff) Data.Stuff;
+import Data.Stuff;

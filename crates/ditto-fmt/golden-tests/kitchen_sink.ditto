@@ -1,0 +1,42 @@
+-- Module documentation
+-- goes here!
+module Test exports (
+    -- ## Values
+    --
+    -- Here are some value exports.
+    foo,
+    bar,
+    -- ## Types
+    --
+    -- Here are some type exports.
+    Baz,
+    Bar(..),
+    -- ## Footer
+    --
+    -- Some trailing documentation
+);
+
+import (core) Maybe;
+
+import (some-pkg) A;
+-- Alphabetical order
+import (some-pkg) B;
+import (some-pkg) C;
+
+import Bar as B;
+import Foo (
+    a,
+    b,
+    c,
+);
+
+
+foreign string_eq: (String, String) -> Bool;
+
+-- FFI implementation for integer equality.
+foreign int_eq: (Int, Int) -> Bool;
+
+
+-- trailing
+-- comments
+-- for whatever reason

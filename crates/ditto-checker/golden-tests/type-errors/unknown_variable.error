@@ -1,0 +1,9 @@
+
+  × unknown variable
+   ╭─[golden:1:1]
+ 1 │ module Test exports (..);
+ 2 │ 
+ 3 │ bang = nada;
+   ·        ──┬─
+   ·          ╰── not in scope
+   ╰────

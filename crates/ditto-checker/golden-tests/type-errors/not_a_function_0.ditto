@@ -1,0 +1,5 @@
+module Test exports (..);
+
+identity_int = (n : Int) -> n;
+
+huh  = identity_int(5)();

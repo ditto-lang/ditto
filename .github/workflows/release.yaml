@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version x.x.x"
+        type: string
+        required: true
+      dry-run:
+        type: boolean
+        description: Dry run? (won't actually push the release artifacts)
+
+jobs:
+  release:
+    name: Prepare release for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            artifact_name: target/release/ditto
+            asset_name: ditto-linux
+          - os: windows-latest
+            artifact_name: target/release/ditto.exe
+            asset_name: ditto-windows
+          - os: macos-latest
+            artifact_name: target/release/ditto
+            asset_name: ditto-macos
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          # Fetch all history for all tags and branches
+          # https://github.com/actions/checkout#fetch-all-history-for-all-tags-and-branches
+          fetch-depth: 0
+
+      - name: Install Rust toolchain 🦀
+        uses: ./.github/actions/rust-toolchain
+
+      - name: Setup Nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+          cache: "npm"
+
+      - name: Run cargo build --release --locked
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --locked
+
+      - name: Prepare release script
+        run: npm install
+        working-directory: ./scripts/release
+
+        # Need to be explicit here as windows defaults to PowerShell
+        shell: bash
+
+      - name: Run release script
+        run: node ./scripts/release --ditto-bin ${{ matrix.artifact_name }} --out-zip ${{ matrix.asset_name }}.zip --out-sha256 ${{ matrix.asset_name }}.sha256
+        shell: bash
+
+      # If this is a dry-run, then just upload the artifact
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        if: github.event.inputs.dry-run == 'true'
+        with:
+          name: release-${{ matrix.os }}
+          path: ${{ matrix.asset_name }}.zip
+
+      - name: Upload release 🎉
+        uses: softprops/action-gh-release@v1
+        if: github.event.inputs.dry-run != 'true'
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          files: |
+            ${{ matrix.asset_name }}.zip
+            ${{ matrix.asset_name }}.sha256

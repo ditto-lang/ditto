@@ -1,0 +1,11 @@
+
+  × expression isn't callable
+   ╭─[golden:2:1]
+ 2 │ 
+ 3 │ identity_int = (n : Int) -> n;
+ 4 │ 
+ 5 │ huh  = identity_int(5)();
+   ·        ───────┬───────
+   ·               ╰── can't call this
+   ╰────
+  help: expression has type: Int

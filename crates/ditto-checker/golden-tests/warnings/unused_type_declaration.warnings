@@ -1,0 +1,10 @@
+
+  ⚠ unused type declaration
+   ╭─[golden:1:1]
+ 1 │ module Test exports (Foo);
+ 2 │ 
+ 3 │ type Foo;
+ 4 │ type Bar;
+   ·      ─┬─
+   ·       ╰── this isn't referenced or exported
+   ╰────

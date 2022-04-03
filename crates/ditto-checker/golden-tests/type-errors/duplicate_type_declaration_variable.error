@@ -1,0 +1,11 @@
+
+  × duplicate type variable
+   ╭─[golden:2:1]
+ 2 │ 
+ 3 │ 
+ 4 │ 
+ 5 │ type Foo(a, a) = Foo(a);
+   ·          ┬  ┬
+   ·          │  ╰── can't be reintroduced here
+   ·          ╰── previously introduced here
+   ╰────

@@ -1,0 +1,5 @@
+module Test exports (..);
+
+five = 5;
+
+suggest = fide;

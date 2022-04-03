@@ -1,0 +1,17 @@
+module Value.Declarations exports (..);
+
+
+my_really_long_value_name: (oooooooooooooooooooooooooooooooooooooooong) -> Int =
+    test();
+
+inline_fives =
+    -- fives
+    [5, 5, 5, 5, 5];
+
+hanging_fives = [
+    --fives
+    5,
+    5,
+];
+
+foreign some_npm_function: (Int) -> Int;

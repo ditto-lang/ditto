@@ -1,0 +1,12 @@
+[workspace]
+members = [
+  "crates/ditto-cst",
+  "crates/ditto-ast",
+  "crates/ditto-checker",
+  "crates/ditto-config",
+  "crates/ditto-codegen-js",
+  "crates/ditto-fmt",
+  "crates/ditto-cli",
+  "crates/ditto-lsp",
+  "crates/snapshot-test",
+]

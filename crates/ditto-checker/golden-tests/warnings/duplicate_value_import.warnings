@@ -1,0 +1,12 @@
+
+  ⚠ duplicate value import
+   ╭─[golden:1:1]
+ 1 │ module Test exports (..);
+ 2 │ 
+ 3 │ import Data.Stuff (id, id);
+   ·                    ─┬  ─┬
+   ·                     │   ╰── already imported
+   ·                     ╰── previously imported here
+ 4 │ 
+ 5 │ my_id = id;
+   ╰────

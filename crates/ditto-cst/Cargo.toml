@@ -1,0 +1,23 @@
+[package]
+name = "ditto-cst"
+version = "0.0.1"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[lib]
+doctest = false
+
+[dependencies]
+pest = "2.1"
+pest_derive = "2.1"
+itertools = "0.10"
+serde = { version = "1.0", features = ["derive"] }
+miette = { version = "4.2", features = ["fancy"] }
+thiserror = "1.0"
+#simsearch = "xx"   <-- for suggestions
+#unindent = "xx"  <-- might come in useful for smart multi-line strings (like Nix)
+#codespan = "xx" <-- might be a good replacement for our `Span` type
+
+[dev-dependencies]
+snapshot-test = { path = "../snapshot-test" }
+similar-asserts = "1.2"
