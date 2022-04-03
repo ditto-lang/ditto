@@ -13,7 +13,11 @@ fn main() {
     println!("cargo:rustc-env=GIT_REV={}", git_rev);
 
     let git_describe = env::var("DITTO_BUILD_GIT_DESCRIBE").unwrap_or_else(|_| {
-        let output = Command::new("git").arg("describe").output().unwrap();
+        let output = Command::new("git")
+            .arg("describe")
+            .arg("--tags")
+            .output()
+            .unwrap();
         String::from_utf8(output.stdout).unwrap()
     });
     println!("cargo:rustc-env=GIT_DESCRIBE={}", git_describe);
