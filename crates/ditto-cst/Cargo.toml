@@ -12,7 +12,7 @@ pest = "2.1"
 pest_derive = "2.1"
 itertools = "0.10"
 serde = { version = "1.0", features = ["derive"] }
-miette = { version = "4.2", features = ["fancy"] }
+miette = { version = "4.3", features = ["fancy"] }
 thiserror = "1.0"
 #simsearch = "xx"   <-- for suggestions
 #unindent = "xx"  <-- might come in useful for smart multi-line strings (like Nix)
