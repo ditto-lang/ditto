@@ -23,12 +23,7 @@ fn indent_if_start_of_line_or_start_of_line_indented(items: PrintItems) -> Condi
     let rc_path = items.into_rc_path();
     conditions::if_true_or(
         "withIndentIfStartOfLineOrStartOfLineIndented",
-        |context| {
-            Some(
-                condition_resolvers::is_start_of_line_indented(context)
-                    || condition_resolvers::is_start_of_line(context),
-            )
-        },
+        condition_resolvers::is_start_of_line_or_is_start_of_line_indented(),
         ir_helpers::with_indent(rc_path.into()),
         rc_path.into(),
     )

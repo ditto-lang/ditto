@@ -111,12 +111,7 @@ fn gen_token(
             let mut items = PrintItems::new();
             items.push_condition(conditions::if_false(
                 "newLineIfCommentNotStartOfLine",
-                |ctx| {
-                    Some(
-                        condition_resolvers::is_start_of_line_indented(ctx)
-                            || condition_resolvers::is_start_of_line(ctx),
-                    )
-                },
+                condition_resolvers::is_start_of_line_or_is_start_of_line_indented(),
                 Signal::NewLine.into(),
             ));
             for comment in leading_comments {
@@ -139,12 +134,7 @@ fn gen_token(
 
             items.push_condition(conditions::if_false(
                 "newLineIfCommentNotStartOfLine",
-                |ctx| {
-                    Some(
-                        condition_resolvers::is_start_of_line_indented(ctx)
-                            || condition_resolvers::is_start_of_line(ctx),
-                    )
-                },
+                condition_resolvers::is_start_of_line_or_is_start_of_line_indented(),
                 Signal::NewLine.into(),
             ));
             for comment in leading_comments {
