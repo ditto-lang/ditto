@@ -4,8 +4,10 @@ use super::{
 };
 use ditto_cst::{BracketsList, Comma, CommaSep1, Parens, ParensList, ParensList1};
 use dprint_core::formatting::{
-    condition_resolvers, conditions, ir_helpers, ConditionResolverContext, Info, PrintItems, Signal,
+    condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext, Info,
+    PrintItems, Signal,
 };
+use std::rc::Rc;
 
 pub fn gen_parens_list<T, GenElement>(parens: ParensList<T>, gen_element: GenElement) -> PrintItems
 where
@@ -40,21 +42,22 @@ where
     let start_info = Info::new("start");
     let end_info = Info::new("end");
 
-    let is_multiple_lines = move |ctx: &mut ConditionResolverContext| -> Option<bool> {
-        condition_resolvers::is_multiple_lines(ctx, &start_info, &end_info)
-    };
+    let is_multiple_lines: ConditionResolver =
+        Rc::new(move |ctx: &mut ConditionResolverContext| -> Option<bool> {
+            condition_helpers::is_multiple_lines(ctx, &start_info, &end_info)
+        });
 
     items.extend(gen_open_paren(parens.open_paren));
     items.push_info(start_info);
     items.push_condition(conditions::if_true(
         "newLineBeforeParensValueIfMultipleLines",
-        is_multiple_lines,
+        is_multiple_lines.clone(),
         Signal::NewLine.into(),
     ));
     let value_items = gen_value(parens.value).into_rc_path();
     items.push_condition(conditions::if_true_or(
         "indentParensValueIfMultipleLines",
-        is_multiple_lines,
+        is_multiple_lines.clone(),
         ir_helpers::with_indent(value_items.into()),
         value_items.into(),
     ));
