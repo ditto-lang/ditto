@@ -1,6 +1,6 @@
 use crate::{
-    Brackets, Expression, ModuleName, Name, PackageName, Parens, ProperName, QualifiedName,
-    QualifiedProperName, Span, Token, Type, TypeAnnotation, TypeCallFunction,
+    Brackets, Expression, ModuleName, Name, PackageName, Parens, Pattern, ProperName,
+    QualifiedName, QualifiedProperName, Span, Token, Type, TypeAnnotation, TypeCallFunction,
 };
 
 impl<Value> Token<Value> {
@@ -71,6 +71,19 @@ impl Expression {
             Self::Parens(parens) => parens.get_span(),
             Self::Variable(qualified_name) => qualified_name.get_span(),
             Self::Constructor(qualified_proper_name) => qualified_proper_name.get_span(),
+            Self::Match {
+                match_keyword,
+                head_arm,
+                tail_arms,
+                ..
+            } => {
+                let start = match_keyword.0.get_span();
+                if let Some(last_arm) = tail_arms.last() {
+                    start.merge(&last_arm.expression.get_span())
+                } else {
+                    start.merge(&head_arm.expression.get_span())
+                }
+            }
             Self::Call {
                 function,
                 arguments,
@@ -156,5 +169,19 @@ impl<T> Brackets<T> {
             .0
             .get_span()
             .merge(&self.close_bracket.0.get_span())
+    }
+}
+
+impl Pattern {
+    /// Get the source span.
+    pub fn get_span(&self) -> Span {
+        match self {
+            Self::NullaryConstructor { constructor } => constructor.get_span(),
+            Self::Constructor {
+                constructor,
+                arguments,
+            } => constructor.get_span().merge(&arguments.get_span()),
+            Self::Variable { name } => name.get_span(),
+        }
     }
 }

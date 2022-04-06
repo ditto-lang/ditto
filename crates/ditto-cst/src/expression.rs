@@ -1,7 +1,7 @@
 use crate::{
-    BracketsList, Colon, ElseKeyword, FalseKeyword, IfKeyword, Name, Parens, ParensList,
-    QualifiedName, QualifiedProperName, RightArrow, StringToken, ThenKeyword, TrueKeyword, Type,
-    UnitKeyword,
+    BracketsList, Colon, ElseKeyword, FalseKeyword, IfKeyword, MatchKeyword, Name, Parens,
+    ParensList, ParensList1, Pipe, QualifiedName, QualifiedProperName, RightArrow, StringToken,
+    ThenKeyword, TrueKeyword, Type, UnitKeyword, WithKeyword,
 };
 
 /// A value expression.
@@ -54,6 +54,24 @@ pub enum Expression {
         /// The expression to evaluate otherwise.
         false_clause: Box<Self>,
     },
+    /// A pattern match.
+    ///
+    /// ```ditto
+    /// match some_expr with
+    /// | Pattern -> another_expr
+    /// ```
+    Match {
+        /// `match`
+        match_keyword: MatchKeyword,
+        /// Expression to be matched.
+        expression: Box<Expression>,
+        /// `with`
+        with_keyword: WithKeyword,
+        /// The first match arm (there should be at least one).
+        head_arm: MatchArm,
+        /// More match arms.
+        tail_arms: Vec<MatchArm>,
+    },
     /// A value constructor, e.g. `Just` and `Ok`.
     Constructor(QualifiedProperName),
     /// A variable. Useful for not repeating things.
@@ -86,6 +104,45 @@ pub enum Expression {
     Float(StringToken),
     /// `[this, is, an, array]`
     Array(BracketsList<Box<Self>>),
+}
+
+/// A single arm of a `match` expression.
+///
+/// ```ditto
+/// | Pattern -> expression
+/// ```
+#[derive(Debug, Clone)]
+pub struct MatchArm {
+    /// `|`
+    pub pipe: Pipe,
+    /// Pattern to be matched.
+    pub pattern: Pattern,
+    /// `->`
+    pub right_arrow: RightArrow,
+    /// The expression to return if the pattern is matched.
+    pub expression: Box<Expression>,
+}
+
+/// A pattern to be matched.
+#[derive(Debug, Clone)]
+pub enum Pattern {
+    /// A constructor pattern without arguments.
+    NullaryConstructor {
+        /// `Maybe.Just`
+        constructor: QualifiedProperName,
+    },
+    /// A constructor pattern with arguments.
+    Constructor {
+        /// `Maybe.Just`
+        constructor: QualifiedProperName,
+        /// Pattern arguments to the constructor.
+        arguments: ParensList1<Box<Pattern>>,
+    },
+    /// A variable binding pattern.
+    Variable {
+        /// Name to bind.
+        name: Name,
+    },
 }
 
 /// `: String`

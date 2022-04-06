@@ -179,3 +179,11 @@ pub struct TypeKeyword(pub EmptyToken);
 /// `foreign`
 #[derive(Debug, Clone)]
 pub struct ForeignKeyword(pub EmptyToken);
+
+/// `match`
+#[derive(Debug, Clone)]
+pub struct MatchKeyword(pub EmptyToken);
+
+/// `with`
+#[derive(Debug, Clone)]
+pub struct WithKeyword(pub EmptyToken);
