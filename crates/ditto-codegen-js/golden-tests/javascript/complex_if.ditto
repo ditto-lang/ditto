@@ -1,0 +1,13 @@
+module Test exports (..);
+
+result =
+  if true then
+    if true then
+      if true then
+        0
+      else
+        1
+    else
+      2
+  else
+    3;
