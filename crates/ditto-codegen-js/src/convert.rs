@@ -276,8 +276,9 @@ fn convert_expression(
             }
         }
         ditto_ast::Expression::String { value, .. } => Expression::String(value),
-        ditto_ast::Expression::Float { value, .. } => Expression::Number(value),
-        ditto_ast::Expression::Int { value, .. } => Expression::Number(value),
+        ditto_ast::Expression::Float { value, .. } | ditto_ast::Expression::Int { value, .. } => {
+            Expression::Number(strip_number_separators(value))
+        }
         ditto_ast::Expression::Array { elements, .. } => Expression::Array(
             elements
                 .into_iter()
@@ -337,6 +338,10 @@ fn ident_from_fully_qualified(
     }
     string.push_str(&name_string_to_ident_string(value));
     Ident(string)
+}
+
+fn strip_number_separators(value: String) -> String {
+    value.replace('_', "")
 }
 
 fn mk_foreign_ident(value: String) -> Ident {
