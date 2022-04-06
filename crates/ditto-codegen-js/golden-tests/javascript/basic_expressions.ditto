@@ -6,8 +6,6 @@ five : Int =
 
 floaty_five: Float = 5.0;
 
-select = (c, x, y) -> if c then x else y;
-
 fifth_string = "A";
 
 identity = (a: a) -> a;
@@ -16,6 +14,7 @@ curry = (fn) -> (a) -> (b) -> fn(a, b);
 uncurry = (fn) -> (a, b) -> fn(a)(b);
 
 always = (a) -> (b) -> a;
+select = (c, x, y) -> if c then x else y;
  
 -- REVIEW `return undefined` is redundant
 denied = (a) -> unit;
