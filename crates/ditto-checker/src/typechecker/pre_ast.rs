@@ -152,8 +152,14 @@ fn convert_cst(
         cst::Expression::True { .. } => Ok(Expression::True { span }),
         cst::Expression::False { .. } => Ok(Expression::False { span }),
         cst::Expression::String(cst::Token { value, .. }) => Ok(Expression::String { span, value }),
-        cst::Expression::Int(cst::Token { value, .. }) => Ok(Expression::Int { span, value: strip_number_separators(value) }),
-        cst::Expression::Float(cst::Token { value, .. }) => Ok(Expression::Float { span, value: strip_number_separators(value) }),
+        cst::Expression::Int(cst::Token { value, .. }) => Ok(Expression::Int {
+            span,
+            value: strip_number_separators(value),
+        }),
+        cst::Expression::Float(cst::Token { value, .. }) => Ok(Expression::Float {
+            span,
+            value: strip_number_separators(value),
+        }),
         cst::Expression::Array(brackets) => {
             let mut elements = Vec::new();
             if let Some(cst_elements) = brackets.value {
