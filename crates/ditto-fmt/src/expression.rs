@@ -5,8 +5,8 @@ use super::{
     r#type::gen_type,
     syntax::{gen_brackets_list, gen_parens, gen_parens_list},
     token::{
-        gen_colon, gen_false_keyword, gen_right_arrow, gen_string_token, gen_true_keyword,
-        gen_unit_keyword,
+        gen_colon, gen_else_keyword, gen_false_keyword, gen_if_keyword, gen_right_arrow,
+        gen_string_token, gen_then_keyword, gen_true_keyword, gen_unit_keyword,
     },
 };
 use ditto_cst::{Expression, StringToken, TypeAnnotation};
@@ -32,6 +32,42 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
         Expression::Array(brackets) => gen_brackets_list(brackets, |box expr| {
             ir_helpers::new_line_group(gen_expression(expr))
         }),
+        Expression::If {
+            if_keyword,
+            box condition,
+            then_keyword,
+            box true_clause,
+            else_keyword,
+            box false_clause,
+        } => {
+            let mut items = PrintItems::new();
+
+            let if_keyword_has_trailing_comment = if_keyword.0.has_trailing_comment();
+            let condition_has_leading_comments = condition.has_leading_comments();
+            items.extend(gen_if_keyword(if_keyword));
+            items.extend(group(
+                gen_expression(condition),
+                if_keyword_has_trailing_comment || condition_has_leading_comments,
+            ));
+
+            let then_keyword_has_trailing_comment = then_keyword.0.has_trailing_comment();
+            let true_clause_has_leading_comments = true_clause.has_leading_comments();
+            items.extend(gen_then_keyword(then_keyword));
+            items.extend(group(
+                gen_expression(true_clause),
+                then_keyword_has_trailing_comment || true_clause_has_leading_comments,
+            ));
+
+            let else_keyword_has_trailing_comment = else_keyword.0.has_trailing_comment();
+            let false_clause_has_leading_comments = false_clause.has_leading_comments();
+            items.extend(gen_else_keyword(else_keyword));
+            items.extend(group(
+                gen_expression(false_clause),
+                else_keyword_has_trailing_comment || false_clause_has_leading_comments,
+            ));
+
+            items
+        }
         Expression::Function {
             box parameters,
             box return_type_annotation,

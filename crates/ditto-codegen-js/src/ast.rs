@@ -57,6 +57,18 @@ pub enum BlockStatement {
     /// ```
     _ConstAssignment { ident: Ident, value: Expression },
     /// ```javascript
+    /// if (condition) {
+    ///     true_clause();
+    /// } else {
+    ///     false_clause();
+    /// }
+    /// ```
+    If {
+        condition: Expression,
+        true_clause: Block,
+        false_clause: Block,
+    },
+    /// ```javascript
     /// return bar;
     /// return;
     /// ```
@@ -118,5 +130,5 @@ pub enum ArrowFunctionBody {
     /// ```javascript
     /// () => { block }
     /// ```
-    _Block(Block),
+    Block(Block),
 }

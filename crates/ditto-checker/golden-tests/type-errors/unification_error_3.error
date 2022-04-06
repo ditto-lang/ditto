@@ -1,0 +1,11 @@
+
+  × types don't unify
+   ╭─[golden:1:1]
+ 1 │ module Test exports (..);
+ 2 │ 
+ 3 │ not_five = if "false" then 5 else 4;
+   ·               ───┬───
+   ·                  ╰── here
+   ╰────
+  help: expected Bool
+        got String

@@ -6,6 +6,8 @@ five : Int =
 
 floaty_five: Float = 5.0;
 
+select = (c, x, y) -> if c then x else y;
+
 fifth_string = "A";
 
 identity = (a: a) -> a;
@@ -21,6 +23,7 @@ denied = (a) -> unit;
 fives = [
   5,
   five, 
+  select(true, 5, 50),
   always(five)(floaty_five), 
   uncurry(always)(five, true),
   ((a) -> a)(5),

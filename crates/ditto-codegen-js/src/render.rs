@@ -118,6 +118,18 @@ impl Render for BlockStatement {
                 value.render(accum);
                 accum.push(';');
             }
+            Self::If {
+                condition,
+                true_clause,
+                false_clause,
+            } => {
+                accum.push_str("if(");
+                condition.render(accum);
+                accum.push_str(")");
+                true_clause.render(accum);
+                accum.push_str("else");
+                false_clause.render(accum);
+            }
         }
     }
 }
@@ -190,7 +202,7 @@ impl Render for Expression {
 impl Render for ArrowFunctionBody {
     fn render(&self, accum: &mut String) {
         match self {
-            Self::_Block(block) => block.render(accum),
+            Self::Block(block) => block.render(accum),
             Self::Expression(expression) => expression.render(accum),
         }
     }

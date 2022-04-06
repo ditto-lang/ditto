@@ -160,6 +160,18 @@ pub struct FalseKeyword(pub EmptyToken);
 #[derive(Debug, Clone)]
 pub struct UnitKeyword(pub EmptyToken);
 
+/// `if`
+#[derive(Debug, Clone)]
+pub struct IfKeyword(pub EmptyToken);
+
+/// `then`
+#[derive(Debug, Clone)]
+pub struct ThenKeyword(pub EmptyToken);
+
+/// `else`
+#[derive(Debug, Clone)]
+pub struct ElseKeyword(pub EmptyToken);
+
 /// `type`
 #[derive(Debug, Clone)]
 pub struct TypeKeyword(pub EmptyToken);

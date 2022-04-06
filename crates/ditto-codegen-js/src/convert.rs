@@ -232,6 +232,31 @@ fn convert_expression(
                 })
                 .collect(),
         },
+
+        // The cheap/lazy way to do it
+        ditto_ast::Expression::If {
+            condition,
+            true_clause,
+            false_clause,
+            ..
+        } => Expression::Call {
+            function: Box::new(Expression::ArrowFunction {
+                parameters: Vec::new(),
+                body: Box::new(ArrowFunctionBody::Block(Block(vec![BlockStatement::If {
+                    condition: convert_expression(imported_idents, *condition),
+                    true_clause: Block(vec![BlockStatement::Return(Some(convert_expression(
+                        imported_idents,
+                        *true_clause,
+                    )))]),
+                    false_clause: Block(vec![BlockStatement::Return(Some(convert_expression(
+                        imported_idents,
+                        *false_clause,
+                    )))]),
+                }]))),
+            }),
+            arguments: Vec::new(),
+        },
+
         ditto_ast::Expression::LocalVariable { variable, .. } => {
             Expression::Variable(Ident::from(variable))
         }

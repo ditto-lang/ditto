@@ -1,7 +1,8 @@
 use super::{parse_rule, Result, Rule};
 use crate::{
-    BracketsList, Colon, Expression, FalseKeyword, Name, Parens, ParensList, QualifiedName,
-    QualifiedProperName, RightArrow, StringToken, TrueKeyword, Type, TypeAnnotation, UnitKeyword,
+    BracketsList, Colon, ElseKeyword, Expression, FalseKeyword, IfKeyword, Name, Parens,
+    ParensList, QualifiedName, QualifiedProperName, RightArrow, StringToken, ThenKeyword,
+    TrueKeyword, Type, TypeAnnotation, UnitKeyword,
 };
 use pest::iterators::Pair;
 
@@ -71,6 +72,23 @@ impl Expression {
                         right_arrow,
                         body,
                     }
+                }
+            }
+            Rule::expression_if => {
+                let mut inner = pair.into_inner();
+                let if_keyword = IfKeyword::from_pair(inner.next().unwrap());
+                let condition = Box::new(Self::from_pair(inner.next().unwrap()));
+                let then_keyword = ThenKeyword::from_pair(inner.next().unwrap());
+                let true_clause = Box::new(Self::from_pair(inner.next().unwrap()));
+                let else_keyword = ElseKeyword::from_pair(inner.next().unwrap());
+                let false_clause = Box::new(Self::from_pair(inner.next().unwrap()));
+                Self::If {
+                    if_keyword,
+                    condition,
+                    then_keyword,
+                    true_clause,
+                    else_keyword,
+                    false_clause,
                 }
             }
             Rule::expression_integer => Expression::Int(StringToken::from_pairs(
@@ -240,6 +258,19 @@ mod tests {
     #[test]
     fn it_parses_unit() {
         assert_parses!("unit", Expression::Unit(_));
+    }
+
+    #[test]
+    fn it_parses_ifs() {
+        assert_parses!("if true then 1 else 0", Expression::If { .. });
+        assert_parses!(
+            "if if false then true else false then 5 else 108",
+            Expression::If { .. }
+        );
+        assert_parses!(
+            "if if true then true else false then if true then 1 else 0 else if true then 0 else 1",
+            Expression::If { .. }
+        );
     }
 
     #[test]

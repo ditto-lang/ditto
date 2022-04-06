@@ -24,6 +24,12 @@ pub enum Expression {
         function: Box<Self>,
         arguments: Vec<Argument>,
     },
+    If {
+        span: Span,
+        condition: Box<Self>,
+        true_clause: Box<Self>,
+        false_clause: Box<Self>,
+    },
     Constructor {
         span: Span,
         constructor: QualifiedProperName,
@@ -164,6 +170,17 @@ fn convert_cst(
             }
             Ok(Expression::Array { span, elements })
         }
+        cst::Expression::If {
+            box condition,
+            box true_clause,
+            box false_clause,
+            ..
+        } => Ok(Expression::If {
+            span,
+            condition: Box::new(convert_cst(env, state, condition)?),
+            true_clause: Box::new(convert_cst(env, state, true_clause)?),
+            false_clause: Box::new(convert_cst(env, state, false_clause)?),
+        }),
         cst::Expression::Call {
             box function,
             arguments: parens,
@@ -310,6 +327,17 @@ fn substitute_type_annotations(subst: &Substitution, expression: Expression) -> 
                     }
                 })
                 .collect(),
+        },
+        If {
+            span,
+            box condition,
+            box true_clause,
+            box false_clause,
+        } => If {
+            span,
+            condition: Box::new(substitute_type_annotations(subst, condition)),
+            true_clause: Box::new(substitute_type_annotations(subst, true_clause)),
+            false_clause: Box::new(substitute_type_annotations(subst, false_clause)),
         },
         Constructor { span, constructor } => Constructor { span, constructor },
         Variable { span, variable } => Variable { span, variable },

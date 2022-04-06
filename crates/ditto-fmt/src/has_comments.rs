@@ -27,6 +27,21 @@ impl HasComments for Expression {
             Self::Variable(variable) => variable.has_comments(),
             Self::Parens(parens) => parens.has_comments(),
             Self::Array(brackets) => brackets.has_comments(),
+            Self::If {
+                if_keyword,
+                condition,
+                then_keyword,
+                true_clause,
+                else_keyword,
+                false_clause,
+            } => {
+                if_keyword.0.has_comments()
+                    || condition.has_comments()
+                    || then_keyword.0.has_comments()
+                    || true_clause.has_comments()
+                    || else_keyword.0.has_comments()
+                    || false_clause.has_comments()
+            }
             Self::Function {
                 parameters,
                 return_type_annotation,
@@ -57,6 +72,7 @@ impl HasComments for Expression {
             Self::Variable(variable) => variable.has_leading_comments(),
             Self::Parens(parens) => parens.open_paren.0.has_leading_comments(),
             Self::Array(brackets) => brackets.open_bracket.0.has_leading_comments(),
+            Self::If { if_keyword, .. } => if_keyword.0.has_leading_comments(),
             Self::Function { box parameters, .. } => parameters.open_paren.0.has_leading_comments(),
             Self::Call { function, .. } => function.has_leading_comments(),
         }

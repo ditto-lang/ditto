@@ -445,6 +445,16 @@ fn toposort_value_declarations(
                     get_connected_nodes_rec(body, nodes, accum)
                 }
             }
+            Expression::If {
+                condition,
+                true_clause,
+                false_clause,
+                ..
+            } => {
+                get_connected_nodes_rec(condition, nodes, accum);
+                get_connected_nodes_rec(true_clause, nodes, accum);
+                get_connected_nodes_rec(false_clause, nodes, accum);
+            }
             Expression::Array(elements) => {
                 if let Some(ref elements) = elements.value {
                     elements.iter().for_each(|element| {
