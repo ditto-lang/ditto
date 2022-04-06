@@ -131,6 +131,7 @@ return_type_annotation = { colon ~ type1 } // used for function expressions only
 expression = _ 
   { expression_call
   | expression_function
+  | expression_match
   | expression1
   }
 
@@ -157,6 +158,10 @@ expression_call = { expression1 ~ expression_call_arguments+   }
 
 expression_call_arguments = { open_paren ~ (expression ~ (comma ~ expression)* ~ comma?)?  ~ close_paren }
 
+expression_match = { match_keyword ~ expression ~ with_keyword ~ expression_match_arm+ }
+
+expression_match_arm = { pipe ~ pattern ~ right_arrow ~ expression }
+
 expression_constructor = { qualified_proper_name }
 
 expression_function = { expression_function_parameters ~ return_type_annotation? ~ right_arrow ~ expression }
@@ -182,6 +187,19 @@ expression_true = { true_keyword }
 expression_false = { false_keyword }
 
 expression_unit = { unit_keyword }
+
+pattern = 
+  { pattern_constructor
+  | pattern_variable
+  }
+
+pattern_constructor = { pattern_constructor_proper_name ~ pattern_constructor_arguments? }
+
+pattern_constructor_proper_name = { qualified_proper_name }
+
+pattern_constructor_arguments = { open_paren ~ (pattern ~ (comma ~ pattern)* ~ comma?)?  ~ close_paren }
+
+pattern_variable = { name }
 
 // -----------------------------------------------------------------------------
 // Names
@@ -230,6 +248,10 @@ as_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ AS_KEYWORD ~ HORIZONTAL_WHITESPAC
 type_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ TYPE_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
 foreign_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ FOREIGN_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
+match_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ MATCH_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
+with_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ WITH_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
 dot = ${ (WHITESPACE | LINE_COMMENT)* ~ DOT ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
@@ -293,6 +315,10 @@ AS_KEYWORD = { "as" }
 TYPE_KEYWORD = { "type" }
 
 FOREIGN_KEYWORD = { "foreign" }
+
+MATCH_KEYWORD = { "match" }
+
+WITH_KEYWORD = { "with" }
 
 DOT = { "." }
 
