@@ -73,8 +73,6 @@ mod tests {
             process::{Command, Stdio},
         };
 
-        println!("{text}");
-
         let mut child = Command::new("node")
             // NOTE: node_modules/.bin/prettier is a shell script on windows
             .arg("../../node_modules/prettier/bin-prettier.js")
