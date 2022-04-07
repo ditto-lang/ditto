@@ -2,13 +2,7 @@ function denied(a) {
   return undefined;
 }
 function select(c, x, y) {
-  return (() => {
-    if (c) {
-      return x;
-    } else {
-      return y;
-    }
-  })();
+  return c ? x : y;
 }
 function always(a) {
   return b => a;

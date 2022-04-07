@@ -197,9 +197,10 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
             let condition = check(env, state, Type::PrimConstructor(PrimType::Bool), condition)?;
             let true_clause = infer(env, state, true_clause)?;
             let true_type = state.substitution.apply(true_clause.get_type());
-            let false_clause = check(env, state, true_type, false_clause)?;
+            let false_clause = check(env, state, true_type.clone(), false_clause)?;
             Ok(Expression::If {
                 span,
+                output_type: true_type,
                 condition: Box::new(condition),
                 true_clause: Box::new(true_clause),
                 false_clause: Box::new(false_clause),

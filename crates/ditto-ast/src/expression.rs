@@ -48,6 +48,9 @@ pub enum Expression {
         /// The source span for this expression.
         span: Span,
 
+        /// The output type of this conditional.
+        output_type: Type,
+
         /// The condition.
         condition: Box<Self>,
         /// The expression to evaluate if the condition holds true.
@@ -189,8 +192,7 @@ impl Expression {
                     return_type: Box::new(body.get_type()),
                 }
             }
-            // Maybe this is correct???
-            Self::If { true_clause, .. } => true_clause.get_type(),
+            Self::If { output_type, .. } => output_type.clone(),
             Self::LocalConstructor {
                 constructor_type, ..
             } => constructor_type.clone(),

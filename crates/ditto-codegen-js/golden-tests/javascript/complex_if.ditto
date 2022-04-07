@@ -1,7 +1,12 @@
 module Test exports (..);
 
 result =
-  if true then
+  if
+    if true then
+      true
+    else
+      false
+  then
     if true then
       if true then
         0
