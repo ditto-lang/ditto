@@ -1,0 +1,12 @@
+
+  × types don't unify
+   ╭─[golden:5:1]
+ 5 │ 
+ 6 │ nah = 
+ 7 │   match Foo with
+ 8 │   | Bar -> unit;
+   ·     ─┬─
+   ·      ╰── here
+   ╰────
+  help: expected Foo
+        got Bar

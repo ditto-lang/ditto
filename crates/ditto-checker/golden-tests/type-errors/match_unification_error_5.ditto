@@ -1,0 +1,8 @@
+module Test exports (..);
+
+type Maybe(a) = Just(a) | Nothing;
+
+nah = (maybe_foo : Maybe(Int)): Int -> 
+  match maybe_foo with
+  | Just(n) -> unit
+  | Nothing -> unit;

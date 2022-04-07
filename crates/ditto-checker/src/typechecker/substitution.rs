@@ -126,6 +126,23 @@ impl Substitution {
                 true_clause: Box::new(self.apply_expression(true_clause)),
                 false_clause: Box::new(self.apply_expression(false_clause)),
             },
+            Match {
+                span,
+                match_type,
+                box expression,
+                arms,
+            } => Match {
+                span,
+                match_type: self.apply(match_type),
+                expression: Box::new(self.apply_expression(expression)),
+                arms: unsafe {
+                    NonEmpty::new_unchecked(
+                        arms.into_iter()
+                            .map(|(pattern, expr)| (pattern, self.apply_expression(expr)))
+                            .collect(),
+                    )
+                },
+            },
             LocalConstructor {
                 constructor_type,
                 span,

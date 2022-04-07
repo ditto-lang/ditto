@@ -10,8 +10,10 @@ use crate::{
 };
 use ditto_ast::{Kind, Name, QualifiedName, QualifiedProperName, Span, Type};
 use ditto_cst as cst;
+use non_empty_vec::NonEmpty;
 use std::collections::hash_map;
 
+#[derive(Clone)] // FIXME: we really shouldn't have to clone this...
 pub enum Expression {
     Function {
         span: Span,
@@ -33,6 +35,11 @@ pub enum Expression {
     Constructor {
         span: Span,
         constructor: QualifiedProperName,
+    },
+    Match {
+        span: Span,
+        expression: Box<Self>,
+        arms: NonEmpty<(Pattern, Self)>,
     },
     Variable {
         span: Span,
@@ -65,6 +72,7 @@ pub enum Expression {
     },
 }
 
+#[derive(Clone)]
 pub enum FunctionBinder {
     Name {
         span: Span,
@@ -73,6 +81,7 @@ pub enum FunctionBinder {
     },
 }
 
+#[derive(Clone)]
 pub enum Argument {
     Expression(Expression),
 }
@@ -154,6 +163,27 @@ fn convert_cst(
             span,
             constructor: QualifiedProperName::from(ctor),
         }),
+        cst::Expression::Match {
+            box expression,
+            head_arm,
+            tail_arms,
+            ..
+        } => {
+            let expression = convert_cst(env, state, expression)?;
+            let head_arm_pattern = Pattern::from(head_arm.pattern);
+            let head_arm_expression = convert_cst(env, state, *head_arm.expression)?;
+            let mut arms = NonEmpty::new((head_arm_pattern, head_arm_expression));
+            for tail_arm in tail_arms.into_iter() {
+                let tail_arm_pattern = Pattern::from(tail_arm.pattern);
+                let tail_arm_expression = convert_cst(env, state, *tail_arm.expression)?;
+                arms.push((tail_arm_pattern, tail_arm_expression));
+            }
+            Ok(Expression::Match {
+                span,
+                expression: Box::new(expression),
+                arms,
+            })
+        }
         cst::Expression::Unit { .. } => Ok(Expression::Unit { span }),
         cst::Expression::True { .. } => Ok(Expression::True { span }),
         cst::Expression::False { .. } => Ok(Expression::False { span }),
@@ -345,6 +375,21 @@ fn substitute_type_annotations(subst: &Substitution, expression: Expression) -> 
             true_clause: Box::new(substitute_type_annotations(subst, true_clause)),
             false_clause: Box::new(substitute_type_annotations(subst, false_clause)),
         },
+        Match {
+            span,
+            box expression,
+            arms,
+        } => Match {
+            span,
+            expression: Box::new(substitute_type_annotations(subst, expression)),
+            arms: unsafe {
+                NonEmpty::new_unchecked(
+                    arms.into_iter()
+                        .map(|(pattern, expr)| (pattern, expr))
+                        .collect(),
+                )
+            },
+        },
         Constructor { span, constructor } => Constructor { span, constructor },
         Variable { span, variable } => Variable { span, variable },
         String { span, value } => String { span, value },
@@ -360,6 +405,48 @@ fn substitute_type_annotations(subst: &Substitution, expression: Expression) -> 
         True { span } => True { span },
         False { span } => False { span },
         Unit { span } => Unit { span },
+    }
+}
+
+#[derive(Clone)]
+pub enum Pattern {
+    Constructor {
+        span: Span,
+        constructor: QualifiedProperName,
+        arguments: Vec<Self>,
+    },
+    Variable {
+        span: Span,
+        name: Name,
+    },
+}
+
+impl From<cst::Pattern> for Pattern {
+    fn from(cst_pattern: cst::Pattern) -> Self {
+        let span = cst_pattern.get_span();
+        match cst_pattern {
+            cst::Pattern::NullaryConstructor { constructor } => Pattern::Constructor {
+                span,
+                constructor: QualifiedProperName::from(constructor),
+                arguments: vec![],
+            },
+            cst::Pattern::Constructor {
+                constructor,
+                arguments,
+            } => Pattern::Constructor {
+                span,
+                constructor: QualifiedProperName::from(constructor),
+                arguments: arguments
+                    .value
+                    .into_iter()
+                    .map(|box pat| Self::from(pat))
+                    .collect(),
+            },
+            cst::Pattern::Variable { name } => Pattern::Variable {
+                span,
+                name: Name::from(name),
+            },
+        }
     }
 }
 

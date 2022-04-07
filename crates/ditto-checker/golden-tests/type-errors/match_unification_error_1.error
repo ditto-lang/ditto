@@ -1,0 +1,13 @@
+
+  × types don't unify
+    ╭─[golden:6:1]
+  6 │ 
+  7 │ nah = (maybe_foo : Maybe(Foo)) -> 
+  8 │   match maybe_foo with
+  9 │   | Just(Bar) -> unit
+    ·          ─┬─
+    ·           ╰── here
+ 10 │   | Nothing -> unit;
+    ╰────
+  help: expected Foo
+        got Bar
