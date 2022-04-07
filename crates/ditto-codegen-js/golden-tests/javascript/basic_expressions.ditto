@@ -6,6 +6,8 @@ five : Int =
 
 floaty_five: Float = 5.0;
 
+not_quite_five: Float = 5_____.0_____1_____;
+
 fifth_string = "A";
 
 identity = (a: a) -> a;
@@ -20,7 +22,7 @@ denied = (a) -> unit;
 
 fives = [
   5,
-  five, 
+  five,
   always(five)(floaty_five), 
   uncurry(always)(five, true),
   ((a) -> a)(5),

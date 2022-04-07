@@ -152,8 +152,14 @@ fn convert_cst(
         cst::Expression::True { .. } => Ok(Expression::True { span }),
         cst::Expression::False { .. } => Ok(Expression::False { span }),
         cst::Expression::String(cst::Token { value, .. }) => Ok(Expression::String { span, value }),
-        cst::Expression::Int(cst::Token { value, .. }) => Ok(Expression::Int { span, value }),
-        cst::Expression::Float(cst::Token { value, .. }) => Ok(Expression::Float { span, value }),
+        cst::Expression::Int(cst::Token { value, .. }) => Ok(Expression::Int {
+            span,
+            value: strip_number_separators(value),
+        }),
+        cst::Expression::Float(cst::Token { value, .. }) => Ok(Expression::Float {
+            span,
+            value: strip_number_separators(value),
+        }),
         cst::Expression::Array(brackets) => {
             let mut elements = Vec::new();
             if let Some(cst_elements) = brackets.value {
@@ -327,4 +333,8 @@ fn substitute_type_annotations(subst: &Substitution, expression: Expression) -> 
         False { span } => False { span },
         Unit { span } => Unit { span },
     }
+}
+
+fn strip_number_separators(value: String) -> String {
+    value.replace('_', "")
 }

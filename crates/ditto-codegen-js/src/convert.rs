@@ -276,8 +276,9 @@ fn convert_expression(
             }
         }
         ditto_ast::Expression::String { value, .. } => Expression::String(value),
-        ditto_ast::Expression::Float { value, .. } => Expression::Number(value),
-        ditto_ast::Expression::Int { value, .. } => Expression::Number(value),
+        ditto_ast::Expression::Float { value, .. } | ditto_ast::Expression::Int { value, .. } => {
+            Expression::Number(value)
+        }
         ditto_ast::Expression::Array { elements, .. } => Expression::Array(
             elements
                 .into_iter()
