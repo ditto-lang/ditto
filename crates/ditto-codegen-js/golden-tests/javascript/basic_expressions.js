@@ -17,6 +17,7 @@ function identity(a) {
   return a;
 }
 const fifthString = "A";
+const notQuiteFive = 5.01;
 const floatyFive = 5.0;
 const five = 5;
 const fives = [

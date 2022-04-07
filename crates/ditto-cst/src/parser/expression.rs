@@ -168,6 +168,10 @@ mod tests {
             Expression::Int(StringToken { value, .. }) if value == "0005"
         );
         assert_parses!(
+            "10_000_000",
+            Expression::Int(StringToken { value, .. }) if value == "10_000_000"
+        );
+        assert_parses!(
             "--leading\n--leading0\n10 --trailing",
             Expression::Int(StringToken { value, .. }) if value == "10"
         );
@@ -186,6 +190,10 @@ mod tests {
         assert_parses!(
             "123456789000000.123456",
             Expression::Float(StringToken { value, .. }) if value == "123456789000000.123456"
+        );
+        assert_parses!(
+            "1___2__3_.0___",
+            Expression::Float(StringToken { value, .. }) if value == "1___2__3_.0___"
         );
         assert_parses!(
             "--leading\n--leading0\n10.10 --trailing",
