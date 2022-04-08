@@ -1,6 +1,7 @@
 use crate::{
-    BracketsList, Colon, FalseKeyword, Name, Parens, ParensList, QualifiedName,
-    QualifiedProperName, RightArrow, StringToken, TrueKeyword, Type, UnitKeyword,
+    BracketsList, Colon, ElseKeyword, FalseKeyword, IfKeyword, Name, Parens, ParensList,
+    QualifiedName, QualifiedProperName, RightArrow, StringToken, ThenKeyword, TrueKeyword, Type,
+    UnitKeyword,
 };
 
 /// A value expression.
@@ -30,9 +31,28 @@ pub enum Expression {
     /// ```
     Call {
         /// The function expression to be called.
-        function: Box<Expression>,
+        function: Box<Self>,
         /// Arguments to pass to the function expression.
         arguments: ParensList<Box<Self>>,
+    },
+    /// A conditional expression.
+    ///
+    /// ```ditto
+    /// if true then "yes" else "no!"
+    /// ```
+    If {
+        /// `if`
+        if_keyword: IfKeyword,
+        /// The condition.
+        condition: Box<Self>,
+        /// `then`
+        then_keyword: ThenKeyword,
+        /// The expression to evaluate if the condition holds `true`.
+        true_clause: Box<Self>,
+        /// `else`
+        else_keyword: ElseKeyword,
+        /// The expression to evaluate otherwise.
+        false_clause: Box<Self>,
     },
     /// A value constructor, e.g. `Just` and `Ok`.
     Constructor(QualifiedProperName),

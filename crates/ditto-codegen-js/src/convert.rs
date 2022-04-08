@@ -232,6 +232,18 @@ fn convert_expression(
                 })
                 .collect(),
         },
+
+        ditto_ast::Expression::If {
+            condition,
+            true_clause,
+            false_clause,
+            ..
+        } => Expression::Conditional {
+            condition: Box::new(convert_expression(imported_idents, *condition)),
+            true_clause: Box::new(convert_expression(imported_idents, *true_clause)),
+            false_clause: Box::new(convert_expression(imported_idents, *false_clause)),
+        },
+
         ditto_ast::Expression::LocalVariable { variable, .. } => {
             Expression::Variable(Ident::from(variable))
         }

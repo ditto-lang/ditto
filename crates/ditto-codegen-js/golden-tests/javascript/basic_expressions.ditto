@@ -16,6 +16,7 @@ curry = (fn) -> (a) -> (b) -> fn(a, b);
 uncurry = (fn) -> (a, b) -> fn(a)(b);
 
 always = (a) -> (b) -> a;
+select = (c, x, y) -> if c then x else y;
  
 -- REVIEW `return undefined` is redundant
 denied = (a) -> unit;
@@ -23,6 +24,7 @@ denied = (a) -> unit;
 fives = [
   5,
   five,
+  select(true, 5, 50),
   always(five)(floaty_five), 
   uncurry(always)(five, true),
   ((a) -> a)(5),

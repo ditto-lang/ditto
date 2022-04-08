@@ -1,6 +1,9 @@
 function denied(a) {
   return undefined;
 }
+function select(c, x, y) {
+  return c ? x : y;
+}
 function always(a) {
   return b => a;
 }
@@ -20,6 +23,7 @@ const five = 5;
 const fives = [
   5,
   five,
+  select(true, 5, 50),
   always(five)(floatyFive),
   uncurry(always)(five, true),
   (a => a)(5),

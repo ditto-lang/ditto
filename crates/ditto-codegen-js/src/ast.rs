@@ -90,6 +90,14 @@ pub enum Expression {
         arguments: Vec<Expression>,
     },
     /// ```javascript
+    /// condition ? true_clause : false_clause
+    /// ```
+    Conditional {
+        condition: Box<Expression>,
+        true_clause: Box<Expression>,
+        false_clause: Box<Expression>,
+    },
+    /// ```javascript
     /// []
     /// [5, 5, 5]
     /// ```

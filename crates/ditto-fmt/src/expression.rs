@@ -5,12 +5,16 @@ use super::{
     r#type::gen_type,
     syntax::{gen_brackets_list, gen_parens, gen_parens_list},
     token::{
-        gen_colon, gen_false_keyword, gen_right_arrow, gen_string_token, gen_true_keyword,
-        gen_unit_keyword,
+        gen_colon, gen_else_keyword, gen_false_keyword, gen_if_keyword, gen_right_arrow,
+        gen_string_token, gen_then_keyword, gen_true_keyword, gen_unit_keyword,
     },
 };
 use ditto_cst::{Expression, StringToken, TypeAnnotation};
-use dprint_core::formatting::{ir_helpers, PrintItems};
+use dprint_core::formatting::{
+    condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext, Info,
+    PrintItems, Signal,
+};
+use std::rc::Rc;
 
 pub fn gen_expression(expr: Expression) -> PrintItems {
     match expr {
@@ -32,6 +36,90 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
         Expression::Array(brackets) => gen_brackets_list(brackets, |box expr| {
             ir_helpers::new_line_group(gen_expression(expr))
         }),
+        Expression::If {
+            if_keyword,
+            box condition,
+            then_keyword,
+            box true_clause,
+            else_keyword,
+            box false_clause,
+        } => {
+            // NOTE that we insert this start info _after_ the `if` keyword
+            // because we don't want to force multi-line layout for
+            //
+            // ```ditto
+            // -- comment
+            // if true then yes else no
+            // ```
+            let start_info = Info::new("start");
+
+            let end_info = Info::new("end");
+
+            let force_use_new_lines = if_keyword.0.has_trailing_comment();
+            let is_multiple_lines: ConditionResolver =
+                Rc::new(move |ctx: &mut ConditionResolverContext| -> Option<bool> {
+                    if force_use_new_lines {
+                        return Some(true);
+                    }
+                    condition_helpers::is_multiple_lines(ctx, &start_info, &end_info)
+                });
+
+            let mut items: PrintItems = conditions::if_true_or(
+                "multiLineConditionalIfMultipleLines",
+                is_multiple_lines,
+                {
+                    // Multiline
+                    //
+                    // ```ditto
+                    // if true then
+                    //     yes
+                    // else
+                    //     no
+                    // ```
+                    let mut items = PrintItems::new();
+                    items.extend(gen_if_keyword(if_keyword.clone()));
+                    items.push_info(start_info);
+                    items.extend(space());
+                    items.extend(gen_expression(condition.clone()));
+                    items.extend(space());
+                    items.extend(gen_then_keyword(then_keyword.clone()));
+                    items.push_signal(Signal::NewLine);
+                    items.extend(ir_helpers::with_indent(gen_expression(true_clause.clone())));
+                    items.push_signal(Signal::ExpectNewLine);
+                    items.extend(gen_else_keyword(else_keyword.clone()));
+                    items.push_signal(Signal::NewLine);
+                    items.extend(ir_helpers::with_indent(gen_expression(
+                        false_clause.clone(),
+                    )));
+                    items
+                },
+                {
+                    // Inline
+                    //
+                    // ```ditto
+                    // if true then 5 else 5
+                    // ```
+                    let mut items = PrintItems::new();
+                    items.extend(gen_if_keyword(if_keyword));
+                    items.push_info(start_info);
+                    items.push_signal(Signal::SpaceOrNewLine);
+                    items.extend(gen_expression(condition));
+                    items.push_signal(Signal::SpaceOrNewLine);
+                    items.extend(gen_then_keyword(then_keyword));
+                    items.push_signal(Signal::SpaceOrNewLine);
+                    items.extend(gen_expression(true_clause));
+                    items.push_signal(Signal::SpaceOrNewLine);
+                    items.extend(gen_else_keyword(else_keyword));
+                    items.push_signal(Signal::SpaceOrNewLine);
+                    items.extend(gen_expression(false_clause));
+                    items
+                },
+            )
+            .into();
+
+            items.push_info(end_info);
+            items
+        }
         Expression::Function {
             box parameters,
             box return_type_annotation,
@@ -201,5 +289,19 @@ mod tests {
         );
         assert_fmt!("() -> [\n\t-- comment\n]");
         assert_fmt!("() ->\n\t-- comment\n\t[5]");
+    }
+
+    #[test]
+    fn it_formats_conditionals() {
+        assert_fmt!("if true then 5 else 5");
+        assert_fmt!("-- comment\nif true then 5 else 5");
+        assert_fmt!("if  -- comment\n true then\n\t5\nelse\n\t5");
+        assert_fmt!("if true then\n\t--comment\n\t5\nelse\n\t5");
+        assert_fmt!("if  -- comment\n true then\n\t5\nelse\n\t5");
+        assert_fmt!(
+            "if true then loooooooooooooooooong else 5",
+            "if true then\n\tloooooooooooooooooong\nelse\n\t5",
+            20
+        );
     }
 }

@@ -21,7 +21,7 @@ pub enum Expression {
         /// The body of the function.
         body: Box<Self>,
     },
-    /// A function invocation
+    /// A function invocation.
     ///
     /// ```ditto
     /// function(argument0, argument1)
@@ -38,6 +38,25 @@ pub enum Expression {
 
         /// Arguments to pass to the function expression.
         arguments: Vec<Argument>,
+    },
+    /// A conditional expression.
+    ///
+    /// ```ditto
+    /// if true then "yes" else "no!"
+    /// ```
+    If {
+        /// The source span for this expression.
+        span: Span,
+
+        /// The output type of this conditional.
+        output_type: Type,
+
+        /// The condition.
+        condition: Box<Self>,
+        /// The expression to evaluate if the condition holds true.
+        true_clause: Box<Self>,
+        /// The expression to evaluate otherwise.
+        false_clause: Box<Self>,
     },
     /// A value constructor local to the current module, e.g. `Just` and `Ok`.
     LocalConstructor {
@@ -173,6 +192,7 @@ impl Expression {
                     return_type: Box::new(body.get_type()),
                 }
             }
+            Self::If { output_type, .. } => output_type.clone(),
             Self::LocalConstructor {
                 constructor_type, ..
             } => constructor_type.clone(),
@@ -199,6 +219,7 @@ impl Expression {
         match self {
             Self::Function { span, .. } => *span,
             Self::Call { span, .. } => *span,
+            Self::If { span, .. } => *span,
             Self::LocalConstructor { span, .. } => *span,
             Self::ImportedConstructor { span, .. } => *span,
             Self::LocalVariable { span, .. } => *span,

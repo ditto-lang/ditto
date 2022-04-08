@@ -158,6 +158,27 @@ impl Render for Expression {
                 });
                 accum.push(')');
             }
+            Self::Conditional {
+                condition,
+                true_clause,
+                false_clause,
+            } => {
+                let condition_needs_parens = matches!(
+                    **condition,
+                    Self::ArrowFunction { .. } | Self::Conditional { .. }
+                );
+                if condition_needs_parens {
+                    accum.push('(');
+                }
+                condition.render(accum);
+                if condition_needs_parens {
+                    accum.push(')');
+                }
+                accum.push('?');
+                true_clause.render(accum);
+                accum.push(':');
+                false_clause.render(accum);
+            }
             Self::Array(expressions) => {
                 accum.push('[');
                 expressions.iter().for_each(|expr| {
@@ -233,7 +254,15 @@ mod tests {
             },
             "() => \"test\""
         );
-
+        assert_render!(
+            Expression::ArrowFunction {
+                parameters: vec![ident!("a")],
+                body: Box::new(ArrowFunctionBody::_Block(Block(vec![
+                    BlockStatement::Return(Some(Expression::String("hello".to_string())))
+                ]))),
+            },
+            "(a) => {return \"hello\";}"
+        );
         assert_render!(
             Expression::ArrowFunction {
                 parameters: vec![ident!("a"), ident!("b"), ident!("c")],
@@ -263,6 +292,47 @@ mod tests {
                 arguments: vec![]
             },
             "(() => true)()"
+        );
+
+        assert_render!(
+            Expression::Conditional {
+                condition: Box::new(Expression::True),
+                true_clause: Box::new(Expression::Number("0".to_string())),
+                false_clause: Box::new(Expression::Number("1".to_string())),
+            },
+            "true?0:1"
+        );
+        assert_render!(
+            Expression::Conditional {
+                condition: Box::new(Expression::Conditional {
+                    condition: Box::new(Expression::True),
+                    true_clause: Box::new(Expression::True),
+                    false_clause: Box::new(Expression::False),
+                }),
+                true_clause: Box::new(Expression::Number("0".to_string())),
+                false_clause: Box::new(Expression::Number("1".to_string())),
+            },
+            "(true?true:false)?0:1"
+        );
+        assert_render!(
+            Expression::Conditional {
+                condition: Box::new(Expression::Conditional {
+                    condition: Box::new(Expression::True),
+                    true_clause: Box::new(Expression::True),
+                    false_clause: Box::new(Expression::False),
+                }),
+                true_clause: Box::new(Expression::Conditional {
+                    condition: Box::new(Expression::False),
+                    true_clause: Box::new(Expression::Number("0".to_string())),
+                    false_clause: Box::new(Expression::Number("1".to_string())),
+                }),
+                false_clause: Box::new(Expression::Conditional {
+                    condition: Box::new(Expression::False),
+                    true_clause: Box::new(Expression::Number("2".to_string())),
+                    false_clause: Box::new(Expression::Number("3".to_string())),
+                }),
+            },
+            "(true?true:false)?false?0:1:false?2:3"
         );
     }
 

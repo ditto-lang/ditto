@@ -80,7 +80,11 @@ impl Expression {
             Self::Function {
                 parameters, body, ..
             } => parameters.open_paren.0.get_span().merge(&body.get_span()),
-
+            Self::If {
+                if_keyword,
+                false_clause,
+                ..
+            } => if_keyword.0.get_span().merge(&false_clause.get_span()),
             Self::String(string_token) => string_token.get_span(),
             Self::Int(int_token) => int_token.get_span(),
             Self::Float(float_token) => float_token.get_span(),

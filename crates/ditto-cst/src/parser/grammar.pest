@@ -140,6 +140,7 @@ expression1 = _
   | expression_true
   | expression_false
   | expression_unit
+  | expression_if
   // It's important that keyword expressions come before variable
   | expression_variable 
   | expression_array
@@ -163,6 +164,8 @@ expression_function = { expression_function_parameters ~ return_type_annotation?
 expression_function_parameters = { open_paren ~ (expression_function_parameter ~ (comma ~ expression_function_parameter)* ~ comma?)?  ~ close_paren }
 
 expression_function_parameter = { name ~ type_annotation? }
+
+expression_if = { if_keyword ~ expression ~ then_keyword ~ expression ~ else_keyword ~ expression }
 
 expression_variable = { qualified_name }
 
@@ -209,6 +212,12 @@ true_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ TRUE_KEYWORD ~ HORIZONTAL_WHITE
 false_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ FALSE_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
 unit_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ UNIT_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
+if_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ IF_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
+then_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ THEN_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
+else_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ ELSE_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
 module_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ MODULE_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
@@ -266,6 +275,12 @@ TRUE_KEYWORD = { "true" }
 FALSE_KEYWORD = { "false" }
 
 UNIT_KEYWORD = { "unit" }
+
+IF_KEYWORD = { "if" }
+
+THEN_KEYWORD = { "then" }
+
+ELSE_KEYWORD = { "else" }
 
 MODULE_KEYWORD = { "module" }
 

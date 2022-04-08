@@ -29,6 +29,9 @@ macro_rules! gen_empty_token_like {
 gen_empty_token_like!(gen_true_keyword, cst::TrueKeyword, "true");
 gen_empty_token_like!(gen_false_keyword, cst::FalseKeyword, "false");
 gen_empty_token_like!(gen_unit_keyword, cst::UnitKeyword, "unit");
+gen_empty_token_like!(gen_if_keyword, cst::IfKeyword, "if");
+gen_empty_token_like!(gen_then_keyword, cst::ThenKeyword, "then");
+gen_empty_token_like!(gen_else_keyword, cst::ElseKeyword, "else");
 gen_empty_token_like!(gen_exports_keyword, cst::ExportsKeyword, "exports");
 gen_empty_token_like!(gen_as_keyword, cst::AsKeyword, "as");
 gen_empty_token_like!(gen_type_keyword, cst::TypeKeyword, "type");

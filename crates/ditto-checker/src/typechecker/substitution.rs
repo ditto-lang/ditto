@@ -113,6 +113,19 @@ impl Substitution {
                     .collect(),
                 body: Box::new(self.apply_expression(body)),
             },
+            If {
+                span,
+                output_type,
+                box condition,
+                box true_clause,
+                box false_clause,
+            } => If {
+                span,
+                output_type: self.apply(output_type),
+                condition: Box::new(self.apply_expression(condition)),
+                true_clause: Box::new(self.apply_expression(true_clause)),
+                false_clause: Box::new(self.apply_expression(false_clause)),
+            },
             LocalConstructor {
                 constructor_type,
                 span,

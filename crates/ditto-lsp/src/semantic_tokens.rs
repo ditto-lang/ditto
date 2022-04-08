@@ -102,6 +102,9 @@ impl TokensBuilder {
 
             ; 1
             [
+              "if"
+              "then"
+              "else"
               "module"
               "exports"
               "import"
