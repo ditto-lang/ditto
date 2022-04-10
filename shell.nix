@@ -6,6 +6,7 @@ let
     sha256 = "1mbm0nxkysxi9p4d4v2h6p32rni3wl10qm9hlqa2dy25yzamvjm9";
   };
   pkgs = import nixpkgs { };
+  lib = pkgs.lib;
 
   fenixRev = "9e3384c61656487b10226a3366a12c37393b21d9";
   fenixPackages = import (builtins.fetchTarball {
@@ -35,11 +36,10 @@ in pkgs.mkShell {
     pkgs.cargo-tarpaulin
     nodejs
     pkgs.ninja
-  ] ++ (if pkgs.stdenv.isDarwin then [
+  ] ++ (lib.optionals pkgs.stdenv.isDarwin [
     # Fixes for MacOS Catalina
     # https://github.com/NixOS/nixpkgs/issues/120688
     pkgs.libiconv
     pkgs.darwin.apple_sdk.frameworks.CoreServices
-  ] else
-    [ ]);
+  ]);
 }
