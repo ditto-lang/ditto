@@ -36,6 +36,8 @@ in pkgs.mkShell {
     pkgs.cargo-tarpaulin
     nodejs
     pkgs.ninja
+    pkgs.openssl
+    pkgs.pkg-config
   ] ++ (lib.optionals pkgs.stdenv.isDarwin [
     # Fixes for MacOS Catalina
     # https://github.com/NixOS/nixpkgs/issues/120688
