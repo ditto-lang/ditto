@@ -1,6 +1,6 @@
 use crate::ast::{
     ArrowFunctionBody, Block, BlockStatement, Expression, Ident, ImportStatement, Module,
-    ModuleStatement,
+    ModuleStatement, Operator,
 };
 
 pub fn render_module(module: Module) -> String {
@@ -113,7 +113,16 @@ impl Render for BlockStatement {
                 expression.render(accum);
                 accum.push(';');
             }
-            Self::_ConstAssignment { ident, value } => {
+            Self::_Expression(expression) => {
+                expression.render(accum);
+                accum.push(';');
+            }
+            Self::Throw(message) => {
+                accum.push_str("throw new Error(\"");
+                accum.push_str(message);
+                accum.push_str("\");");
+            }
+            Self::ConstAssignment { ident, value } => {
                 accum.push_str(&format!("const {ident} = ", ident = ident.0));
                 value.render(accum);
                 accum.push(';');
@@ -204,6 +213,33 @@ impl Render for Expression {
             Self::Undefined => {
                 accum.push_str("undefined");
             }
+            Self::Block(block) => {
+                // IIFE
+                accum.push('(');
+                let arrow_function = Self::ArrowFunction {
+                    parameters: Vec::new(),
+                    body: Box::new(ArrowFunctionBody::Block(block.clone())),
+                };
+                arrow_function.render(accum);
+                accum.push_str(")()");
+            }
+            Self::Operator { op, lhs, rhs } => {
+                // Always use parens rather than worry about precedence
+                accum.push('(');
+                lhs.render(accum);
+                accum.push_str(match op {
+                    Operator::And => " && ",
+                    Operator::Equals => " === ",
+                });
+                rhs.render(accum);
+                accum.push(')');
+            }
+            Self::IndexAccess { target, index } => {
+                target.render(accum);
+                accum.push('[');
+                index.render(accum);
+                accum.push(']');
+            }
         }
     }
 }
@@ -211,7 +247,7 @@ impl Render for Expression {
 impl Render for ArrowFunctionBody {
     fn render(&self, accum: &mut String) {
         match self {
-            Self::_Block(block) => block.render(accum),
+            Self::Block(block) => block.render(accum),
             Self::Expression(expression) => expression.render(accum),
         }
     }
@@ -257,7 +293,7 @@ mod tests {
         assert_render!(
             Expression::ArrowFunction {
                 parameters: vec![ident!("a")],
-                body: Box::new(ArrowFunctionBody::_Block(Block(vec![
+                body: Box::new(ArrowFunctionBody::Block(Block(vec![
                     BlockStatement::Return(Some(Expression::String("hello".to_string())))
                 ]))),
             },
@@ -334,6 +370,29 @@ mod tests {
             },
             "(true?true:false)?false?0:1:false?2:3"
         );
+        assert_render!(
+            Expression::Operator {
+                op: Operator::Equals,
+                lhs: Box::new(Expression::Operator {
+                    op: Operator::And,
+                    lhs: Box::new(Expression::False),
+                    rhs: Box::new(Expression::True),
+                }),
+                rhs: Box::new(Expression::True),
+            },
+            "((false && true) === true)"
+        );
+
+        assert_render!(
+            Expression::IndexAccess {
+                target: Box::new(Expression::IndexAccess {
+                    target: Box::new(Expression::Variable(ident!("foo"))),
+                    index: Box::new(Expression::String(String::from("bar")))
+                }),
+                index: Box::new(Expression::String(String::from("baz")))
+            },
+            r#"foo["bar"]["baz"]"#
+        );
     }
 
     #[test]
@@ -343,6 +402,10 @@ mod tests {
             "return true;"
         );
         assert_render!(BlockStatement::Return(None), "return;");
+        assert_render!(
+            BlockStatement::Throw(String::from("aaaahhh")),
+            "throw new Error(\"aaaahhh\");"
+        )
     }
 
     #[test]

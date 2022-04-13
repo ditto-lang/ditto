@@ -46,16 +46,26 @@ pub enum ModuleStatement {
 }
 
 /// A bunch of statements surrounded by braces.
+#[derive(Clone)]
 pub struct Block(pub Vec<BlockStatement>);
 
 /// A single JavaScript statement.
 ///
 /// These end with a semicolon.
+#[derive(Clone)]
 pub enum BlockStatement {
     /// ```javascript
     /// const ident = expression;
     /// ```
-    _ConstAssignment { ident: Ident, value: Expression },
+    ConstAssignment { ident: Ident, value: Expression },
+    /// ```javascript
+    /// console.log("hi");
+    /// ```
+    _Expression(Expression),
+    /// ```javascript
+    /// throw new Error("message")
+    /// ```
+    Throw(String),
     /// ```javascript
     /// return bar;
     /// return;
@@ -63,6 +73,7 @@ pub enum BlockStatement {
     Return(Option<Expression>),
 }
 
+#[derive(Clone)]
 pub enum Expression {
     /// `true`
     True,
@@ -86,22 +97,22 @@ pub enum Expression {
     /// function(argument, argument, argument)
     /// ```
     Call {
-        function: Box<Expression>,
-        arguments: Vec<Expression>,
+        function: Box<Self>,
+        arguments: Vec<Self>,
     },
     /// ```javascript
     /// condition ? true_clause : false_clause
     /// ```
     Conditional {
-        condition: Box<Expression>,
-        true_clause: Box<Expression>,
-        false_clause: Box<Expression>,
+        condition: Box<Self>,
+        true_clause: Box<Self>,
+        false_clause: Box<Self>,
     },
     /// ```javascript
     /// []
     /// [5, 5, 5]
     /// ```
-    Array(Vec<Expression>),
+    Array(Vec<Self>),
     /// ```javascript
     /// 5
     /// 5.0
@@ -115,9 +126,36 @@ pub enum Expression {
     /// undefined
     /// ```
     Undefined,
+    /// IIFE
+    ///
+    /// ```javascript
+    /// (() => { block })()
+    /// ```
+    Block(Block),
+    /// ```javascript
+    /// 1 + 2
+    /// x && y
+    /// ```
+    Operator {
+        op: Operator,
+        lhs: Box<Self>,
+        rhs: Box<Self>,
+    },
+    IndexAccess {
+        target: Box<Self>,
+        index: Box<Self>,
+    },
+}
+
+/// A binary operator.
+#[derive(Clone)]
+pub enum Operator {
+    And,
+    Equals,
 }
 
 /// The _body_ of an arrow function.
+#[derive(Clone)]
 pub enum ArrowFunctionBody {
     /// ```javascript
     /// () => expression;
@@ -126,5 +164,5 @@ pub enum ArrowFunctionBody {
     /// ```javascript
     /// () => { block }
     /// ```
-    _Block(Block),
+    Block(Block),
 }

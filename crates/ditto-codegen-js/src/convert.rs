@@ -1,6 +1,6 @@
 use crate::ast::{
     ArrowFunctionBody, Block, BlockStatement, Expression, Ident, ImportStatement, Module,
-    ModuleStatement,
+    ModuleStatement, Operator,
 };
 use convert_case::{Case, Casing};
 use ditto_ast::graph::Scc;
@@ -300,6 +300,112 @@ fn convert_expression(
         ditto_ast::Expression::True { .. } => Expression::True,
         ditto_ast::Expression::False { .. } => Expression::False,
         ditto_ast::Expression::Unit { .. } => Expression::Undefined, // REVIEW could use `null` or `null` here?
+        ditto_ast::Expression::Match {
+            span: _,
+            box expression,
+            arms,
+            ..
+        } => {
+            let expression = convert_expression(imported_idents, expression);
+            let err = Expression::Block(Block(vec![BlockStatement::Throw(String::from(
+                // TODO: mention the file location here?
+                "Pattern match error",
+            ))]));
+            arms.into_iter()
+                .fold(err, |false_clause, (pattern, arm_expression)| {
+                    let (condition, assignments) = convert_pattern(expression.clone(), pattern);
+
+                    let expression = if assignments.is_empty() {
+                        convert_expression(imported_idents, arm_expression)
+                    } else {
+                        let mut block_statements = assignments
+                            .into_iter()
+                            .map(|(ident, value)| BlockStatement::ConstAssignment { ident, value })
+                            .collect::<Vec<_>>();
+                        let arm_expression = convert_expression(imported_idents, arm_expression);
+                        block_statements.push(BlockStatement::Return(Some(arm_expression)));
+                        Expression::Block(Block(block_statements))
+                    };
+
+                    if let Some(condition) = condition {
+                        Expression::Conditional {
+                            condition: Box::new(condition),
+                            true_clause: Box::new(expression),
+                            false_clause: Box::new(false_clause),
+                        }
+                    } else {
+                        expression
+                    }
+                })
+        }
+    }
+}
+
+type Assignment = (Ident, Expression);
+type Assignments = Vec<Assignment>;
+
+fn convert_pattern(
+    expression: Expression,
+    pattern: ditto_ast::Pattern,
+) -> (Option<Expression>, Assignments) {
+    let mut conditions = Vec::new();
+    let mut assignments = Vec::new();
+    convert_pattern_rec(expression, pattern, &mut conditions, &mut assignments);
+    if let Some((condition, conditions)) = conditions.split_first() {
+        let condition =
+            conditions
+                .iter()
+                .fold(condition.clone(), |rhs, lhs| Expression::Operator {
+                    op: Operator::And,
+                    lhs: Box::new(lhs.clone()),
+                    rhs: Box::new(rhs),
+                });
+        (Some(condition), assignments)
+    } else {
+        (None, assignments)
+    }
+}
+
+fn convert_pattern_rec(
+    expression: Expression,
+    pattern: ditto_ast::Pattern,
+    conditions: &mut Vec<Expression>,
+    assignments: &mut Vec<Assignment>,
+) {
+    match pattern {
+        ditto_ast::Pattern::Variable { name, .. } => {
+            let assignment = (name.into(), expression);
+            assignments.push(assignment)
+        }
+        ditto_ast::Pattern::LocalConstructor {
+            constructor,
+            arguments,
+            ..
+        } => {
+            let condition = Expression::Operator {
+                op: Operator::Equals,
+                lhs: Box::new(Expression::IndexAccess {
+                    target: Box::new(expression.clone()),
+                    index: Box::new(Expression::Number(String::from("0"))),
+                }),
+                rhs: Box::new(Expression::String(constructor.0)),
+            };
+            conditions.push(condition);
+            for (i, pattern) in arguments.into_iter().enumerate() {
+                let expression = Expression::IndexAccess {
+                    target: Box::new(expression.clone()),
+                    index: Box::new(Expression::Number((i + 1).to_string())),
+                };
+                convert_pattern_rec(expression, pattern, conditions, assignments);
+            }
+        }
+        ditto_ast::Pattern::ImportedConstructor {
+            constructor: _,
+            arguments: _,
+            ..
+        } => {
+            todo!();
+        }
     }
 }
 
