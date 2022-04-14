@@ -12,6 +12,7 @@ on:
 jobs:
   check:
     name: Check 🕵️
+    needs: [not-draft]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -29,7 +30,7 @@ jobs:
 
   test:
     name: Run tests 🧪
-    needs: check
+    needs: [not-draft, check]
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -123,6 +124,7 @@ jobs:
 
   clippy:
     name: Run clippy 📎
+    needs: [not-draft]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -139,3 +141,11 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --all-features
+
+  not-draft:
+    name: Check if CI should run 🧑‍✈️
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR not ready 🙅
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == true
+        run: exit 1
