@@ -142,12 +142,7 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
 
             let right_arrow_has_trailing_comment = right_arrow.0.has_trailing_comment();
             items.extend(gen_right_arrow(right_arrow));
-
-            let body_has_leading_comments = body.has_leading_comments();
-            items.extend(group(
-                gen_expression(body),
-                right_arrow_has_trailing_comment || body_has_leading_comments,
-            ));
+            items.extend(gen_body_expression(body, right_arrow_has_trailing_comment));
             items
         }
         Expression::Call {
@@ -162,6 +157,50 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
             items
         }
     }
+}
+
+/// Generated a "body" expression, i.e. an expression on the right-hand-side
+/// of an `=` or `->`.
+pub fn gen_body_expression(expr: Expression, force_use_new_lines: bool) -> PrintItems {
+    let mut items = PrintItems::new();
+
+    let start_info = Info::new("start");
+    let end_info = Info::new("end");
+
+    let has_leading_comments = expr.has_leading_comments();
+    let deserves_new_line_if_multi_lines = matches!(expr, Expression::If { .. });
+
+    let expression_should_be_on_new_line: ConditionResolver =
+        Rc::new(move |ctx: &mut ConditionResolverContext| -> Option<bool> {
+            if force_use_new_lines || has_leading_comments {
+                return Some(true);
+            }
+            if deserves_new_line_if_multi_lines {
+                return condition_helpers::is_multiple_lines(ctx, &start_info, &end_info);
+            }
+            // return Some(false);
+            None // NOTE I'm not sure what the implications are of None vs Some(false) ?
+        });
+
+    items.push_condition(conditions::if_true_or(
+        "bodyExpressionOnNewLine",
+        expression_should_be_on_new_line,
+        {
+            let mut items = PrintItems::new();
+            items.push_info(start_info);
+            items.extend(group(gen_expression(expr.clone()), true));
+            items.push_info(end_info);
+            items
+        },
+        {
+            let mut items = PrintItems::new();
+            items.push_info(start_info);
+            items.extend(group(gen_expression(expr), false));
+            items.push_info(end_info);
+            items
+        },
+    ));
+    items
 }
 
 pub fn gen_type_annotation(type_annotation: TypeAnnotation) -> PrintItems {
@@ -289,6 +328,13 @@ mod tests {
         );
         assert_fmt!("() -> [\n\t-- comment\n]");
         assert_fmt!("() ->\n\t-- comment\n\t[5]");
+
+        assert_fmt!("() -> if true then yeh else nah");
+        assert_fmt!(
+            "() -> if loooooooooong then x else y",
+            "() ->\n\tif loooooooooong then\n\t\tx\n\telse\n\t\ty",
+            20
+        );
     }
 
     #[test]
