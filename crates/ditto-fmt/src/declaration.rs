@@ -1,21 +1,15 @@
 use super::{
-    expression::{gen_expression, gen_type_annotation},
-    has_comments::HasComments,
-    helpers::{group, space},
+    expression::{gen_body_expression, gen_type_annotation},
+    helpers::space,
     name::{gen_name, gen_proper_name},
     r#type::gen_type,
     syntax::gen_parens_list1,
     token::{gen_equals, gen_foreign_keyword, gen_pipe, gen_semicolon, gen_type_keyword},
 };
 use ditto_cst::{
-    Constructor, Declaration, Expression, ForeignValueDeclaration, Pipe, TypeDeclaration,
-    ValueDeclaration,
+    Constructor, Declaration, ForeignValueDeclaration, Pipe, TypeDeclaration, ValueDeclaration,
 };
-use dprint_core::formatting::{
-    condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext, Info,
-    PrintItems, Signal,
-};
-use std::rc::Rc;
+use dprint_core::formatting::{ir_helpers, PrintItems, Signal};
 
 pub fn gen_declaration(declaration: Declaration) -> PrintItems {
     match declaration {
@@ -36,47 +30,9 @@ fn gen_value_declaration(decl: ValueDeclaration) -> PrintItems {
     items.extend(space());
     let equals_has_trailing_comment = decl.equals.0.has_trailing_comment();
     items.extend(gen_equals(decl.equals));
-
-    let expression_start_info = Info::new("start");
-    let expression_end_info = Info::new("end");
-
-    let expression_has_leading_comments = decl.expression.has_leading_comments();
-    let expression_deserves_new_line_if_multi_lines =
-        matches!(decl.expression, Expression::If { .. });
-
-    let expression_should_be_on_new_line: ConditionResolver =
-        Rc::new(move |ctx: &mut ConditionResolverContext| -> Option<bool> {
-            if equals_has_trailing_comment || expression_has_leading_comments {
-                return Some(true);
-            }
-            if expression_deserves_new_line_if_multi_lines {
-                return condition_helpers::is_multiple_lines(
-                    ctx,
-                    &expression_start_info,
-                    &expression_end_info,
-                );
-            }
-            // return Some(false);
-            None // NOTE I'm not sure what the implications are of None vs Some(false) ?
-        });
-
-    items.push_condition(conditions::if_true_or(
-        "valueDeclarationExpressionOnNewLine",
-        expression_should_be_on_new_line,
-        {
-            let mut items = PrintItems::new();
-            items.push_info(expression_start_info);
-            items.extend(group(gen_expression(decl.expression.clone()), true));
-            items.push_info(expression_end_info);
-            items
-        },
-        {
-            let mut items = PrintItems::new();
-            items.push_info(expression_start_info);
-            items.extend(group(gen_expression(decl.expression.clone()), false));
-            items.push_info(expression_end_info);
-            items
-        },
+    items.extend(gen_body_expression(
+        decl.expression,
+        equals_has_trailing_comment,
     ));
 
     items.extend(gen_semicolon(decl.semicolon));
