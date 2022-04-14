@@ -144,7 +144,8 @@ jobs:
           args: --all-features
 
   not-draft:
-    name: draft PR?
+    # https://knowyourmeme.com/memes/you-shall-not-pass
+    name: Shall pass? 🧙
     runs-on: ubuntu-latest
     steps:
       - name: PR not ready 🙅
