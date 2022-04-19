@@ -172,9 +172,7 @@ pub async fn run_once(_matches: &ArgMatches, ditto_version: &Version) -> Result<
     let now = Instant::now(); // for timing
 
     // Do the work
-    let status = make(&config_path, &config, ditto_version)
-        .await
-        .wrap_err("error running make")?;
+    let status = make(&config_path, &config, ditto_version).await?;
 
     lock.unlock()
         .into_diagnostic()
@@ -187,7 +185,17 @@ pub async fn run_once(_matches: &ArgMatches, ditto_version: &Version) -> Result<
 
 async fn make(config_path: &Path, config: &Config, ditto_version: &Version) -> Result<ExitStatus> {
     let (build_ninja, get_warnings) = generate_build_ninja(config_path, config, ditto_version)
-        .wrap_err("error generating build.ninja")?;
+        .map_err(|err| {
+            // This is a bit brittle, but we want parse errors encountered during
+            // build planning to be indistinguishable from parse errors encountered
+            // during the actual build
+            if err.root_cause().to_string() == "syntax error" {
+                //                                  ^^ BEWARE relying on this string is brittle!
+                err
+            } else {
+                err.wrap_err("error generating build.ninja")
+            }
+        })?;
 
     trace!("build.ninja generated");
 
@@ -349,25 +357,14 @@ fn generate_build_ninja(
     let package_sources =
         get_package_sources(config).wrap_err("error finding ditto files in packages")?;
 
-    let result = make::generate_build_ninja(
+    make::generate_build_ninja(
         build_dir,
         ditto_bin,
         &ditto_version.semversion,
         COMPILE_SUBCOMMAND,
         sources,
         package_sources,
-    );
-    if let Err(ref report) = result {
-        // This is a bit brittle, but we want parse errors encountered during
-        // build planning to be indistinguishable from parse errors encountered
-        // during the actual build
-        if report.root_cause().to_string() == "syntax error" {
-            //                                  ^^ BEWARE relying on this string is brittle,
-            eprintln!("{:?}", report);
-            std::process::exit(1);
-        }
-    }
-    result
+    )
 }
 
 fn get_package_sources(config: &Config) -> Result<PackageSources> {
