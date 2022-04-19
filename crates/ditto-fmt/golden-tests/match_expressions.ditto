@@ -1,0 +1,49 @@
+module If.Then.Else exports (..);
+
+
+octopus =
+    match arm with
+    | Arm1 -> "octopus"
+    | Arm2 ->  -- comment
+        "octopus"
+    | Arm3 ->
+        -- comment
+        "octopus"
+    | Arm4 -> "octopus"  -- comment
+    |  -- pls don't do this
+     Arm5 -> "octopus"
+    | Arm6  -- or this
+     -> "octopus"
+    --
+    --
+    --
+    | Arm.Arm7 -> if true then "octopus" else "octopus"
+    | Arm.Arm8 ->
+        if true then
+            -- still octopus
+            "octopus"
+        else
+            "octopus";
+
+-- it's a classic
+map_maybe = (fn, maybe) ->
+    -- it really is
+    match maybe with
+    | Just(a) -> fn(a)
+    | Nothing -> Nothing;
+
+all_the_args = () ->
+    match not_sure with
+    | Foo(a, b, c, d) -> unit
+    | Bar(Foo(a, b), b, Baz.Barrr, d) -> unit
+    | Foo(
+        -- comment
+        a,
+        B.B,
+        -- comment
+        C.C(a, b, c),
+        D.D(
+            -- comment
+            d,
+        ),
+    ) -> unit;

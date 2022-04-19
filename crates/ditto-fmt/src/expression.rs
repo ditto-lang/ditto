@@ -3,13 +3,14 @@ use super::{
     helpers::{group, space},
     name::{gen_name, gen_qualified_name, gen_qualified_proper_name},
     r#type::gen_type,
-    syntax::{gen_brackets_list, gen_parens, gen_parens_list},
+    syntax::{gen_brackets_list, gen_parens, gen_parens_list, gen_parens_list1},
     token::{
-        gen_colon, gen_else_keyword, gen_false_keyword, gen_if_keyword, gen_right_arrow,
-        gen_string_token, gen_then_keyword, gen_true_keyword, gen_unit_keyword,
+        gen_colon, gen_else_keyword, gen_false_keyword, gen_if_keyword, gen_match_keyword,
+        gen_pipe, gen_right_arrow, gen_string_token, gen_then_keyword, gen_true_keyword,
+        gen_unit_keyword, gen_with_keyword,
     },
 };
-use ditto_cst::{Expression, StringToken, TypeAnnotation};
+use ditto_cst::{Expression, MatchArm, Pattern, StringToken, TypeAnnotation};
 use dprint_core::formatting::{
     condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext, Info,
     PrintItems, Signal,
@@ -156,6 +157,66 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
             }));
             items
         }
+        Expression::Match {
+            match_keyword,
+            box expression,
+            with_keyword,
+            head_arm,
+            tail_arms,
+        } => {
+            let mut items = PrintItems::new();
+            // REVIEW: do we want to support an inline format for single-arm matches?
+            //
+            // e.g. `match x with | foo -> bar`
+            //
+            // If so, we should probably make that leading `|` optional in the parser
+            // like we do for type declarations.
+            items.extend(gen_match_keyword(match_keyword));
+            items.extend(space());
+            items.extend(gen_expression(expression));
+            items.extend(space());
+            items.extend(gen_with_keyword(with_keyword));
+            items.extend(gen_match_arm(head_arm));
+            for match_arm in tail_arms {
+                items.extend(gen_match_arm(match_arm));
+            }
+            items
+        }
+    }
+}
+
+fn gen_match_arm(match_arm: MatchArm) -> PrintItems {
+    let mut items = PrintItems::new();
+    items.push_signal(Signal::ExpectNewLine);
+    items.extend(gen_pipe(match_arm.pipe));
+    items.extend(space());
+    items.extend(gen_pattern(match_arm.pattern));
+    items.extend(space());
+    let right_arrow_has_trailing_comment = match_arm.right_arrow.0.has_trailing_comment();
+    items.extend(gen_right_arrow(match_arm.right_arrow));
+    items.extend(gen_body_expression(
+        *match_arm.expression,
+        right_arrow_has_trailing_comment,
+    ));
+    items
+}
+
+fn gen_pattern(pattern: Pattern) -> PrintItems {
+    match pattern {
+        Pattern::Variable { name } => gen_name(name),
+        Pattern::NullaryConstructor { constructor } => gen_qualified_proper_name(constructor),
+        Pattern::Constructor {
+            constructor,
+            arguments,
+        } => {
+            let mut items = gen_qualified_proper_name(constructor);
+            items.extend(gen_parens_list1(
+                arguments,
+                |box pattern| gen_pattern(pattern),
+                false,
+            ));
+            items
+        }
     }
 }
 
@@ -168,7 +229,8 @@ pub fn gen_body_expression(expr: Expression, force_use_new_lines: bool) -> Print
     let end_info = Info::new("end");
 
     let has_leading_comments = expr.has_leading_comments();
-    let deserves_new_line_if_multi_lines = matches!(expr, Expression::If { .. });
+    let deserves_new_line_if_multi_lines =
+        matches!(expr, Expression::If { .. } | Expression::Match { .. });
 
     let expression_should_be_on_new_line: ConditionResolver =
         Rc::new(move |ctx: &mut ConditionResolverContext| -> Option<bool> {
@@ -349,5 +411,16 @@ mod tests {
             "if true then\n\tloooooooooooooooooong\nelse\n\t5",
             20
         );
+    }
+
+    #[test]
+    fn it_formats_matches() {
+        assert_fmt!("match foo with\n| var -> 5");
+        assert_fmt!("-- comment\nmatch foo with\n| var -> 5");
+        assert_fmt!("match foo with\n-- comment\n| var -> 5");
+        assert_fmt!("match foo with\n| a -> 5\n| b -> 5\n| c -> 5");
+        assert_fmt!("match foo with\n| Foo.Bar ->  -- comment\n\t5");
+        assert_fmt!("match Foo with\n| Foo(a, b, c) -> a");
+        assert_fmt!("match Foo with\n| Foo(\n\t--comment\n\ta,\n\tb,\n\tc,\n) -> a");
     }
 }
