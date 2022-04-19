@@ -400,11 +400,26 @@ fn convert_pattern_rec(
             }
         }
         ditto_ast::Pattern::ImportedConstructor {
-            constructor: _,
-            arguments: _,
+            constructor,
+            arguments,
             ..
         } => {
-            todo!();
+            let condition = Expression::Operator {
+                op: Operator::Equals,
+                lhs: Box::new(Expression::IndexAccess {
+                    target: Box::new(expression.clone()),
+                    index: Box::new(Expression::Number(String::from("0"))),
+                }),
+                rhs: Box::new(Expression::String(constructor.value.0)),
+            };
+            conditions.push(condition);
+            for (i, pattern) in arguments.into_iter().enumerate() {
+                let expression = Expression::IndexAccess {
+                    target: Box::new(expression.clone()),
+                    index: Box::new(Expression::Number((i + 1).to_string())),
+                };
+                convert_pattern_rec(expression, pattern, conditions, assignments);
+            }
         }
     }
 }
