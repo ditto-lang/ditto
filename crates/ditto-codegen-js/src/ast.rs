@@ -126,12 +126,6 @@ pub enum Expression {
     /// undefined
     /// ```
     Undefined,
-    /// IIFE
-    ///
-    /// ```javascript
-    /// (() => { block })()
-    /// ```
-    Block(Block),
     /// ```javascript
     /// 1 + 2
     /// x && y
@@ -166,3 +160,21 @@ pub enum ArrowFunctionBody {
     /// ```
     Block(Block),
 }
+
+/// IIFE
+///
+/// ```javascript
+/// (() => { block })()
+/// ```
+macro_rules! iife {
+    ($block: expr) => {
+        $crate::ast::Expression::Call {
+            function: Box::new($crate::ast::Expression::ArrowFunction {
+                parameters: vec![],
+                body: Box::new($crate::ast::ArrowFunctionBody::Block($block)),
+            }),
+            arguments: vec![],
+        }
+    };
+}
+pub(crate) use iife;

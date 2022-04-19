@@ -1,5 +1,5 @@
 use crate::ast::{
-    ArrowFunctionBody, Block, BlockStatement, Expression, Ident, ImportStatement, Module,
+    iife, ArrowFunctionBody, Block, BlockStatement, Expression, Ident, ImportStatement, Module,
     ModuleStatement, Operator,
 };
 use convert_case::{Case, Casing};
@@ -307,7 +307,7 @@ fn convert_expression(
             ..
         } => {
             let expression = convert_expression(imported_idents, expression);
-            let err = Expression::Block(Block(vec![BlockStatement::Throw(String::from(
+            let err = iife!(Block(vec![BlockStatement::Throw(String::from(
                 // TODO: mention the file location here?
                 "Pattern match error",
             ))]));
@@ -324,7 +324,7 @@ fn convert_expression(
                             .collect::<Vec<_>>();
                         let arm_expression = convert_expression(imported_idents, arm_expression);
                         block_statements.push(BlockStatement::Return(Some(arm_expression)));
-                        Expression::Block(Block(block_statements))
+                        iife!(Block(block_statements))
                     };
 
                     if let Some(condition) = condition {

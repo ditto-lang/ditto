@@ -207,16 +207,6 @@ impl Render for Expression {
             Self::Undefined => {
                 accum.push_str("undefined");
             }
-            Self::Block(block) => {
-                // IIFE
-                accum.push('(');
-                let arrow_function = Self::ArrowFunction {
-                    parameters: Vec::new(),
-                    body: Box::new(ArrowFunctionBody::Block(block.clone())),
-                };
-                arrow_function.render(accum);
-                accum.push_str(")()");
-            }
             Self::Operator { op, lhs, rhs } => {
                 // Always use parens rather than worry about precedence
                 accum.push('(');
