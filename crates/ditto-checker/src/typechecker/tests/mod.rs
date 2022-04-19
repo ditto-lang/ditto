@@ -6,5 +6,6 @@ mod float;
 mod function;
 mod int;
 pub(self) mod macros;
+mod r#match;
 mod string;
 mod unit;

@@ -1,15 +1,15 @@
 use super::{common::type_variables, Scheme};
 use crate::supply::Supply;
 use ditto_ast::{
-    Expression, FullyQualifiedName, FullyQualifiedProperName, Name, ProperName, QualifiedName,
-    QualifiedProperName, Span, Type,
+    Expression, FullyQualifiedName, FullyQualifiedProperName, Name, Pattern, ProperName,
+    QualifiedName, QualifiedProperName, Span, Type,
 };
 use std::{
     collections::{HashMap, HashSet},
     default::Default,
 };
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct Env {
     pub constructors: EnvConstructors,
     pub values: EnvValues,
@@ -155,6 +155,26 @@ impl EnvConstructor {
                 }
             }
         }
+    }
+
+    // REVIEW should this be `into_pattern`?
+    pub fn to_pattern(&self, span: Span, arguments: Vec<Pattern>) -> Pattern {
+        match self {
+            Self::ModuleConstructor { constructor, .. } => Pattern::LocalConstructor {
+                span,
+                constructor: constructor.clone(),
+                arguments,
+            },
+            Self::ImportedConstructor { constructor, .. } => Pattern::ImportedConstructor {
+                span,
+                constructor: constructor.clone(),
+                arguments,
+            },
+        }
+    }
+
+    pub fn get_type(&self, supply: &mut Supply) -> Type {
+        self.get_scheme().instantiate(supply)
     }
 
     fn get_scheme(&self) -> Scheme {

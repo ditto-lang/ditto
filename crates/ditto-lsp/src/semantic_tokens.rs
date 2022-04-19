@@ -111,6 +111,8 @@ impl TokensBuilder {
               "as"
               "type"
               "foreign"
+              "match"
+              "with"
             ] @keyword
 
             ; 2, 3, 4

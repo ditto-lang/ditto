@@ -1,0 +1,9 @@
+module Test exports (..);
+
+type Maybe(a) = Just(a) | Nothing;
+
+
+with_default = (maybe: Maybe(a), default: a): a ->
+    match maybe with
+    | Just(a) -> a
+    | Nothing -> default;

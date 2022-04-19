@@ -43,6 +43,8 @@ impl_from_pair!(ElseKeyword, rule = Rule::else_keyword);
 impl_from_pair!(TypeKeyword, rule = Rule::type_keyword);
 impl_from_pair!(ForeignKeyword, rule = Rule::foreign_keyword);
 impl_from_pair!(Pipe, rule = Rule::pipe);
+impl_from_pair!(MatchKeyword, rule = Rule::match_keyword);
+impl_from_pair!(WithKeyword, rule = Rule::with_keyword);
 
 impl StringToken {
     pub(super) fn from_pairs(pairs: &mut Pairs<Rule>) -> Self {

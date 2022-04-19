@@ -19,7 +19,7 @@ use crate::{
     result::{Result, TypeError, Warning, Warnings},
     supply::Supply,
 };
-use ditto_ast::{unqualified, Argument, Expression, FunctionBinder, PrimType, Span, Type};
+use ditto_ast::{unqualified, Argument, Expression, FunctionBinder, Pattern, PrimType, Span, Type};
 use ditto_cst as cst;
 use std::collections::HashSet;
 
@@ -378,6 +378,11 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
                 body: Box::new(body),
             })
         }
+        pre::Expression::Match {
+            span,
+            box expression,
+            arms,
+        } => infer_or_check_match(env, state, span, expression, arms, None),
     }
 }
 
@@ -387,16 +392,170 @@ pub fn check(
     expected: Type,
     expr: pre::Expression,
 ) -> Result<Expression> {
-    let expression = infer(env, state, expr)?;
-    unify(
+    match expr {
+        pre::Expression::Match {
+            span,
+            box expression,
+            arms,
+        } => infer_or_check_match(env, state, span, expression, arms, Some(expected)),
+        _ => {
+            let expression = infer(env, state, expr)?;
+            unify(
+                state,
+                expression.get_span(),
+                Constraint {
+                    expected,
+                    actual: expression.get_type(),
+                },
+            )?;
+            Ok(expression)
+        }
+    }
+}
+
+fn infer_or_check_match(
+    env: &Env,
+    state: &mut State,
+    span: Span,
+    expression: pre::Expression,
+    arms: non_empty_vec::NonEmpty<(pre::Pattern, pre::Expression)>,
+    match_type: Option<Type>,
+) -> Result<Expression> {
+    let expression = infer(env, state, expression)?;
+    let pattern_type = expression.get_type();
+
+    let (head_arm, tail_arms) = arms.split_first();
+    let mut head_arm_env = env.clone();
+    let head_arm_pattern = check_pattern(
+        &mut head_arm_env,
         state,
-        expression.get_span(),
-        Constraint {
-            expected,
-            actual: expression.get_type(),
-        },
+        pattern_type.clone(),
+        head_arm.0.clone(),
     )?;
-    Ok(expression)
+
+    let (head_arm_expression, match_type) = if let Some(expected) = match_type {
+        let head_arm_expression =
+            check(&head_arm_env, state, expected.clone(), head_arm.1.clone())?;
+        (head_arm_expression, expected)
+    } else {
+        let head_arm_expression = infer(&head_arm_env, state, head_arm.1.clone())?;
+        let match_type = head_arm_expression.get_type();
+        (head_arm_expression, match_type)
+    };
+
+    let mut arms = non_empty_vec::NonEmpty::new((head_arm_pattern, head_arm_expression));
+    for tail_arm in tail_arms {
+        let mut tail_arm_env = env.clone();
+        let tail_arm_pattern = check_pattern(
+            &mut tail_arm_env,
+            state,
+            pattern_type.clone(),
+            tail_arm.0.clone(),
+        )?;
+        let tail_arm_expression =
+            check(&tail_arm_env, state, match_type.clone(), tail_arm.1.clone())?;
+        arms.push((tail_arm_pattern, tail_arm_expression));
+    }
+
+    Ok(Expression::Match {
+        span,
+        match_type,
+        expression: Box::new(expression),
+        arms,
+    })
+}
+
+fn check_pattern(
+    env: &mut Env,
+    state: &mut State,
+    expected: Type,
+    pattern: pre::Pattern,
+) -> Result<Pattern> {
+    match pattern {
+        pre::Pattern::Constructor {
+            span,
+            constructor,
+            arguments,
+        } => {
+            if let Some(count) = state.constructor_references.get_mut(&constructor) {
+                *count += 1
+            } else {
+                state.constructor_references.insert(constructor.clone(), 1);
+            }
+
+            let env_constructors = env.constructors.clone();
+            let env_constructor = env_constructors.get(&constructor).ok_or_else(|| {
+                TypeError::UnknownConstructor {
+                    span,
+                    constructor,
+                    ctors_in_scope: env_constructors.keys().cloned().collect(),
+                }
+            })?;
+
+            let constructor_type = env_constructor.get_type(&mut state.supply);
+
+            let arguments_len = arguments.len();
+            let constraint = match constructor_type.clone() {
+                Type::Function {
+                    parameters,
+                    box return_type,
+                    ..
+                } => {
+                    let parameters_len = parameters.len();
+                    if parameters_len != arguments_len {
+                        // TODO reusing this type error is a bit lazy,
+                        // might be worth adding `PatternArgumentLengthMismatch`?
+                        return Err(TypeError::ArgumentLengthMismatch {
+                            function_span: span,
+                            wanted: parameters_len,
+                            got: arguments_len,
+                        });
+                    }
+                    Constraint {
+                        expected,
+                        actual: return_type,
+                    }
+                }
+                actual => {
+                    if arguments_len != 0 {
+                        // TODO reusing this type error is a bit lazy,
+                        // might be worth adding `PatternArgumentLengthMismatch`?
+                        return Err(TypeError::ArgumentLengthMismatch {
+                            function_span: span,
+                            wanted: 0,
+                            got: arguments_len,
+                        });
+                    }
+                    Constraint { expected, actual }
+                }
+            };
+
+            unify(state, span, constraint)?;
+
+            if let Type::Function { parameters, .. } = state.substitution.apply(constructor_type) {
+                let mut checked_arguments = Vec::new();
+                for (parameter, argument) in parameters.into_iter().zip(arguments) {
+                    let checked_argument = check_pattern(env, state, parameter, argument)?;
+                    checked_arguments.push(checked_argument);
+                }
+                Ok(env_constructor.to_pattern(span, checked_arguments))
+            } else {
+                Ok(env_constructor.to_pattern(span, vec![]))
+            }
+        }
+        pre::Pattern::Variable { span, name } => {
+            let variable_scheme = env.generalize(expected);
+            env.values.insert(
+                unqualified(name.clone()),
+                EnvValue::ModuleValue {
+                    span,
+                    variable_scheme,
+                    variable: name.clone(),
+                },
+            );
+            Ok(Pattern::Variable { span, name })
+        }
+    }
 }
 
 #[derive(Debug)]

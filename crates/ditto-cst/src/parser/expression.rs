@@ -1,8 +1,9 @@
 use super::{parse_rule, Result, Rule};
 use crate::{
-    BracketsList, Colon, ElseKeyword, Expression, FalseKeyword, IfKeyword, Name, Parens,
-    ParensList, QualifiedName, QualifiedProperName, RightArrow, StringToken, ThenKeyword,
-    TrueKeyword, Type, TypeAnnotation, UnitKeyword,
+    BracketsList, Colon, ElseKeyword, Expression, FalseKeyword, IfKeyword, MatchArm, MatchKeyword,
+    Name, Parens, ParensList, ParensList1, Pattern, Pipe, QualifiedName, QualifiedProperName,
+    RightArrow, StringToken, ThenKeyword, TrueKeyword, Type, TypeAnnotation, UnitKeyword,
+    WithKeyword,
 };
 use pest::iterators::Pair;
 
@@ -105,24 +106,84 @@ impl Expression {
                     value: string_token.value[1..string_token.value.len() - 1].to_owned(),
                     ..string_token
                 };
-                Expression::String(string_token)
+                Self::String(string_token)
             }
             Rule::expression_array => {
                 let elements = BracketsList::list_from_pair(pair, |expr_pair| {
                     Box::new(Self::from_pair(expr_pair))
                 });
-                Expression::Array(elements)
+                Self::Array(elements)
             }
             Rule::expression_true => {
-                Expression::True(TrueKeyword::from_pair(pair.into_inner().next().unwrap()))
+                Self::True(TrueKeyword::from_pair(pair.into_inner().next().unwrap()))
             }
             Rule::expression_false => {
-                Expression::False(FalseKeyword::from_pair(pair.into_inner().next().unwrap()))
+                Self::False(FalseKeyword::from_pair(pair.into_inner().next().unwrap()))
             }
             Rule::expression_unit => {
-                Expression::Unit(UnitKeyword::from_pair(pair.into_inner().next().unwrap()))
+                Self::Unit(UnitKeyword::from_pair(pair.into_inner().next().unwrap()))
+            }
+            Rule::expression_match => {
+                let mut inner = pair.into_inner();
+                let match_keyword = MatchKeyword::from_pair(inner.next().unwrap());
+                let expression = Box::new(Expression::from_pair(inner.next().unwrap()));
+                let with_keyword = WithKeyword::from_pair(inner.next().unwrap());
+                let head_arm = MatchArm::from_pair(inner.next().unwrap());
+                let tail_arms = inner.into_iter().map(MatchArm::from_pair).collect();
+                Self::Match {
+                    match_keyword,
+                    expression,
+                    with_keyword,
+                    head_arm,
+                    tail_arms,
+                }
             }
             other => unreachable!("{:#?} {:#?}", other, pair.into_inner()),
+        }
+    }
+}
+
+impl MatchArm {
+    fn from_pair(pair: Pair<Rule>) -> Self {
+        let mut inner = pair.into_inner();
+        let pipe = Pipe::from_pair(inner.next().unwrap());
+        let pattern = Pattern::from_pair(inner.next().unwrap());
+        let right_arrow = RightArrow::from_pair(inner.next().unwrap());
+        let expression = Box::new(Expression::from_pair(inner.next().unwrap()));
+        Self {
+            pipe,
+            pattern,
+            right_arrow,
+            expression,
+        }
+    }
+}
+
+impl Pattern {
+    fn from_pair(pair: Pair<Rule>) -> Self {
+        let mut inner = pair.into_inner();
+        let pattern = inner.next().unwrap();
+        match pattern.as_rule() {
+            Rule::pattern_constructor => {
+                let mut pattern_inner = pattern.into_inner();
+                let constructor = QualifiedProperName::from_pair(pattern_inner.next().unwrap());
+                if let Some(args) = pattern_inner.next() {
+                    let arguments = ParensList1::list1_from_pair(args, |pair| {
+                        Box::new(Pattern::from_pair(pair))
+                    });
+                    return Self::Constructor {
+                        constructor,
+                        arguments,
+                    };
+                }
+                Self::NullaryConstructor { constructor }
+            }
+            Rule::pattern_variable => {
+                let mut pattern_inner = pattern.into_inner();
+                let name = Name::from_pair(pattern_inner.next().unwrap());
+                Self::Variable { name }
+            }
+            other => unreachable!("{:#?} {:#?}", other, pattern.into_inner()),
         }
     }
 }
@@ -132,7 +193,7 @@ impl TypeAnnotation {
         let mut inner = pair.into_inner();
         let colon = Colon::from_pair(inner.next().unwrap());
         let type_ = Type::from_pair(inner.next().unwrap());
-        TypeAnnotation(colon, type_)
+        Self(colon, type_)
     }
 }
 
@@ -364,6 +425,59 @@ mod tests {
                 }),
                 ..
             })
+        );
+    }
+
+    #[test]
+    fn it_parses_match_expressions() {
+        use crate::{MatchArm, Pattern};
+        assert_parses!(
+            "match x with | foo -> 2",
+            Expression::Match {
+                head_arm: MatchArm {
+                    pattern: Pattern::Variable { .. },
+                    ..
+                },
+                ..
+            }
+        );
+        assert_parses!(
+            "match x with | Foo -> 2",
+            Expression::Match {
+                head_arm: MatchArm {
+                    pattern: Pattern::NullaryConstructor { .. },
+                    ..
+                },
+                ..
+            }
+        );
+        assert_parses!(
+            "match x with | F.Foo -> 2",
+            Expression::Match {
+                head_arm: MatchArm {
+                    pattern: Pattern::NullaryConstructor { .. },
+                    ..
+                },
+                ..
+            }
+        );
+        assert_parses!(
+            "match x with | Foo(bar) -> 2",
+            Expression::Match {
+                head_arm: MatchArm {
+                    pattern: Pattern::Constructor { .. },
+                    ..
+                },
+                ..
+            }
+        );
+        assert_parses!(
+            "match x with | Foo(Bar, Baz(bar, Bar)) -> 2",
+            Expression::Match { .. }
+        );
+        assert_parses!(
+            "match x with | Foo -> 2 | Bar -> 3",
+            Expression::Match { tail_arms, .. } if tail_arms.len() == 1
         );
     }
 }

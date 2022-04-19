@@ -58,6 +58,25 @@ pub enum Expression {
         /// The expression to evaluate otherwise.
         false_clause: Box<Self>,
     },
+    /// A pattern match.
+    ///
+    /// ```ditto
+    /// match some_expr with
+    /// | Pattern -> another_expr
+    /// ```
+    Match {
+        /// The source span for this expression.
+        span: Span,
+
+        /// The type of the expressions in the `arms`.
+        match_type: Type,
+
+        /// Expression to be matched.
+        expression: Box<Self>,
+
+        /// Patterns to be matched against and their corresponding expressions.
+        arms: NonEmpty<(Pattern, Self)>,
+    },
     /// A value constructor local to the current module, e.g. `Just` and `Ok`.
     LocalConstructor {
         /// The source span for this expression.
@@ -193,6 +212,7 @@ impl Expression {
                 }
             }
             Self::If { output_type, .. } => output_type.clone(),
+            Self::Match { match_type, .. } => match_type.clone(),
             Self::LocalConstructor {
                 constructor_type, ..
             } => constructor_type.clone(),
@@ -220,6 +240,7 @@ impl Expression {
             Self::Function { span, .. } => *span,
             Self::Call { span, .. } => *span,
             Self::If { span, .. } => *span,
+            Self::Match { span, .. } => *span,
             Self::LocalConstructor { span, .. } => *span,
             Self::ImportedConstructor { span, .. } => *span,
             Self::LocalVariable { span, .. } => *span,
@@ -295,4 +316,34 @@ impl FunctionBinder {
             Self::Name { span, .. } => *span,
         }
     }
+}
+
+/// A pattern to be matched.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum Pattern {
+    /// A local constructor pattern.
+    LocalConstructor {
+        /// The source span for this pattern.
+        span: Span,
+        /// `Just`
+        constructor: ProperName,
+        /// Pattern arguments to the constructor.
+        arguments: Vec<Self>,
+    },
+    /// An importedf constructor pattern.
+    ImportedConstructor {
+        /// The source span for this pattern.
+        span: Span,
+        /// `Maybe.Just`
+        constructor: FullyQualifiedProperName,
+        /// Pattern arguments to the constructor.
+        arguments: Vec<Self>,
+    },
+    /// A variable binding pattern.
+    Variable {
+        /// The source span for this pattern.
+        span: Span,
+        /// Name to bind.
+        name: Name,
+    },
 }

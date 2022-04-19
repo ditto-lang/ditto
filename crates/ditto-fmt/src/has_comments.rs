@@ -57,6 +57,19 @@ impl HasComments for Expression {
                 function,
                 arguments,
             } => function.has_comments() || arguments.has_comments(),
+            Self::Match {
+                match_keyword,
+                expression,
+                with_keyword,
+                head_arm,
+                tail_arms,
+            } => {
+                match_keyword.0.has_comments()
+                    || expression.has_comments()
+                    || with_keyword.0.has_comments()
+                    || head_arm.has_comments()
+                    || tail_arms.iter().any(|arm| arm.has_comments())
+            }
         }
     }
 
@@ -75,6 +88,45 @@ impl HasComments for Expression {
             Self::If { if_keyword, .. } => if_keyword.0.has_leading_comments(),
             Self::Function { box parameters, .. } => parameters.open_paren.0.has_leading_comments(),
             Self::Call { function, .. } => function.has_leading_comments(),
+            Self::Match { match_keyword, .. } => match_keyword.0.has_leading_comments(),
+        }
+    }
+}
+
+impl HasComments for MatchArm {
+    fn has_comments(&self) -> bool {
+        let Self {
+            pipe,
+            pattern,
+            right_arrow,
+            expression,
+        } = self;
+        pipe.0.has_comments()
+            || pattern.has_comments()
+            || right_arrow.0.has_comments()
+            || expression.has_comments()
+    }
+    fn has_leading_comments(&self) -> bool {
+        self.pipe.0.has_leading_comments()
+    }
+}
+
+impl HasComments for Pattern {
+    fn has_comments(&self) -> bool {
+        match self {
+            Self::NullaryConstructor { constructor } => constructor.has_comments(),
+            Self::Constructor {
+                constructor,
+                arguments,
+            } => constructor.has_comments() || arguments.has_comments(),
+            Self::Variable { name } => name.has_comments(),
+        }
+    }
+    fn has_leading_comments(&self) -> bool {
+        match self {
+            Self::NullaryConstructor { constructor } => constructor.has_leading_comments(),
+            Self::Constructor { constructor, .. } => constructor.has_leading_comments(),
+            Self::Variable { name } => name.has_leading_comments(),
         }
     }
 }

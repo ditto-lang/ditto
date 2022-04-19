@@ -455,6 +455,18 @@ fn toposort_value_declarations(
                 get_connected_nodes_rec(true_clause, nodes, accum);
                 get_connected_nodes_rec(false_clause, nodes, accum);
             }
+            Expression::Match {
+                expression,
+                head_arm,
+                tail_arms,
+                ..
+            } => {
+                get_connected_nodes_rec(expression, nodes, accum);
+                get_connected_nodes_rec(&head_arm.expression, nodes, accum);
+                for tail_arm in tail_arms.iter() {
+                    get_connected_nodes_rec(&tail_arm.expression, nodes, accum);
+                }
+            }
             Expression::Array(elements) => {
                 if let Some(ref elements) = elements.value {
                     elements.iter().for_each(|element| {
