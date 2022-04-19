@@ -331,14 +331,53 @@ mod tests {
 
     #[test]
     fn it_parses_ifs() {
-        assert_parses!("if true then 1 else 0", Expression::If { .. });
+        assert_parses!(
+            "if true then 1 else 0",
+            Expression::If {
+                condition: box Expression::True { .. },
+                true_clause: box Expression::Int { .. },
+                false_clause: box Expression::Int { .. },
+
+                ..
+            }
+        );
         assert_parses!(
             "if if false then true else false then 5 else 108",
-            Expression::If { .. }
+            Expression::If {
+                condition: box Expression::If {
+                    condition: box Expression::False { .. },
+                    true_clause: box Expression::True { .. },
+                    false_clause: box Expression::False { .. },
+                    ..
+                },
+                true_clause: box Expression::Int { .. },
+                false_clause: box Expression::Int { .. },
+                ..
+            }
         );
         assert_parses!(
             "if if true then true else false then if true then 1 else 0 else if true then 0 else 1",
-            Expression::If { .. }
+            Expression::If {
+                condition: box Expression::If {
+                    condition: box Expression::True { .. },
+                    true_clause: box Expression::True { .. },
+                    false_clause: box Expression::False { .. },
+                    ..
+                },
+                true_clause: box Expression::If {
+                    condition: box Expression::True { .. },
+                    true_clause: box Expression::Int { .. },
+                    false_clause: box Expression::Int { .. },
+                    ..
+                },
+                false_clause: box Expression::If {
+                    condition: box Expression::True { .. },
+                    true_clause: box Expression::Int { .. },
+                    false_clause: box Expression::Int { .. },
+                    ..
+                },
+                ..
+            }
         );
     }
 
