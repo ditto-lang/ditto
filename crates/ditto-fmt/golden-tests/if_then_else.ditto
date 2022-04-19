@@ -23,3 +23,17 @@ multi_line_if_due_to_long_expression =
 
 inline_if_with_trailing_comment = if true then yes else no  -- test
 ;
+
+chained =
+    -- *click* noice
+    if true then
+        yes
+    -- test
+    else if true then
+        if true then
+            -- this one can be inline
+            if true then 5 else 5
+        else
+            nah
+    else
+        no;

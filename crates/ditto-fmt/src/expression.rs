@@ -74,6 +74,8 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
                     // ```ditto
                     // if true then
                     //     yes
+                    // else if true then
+                    //     yes_again
                     // else
                     //     no
                     // ```
@@ -88,10 +90,15 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
                     items.extend(ir_helpers::with_indent(gen_expression(true_clause.clone())));
                     items.push_signal(Signal::ExpectNewLine);
                     items.extend(gen_else_keyword(else_keyword.clone()));
-                    items.push_signal(Signal::NewLine);
-                    items.extend(ir_helpers::with_indent(gen_expression(
-                        false_clause.clone(),
-                    )));
+                    if matches!(false_clause, Expression::If { .. }) {
+                        items.extend(space());
+                        items.extend(gen_expression(false_clause.clone()));
+                    } else {
+                        items.push_signal(Signal::NewLine);
+                        items.extend(ir_helpers::with_indent(gen_expression(
+                            false_clause.clone(),
+                        )));
+                    }
                     items
                 },
                 {
