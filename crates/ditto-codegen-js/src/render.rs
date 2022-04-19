@@ -149,17 +149,14 @@ impl Render for Expression {
                 body.render(accum)
             }
             Self::Call {
-                function,
+                box function,
                 arguments,
             } => {
-                let function_needs_parens = matches!(**function, Self::ArrowFunction { .. });
-                if function_needs_parens {
-                    accum.push('(')
-                }
-                function.render(accum);
-                if function_needs_parens {
-                    accum.push(')')
-                }
+                render_in_parens_if(
+                    matches!(function, Self::ArrowFunction { .. }),
+                    function,
+                    accum,
+                );
                 accum.push('(');
                 arguments.iter().for_each(|arg| {
                     arg.render(accum);
@@ -168,21 +165,18 @@ impl Render for Expression {
                 accum.push(')');
             }
             Self::Conditional {
-                condition,
+                box condition,
                 true_clause,
                 false_clause,
             } => {
-                let condition_needs_parens = matches!(
-                    **condition,
-                    Self::ArrowFunction { .. } | Self::Conditional { .. }
+                render_in_parens_if(
+                    matches!(
+                        condition,
+                        Self::ArrowFunction { .. } | Self::Conditional { .. }
+                    ),
+                    condition,
+                    accum,
                 );
-                if condition_needs_parens {
-                    accum.push('(');
-                }
-                condition.render(accum);
-                if condition_needs_parens {
-                    accum.push(')');
-                }
                 accum.push('?');
                 true_clause.render(accum);
                 accum.push(':');
@@ -241,6 +235,16 @@ impl Render for Expression {
                 accum.push(']');
             }
         }
+    }
+}
+
+fn render_in_parens_if<T: Render>(condition: bool, t: &T, accum: &mut String) {
+    if condition {
+        accum.push('(');
+        t.render(accum);
+        accum.push(')');
+    } else {
+        t.render(accum);
     }
 }
 
