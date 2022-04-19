@@ -392,13 +392,16 @@ pub fn check(
     expected: Type,
     expr: pre::Expression,
 ) -> Result<Expression> {
-    match expr {
-        pre::Expression::Match {
-            span,
-            box expression,
-            arms,
-        } => infer_or_check_match(env, state, span, expression, arms, Some(expected)),
-        _ => {
+    match (expr, expected) {
+        (
+            pre::Expression::Match {
+                span,
+                box expression,
+                arms,
+            },
+            expected,
+        ) => infer_or_check_match(env, state, span, expression, arms, Some(expected)),
+        (expr, expected) => {
             let expression = infer(env, state, expr)?;
             unify(
                 state,
@@ -665,6 +668,7 @@ fn unify_else(
                     arguments: actual_arguments.clone(),
                 },
             };
+
             unify_else(
                 state,
                 span,
@@ -674,6 +678,13 @@ fn unify_else(
                 },
                 Some(&err),
             )?;
+
+            let expected_arguments_len = expected_arguments.len();
+            let actual_arguments_len = actual_arguments.len();
+            if expected_arguments_len != actual_arguments_len {
+                return Err(err);
+            }
+
             let arguments = expected_arguments
                 .into_iter()
                 .zip(actual_arguments.into_iter());
@@ -715,6 +726,13 @@ fn unify_else(
                     return_type: Box::new(actual_return_type.clone()),
                 },
             };
+
+            let expected_parameters_len = expected_parameters.len();
+            let actual_parameters_len = actual_parameters.len();
+            if expected_parameters_len != actual_parameters_len {
+                return Err(err);
+            }
+
             let parameters = expected_parameters
                 .into_iter()
                 .zip(actual_parameters.into_iter());

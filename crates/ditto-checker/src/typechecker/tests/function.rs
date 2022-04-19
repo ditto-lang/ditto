@@ -52,6 +52,11 @@ fn it_errors_as_expected() {
     // scoped type variables
     assert_type_error!("(a: a): a -> (): b -> a", TypesNotEqual { .. });
     assert_type_error!("(a: a): a -> (b: b): a -> b", TypesNotEqual { .. });
+
+    assert_type_error!(
+        "((fn: (Int, Int) -> Bool) -> unit)((lhs: Int) -> true)",
+        TypesNotEqual { .. }
+    );
 }
 
 #[test]
