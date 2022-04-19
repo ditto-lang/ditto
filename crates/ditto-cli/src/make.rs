@@ -33,8 +33,7 @@ pub async fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
     if matches.is_present("watch") {
         run_watch(matches, ditto_version).await
     } else {
-        let status = run_once(matches, ditto_version).await?;
-        process::exit(status.code().unwrap_or(0));
+        run_once(matches, ditto_version).await?.exit()
     }
 }
 
@@ -98,21 +97,7 @@ pub async fn run_watch(matches: &ArgMatches, ditto_version: &Version) -> Result<
         )
         .into_diagnostic()?;
 
-    // Clear screen initially
-    // (other watching tools do this)
-    clearscreen::clear()
-        .into_diagnostic()
-        .wrap_err("error clearing screen")?;
-
-    //let print_done = || {
-    //    println!("{}", Style::new().green().bold().apply_to("Done"));
-    //};
-
-    if let Err(err) = run_once(matches, ditto_version).await {
-        // print the error but don't exit!
-        eprintln!("{:?}", err);
-    }
-    //print_done();
+    run_once_watch(matches, ditto_version).await;
 
     // Listen for changes...
     loop {
@@ -135,14 +120,7 @@ pub async fn run_watch(matches: &ArgMatches, ditto_version: &Version) -> Result<
                     // config file
                     Some("toml")
                 ) {
-                    clearscreen::clear()
-                        .into_diagnostic()
-                        .wrap_err("error clearing screen")?;
-                    if let Err(err) = run_once(matches, ditto_version).await {
-                        // print the error but don't exit!
-                        eprintln!("{:?}", err);
-                    }
-                    //print_done();
+                    run_once_watch(matches, ditto_version).await;
                 }
             }
             other => {
@@ -150,9 +128,58 @@ pub async fn run_watch(matches: &ArgMatches, ditto_version: &Version) -> Result<
             }
         }
     }
+
+    async fn run_once_watch(matches: &ArgMatches, ditto_version: &Version) {
+        if let Err(_err) = clearscreen::clear() {
+            // doesn't matter, let it fail?
+        }
+
+        match run_once(matches, ditto_version).await {
+            Err(err) => {
+                // print the error but don't exit!
+                eprintln!("{:?}", err);
+            }
+            Ok(WhatHappened::Nothing {
+                warnings_printed: false,
+                ..
+            }) => println!("{}", Style::new().white().dim().apply_to("Nothing to do")),
+            Ok(WhatHappened::Success {
+                warnings_printed: false,
+            }) => println!("{}", Style::new().green().bold().apply_to("All good!")),
+            _ => {}
+        }
+    }
 }
 
-pub async fn run_once(_matches: &ArgMatches, ditto_version: &Version) -> Result<ExitStatus> {
+enum WhatHappened {
+    Nothing {
+        ninja_exit_status: ExitStatus,
+        warnings_printed: bool,
+    },
+    Error {
+        ninja_exit_status: ExitStatus,
+    },
+    Success {
+        warnings_printed: bool,
+    },
+}
+
+impl WhatHappened {
+    fn exit(self) -> ! {
+        match self {
+            Self::Nothing {
+                ninja_exit_status, ..
+            } => process::exit(ninja_exit_status.code().unwrap_or(0)),
+            Self::Error {
+                ninja_exit_status, ..
+            } => process::exit(ninja_exit_status.code().unwrap_or(0)),
+            Self::Success { .. } => process::exit(0),
+        }
+    }
+}
+
+/// If successful returns the exit status of `ninja` and whether anything actually happened.
+async fn run_once(_matches: &ArgMatches, ditto_version: &Version) -> Result<WhatHappened> {
     let config_path: PathBuf = [".", CONFIG_FILE_NAME].iter().collect();
     let config = read_config(&config_path)?;
 
@@ -171,8 +198,8 @@ pub async fn run_once(_matches: &ArgMatches, ditto_version: &Version) -> Result<
 
     let now = Instant::now(); // for timing
 
-    // Do the work
-    let status = make(&config_path, &config, ditto_version).await?;
+    // Do the thing
+    let result = make(&config_path, &config, ditto_version).await;
 
     lock.unlock()
         .into_diagnostic()
@@ -180,10 +207,15 @@ pub async fn run_once(_matches: &ArgMatches, ditto_version: &Version) -> Result<
 
     debug!("make ran in {}ms", now.elapsed().as_millis());
 
-    Ok(status)
+    result
 }
 
-async fn make(config_path: &Path, config: &Config, ditto_version: &Version) -> Result<ExitStatus> {
+/// If successful returns the exit status of `ninja` and whether anything actually happened.
+async fn make(
+    config_path: &Path,
+    config: &Config,
+    ditto_version: &Version,
+) -> Result<WhatHappened> {
     let (build_ninja, get_warnings) = generate_build_ninja(config_path, config, ditto_version)
         .map_err(|err| {
             // This is a bit brittle, but we want parse errors encountered during
@@ -266,22 +298,17 @@ async fn make(config_path: &Path, config: &Config, ditto_version: &Version) -> R
             // Nothing to do,
             // still need to print warnings though
             let warnings = get_warnings()?;
-            if !warnings.is_empty() {
-                let warnings_len = warnings.len();
-                for (i, warning) in warnings.into_iter().enumerate() {
-                    if i == warnings_len - 1 {
-                        eprintln!("{:?}", warning);
-                    } else {
-                        eprint!("{:?}", warning);
-                    }
-                }
-            } else {
-                println!("{}", Style::new().white().dim().apply_to("Nothing to do"));
-            }
-            child
+            let warnings_printed = print_warnings(warnings);
+
+            let ninja_exit_status = child
                 .wait()
                 .into_diagnostic()
-                .wrap_err("ninja wasn't running?")
+                .wrap_err("ninja wasn't running?")?;
+
+            return Ok(WhatHappened::Nothing {
+                ninja_exit_status,
+                warnings_printed,
+            });
         } else {
             let mut spinner = Spinner::new();
             spinner.set_message(
@@ -311,26 +338,35 @@ async fn make(config_path: &Path, config: &Config, ditto_version: &Version) -> R
                 }
             }
 
-            let status = child.wait().expect("error waiting for ninja to exit");
+            let ninja_exit_status = child.wait().expect("error waiting for ninja to exit");
             spinner.finish();
-            if status.success() {
+            if ninja_exit_status.success() {
                 // Only print warnings if there wasn't an error
                 let warnings = get_warnings()?;
-                if !warnings.is_empty() {
-                    let warnings_len = warnings.len();
-                    for (i, warning) in warnings.into_iter().enumerate() {
-                        if i == warnings_len - 1 {
-                            eprintln!("{:?}", warning);
-                        } else {
-                            eprint!("{:?}", warning);
-                        }
-                    }
-                }
+                let warnings_printed = print_warnings(warnings);
+                return Ok(WhatHappened::Success { warnings_printed });
+            } else {
+                return Ok(WhatHappened::Error { ninja_exit_status });
             }
-            Ok(status)
         }
     } else {
         unreachable!()
+    }
+
+    fn print_warnings(warnings: Vec<miette::Report>) -> bool {
+        if !warnings.is_empty() {
+            let warnings_len = warnings.len();
+            for (i, warning) in warnings.into_iter().enumerate() {
+                if i == warnings_len - 1 {
+                    eprintln!("{:?}", warning);
+                } else {
+                    eprint!("{:?}", warning);
+                }
+            }
+            true
+        } else {
+            false
+        }
     }
 }
 
