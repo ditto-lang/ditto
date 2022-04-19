@@ -304,12 +304,20 @@ fn prepare_build_graph(
 
     // Add the edges
     for (node_index, node) in build_graph_nodes.iter() {
+        let node_package_name: Option<&str> =
+            node.package_name.as_ref().map(|pkg_name| pkg_name.as_str());
+
         for import_line in node.imports.iter() {
-            let import_package_name = import_line
+            let import_package_name: Option<&str> = import_line
                 .package
                 .as_ref()
-                .map(|parens| parens.value.0.value.as_str());
+                .map(|parens| parens.value.0.value.as_str())
+                .or(node_package_name);
+
             let import_module_name = ast::ModuleName::from(import_line.module_name.clone());
+
+            // Loop through all the nodes and try to
+            // find the (import_package_name, import_module_name) we're looking for
             for (
                 idx,
                 BuildGraphNode {

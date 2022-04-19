@@ -129,6 +129,32 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
     let mut ditto_input = None;
     let mut everything = checker::Everything::default();
 
+    // Need to figure out if we're compiling a "package module",
+    // and if so what the name of the package is.
+    //
+    // This is so that imports referencing other modules in the same package
+    // resolve correctly.
+    let mut output_package_name = None;
+    for output in outputs.iter() {
+        let path = Path::new(&output);
+        match full_extension(path) {
+            Some(common::EXTENSION_AST | common::EXTENSION_AST_EXPORTS) => {
+                if let Some(parent) = path.parent() {
+                    // Extract a package name
+                    if parent.to_str() != Some(build_dir) {
+                        let dir = parent
+                            .file_name()
+                            .and_then(|file_name| file_name.to_str())
+                            .unwrap();
+
+                        output_package_name = Some(ditto_ast::PackageName(dir.to_owned()));
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+
     for input in inputs {
         let path = Path::new(&input);
         match full_extension(path) {
@@ -148,11 +174,17 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
                             .file_name()
                             .and_then(|file_name| file_name.to_str())
                             .unwrap();
+
                         package_name = Some(ditto_ast::PackageName(dir.to_owned()));
                     }
                 }
-
-                if let Some(package_name) = package_name {
+                if output_package_name == package_name {
+                    // This is a "package module" importing another module from
+                    // the same package, so it needs to be added to the typing
+                    // environment _without_ a package qualifier.
+                    everything.modules.insert(module_name, module_exports);
+                } else if let Some(package_name) = package_name {
+                    // UPSERT the package
                     if let Some(package) = everything.packages.get_mut(&package_name) {
                         package.insert(module_name, module_exports);
                     } else {

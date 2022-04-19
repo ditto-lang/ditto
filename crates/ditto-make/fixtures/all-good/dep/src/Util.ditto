@@ -1,0 +1,3 @@
+module Util exports (identity);
+
+identity = (x) -> x;

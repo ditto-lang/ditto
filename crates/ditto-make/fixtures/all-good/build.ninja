@@ -21,8 +21,11 @@ build builddir/C.ast builddir/C.ast-exports builddir/C.checker-warnings: ast ./s
 build builddir/D.ast builddir/D.ast-exports builddir/D.checker-warnings: ast ./src/D.ditto builddir/C.ast-exports builddir/dep/Dep.ast-exports
   description = Checking D
 
-build builddir/dep/Dep.ast builddir/dep/Dep.ast-exports: ast ./dep/src/Dep.ditto
+build builddir/dep/Dep.ast builddir/dep/Dep.ast-exports: ast ./dep/src/Dep.ditto builddir/dep/Util.ast-exports
   description = Checking dep:Dep
+
+build builddir/dep/Util.ast builddir/dep/Util.ast-exports: ast ./dep/src/Util.ditto
+  description = Checking dep:Util
 
 build dist/A.js: js builddir/A.ast
   description = Generating JavaScript for A
@@ -38,6 +41,9 @@ build dist/D.js: js builddir/D.ast
 
 build packages/dep/Dep.js: js builddir/dep/Dep.ast
   description = Generating JavaScript for dep:Dep
+
+build packages/dep/Util.js: js builddir/dep/Util.ast
+  description = Generating JavaScript for dep:Util
 
 build packages/dep/package.json: package_json dep/ditto.toml
   description = Generating package.json for dep
