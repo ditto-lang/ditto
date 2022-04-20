@@ -48,10 +48,12 @@ impl Render for Module {
 impl Render for ImportStatement {
     fn render(&self, accum: &mut String) {
         accum.push_str("import {");
-        for (aliased, ident) in self.idents.iter() {
-            accum.push_str(&format!("{} as {}", aliased.0, ident.0));
-            accum.push(',');
-        }
+        let imports = self
+            .idents
+            .iter()
+            .map(|(aliased, ident)| format!("{} as {}", aliased.0, ident.0))
+            .collect::<Vec<_>>();
+        accum.push_str(&imports.join(","));
         accum.push_str(&format!("}} from \"{}\";", self.path));
     }
 }
@@ -158,10 +160,7 @@ impl Render for Expression {
                     accum,
                 );
                 accum.push('(');
-                arguments.iter().for_each(|arg| {
-                    arg.render(accum);
-                    accum.push(',');
-                });
+                render_comma_sep(arguments, accum);
                 accum.push(')');
             }
             Self::Conditional {
@@ -184,10 +183,7 @@ impl Render for Expression {
             }
             Self::Array(expressions) => {
                 accum.push('[');
-                expressions.iter().for_each(|expr| {
-                    expr.render(accum);
-                    accum.push(',');
-                });
+                render_comma_sep(expressions, accum);
                 accum.push(']');
             }
             Self::Number(number_string) => {
@@ -224,6 +220,16 @@ impl Render for Expression {
                 index.render(accum);
                 accum.push(']');
             }
+        }
+    }
+}
+
+fn render_comma_sep<T: Render>(ts: &Vec<T>, accum: &mut String) {
+    let len = ts.len();
+    for (i, t) in ts.iter().enumerate() {
+        t.render(accum);
+        if i != len - 1 {
+            accum.push(',');
         }
     }
 }
@@ -311,7 +317,7 @@ mod tests {
                 function: Box::new(Expression::Variable(ident!("f"))),
                 arguments: vec![Expression::True, Expression::False]
             },
-            "f(true,false,)"
+            "f(true,false)"
         );
         assert_render!(
             Expression::Call {

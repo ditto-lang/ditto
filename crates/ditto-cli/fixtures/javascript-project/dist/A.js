@@ -1,2 +1,2 @@
-const A = ["A",];
+const A = ["A"];
 export {A};
