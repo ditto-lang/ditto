@@ -1,0 +1,20 @@
+module Test exports (..);
+
+get_name = do {
+    return "jane"
+};
+
+get_names = do {
+    name <- get_name;
+    another_name <- get_name;
+    return [name, another_name]
+};
+
+effect_map = (effect_a: Effect(a), fn: (a) -> b): Effect(b) -> do {
+    a <- effect_a;
+    return fn(a)
+};
+
+main : Effect(Unit) = do {
+    effect_map(get_name, (name) -> unit)
+};

@@ -18,126 +18,69 @@ pub struct Config {
 }
 
 pub fn convert_module(config: &Config, ast_module: ditto_ast::Module) -> Module {
-    let mut statements = Vec::new();
+    let values_toposorted = ast_module.values_toposorted();
+    let ditto_ast::Module { constructors, .. } = ast_module;
 
-    let mut constructors = ast_module
-        .constructors
-        .clone()
-        .into_iter()
-        .collect::<Vec<_>>();
+    let mut statements = convert_module_constructors(constructors);
 
-    // Sort for determinism in tests
-    if cfg!(debug_assertions) {
-        constructors.sort_by(|a, b| a.0.cmp(&b.0));
-    }
-
-    for (proper_name, module_constructor) in constructors {
-        if module_constructor.fields.is_empty() {
-            statements.push(ModuleStatement::ConstAssignment {
-                ident: Ident::from(proper_name.clone()),
-                value: Expression::Array(vec![Expression::String(proper_name.0)]),
-            });
-        } else {
-            let field_idents = module_constructor
-                .fields
-                .iter()
-                .enumerate()
-                .map(|(i, _type)| Ident(format!("${}", i)))
-                .collect::<Vec<_>>();
-
-            let mut elements = vec![Expression::String(proper_name.0.clone())];
-            elements.extend(field_idents.clone().into_iter().map(Expression::Variable));
-
-            let return_expr = Expression::Array(elements);
-
-            statements.push(ModuleStatement::Function {
-                ident: Ident::from(proper_name),
-                parameters: field_idents,
-                body: Block(vec![BlockStatement::Return(Some(return_expr))]),
-            });
-        }
-    }
-
+    // As we convert the values we track imported value references,
+    // so that we import only what's needed.
     let mut imported_idents = ImportedIdentReferences::new();
 
-    for scc in ast_module.values_toposorted().into_iter() {
+    for scc in values_toposorted.into_iter() {
+        // REVIEW need to think about what we do if we have a mix of value
+        // constants and functions in a cycle
         match scc {
-            Scc::Cyclic(cyclic) => {
-                let all_functions = cyclic.iter().all(|(_, ast_expression)| {
-                    matches!(ast_expression, ditto_ast::Expression::Function { .. })
-                });
+            Scc::Cyclic(cyclic_values) => {
+                let cyclic_values = cyclic_values
+                    .into_iter()
+                    .map(|(name, expression)| {
+                        (
+                            Ident::from(name),
+                            convert_expression(&mut imported_idents, expression),
+                        )
+                    })
+                    .collect::<Vec<_>>();
 
-                // REVIEW need to think about what we do if we have a mix of value
-                // constants and functions in a cycle
-
-                if all_functions {
-                    for (name, ast_expression) in cyclic {
-                        if let ditto_ast::Expression::Function {
-                            span: _,
-                            binders,
-                            body,
-                        } = ast_expression
-                        {
-                            statements.push(ModuleStatement::Function {
-                                ident: Ident::from(name),
-                                parameters: binders
-                                    .into_iter()
-                                    .map(|binder| match binder {
-                                        ditto_ast::FunctionBinder::Name { value, .. } => {
-                                            Ident::from(value)
-                                        }
-                                    })
-                                    .collect(),
-                                body: convert_expression_to_block(&mut imported_idents, *body),
-                            });
-                        } else {
-                            panic!("i can't believe you've done this")
-                        }
-                    }
+                // Are all the cyclic values functions?
+                // If so, we don't need to do anything special
+                let all_values_are_functions = cyclic_values
+                    .iter()
+                    .all(|(_, js)| matches!(js, Expression::ArrowFunction { .. }));
+                if all_values_are_functions {
+                    statements.extend(cyclic_values.into_iter().map(|(ident, expression)| {
+                        expression_to_module_statement(ident, expression)
+                    }));
                 } else {
+                    // ```
+                    // let a;
+                    // let b;
+                    // a = b;
+                    // b = a;
+                    // ```
                     let mut assignments = Vec::new();
-                    for (name, ast_expression) in cyclic {
+                    for (ident, value) in cyclic_values {
                         statements.push(ModuleStatement::LetDeclaration {
-                            ident: Ident::from(name.clone()),
+                            ident: ident.clone(),
                         });
-                        assignments.push(ModuleStatement::Assignment {
-                            ident: Ident::from(name),
-                            value: convert_expression(&mut imported_idents, ast_expression),
-                        });
+                        assignments.push(ModuleStatement::Assignment { ident, value });
                     }
                     statements.extend(assignments);
                 }
             }
-            Scc::Acyclic((name, ast_expression)) => match ast_expression {
-                ditto_ast::Expression::Function {
-                    span: _,
-                    binders,
-                    body,
-                } => {
-                    statements.push(ModuleStatement::Function {
-                        ident: Ident::from(name),
-                        parameters: binders
-                            .into_iter()
-                            .map(|binder| match binder {
-                                ditto_ast::FunctionBinder::Name { value, .. } => Ident::from(value),
-                            })
-                            .collect(),
-                        body: convert_expression_to_block(&mut imported_idents, *body),
-                    });
-                }
-                _ => statements.push(ModuleStatement::ConstAssignment {
-                    ident: Ident::from(name),
-                    value: convert_expression(&mut imported_idents, ast_expression),
-                }),
-            },
+            Scc::Acyclic((name, expression)) => {
+                let ident = Ident::from(name);
+                let expression = convert_expression(&mut imported_idents, expression);
+                statements.push(expression_to_module_statement(ident, expression));
+            }
         }
     }
 
-    let mut imports = imported_idents
+    let mut imports: Vec<ImportStatement> = imported_idents
         .into_iter()
         .map(|(imported_module, mut idents)| {
+            // Sort imported idents for determinism in tests
             if cfg!(debug_assertions) {
-                // Sort for determinism
                 idents.sort_by(|a, b| a.0 .0.cmp(&b.0 .0));
             }
             ImportStatement {
@@ -150,23 +93,23 @@ pub fn convert_module(config: &Config, ast_module: ditto_ast::Module) -> Module 
                 idents,
             }
         })
-        .collect::<Vec<_>>();
+        .collect();
 
+    // Sort import lines for determinism in tests
     if cfg!(debug_assertions) {
-        // Sort for determinism
         imports.sort_by(|a, b| a.path.cmp(&b.path));
     }
 
-    let mut exports = ast_module
+    let mut exports: Vec<Ident> = ast_module
         .exports
         .values
         .into_keys()
         .map(Ident::from)
         .chain(ast_module.exports.constructors.into_keys().map(Ident::from))
-        .collect::<Vec<_>>();
+        .collect();
 
+    // Sort exported idents for determinism in tests
     if cfg!(debug_assertions) {
-        // Sort for determinism
         exports.sort_by(|a, b| a.0.cmp(&b.0));
     }
 
@@ -175,6 +118,78 @@ pub fn convert_module(config: &Config, ast_module: ditto_ast::Module) -> Module 
         statements,
         exports,
     }
+}
+
+fn expression_to_module_statement(ident: Ident, expression: Expression) -> ModuleStatement {
+    if let Expression::ArrowFunction {
+        parameters,
+        box body,
+    } = expression
+    {
+        ModuleStatement::Function {
+            ident,
+            parameters,
+            body: match body {
+                ArrowFunctionBody::Expression(expression) => {
+                    Block(vec![BlockStatement::Return(Some(expression))])
+                }
+                ArrowFunctionBody::Block(block) => block,
+            },
+        }
+    } else {
+        ModuleStatement::ConstAssignment {
+            ident,
+            value: expression,
+        }
+    }
+}
+
+fn convert_module_constructors(
+    constructors: ditto_ast::ModuleConstructors,
+) -> Vec<ModuleStatement> {
+    let mut statements = Vec::with_capacity(constructors.len());
+
+    for (proper_name, ditto_ast::ModuleConstructor { fields, .. }) in constructors {
+        if fields.is_empty() {
+            // If the constructor doesn't have any fields then it's a constant assignment.
+            //
+            // ```
+            // const Nothing = ["Nothing"]
+            // ```
+            statements.push(ModuleStatement::ConstAssignment {
+                ident: Ident::from(proper_name.clone()),
+                value: Expression::Array(vec![Expression::String(proper_name.0)]),
+            });
+        } else {
+            // If the constructor does have fields then it's a function
+            //
+            // ```
+            // function Just($0) {
+            //   return ["Just", $0];
+            // }
+            // ```
+            let field_idents = fields
+                .iter()
+                .enumerate()
+                .map(|(i, _type)| Ident(format!("${}", i)));
+
+            let mut elements = vec![Expression::String(proper_name.0.clone())];
+            elements.extend(field_idents.clone().into_iter().map(Expression::Variable));
+
+            let return_expr = Expression::Array(elements);
+
+            statements.push(ModuleStatement::Function {
+                ident: Ident::from(proper_name),
+                parameters: field_idents.collect(),
+                body: Block(vec![BlockStatement::Return(Some(return_expr))]),
+            });
+        }
+    }
+    // Sort for determinism in tests
+    if cfg!(debug_assertions) {
+        statements.sort_by(|a, b| a.ident().cmp(b.ident()))
+    }
+    statements
 }
 
 type ImportedIdentReferences = HashMap<ImportedModule, Vec<ImportedIdent>>;
@@ -187,16 +202,6 @@ enum ImportedModule {
 
 /// (foo, Some$Module$foo)
 type ImportedIdent = (Ident, Ident);
-
-fn convert_expression_to_block(
-    imported_idents: &mut ImportedIdentReferences,
-    ast_expression: ditto_ast::Expression,
-) -> Block {
-    Block(vec![BlockStatement::Return(Some(convert_expression(
-        imported_idents,
-        ast_expression,
-    )))])
-}
 
 fn convert_expression(
     imported_idents: &mut ImportedIdentReferences,
@@ -336,6 +341,56 @@ fn convert_expression(
                         expression
                     }
                 })
+        }
+        ditto_ast::Expression::Effect { effect, .. } => {
+            let mut block_statements = Vec::new();
+            convert_effect(imported_idents, &mut block_statements, effect);
+            let block = Block(block_statements);
+            Expression::ArrowFunction {
+                parameters: vec![],
+                body: Box::new(ArrowFunctionBody::Block(block)),
+            }
+        }
+    }
+}
+
+fn convert_effect(
+    imported_idents: &mut ImportedIdentReferences,
+    block_statements: &mut Vec<BlockStatement>,
+    effect: ditto_ast::Effect,
+) {
+    match effect {
+        ditto_ast::Effect::Return { box expression } => {
+            let expression = convert_expression(imported_idents, expression);
+            block_statements.push(BlockStatement::Return(Some(expression)));
+        }
+        ditto_ast::Effect::Bind {
+            name,
+            box expression,
+            box rest,
+        } => {
+            let ident = Ident::from(name);
+            block_statements.push(BlockStatement::ConstAssignment {
+                ident,
+                value: Expression::Call {
+                    function: Box::new(convert_expression(imported_idents, expression)),
+                    arguments: vec![],
+                },
+            });
+            convert_effect(imported_idents, block_statements, rest);
+        }
+        ditto_ast::Effect::Expression {
+            box expression,
+            rest,
+        } => {
+            let expression = Expression::Call {
+                function: Box::new(convert_expression(imported_idents, expression)),
+                arguments: vec![],
+            };
+            block_statements.push(BlockStatement::Expression(expression));
+            if let Some(box rest) = rest {
+                convert_effect(imported_idents, block_statements, rest);
+            }
         }
     }
 }

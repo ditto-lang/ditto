@@ -45,6 +45,18 @@ pub enum ModuleStatement {
     },
 }
 
+impl ModuleStatement {
+    /// Get the identifier for this module statement.
+    pub fn ident(&self) -> &Ident {
+        match self {
+            Self::ConstAssignment { ident, .. } => ident,
+            Self::Assignment { ident, .. } => ident,
+            Self::LetDeclaration { ident, .. } => ident,
+            Self::Function { ident, .. } => ident,
+        }
+    }
+}
+
 /// A bunch of statements surrounded by braces.
 #[derive(Clone)]
 pub struct Block(pub Vec<BlockStatement>);
@@ -61,7 +73,7 @@ pub enum BlockStatement {
     /// ```javascript
     /// console.log("hi");
     /// ```
-    _Expression(Expression),
+    Expression(Expression),
     /// ```javascript
     /// throw new Error("message")
     /// ```

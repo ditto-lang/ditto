@@ -196,6 +196,11 @@ fn convert_type_rec(
         ast::Type::PrimConstructor(ast::PrimType::Bool) => ident!("boolean").into(),
         ast::Type::PrimConstructor(ast::PrimType::Unit) => ident!("undefined").into(),
 
+        ast::Type::PrimConstructor(ast::PrimType::Effect) => {
+            // :thinking:
+            todo!();
+        }
+
         ast::Type::Variable {
             var, variable_kind, ..
         } => {
