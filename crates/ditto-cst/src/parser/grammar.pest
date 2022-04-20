@@ -132,6 +132,7 @@ expression = _
   { expression_call
   | expression_function
   | expression_match
+  | expression_effect
   | expression1
   }
 
@@ -161,6 +162,20 @@ expression_call_arguments = { open_paren ~ (expression ~ (comma ~ expression)* ~
 expression_match = { match_keyword ~ expression ~ with_keyword ~ expression_match_arm+ }
 
 expression_match_arm = { pipe ~ pattern ~ right_arrow ~ expression }
+
+expression_effect = { do_keyword ~ open_brace ~ expression_effect_statement ~ close_brace }
+
+expression_effect_statement = _
+  { expression_effect_return
+  | expression_effect_bind
+  | expression_effect_expression
+  }
+
+expression_effect_return = { return_keyword ~ expression }
+
+expression_effect_bind = { name ~ left_arrow ~ expression ~ semicolon ~ expression_effect_statement }
+
+expression_effect_expression = { expression ~ (semicolon ~ expression_effect_statement)? }
 
 expression_constructor = { qualified_proper_name }
 
@@ -251,6 +266,12 @@ foreign_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ FOREIGN_KEYWORD ~ HORIZONTAL
 
 match_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ MATCH_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
+do_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ DO_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
+return_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ RETURN_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
+let_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ LET_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
 with_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ WITH_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
 dot = ${ (WHITESPACE | LINE_COMMENT)* ~ DOT ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
@@ -269,6 +290,8 @@ equals = ${ (WHITESPACE | LINE_COMMENT)* ~ EQUALS ~ HORIZONTAL_WHITESPACE? ~ LIN
 
 right_arrow = ${ (WHITESPACE | LINE_COMMENT)* ~ RIGHT_ARROW ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
+left_arrow = ${ (WHITESPACE | LINE_COMMENT)* ~ LEFT_ARROW ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
 open_paren = ${ (WHITESPACE | LINE_COMMENT)* ~ OPEN_PAREN ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
 close_paren = ${ (WHITESPACE | LINE_COMMENT)* ~ CLOSE_PAREN ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
@@ -276,6 +299,10 @@ close_paren = ${ (WHITESPACE | LINE_COMMENT)* ~ CLOSE_PAREN ~ HORIZONTAL_WHITESP
 open_bracket = ${ (WHITESPACE | LINE_COMMENT)* ~ OPEN_BRACKET ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
 close_bracket = ${ (WHITESPACE | LINE_COMMENT)* ~ CLOSE_BRACKET ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
+open_brace = ${ (WHITESPACE | LINE_COMMENT)* ~ OPEN_BRACE ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
+close_brace = ${ (WHITESPACE | LINE_COMMENT)* ~ CLOSE_BRACE ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
 // -----------------------------------------------------------------------------
 // Atom rules (uppercase by convention)
@@ -318,6 +345,12 @@ FOREIGN_KEYWORD = { "foreign" }
 
 MATCH_KEYWORD = { "match" }
 
+DO_KEYWORD = { "do" }
+
+RETURN_KEYWORD = { "return" }
+
+LET_KEYWORD = { "let" }
+
 WITH_KEYWORD = { "with" }
 
 DOT = { "." }
@@ -336,6 +369,8 @@ EQUALS = { "=" }
 
 RIGHT_ARROW = { "->" }
 
+LEFT_ARROW = { "<-" }
+
 OPEN_PAREN = { "(" }
 
 CLOSE_PAREN = { ")" }
@@ -343,6 +378,10 @@ CLOSE_PAREN = { ")" }
 OPEN_BRACKET = { "[" }
 
 CLOSE_BRACKET = { "]" }
+
+OPEN_BRACE = { "{" }
+
+CLOSE_BRACE = { "}" }
 
 DOUBLE_QUOTE = { "\"" }
 
