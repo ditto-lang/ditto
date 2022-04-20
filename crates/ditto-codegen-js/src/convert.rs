@@ -2,7 +2,6 @@ use crate::ast::{
     iife, ArrowFunctionBody, Block, BlockStatement, Expression, Ident, ImportStatement, Module,
     ModuleStatement, Operator,
 };
-use convert_case::{Case, Casing};
 use ditto_ast::graph::Scc;
 use lazy_static::lazy_static;
 use std::{
@@ -477,9 +476,8 @@ fn mk_foreign_ident(value: String) -> Ident {
     Ident(format!("foreign${}", name_string_to_ident_string(value)))
 }
 
-// Hmmm probably don't want to do this, as it will get messy with foreign things?
 fn name_string_to_ident_string(name_string: String) -> String {
-    mangle_reserved(name_string).to_case(Case::Camel)
+    mangle_reserved(name_string)
 }
 
 fn mangle_reserved(ident: String) -> String {

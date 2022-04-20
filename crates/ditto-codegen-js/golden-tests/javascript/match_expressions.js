@@ -2,14 +2,14 @@ function Just($0) {
   return ["Just", $0];
 }
 const Nothing = ["Nothing"];
-function mkFive(five) {
+function mk_five(five) {
   return five[0] === "Five"
     ? 5
     : (() => {
         throw new Error("Pattern match error");
       })();
 }
-function withDefault(maybe, $default) {
+function with_default(maybe, $default) {
   return maybe[0] === "Nothing"
     ? $default
     : maybe[0] === "Just"
@@ -21,4 +21,4 @@ function withDefault(maybe, $default) {
         throw new Error("Pattern match error");
       })();
 }
-export { Just, Nothing, mkFive, withDefault };
+export { Just, Nothing, mk_five, with_default };

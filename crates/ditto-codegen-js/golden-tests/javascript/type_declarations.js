@@ -13,6 +13,6 @@ function Ok($0) {
   return ["Ok", $0];
 }
 const Private = ["Private"];
-const justFive = Just(5);
+const just_five = Just(5);
 const nothing = Nothing;
 export { A, Err, Just, Nothing, Ok };

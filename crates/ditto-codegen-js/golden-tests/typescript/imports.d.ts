@@ -9,8 +9,8 @@ export declare function MyFive(
   $0: Data$Stuff.Five,
   $1: test_stuff$Data$Stuff.Five,
 ): MyFive;
-export declare const anotherFive: test_stuff$Data$Stuff.Five;
+export declare const another_five: test_stuff$Data$Stuff.Five;
 export declare const five: Data$Stuff.Five;
-export declare const justOneMore: MyFive;
-export declare const maybeFive: test_stuff$Data$Stuff.Maybe<Data$Stuff.Five>;
-export declare const myFive: MyFive;
+export declare const just_one_more: MyFive;
+export declare const maybe_five: test_stuff$Data$Stuff.Maybe<Data$Stuff.Five>;
+export declare const my_five: MyFive;

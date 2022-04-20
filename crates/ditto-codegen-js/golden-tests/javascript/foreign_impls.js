@@ -1,12 +1,12 @@
 import {
-  arrayMapImpl as foreign$arrayMapImpl,
+  array_map_impl as foreign$array_map_impl,
   h as foreign$h,
 } from "./foreign.js";
 function Attr($0, $1) {
   return ["Attr", $0, $1];
 }
-const arrayMap = foreign$arrayMapImpl;
+const array_map = foreign$array_map_impl;
 function span(attrs) {
   return foreign$h("span", attrs);
 }
-export { Attr, arrayMap, span };
+export { Attr, array_map, span };

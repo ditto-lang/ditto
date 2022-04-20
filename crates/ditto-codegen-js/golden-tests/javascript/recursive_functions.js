@@ -1,10 +1,10 @@
-function cycleA() {
-  return cycleB();
+function cycle_a() {
+  return cycle_b();
 }
-function cycleB() {
-  return cycleA();
+function cycle_b() {
+  return cycle_a();
 }
 function forever() {
   return forever();
 }
-export { cycleA, cycleB, forever };
+export { cycle_a, cycle_b, forever };
