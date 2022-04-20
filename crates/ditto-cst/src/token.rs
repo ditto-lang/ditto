@@ -120,6 +120,14 @@ pub struct OpenBracket(pub EmptyToken);
 #[derive(Debug, Clone)]
 pub struct CloseBracket(pub EmptyToken);
 
+/// `{`
+#[derive(Debug, Clone)]
+pub struct OpenBrace(pub EmptyToken);
+
+/// `}`
+#[derive(Debug, Clone)]
+pub struct CloseBrace(pub EmptyToken);
+
 /// `<-`
 #[derive(Debug, Clone)]
 pub struct LeftArrow(pub EmptyToken);
@@ -187,3 +195,15 @@ pub struct MatchKeyword(pub EmptyToken);
 /// `with`
 #[derive(Debug, Clone)]
 pub struct WithKeyword(pub EmptyToken);
+
+/// `let`
+#[derive(Debug, Clone)]
+pub struct LetKeyword(pub EmptyToken);
+
+/// `do`
+#[derive(Debug, Clone)]
+pub struct DoKeyword(pub EmptyToken);
+
+/// `return`
+#[derive(Debug, Clone)]
+pub struct ReturnKeyword(pub EmptyToken);

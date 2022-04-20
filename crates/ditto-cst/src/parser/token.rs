@@ -2,9 +2,10 @@
 
 use super::Rule;
 use crate::{
-    AsKeyword, CloseBracket, CloseParen, Colon, Comma, Comment, DoubleDot, EmptyToken, Equals,
-    ExportsKeyword, FalseKeyword, ForeignKeyword, ImportKeyword, ModuleKeyword, OpenBracket,
-    OpenParen, Pipe, RightArrow, Span, StringToken, TrueKeyword, TypeKeyword, UnitKeyword,
+    AsKeyword, CloseBrace, CloseBracket, CloseParen, Colon, Comma, Comment, DoKeyword, DoubleDot,
+    EmptyToken, Equals, ExportsKeyword, FalseKeyword, ForeignKeyword, ImportKeyword, LeftArrow,
+    LetKeyword, ModuleKeyword, OpenBrace, OpenBracket, OpenParen, Pipe, ReturnKeyword, RightArrow,
+    Span, StringToken, TrueKeyword, TypeKeyword, UnitKeyword,
 };
 use pest::iterators::{Pair, Pairs};
 
@@ -24,10 +25,13 @@ impl_from_pair!(OpenParen, rule = Rule::open_paren);
 impl_from_pair!(CloseParen, rule = Rule::close_paren);
 impl_from_pair!(Comma, rule = Rule::comma);
 impl_from_pair!(RightArrow, rule = Rule::right_arrow);
+impl_from_pair!(LeftArrow, rule = Rule::left_arrow);
 impl_from_pair!(Colon, rule = Rule::colon);
 impl_from_pair!(Semicolon, rule = Rule::semicolon);
 impl_from_pair!(OpenBracket, rule = Rule::open_bracket);
 impl_from_pair!(CloseBracket, rule = Rule::close_bracket);
+impl_from_pair!(OpenBrace, rule = Rule::open_brace);
+impl_from_pair!(CloseBrace, rule = Rule::close_brace);
 impl_from_pair!(ImportKeyword, rule = Rule::import_keyword);
 impl_from_pair!(AsKeyword, rule = Rule::as_keyword);
 impl_from_pair!(DoubleDot, rule = Rule::double_dot);
@@ -45,6 +49,9 @@ impl_from_pair!(ForeignKeyword, rule = Rule::foreign_keyword);
 impl_from_pair!(Pipe, rule = Rule::pipe);
 impl_from_pair!(MatchKeyword, rule = Rule::match_keyword);
 impl_from_pair!(WithKeyword, rule = Rule::with_keyword);
+//impl_from_pair!(LetKeyword, rule = Rule::let_keyword);
+impl_from_pair!(DoKeyword, rule = Rule::do_keyword);
+impl_from_pair!(ReturnKeyword, rule = Rule::return_keyword);
 
 impl StringToken {
     pub(super) fn from_pairs(pairs: &mut Pairs<Rule>) -> Self {
