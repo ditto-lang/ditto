@@ -47,3 +47,14 @@ all_the_args = () ->
             d,
         ),
     ) -> unit;
+
+-- Because ditto isn't whitespace sensitive, nested match expressions need to be
+-- wrapped in parens :disappointed:
+nested = () ->
+    match x with
+    | Outer0 -> (
+        match y with
+        | Inner0 -> unit
+        | Inner1 -> unit
+    )
+    | Outer1 -> unit;
