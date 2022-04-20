@@ -16,18 +16,18 @@ function curry(fn) {
 function identity(a) {
   return a;
 }
-const fifthString = "A";
-const notQuiteFive = 5.01;
-const floatyFive = 5.0;
+const fifth_string = "A";
+const not_quite_five = 5.01;
+const floaty_five = 5.0;
 const five = 5;
 const fives = [
   5,
   five,
   select(true, 5, 50),
-  always(five)(floatyFive),
+  always(five)(floaty_five),
   uncurry(always)(five, true),
   (a => a)(5),
-  uncurry(always)(five, fifthString),
+  uncurry(always)(five, fifth_string),
   always(identity)(false)(five),
 ];
 export { curry, fives };
