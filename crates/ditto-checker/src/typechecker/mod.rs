@@ -19,7 +19,9 @@ use crate::{
     result::{Result, TypeError, Warning, Warnings},
     supply::Supply,
 };
-use ditto_ast::{unqualified, Argument, Expression, FunctionBinder, Pattern, PrimType, Span, Type};
+use ditto_ast::{
+    unqualified, Argument, Effect, Expression, FunctionBinder, Pattern, PrimType, Span, Type,
+};
 use ditto_cst as cst;
 use std::collections::HashSet;
 
@@ -383,6 +385,16 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
             box expression,
             arms,
         } => infer_or_check_match(env, state, span, expression, arms, None),
+
+        pre::Expression::Effect { span, effect } => {
+            let return_type = state.supply.fresh_type();
+            let effect = check_effect(env, state, return_type.clone(), effect)?;
+            Ok(Expression::Effect {
+                span,
+                return_type,
+                effect,
+            })
+        }
     }
 }
 
@@ -401,6 +413,24 @@ pub fn check(
             },
             expected,
         ) => infer_or_check_match(env, state, span, expression, arms, Some(expected)),
+        (
+            pre::Expression::Effect { span, effect },
+            Type::Call {
+                function: box Type::PrimConstructor(PrimType::Effect),
+                arguments,
+            },
+        ) if arguments.as_slice().len() == 1 => {
+            //                          ^^^^
+            // NOTE kindchecking _should_ ensure that this is never not the case...
+            //
+            let return_type = arguments.first();
+            let effect = check_effect(env, state, return_type.clone(), effect)?;
+            Ok(Expression::Effect {
+                span,
+                return_type: return_type.clone(),
+                effect,
+            })
+        }
         (expr, expected) => {
             let expression = infer(env, state, expr)?;
             unify(
@@ -412,6 +442,103 @@ pub fn check(
                 },
             )?;
             Ok(expression)
+        }
+    }
+}
+
+fn check_effect(
+    env: &Env,
+    state: &mut State,
+    expected_return_type: Type,
+    effect: pre::Effect,
+) -> Result<Effect> {
+    match effect {
+        pre::Effect::Return { box expression } => {
+            let expression = check(env, state, expected_return_type, expression)?;
+            return Ok(Effect::Return {
+                expression: Box::new(expression),
+            });
+        }
+        pre::Effect::Expression {
+            box expression,
+            rest: None,
+        } => {
+            let expected_type = mk_effect_type(expected_return_type);
+            let expression = check(env, state, expected_type, expression)?;
+            return Ok(Effect::Expression {
+                expression: Box::new(expression),
+                rest: None,
+            });
+        }
+        pre::Effect::Expression {
+            box expression,
+            rest: Some(box rest),
+        } => {
+            // TODO: warn if something important was discarded?
+            let expected_type = mk_effect_type(state.supply.fresh_type());
+            let expression = check(env, state, expected_type, expression)?;
+            let rest = check_effect(env, state, expected_return_type, rest)?;
+            return Ok(Effect::Expression {
+                expression: Box::new(expression),
+                rest: Some(Box::new(rest)),
+            });
+        }
+        pre::Effect::Bind {
+            name,
+            name_span,
+            box expression,
+            box rest,
+        } => {
+            // NOTE: `name` isn't in scope for `expression`
+            let value_type = state.supply.fresh_type();
+            let expression = check(env, state, mk_effect_type(value_type.clone()), expression)?;
+
+            // Extend the environment
+            let qualified_name = unqualified(name.clone());
+            let mut env_values = env.values.clone();
+            env_values.insert(
+                qualified_name.clone(),
+                EnvValue::ModuleValue {
+                    span: name_span,
+                    variable_scheme: Scheme {
+                        forall: HashSet::new(),
+                        signature: value_type,
+                    },
+                    variable: name.clone(),
+                },
+            );
+            let env = Env {
+                values: env_values,
+                constructors: env.constructors.clone(),
+            };
+
+            let original_value_reference_count = state.value_references.remove(&qualified_name);
+
+            let rest = check_effect(&env, state, expected_return_type, rest)?;
+
+            // Warn if the binder was never referenced
+            if !state.value_references.contains_key(&qualified_name) {
+                let warning = Warning::UnusedEffectBinder { span: name_span };
+                state.warnings.push(warning);
+            }
+
+            // Restore shadowed reference count
+            if let Some(count) = original_value_reference_count {
+                state.value_references.insert(qualified_name, count);
+            }
+
+            return Ok(Effect::Bind {
+                name,
+                expression: Box::new(expression),
+                rest: Box::new(rest),
+            });
+        }
+    };
+
+    fn mk_effect_type(t: Type) -> Type {
+        Type::Call {
+            function: Box::new(Type::PrimConstructor(PrimType::Effect)),
+            arguments: non_empty_vec::NonEmpty::new(t),
         }
     }
 }

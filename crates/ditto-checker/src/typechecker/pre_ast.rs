@@ -41,6 +41,10 @@ pub enum Expression {
         expression: Box<Self>,
         arms: NonEmpty<(Pattern, Self)>,
     },
+    Effect {
+        span: Span,
+        effect: Effect,
+    },
     Variable {
         span: Span,
         variable: QualifiedName,
@@ -184,6 +188,10 @@ fn convert_cst(
                 arms,
             })
         }
+        cst::Expression::Effect { effect, .. } => {
+            let effect = convert_cst_effect(env, state, effect)?;
+            Ok(Expression::Effect { span, effect })
+        }
         cst::Expression::Unit { .. } => Ok(Expression::Unit { span }),
         cst::Expression::True { .. } => Ok(Expression::True { span }),
         cst::Expression::False { .. } => Ok(Expression::False { span }),
@@ -297,6 +305,57 @@ fn convert_cst(
     }
 }
 
+fn convert_cst_effect(env: &Env, state: &mut State, cst_effect: cst::Effect) -> Result<Effect> {
+    match cst_effect {
+        cst::Effect::Return { box expression, .. } => {
+            let expression = convert_cst(env, state, expression)?;
+            Ok(Effect::Return {
+                expression: Box::new(expression),
+            })
+        }
+        cst::Effect::Bind {
+            name,
+            box expression,
+            box rest,
+            ..
+        } => {
+            let name_span = name.get_span();
+            let name = Name::from(name);
+            let expression = convert_cst(env, state, expression)?;
+            let rest = convert_cst_effect(env, state, rest)?;
+            Ok(Effect::Bind {
+                name,
+                name_span,
+                expression: Box::new(expression),
+                rest: Box::new(rest),
+            })
+        }
+        cst::Effect::Expression {
+            box expression,
+            rest: None,
+            ..
+        } => {
+            let expression = convert_cst(env, state, expression)?;
+            Ok(Effect::Expression {
+                expression: Box::new(expression),
+                rest: None,
+            })
+        }
+        cst::Effect::Expression {
+            box expression,
+            rest: Some((_semicolon, box rest)),
+            ..
+        } => {
+            let expression = convert_cst(env, state, expression)?;
+            let rest = convert_cst_effect(env, state, rest)?;
+            Ok(Effect::Expression {
+                expression: Box::new(expression),
+                rest: Some(Box::new(rest)),
+            })
+        }
+    }
+}
+
 pub fn check_type_annotation(
     env_types: &EnvTypes,
     env_type_variables: &mut EnvTypeVariables,
@@ -405,6 +464,7 @@ fn substitute_type_annotations(subst: &Substitution, expression: Expression) -> 
         True { span } => True { span },
         False { span } => False { span },
         Unit { span } => Unit { span },
+        Effect { span, effect } => Effect { span, effect },
     }
 }
 
@@ -448,6 +508,23 @@ impl From<cst::Pattern> for Pattern {
             },
         }
     }
+}
+
+#[derive(Clone)]
+pub enum Effect {
+    Bind {
+        name: Name,
+        name_span: Span,
+        expression: Box<Expression>,
+        rest: Box<Self>,
+    },
+    Expression {
+        expression: Box<Expression>,
+        rest: Option<Box<Self>>,
+    },
+    Return {
+        expression: Box<Expression>,
+    },
 }
 
 fn strip_number_separators(value: String) -> String {

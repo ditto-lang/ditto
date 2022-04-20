@@ -1,4 +1,4 @@
-use ditto_ast::{Argument, Expression, FunctionBinder, Type};
+use ditto_ast::{Argument, Effect, Expression, FunctionBinder, Type};
 use non_empty_vec::NonEmpty;
 use std::collections::HashMap;
 
@@ -143,6 +143,15 @@ impl Substitution {
                     )
                 },
             },
+            Effect {
+                span,
+                return_type,
+                effect,
+            } => Effect {
+                span,
+                return_type: self.apply(return_type),
+                effect: self.apply_effect(effect),
+            },
             LocalConstructor {
                 constructor_type,
                 span,
@@ -207,6 +216,35 @@ impl Substitution {
             String { .. } => expression,
             Int { .. } => expression,
             Float { .. } => expression,
+        }
+    }
+
+    fn apply_effect(&self, effect: Effect) -> Effect {
+        match effect {
+            Effect::Return { expression } => Effect::Return { expression },
+            Effect::Bind {
+                name,
+                box expression,
+                box rest,
+            } => Effect::Bind {
+                name,
+                expression: Box::new(self.apply_expression(expression)),
+                rest: Box::new(self.apply_effect(rest)),
+            },
+            Effect::Expression {
+                box expression,
+                rest: None,
+            } => Effect::Expression {
+                expression: Box::new(self.apply_expression(expression)),
+                rest: None,
+            },
+            Effect::Expression {
+                box expression,
+                rest: Some(box rest),
+            } => Effect::Expression {
+                expression: Box::new(self.apply_expression(expression)),
+                rest: Some(Box::new(self.apply_effect(rest))),
+            },
         }
     }
 }
