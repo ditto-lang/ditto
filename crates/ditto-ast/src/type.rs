@@ -59,6 +59,8 @@ pub enum Type {
 /// Ditto's primitive types.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum PrimType {
+    /// `do { return 5 } : Effect(Int)`
+    Effect,
     /// `[] : Array(a)`
     Array,
     /// `5 : Int`
@@ -76,6 +78,7 @@ pub enum PrimType {
 impl fmt::Display for PrimType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::Effect => write!(f, "Effect"),
             Self::Array => write!(f, "Array"),
             Self::Int => write!(f, "Int"),
             Self::Float => write!(f, "Float"),
@@ -94,6 +97,9 @@ impl PrimType {
     /// Return the kind of the given primitive.
     pub fn get_kind(&self) -> Kind {
         match self {
+            Self::Effect => Kind::Function {
+                parameters: NonEmpty::new(Kind::Type),
+            },
             Self::Array => Kind::Function {
                 parameters: NonEmpty::new(Kind::Type),
             },

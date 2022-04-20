@@ -130,6 +130,17 @@ pub enum Expression {
         /// The canonical variable.
         variable: FullyQualifiedName,
     },
+    /// An effectful expression.
+    Effect {
+        /// The source span for this expression.
+        span: Span,
+
+        /// The return type of this effect.
+        return_type: Type,
+
+        /// The chain of effect statements.
+        effect: Effect,
+    },
     /// A string literal.
     String {
         /// The source span for this expression.
@@ -189,8 +200,6 @@ pub enum Expression {
         /// The source span for this expression.
         span: Span,
     },
-    //
-    // TODO GeneratedVariable? (would be used for desugaring function sections?)
 }
 
 impl Expression {
@@ -213,6 +222,10 @@ impl Expression {
             }
             Self::If { output_type, .. } => output_type.clone(),
             Self::Match { match_type, .. } => match_type.clone(),
+            Self::Effect { return_type, .. } => Type::Call {
+                function: Box::new(Type::PrimConstructor(PrimType::Effect)),
+                arguments: NonEmpty::new(return_type.clone()),
+            },
             Self::LocalConstructor {
                 constructor_type, ..
             } => constructor_type.clone(),
@@ -246,6 +259,7 @@ impl Expression {
             Self::LocalVariable { span, .. } => *span,
             Self::ForeignVariable { span, .. } => *span,
             Self::ImportedVariable { span, .. } => *span,
+            Self::Effect { span, .. } => *span,
             Self::String { span, .. } => *span,
             Self::Int { span, .. } => *span,
             Self::Float { span, .. } => *span,
@@ -267,8 +281,6 @@ pub enum Argument {
     /// A standard expression argument.
     /// Could be a variable, could be another function call.
     Expression(Expression),
-    //
-    // TODO sections, e.g. `some_function(&1, True, &2, 5)`
 }
 
 impl Argument {
@@ -330,7 +342,7 @@ pub enum Pattern {
         /// Pattern arguments to the constructor.
         arguments: Vec<Self>,
     },
-    /// An importedf constructor pattern.
+    /// An imported constructor pattern.
     ImportedConstructor {
         /// The source span for this pattern.
         span: Span,
@@ -345,5 +357,31 @@ pub enum Pattern {
         span: Span,
         /// Name to bind.
         name: Name,
+    },
+}
+
+/// A chain of Effect statements.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum Effect {
+    /// `do { name <- expression; rest }`
+    Bind {
+        /// The name being bound.
+        name: Name,
+        /// The (effectful) expression to be evaluated.
+        expression: Box<Expression>,
+        /// Further effect statements.
+        rest: Box<Self>,
+    },
+    /// `do { expression }`
+    Expression {
+        /// The (effectful) expression to be evaluated.
+        expression: Box<Expression>,
+        /// _Optional_ further effect statements.
+        rest: Option<Box<Self>>,
+    },
+    /// `do { return expression }`
+    Return {
+        /// The expression to be returned.
+        expression: Box<Expression>,
     },
 }
