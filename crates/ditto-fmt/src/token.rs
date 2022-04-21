@@ -40,6 +40,7 @@ gen_empty_token_like!(gen_type_keyword, cst::TypeKeyword, "type");
 gen_empty_token_like!(gen_import_keyword, cst::ImportKeyword, "import");
 gen_empty_token_like!(gen_foreign_keyword, cst::ForeignKeyword, "foreign");
 gen_empty_token_like!(gen_open_bracket, cst::OpenBracket, "[");
+gen_empty_token_like!(gen_open_brace, cst::OpenBrace, "{");
 gen_empty_token_like!(gen_pipe, cst::Pipe, "|");
 gen_empty_token_like!(gen_open_paren, cst::OpenParen, "(");
 gen_empty_token_like!(gen_comma, cst::Comma, ",");
@@ -49,7 +50,10 @@ gen_empty_token_like!(gen_double_dot, cst::DoubleDot, "..");
 gen_empty_token_like!(gen_colon, cst::Colon, ":");
 gen_empty_token_like!(gen_semicolon, cst::Semicolon, ";");
 gen_empty_token_like!(gen_right_arrow, cst::RightArrow, "->");
+gen_empty_token_like!(gen_left_arrow, cst::LeftArrow, "<-");
 gen_empty_token_like!(gen_module_keyword, cst::ModuleKeyword, "module");
+gen_empty_token_like!(gen_do_keyword, cst::DoKeyword, "do");
+gen_empty_token_like!(gen_return_keyword, cst::ReturnKeyword, "return");
 gen_empty_token_like!(
     gen_close_bracket,
     cst::CloseBracket,
@@ -62,6 +66,14 @@ gen_empty_token_like!(
     gen_close_paren,
     cst::CloseParen,
     ")",
+    GenTokenOptions {
+        indent_leading_comments: true,
+    }
+);
+gen_empty_token_like!(
+    gen_close_brace,
+    cst::CloseBrace,
+    "}",
     GenTokenOptions {
         indent_leading_comments: true,
     }

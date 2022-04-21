@@ -1,0 +1,59 @@
+module Effect exports (..);
+
+
+get_name = do {
+    return "jane"
+};
+
+get_names = do {
+    name <- get_name;
+    another_name <- get_name;
+    return [name, another_name]
+};
+
+effect_map = (effect_a: Effect(a), fn: (a) -> b): Effect(b) -> do {
+    a <- effect_a;
+    return fn(a)
+};
+
+main: Effect(Unit) = do {
+    effect_map(get_name, (name) -> unit)
+};
+
+bind_comments = do {
+    -- comment
+    whatever <- do_whatever();
+    whatever <- do_whatever();  -- comment
+    whatever <- do_whatever(
+        -- comment
+    );
+    whatever <-
+        -- comment
+        do_whatever();
+    whatever <-  -- comment
+        do_whatever();
+    return 5
+};
+
+nested = do {
+    five <- do {
+        return 5
+    };
+    return 5
+};
+
+if_then_else_effects = do {
+    yey_or_ney <-
+        if true then
+            -- comment
+            yey
+        else
+            ney;
+    if true then do_if_true() else do_if_false();
+    -- comment
+    if true then
+        -- comment
+        do_if_true()
+    else
+        do_if_false()
+};
