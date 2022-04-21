@@ -30,6 +30,10 @@ lazy_static! {
             unqualified(PrimType::Array.as_proper_name()),
             EnvType::PrimConstructor(PrimType::Array),
         ),
+        (
+            unqualified(PrimType::Effect.as_proper_name()),
+            EnvType::PrimConstructor(PrimType::Effect),
+        ),
     ]);
 }
 

@@ -467,6 +467,9 @@ fn toposort_value_declarations(
                     get_connected_nodes_rec(&tail_arm.expression, nodes, accum);
                 }
             }
+            Expression::Effect { effect, .. } => {
+                get_connected_nodes_rec_effect(effect, nodes, accum);
+            }
             Expression::Array(elements) => {
                 if let Some(ref elements) = elements.value {
                     elements.iter().for_each(|element| {
@@ -485,6 +488,35 @@ fn toposort_value_declarations(
             Expression::True(_) => {}
             Expression::False(_) => {}
             Expression::Unit(_) => {}
+        }
+    }
+
+    fn get_connected_nodes_rec_effect(effect: &cst::Effect, nodes: &Nodes, accum: &mut Nodes) {
+        match effect {
+            cst::Effect::Return {
+                return_keyword: _,
+                box expression,
+            } => get_connected_nodes_rec(expression, nodes, accum),
+            cst::Effect::Bind {
+                name,
+                left_arrow: _,
+                box expression,
+                semicolon: _,
+                rest,
+            } => {
+                get_connected_nodes_rec(expression, nodes, accum);
+                let nodes = nodes
+                    .difference(&HashSet::from([name.0.value.clone()]))
+                    .cloned()
+                    .collect();
+                get_connected_nodes_rec_effect(rest, &nodes, accum);
+            }
+            cst::Effect::Expression { expression, rest } => {
+                get_connected_nodes_rec(expression, nodes, accum);
+                if let Some((_semicolon, rest)) = rest {
+                    get_connected_nodes_rec_effect(rest, nodes, accum);
+                }
+            }
         }
     }
 }

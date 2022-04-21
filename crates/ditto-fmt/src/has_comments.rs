@@ -70,6 +70,17 @@ impl HasComments for Expression {
                     || head_arm.has_comments()
                     || tail_arms.iter().any(|arm| arm.has_comments())
             }
+            Self::Effect {
+                do_keyword,
+                open_brace,
+                effect,
+                close_brace,
+            } => {
+                do_keyword.0.has_comments()
+                    || open_brace.0.has_comments()
+                    || effect.has_comments()
+                    || close_brace.0.has_comments()
+            }
         }
     }
 
@@ -89,7 +100,43 @@ impl HasComments for Expression {
             Self::Function { box parameters, .. } => parameters.open_paren.0.has_leading_comments(),
             Self::Call { function, .. } => function.has_leading_comments(),
             Self::Match { match_keyword, .. } => match_keyword.0.has_leading_comments(),
+            Self::Effect { do_keyword, .. } => do_keyword.0.has_leading_comments(),
         }
+    }
+}
+
+impl HasComments for Effect {
+    fn has_comments(&self) -> bool {
+        match self {
+            Self::Return {
+                return_keyword,
+                expression,
+            } => return_keyword.0.has_comments() || expression.has_comments(),
+            Self::Bind {
+                name,
+                left_arrow,
+                expression,
+                semicolon,
+                rest,
+            } => {
+                name.has_comments()
+                    || left_arrow.0.has_comments()
+                    || expression.has_comments()
+                    || semicolon.0.has_comments()
+                    || rest.has_comments()
+            }
+            Self::Expression {
+                expression,
+                rest: None,
+            } => expression.has_comments(),
+            Self::Expression {
+                expression,
+                rest: Some((semicolon, rest)),
+            } => expression.has_comments() || semicolon.0.has_comments() || rest.has_comments(),
+        }
+    }
+    fn has_leading_comments(&self) -> bool {
+        todo!()
     }
 }
 

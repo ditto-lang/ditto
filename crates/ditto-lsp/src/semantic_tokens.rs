@@ -113,6 +113,8 @@ impl TokensBuilder {
               "foreign"
               "match"
               "with"
+              "do"
+              "return"
             ] @keyword
 
             ; 2, 3, 4

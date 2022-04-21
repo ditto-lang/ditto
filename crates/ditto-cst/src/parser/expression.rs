@@ -1,9 +1,9 @@
 use super::{parse_rule, Result, Rule};
 use crate::{
-    BracketsList, Colon, ElseKeyword, Expression, FalseKeyword, IfKeyword, MatchArm, MatchKeyword,
-    Name, Parens, ParensList, ParensList1, Pattern, Pipe, QualifiedName, QualifiedProperName,
-    RightArrow, StringToken, ThenKeyword, TrueKeyword, Type, TypeAnnotation, UnitKeyword,
-    WithKeyword,
+    BracketsList, CloseBrace, Colon, DoKeyword, Effect, ElseKeyword, Expression, FalseKeyword,
+    IfKeyword, LeftArrow, MatchArm, MatchKeyword, Name, OpenBrace, Parens, ParensList, ParensList1,
+    Pattern, Pipe, QualifiedName, QualifiedProperName, ReturnKeyword, RightArrow, Semicolon,
+    StringToken, ThenKeyword, TrueKeyword, Type, TypeAnnotation, UnitKeyword, WithKeyword,
 };
 use pest::iterators::Pair;
 
@@ -136,6 +136,69 @@ impl Expression {
                     with_keyword,
                     head_arm,
                     tail_arms,
+                }
+            }
+            Rule::expression_effect => {
+                let mut inner = pair.into_inner();
+                let do_keyword = DoKeyword::from_pair(inner.next().unwrap());
+                let open_brace = OpenBrace::from_pair(inner.next().unwrap());
+                let effect = Effect::from_pair(inner.next().unwrap());
+                let close_brace = CloseBrace::from_pair(inner.next().unwrap());
+                Self::Effect {
+                    do_keyword,
+                    open_brace,
+                    effect,
+                    close_brace,
+                }
+            }
+            other => unreachable!("{:#?} {:#?}", other, pair.into_inner()),
+        }
+    }
+}
+
+impl Effect {
+    fn from_pair(pair: Pair<Rule>) -> Self {
+        match pair.as_rule() {
+            Rule::expression_effect_return => {
+                let mut inner = pair.into_inner();
+                let return_keyword = ReturnKeyword::from_pair(inner.next().unwrap());
+                let expression = Expression::from_pair(inner.next().unwrap());
+                Self::Return {
+                    return_keyword,
+                    expression: Box::new(expression),
+                }
+            }
+            Rule::expression_effect_expression => {
+                let mut inner = pair.into_inner();
+                let expression = Expression::from_pair(inner.next().unwrap());
+                if let Some(semicolon) = inner.next() {
+                    let semicolon = Semicolon::from_pair(semicolon);
+                    let effect = Self::from_pair(inner.next().unwrap());
+                    let rest = Some((semicolon, Box::new(effect)));
+                    Self::Expression {
+                        expression: Box::new(expression),
+                        rest,
+                    }
+                } else {
+                    Self::Expression {
+                        expression: Box::new(expression),
+                        rest: None,
+                    }
+                }
+            }
+            Rule::expression_effect_bind => {
+                let mut inner = pair.into_inner();
+                let name = Name::from_pair(inner.next().unwrap());
+                let left_arrow = LeftArrow::from_pair(inner.next().unwrap());
+                let expression = Expression::from_pair(inner.next().unwrap());
+                let semicolon = Semicolon::from_pair(inner.next().unwrap());
+                let rest = Self::from_pair(inner.next().unwrap());
+                Self::Bind {
+                    name,
+                    left_arrow,
+                    expression: Box::new(expression),
+                    semicolon,
+                    rest: Box::new(rest),
                 }
             }
             other => unreachable!("{:#?} {:#?}", other, pair.into_inner()),
@@ -517,6 +580,51 @@ mod tests {
         assert_parses!(
             "match x with | Foo -> 2 | Bar -> 3",
             Expression::Match { tail_arms, .. } if tail_arms.len() == 1
+        );
+    }
+
+    #[test]
+    fn it_parses_effect_expressions() {
+        use crate::Effect;
+        assert_parses!(
+            "do { return 5 }",
+            Expression::Effect {
+                effect: Effect::Return { .. },
+                ..
+            }
+        );
+        assert_parses!(
+            "do { some_effect() }",
+            Expression::Effect {
+                effect: Effect::Expression {
+                    expression: box Expression::Call { .. },
+                    rest: None,
+                },
+                ..
+            }
+        );
+        assert_parses!(
+            "do { log_something(); return 5 }",
+            Expression::Effect {
+                effect: Effect::Expression {
+                    expression: box Expression::Call { .. },
+                    rest: Some((_, box Effect::Return { .. })),
+                },
+                ..
+            }
+        );
+        assert_parses!(
+            "do { x <- some_effect(); log_something(); return fn(x) }",
+            Expression::Effect {
+                effect: Effect::Bind {
+                    rest: box Effect::Expression {
+                        rest: Some((_, box Effect::Return { .. })),
+                        ..
+                    },
+                    ..
+                },
+                ..
+            }
         );
     }
 }

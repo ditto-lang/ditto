@@ -1,0 +1,12 @@
+
+  ⚠ unused effect binder
+    ╭─[golden:5:1]
+  5 │ };
+  6 │ 
+  7 │ greet : Effect(Unit) = do {
+  8 │     name <- get_name;
+    ·     ──┬─
+    ·       ╰── this isn't used
+  9 │     return unit
+ 10 │ };
+    ╰────

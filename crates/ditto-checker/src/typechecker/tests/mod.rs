@@ -2,6 +2,7 @@ mod array;
 mod bool;
 mod call;
 mod cond;
+mod effect;
 mod float;
 mod function;
 mod int;

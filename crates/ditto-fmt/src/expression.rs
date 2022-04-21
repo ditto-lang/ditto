@@ -5,12 +5,13 @@ use super::{
     r#type::gen_type,
     syntax::{gen_brackets_list, gen_parens, gen_parens_list, gen_parens_list1},
     token::{
-        gen_colon, gen_else_keyword, gen_false_keyword, gen_if_keyword, gen_match_keyword,
-        gen_pipe, gen_right_arrow, gen_string_token, gen_then_keyword, gen_true_keyword,
-        gen_unit_keyword, gen_with_keyword,
+        gen_close_brace, gen_colon, gen_do_keyword, gen_else_keyword, gen_false_keyword,
+        gen_if_keyword, gen_left_arrow, gen_match_keyword, gen_open_brace, gen_pipe,
+        gen_return_keyword, gen_right_arrow, gen_semicolon, gen_string_token, gen_then_keyword,
+        gen_true_keyword, gen_unit_keyword, gen_with_keyword,
     },
 };
-use ditto_cst::{Expression, MatchArm, Pattern, StringToken, TypeAnnotation};
+use ditto_cst::{Effect, Expression, MatchArm, Pattern, StringToken, TypeAnnotation};
 use dprint_core::formatting::{
     condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext, Info,
     PrintItems, Signal,
@@ -128,6 +129,23 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
             items.push_info(end_info);
             items
         }
+        Expression::Effect {
+            do_keyword,
+            open_brace,
+            effect,
+            close_brace,
+        } => {
+            let mut items = PrintItems::new();
+            items.extend(gen_do_keyword(do_keyword));
+            items.extend(space());
+            items.extend(gen_open_brace(open_brace));
+            let mut effect_items = PrintItems::new();
+            gen_effect(effect, &mut effect_items);
+            items.extend(ir_helpers::with_indent(effect_items));
+            items.push_signal(Signal::ExpectNewLine);
+            items.extend(gen_close_brace(close_brace));
+            items
+        }
         Expression::Function {
             box parameters,
             box return_type_annotation,
@@ -188,6 +206,46 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
                 items.extend(gen_match_arm(match_arm));
             }
             items
+        }
+    }
+}
+
+fn gen_effect(effect: Effect, items: &mut PrintItems) {
+    items.push_signal(Signal::ExpectNewLine);
+    match effect {
+        Effect::Return {
+            return_keyword,
+            box expression,
+        } => {
+            items.extend(gen_return_keyword(return_keyword));
+            items.extend(space());
+            items.extend(gen_expression(expression));
+        }
+        Effect::Bind {
+            name,
+            left_arrow,
+            box expression,
+            semicolon,
+            box rest,
+        } => {
+            items.extend(gen_name(name));
+            items.extend(space());
+            let force_use_newlines =
+                left_arrow.0.has_trailing_comment() || expression.has_leading_comments();
+            items.extend(gen_left_arrow(left_arrow));
+            items.extend(gen_body_expression(expression, force_use_newlines));
+            items.extend(gen_semicolon(semicolon));
+            gen_effect(rest, items)
+        }
+        Effect::Expression {
+            box expression,
+            rest,
+        } => {
+            items.extend(gen_expression(expression));
+            if let Some((semicolon, box rest)) = rest {
+                items.extend(gen_semicolon(semicolon));
+                gen_effect(rest, items)
+            }
         }
     }
 }
@@ -429,5 +487,13 @@ mod tests {
         assert_fmt!("match foo with\n| Foo.Bar ->  -- comment\n\t5");
         assert_fmt!("match Foo with\n| Foo(a, b, c) -> a");
         assert_fmt!("match Foo with\n| Foo(\n\t--comment\n\ta,\n\tb,\n\tc,\n) -> a");
+    }
+
+    #[test]
+    fn it_formats_effects() {
+        assert_fmt!("do {\n\treturn 5\n}");
+        assert_fmt!("do {\n\tsome_effect()\n}");
+        assert_fmt!("do {\n\tx <- some_effect();\n\treturn x\n}");
+        assert_fmt!("do {\n\tsome_effect();\n\treturn 5\n}");
     }
 }

@@ -1,0 +1,10 @@
+module Test exports (..);
+
+get_name : Effect(String) = do {
+    return "jane"
+};
+
+greet : Effect(Unit) = do {
+    name <- get_name;
+    return unit
+};

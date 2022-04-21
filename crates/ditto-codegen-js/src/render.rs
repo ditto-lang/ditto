@@ -115,7 +115,7 @@ impl Render for BlockStatement {
                 expression.render(accum);
                 accum.push(';');
             }
-            Self::_Expression(expression) => {
+            Self::Expression(expression) => {
                 expression.render(accum);
                 accum.push(';');
             }

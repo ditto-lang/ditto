@@ -1,7 +1,8 @@
 use crate::{
-    BracketsList, Colon, ElseKeyword, FalseKeyword, IfKeyword, MatchKeyword, Name, Parens,
-    ParensList, ParensList1, Pipe, QualifiedName, QualifiedProperName, RightArrow, StringToken,
-    ThenKeyword, TrueKeyword, Type, UnitKeyword, WithKeyword,
+    BracketsList, CloseBrace, Colon, DoKeyword, ElseKeyword, FalseKeyword, IfKeyword, LeftArrow,
+    MatchKeyword, Name, OpenBrace, Parens, ParensList, ParensList1, Pipe, QualifiedName,
+    QualifiedProperName, ReturnKeyword, RightArrow, Semicolon, StringToken, ThenKeyword,
+    TrueKeyword, Type, UnitKeyword, WithKeyword,
 };
 
 /// A value expression.
@@ -72,6 +73,26 @@ pub enum Expression {
         /// More match arms.
         tail_arms: Vec<MatchArm>,
     },
+    /// A `do` expression.
+    ///
+    /// ```ditto
+    /// do {
+    ///     x <- some_effect();
+    ///     Console.log("hi");
+    ///     let five = 5;
+    ///     return true;
+    /// }
+    /// ```
+    Effect {
+        /// `do`
+        do_keyword: DoKeyword,
+        /// `{`
+        open_brace: OpenBrace,
+        /// The inner effect statements.
+        effect: Effect,
+        /// `}`
+        close_brace: CloseBrace,
+    },
     /// A value constructor, e.g. `Just` and `Ok`.
     Constructor(QualifiedProperName),
     /// A variable. Useful for not repeating things.
@@ -104,6 +125,38 @@ pub enum Expression {
     Float(StringToken),
     /// `[this, is, an, array]`
     Array(BracketsList<Box<Self>>),
+}
+
+/// A chain of Effect statements.
+#[derive(Debug, Clone)]
+pub enum Effect {
+    /// `do { return expression }`
+    Return {
+        /// `return`
+        return_keyword: ReturnKeyword,
+        /// The expression to be returned.
+        expression: Box<Expression>, // REVIEW this could be optional, which would imply `return unit` ?
+    },
+    /// `do { name <- expression; rest }`
+    Bind {
+        /// The name bound to the result of the effect `expression`.
+        name: Name,
+        /// `<-`
+        left_arrow: LeftArrow,
+        /// The (effectful) expression to be evaluated.
+        expression: Box<Expression>,
+        /// `;`
+        semicolon: Semicolon,
+        /// Further effect statements.
+        rest: Box<Self>,
+    },
+    /// `do { expression }`
+    Expression {
+        /// The (effectful) expression to be evaluated.
+        expression: Box<Expression>,
+        /// _Optional_ further effect statements.
+        rest: Option<(Semicolon, Box<Self>)>,
+    },
 }
 
 /// A single arm of a `match` expression.
