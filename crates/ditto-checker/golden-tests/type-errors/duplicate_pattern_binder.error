@@ -1,0 +1,11 @@
+
+  × duplicate pattern variable
+   ╭─[golden:4:1]
+ 4 │ 
+ 5 │ nope = (pair: Pair(a, a)): Array(a) -> 
+ 6 │   match pair with
+ 7 │   | Pair(a, a) -> [a, a];
+   ·          ┬  ┬
+   ·          │  ╰── name can't be reused here
+   ·          ╰── previous variable
+   ╰────

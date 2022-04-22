@@ -110,6 +110,10 @@ pub enum TypeError {
         previous_binder: Span,
         duplicate_binder: Span,
     },
+    DuplicatePatternBinder {
+        previous_binder: Span,
+        duplicate_binder: Span,
+    },
     DuplicateValueDeclaration {
         previous_declaration: Span,
         duplicate_declaration: Span,
@@ -319,6 +323,14 @@ impl TypeError {
                 previous_binder,
                 duplicate_binder,
             } => TypeErrorReport::DuplicateFunctionBinder {
+                input,
+                previous_parameter: span_to_source_span(previous_binder),
+                shadowing_parameter: span_to_source_span(duplicate_binder),
+            },
+            Self::DuplicatePatternBinder {
+                previous_binder,
+                duplicate_binder,
+            } => TypeErrorReport::DuplicatePatternBinder {
                 input,
                 previous_parameter: span_to_source_span(previous_binder),
                 shadowing_parameter: span_to_source_span(duplicate_binder),
@@ -608,6 +620,16 @@ pub enum TypeErrorReport {
         #[source_code]
         input: NamedSource,
         #[label("previous parameter")]
+        previous_parameter: SourceSpan,
+        #[label("name can't be reused here")]
+        shadowing_parameter: SourceSpan,
+    },
+    #[error("duplicate pattern variable")]
+    #[diagnostic(severity(Error))]
+    DuplicatePatternBinder {
+        #[source_code]
+        input: NamedSource,
+        #[label("previous variable")]
         previous_parameter: SourceSpan,
         #[label("name can't be reused here")]
         shadowing_parameter: SourceSpan,

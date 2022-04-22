@@ -1,0 +1,11 @@
+
+  ⚠ unused patter binder
+   ╭─[golden:4:1]
+ 4 │ 
+ 5 │ not_used = (o: Option(a)): Float -> 
+ 6 │   match o with
+ 7 │   | Some(a) -> 5.0
+   ·          ┬
+   ·          ╰── this isn't used
+ 8 │   | None -> 5.0;
+   ╰────

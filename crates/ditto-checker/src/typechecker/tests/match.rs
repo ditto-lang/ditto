@@ -1,5 +1,5 @@
 use super::macros::*;
-use crate::TypeError::*;
+use crate::{TypeError::*, Warning::*};
 
 #[test]
 fn it_typechecks_as_expected() {
@@ -13,5 +13,14 @@ fn it_errors_as_expected() {
     assert_type_error!(
         r#" match 5 with | x -> unit | y -> true "#,
         TypesNotEqual { .. }
+    );
+}
+
+#[test]
+fn it_warns_as_expected() {
+    assert_type!(
+        "match 5 with | x -> unit",
+        "Unit",
+        [UnusedPatternBinder { .. }]
     );
 }

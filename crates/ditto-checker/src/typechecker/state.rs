@@ -32,3 +32,21 @@ pub fn merge_references<K: Eq + std::hash::Hash>(
     }
     lhs
 }
+
+impl State {
+    pub fn register_value_reference(&mut self, value: &QualifiedName) {
+        if let Some(count) = self.value_references.get_mut(value) {
+            *count += 1
+        } else {
+            self.value_references.insert(value.clone(), 1);
+        }
+    }
+
+    pub fn register_constructor_reference(&mut self, constructor: &QualifiedProperName) {
+        if let Some(count) = self.constructor_references.get_mut(constructor) {
+            *count += 1
+        } else {
+            self.constructor_references.insert(constructor.clone(), 1);
+        }
+    }
+}

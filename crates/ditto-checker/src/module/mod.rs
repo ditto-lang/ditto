@@ -209,9 +209,9 @@ pub fn check_module(
 
     // Check for unused values
     for (name, module_value) in module.values.iter() {
-        if !value_references.contains_key(&unqualified(name.clone()))
-            && !module.exports.values.contains_key(name)
-        {
+        let referenced = value_references.contains_key(&unqualified(name.clone()));
+        let exported = module.exports.values.contains_key(name);
+        if !referenced && !exported {
             warnings.push(Warning::UnusedValueDeclaration {
                 span: module_value.name_span,
             });

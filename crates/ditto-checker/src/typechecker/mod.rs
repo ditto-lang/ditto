@@ -20,10 +20,11 @@ use crate::{
     supply::Supply,
 };
 use ditto_ast::{
-    unqualified, Argument, Effect, Expression, FunctionBinder, Pattern, PrimType, Span, Type,
+    unqualified, Argument, Effect, Expression, FunctionBinder, Name, Pattern, PrimType,
+    QualifiedName, Span, Type,
 };
 use ditto_cst as cst;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 #[cfg(test)]
 pub fn typecheck(
@@ -155,11 +156,7 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
             }
         }
         pre::Expression::Variable { span, variable } => {
-            if let Some(count) = state.value_references.get_mut(&variable) {
-                *count += 1
-            } else {
-                state.value_references.insert(variable.clone(), 1);
-            }
+            state.register_value_reference(&variable);
             env.values
                 .get(&variable)
                 .map(|value| value.to_expression(span, &mut state.supply))
@@ -173,11 +170,7 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
                 })
         }
         pre::Expression::Constructor { span, constructor } => {
-            if let Some(count) = state.constructor_references.get_mut(&constructor) {
-                *count += 1
-            } else {
-                state.constructor_references.insert(constructor.clone(), 1);
-            }
+            state.register_constructor_reference(&constructor);
             env.constructors
                 .get(&constructor)
                 .map(|constructor| constructor.to_expression(span, &mut state.supply))
@@ -288,13 +281,25 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
             binders: pre_binders,
             return_type_annotation,
             box body,
+        } if pre_binders.is_empty() => {
+            let body = if let Some(expected) = return_type_annotation {
+                check(env, state, expected, body)
+            } else {
+                infer(env, state, body)
+            }?;
+            Ok(Expression::Function {
+                span,
+                binders: vec![],
+                body: Box::new(body),
+            })
+        }
+        pre::Expression::Function {
+            span,
+            binders: pre_binders,
+            return_type_annotation,
+            box body,
         } => {
             let mut binders = Vec::new();
-
-            let mut env_values = env.values.clone();
-
-            let mut original_value_references = ValueReferences::new();
-
             for binder in pre_binders {
                 match binder {
                     pre_ast::FunctionBinder::Name {
@@ -311,7 +316,6 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
                             } if value == *found_value => Some(*found_span),
                             _ => None,
                         });
-
                         if let Some(previous_binder) = conflict {
                             return Err(TypeError::DuplicateFunctionBinder {
                                 previous_binder,
@@ -322,25 +326,6 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
                         let binder_type =
                             type_annotation.unwrap_or_else(|| state.supply.fresh_type());
 
-                        let qualified_name = unqualified(value.clone());
-
-                        if let Some(count) = state.value_references.remove(&qualified_name) {
-                            original_value_references.insert(qualified_name.clone(), count);
-                            state.value_references.insert(qualified_name.clone(), 0);
-                        }
-
-                        env_values.insert(
-                            qualified_name,
-                            EnvValue::ModuleValue {
-                                span,
-                                variable_scheme: Scheme {
-                                    forall: HashSet::new(),
-                                    signature: binder_type.clone(),
-                                },
-                                variable: value.clone(),
-                            },
-                        );
-
                         binders.push(FunctionBinder::Name {
                             span,
                             binder_type,
@@ -349,30 +334,24 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
                     }
                 }
             }
-            let env = Env {
-                values: env_values,
-                constructors: env.constructors.clone(),
-            };
-            let body = if let Some(expected) = return_type_annotation {
-                check(&env, state, expected, body)?
-            } else {
-                infer(&env, state, body)?
-            };
+            let env_values = binders
+                .clone()
+                .into_iter()
+                .map(LocalValue::from_function_binder)
+                .collect();
 
-            // Check for unused binders
-            for FunctionBinder::Name { span, value, .. } in binders.iter() {
-                let qualified_name = unqualified(value.clone());
-                if !state.value_references.contains_key(&qualified_name) {
-                    state
-                        .warnings
-                        .push(Warning::UnusedFunctionBinder { span: *span });
-                } else {
-                    state.value_references.remove(&qualified_name);
-                }
+            let (body, unused_spans) =
+                with_extended_env(env, state, env_values, move |env, state| {
+                    if let Some(expected) = return_type_annotation {
+                        check(env, state, expected, body)
+                    } else {
+                        infer(env, state, body)
+                    }
+                })?;
+
+            for span in unused_spans {
+                state.warnings.push(Warning::UnusedFunctionBinder { span });
             }
-
-            // Restore shadowed reference counts
-            state.value_references.extend(original_value_references);
 
             Ok(Expression::Function {
                 span,
@@ -492,41 +471,19 @@ fn check_effect(
             // NOTE: `name` isn't in scope for `expression`
             let value_type = state.supply.fresh_type();
             let expression = check(env, state, mk_effect_type(value_type.clone()), expression)?;
-
-            // Extend the environment
-            let qualified_name = unqualified(name.clone());
-            let mut env_values = env.values.clone();
-            env_values.insert(
-                qualified_name.clone(),
-                EnvValue::ModuleValue {
+            let (rest, unused_spans) = with_extended_env(
+                env,
+                state,
+                vec![LocalValue {
                     span: name_span,
-                    variable_scheme: Scheme {
-                        forall: HashSet::new(),
-                        signature: value_type,
-                    },
-                    variable: name.clone(),
-                },
-            );
-            let env = Env {
-                values: env_values,
-                constructors: env.constructors.clone(),
-            };
-
-            let original_value_reference_count = state.value_references.remove(&qualified_name);
-
-            let rest = check_effect(&env, state, expected_return_type, rest)?;
-
-            // Warn if the binder was never referenced
-            if !state.value_references.contains_key(&qualified_name) {
-                let warning = Warning::UnusedEffectBinder { span: name_span };
-                state.warnings.push(warning);
+                    value_type,
+                    name: name.clone(),
+                }],
+                |env, state| check_effect(env, state, expected_return_type, rest),
+            )?;
+            for span in unused_spans {
+                state.warnings.push(Warning::UnusedEffectBinder { span });
             }
-
-            // Restore shadowed reference count
-            if let Some(count) = original_value_reference_count {
-                state.value_references.insert(qualified_name, count);
-            }
-
             return Ok(Effect::Bind {
                 name,
                 expression: Box::new(expression),
@@ -555,36 +512,59 @@ fn infer_or_check_match(
     let pattern_type = expression.get_type();
 
     let (head_arm, tail_arms) = arms.split_first();
-    let mut head_arm_env = env.clone();
+
+    let mut head_arm_env_values = HashMap::new();
     let head_arm_pattern = check_pattern(
-        &mut head_arm_env,
+        env,
         state,
+        &mut head_arm_env_values,
         pattern_type.clone(),
         head_arm.0.clone(),
     )?;
+    let ((head_arm_expression, match_type), unused_head_arm_spans) = with_extended_env(
+        env,
+        state,
+        head_arm_env_values.into_values().collect(),
+        |env, state| {
+            if let Some(expected) = match_type {
+                let head_arm_expression = check(env, state, expected.clone(), head_arm.1.clone())?;
+                Ok((head_arm_expression, expected))
+            } else {
+                let head_arm_expression = infer(env, state, head_arm.1.clone())?;
+                let match_type = head_arm_expression.get_type();
+                Ok((head_arm_expression, match_type))
+            }
+        },
+    )?;
 
-    let (head_arm_expression, match_type) = if let Some(expected) = match_type {
-        let head_arm_expression =
-            check(&head_arm_env, state, expected.clone(), head_arm.1.clone())?;
-        (head_arm_expression, expected)
-    } else {
-        let head_arm_expression = infer(&head_arm_env, state, head_arm.1.clone())?;
-        let match_type = head_arm_expression.get_type();
-        (head_arm_expression, match_type)
-    };
+    for span in unused_head_arm_spans {
+        state.warnings.push(Warning::UnusedPatternBinder { span });
+    }
 
     let mut arms = non_empty_vec::NonEmpty::new((head_arm_pattern, head_arm_expression));
+
     for tail_arm in tail_arms {
-        let mut tail_arm_env = env.clone();
+        let mut tail_arm_env_values = HashMap::new();
         let tail_arm_pattern = check_pattern(
-            &mut tail_arm_env,
+            env,
             state,
+            &mut tail_arm_env_values,
             pattern_type.clone(),
             tail_arm.0.clone(),
         )?;
-        let tail_arm_expression =
-            check(&tail_arm_env, state, match_type.clone(), tail_arm.1.clone())?;
+
+        let (tail_arm_expression, unused_tail_arm_spans) = with_extended_env(
+            env,
+            state,
+            tail_arm_env_values.into_values().collect(),
+            |env, state| check(env, state, match_type.clone(), tail_arm.1.clone()),
+        )?;
+
         arms.push((tail_arm_pattern, tail_arm_expression));
+
+        for span in unused_tail_arm_spans {
+            state.warnings.push(Warning::UnusedPatternBinder { span });
+        }
     }
 
     Ok(Expression::Match {
@@ -596,8 +576,9 @@ fn infer_or_check_match(
 }
 
 fn check_pattern(
-    env: &mut Env,
+    env: &Env,
     state: &mut State,
+    local_values: &mut HashMap<Name, LocalValue>, // REVIEW HashMap might be overkill here
     expected: Type,
     pattern: pre::Pattern,
 ) -> Result<Pattern> {
@@ -607,11 +588,7 @@ fn check_pattern(
             constructor,
             arguments,
         } => {
-            if let Some(count) = state.constructor_references.get_mut(&constructor) {
-                *count += 1
-            } else {
-                state.constructor_references.insert(constructor.clone(), 1);
-            }
+            state.register_constructor_reference(&constructor);
 
             let env_constructors = env.constructors.clone();
             let env_constructor = env_constructors.get(&constructor).ok_or_else(|| {
@@ -665,7 +642,8 @@ fn check_pattern(
             if let Type::Function { parameters, .. } = state.substitution.apply(constructor_type) {
                 let mut checked_arguments = Vec::new();
                 for (parameter, argument) in parameters.into_iter().zip(arguments) {
-                    let checked_argument = check_pattern(env, state, parameter, argument)?;
+                    let checked_argument =
+                        check_pattern(env, state, local_values, parameter, argument)?;
                     checked_arguments.push(checked_argument);
                 }
                 Ok(env_constructor.to_pattern(span, checked_arguments))
@@ -674,18 +652,106 @@ fn check_pattern(
             }
         }
         pre::Pattern::Variable { span, name } => {
-            let variable_scheme = env.generalize(expected);
-            env.values.insert(
-                unqualified(name.clone()),
-                EnvValue::ModuleValue {
+            if let Some(local_value) = local_values.remove(&name) {
+                return Err(TypeError::DuplicatePatternBinder {
+                    previous_binder: local_value.span,
+                    duplicate_binder: span,
+                });
+            }
+            local_values.insert(
+                name.clone(),
+                LocalValue {
                     span,
-                    variable_scheme,
-                    variable: name.clone(),
+                    value_type: expected,
+                    name: name.clone(),
                 },
             );
             Ok(Pattern::Variable { span, name })
         }
     }
+}
+
+struct LocalValue {
+    span: Span,
+    value_type: Type,
+    name: Name,
+}
+
+impl LocalValue {
+    fn from_function_binder(binder: FunctionBinder) -> Self {
+        let FunctionBinder::Name {
+            span,
+            binder_type: value_type,
+            value: name,
+        } = binder;
+        Self {
+            span,
+            value_type,
+            name,
+        }
+    }
+}
+
+fn with_extended_env<T>(
+    env: &Env,
+    state: &mut State,
+    values: Vec<LocalValue>,
+    f: impl FnOnce(&Env, &mut State) -> Result<T>,
+) -> Result<(T, Vec<Span>)> {
+    if values.is_empty() {
+        // Cheeky shortcut
+        let result = f(env, state)?;
+        return Ok((result, vec![]));
+    }
+
+    // TODO: handle shadowing here?
+
+    let mut env_values = env.values.clone();
+    let mut shadowed_value_references = ValueReferences::new();
+    let mut unqualified_names: Vec<(QualifiedName, Span)> = vec![];
+
+    for LocalValue {
+        span,
+        value_type,
+        name,
+    } in values
+    {
+        let unqualified_name = unqualified(name);
+        unqualified_names.push((unqualified_name.clone(), span));
+
+        if let Some(count) = state.value_references.remove(&unqualified_name) {
+            shadowed_value_references.insert(unqualified_name.clone(), count);
+        }
+
+        env_values.insert(
+            unqualified_name.clone(),
+            EnvValue::ModuleValue {
+                span,
+                variable_scheme: Scheme {
+                    forall: HashSet::new(),
+                    signature: value_type,
+                },
+                variable: unqualified_name.value,
+            },
+        );
+    }
+
+    let env = Env {
+        values: env_values,
+        constructors: env.constructors.clone(),
+    };
+    let result = f(&env, state)?;
+
+    let mut unused_spans = Vec::new();
+    for (unqualified_name, span) in unqualified_names {
+        if state.value_references.remove(&unqualified_name).is_none() {
+            unused_spans.push(span);
+        }
+    }
+    // Restore the shadowed references.
+    state.value_references.extend(shadowed_value_references);
+
+    Ok((result, unused_spans))
 }
 
 #[derive(Debug)]

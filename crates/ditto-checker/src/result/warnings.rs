@@ -29,6 +29,9 @@ pub enum Warning {
     UnusedFunctionBinder {
         span: Span,
     },
+    UnusedPatternBinder {
+        span: Span,
+    },
     UnusedEffectBinder {
         span: Span,
     },
@@ -82,6 +85,9 @@ impl Warning {
                 duplicate_import: span_to_source_span(duplicate_import),
             },
             Self::UnusedFunctionBinder { span } => WarningReport::UnusedFunctionBinder {
+                location: span_to_source_span(span),
+            },
+            Self::UnusedPatternBinder { span } => WarningReport::UnusedPatternBinder {
                 location: span_to_source_span(span),
             },
             Self::UnusedEffectBinder { span } => WarningReport::UnusedEffectBinder {
@@ -156,6 +162,13 @@ pub enum WarningReport {
     #[error("unused function binder")]
     #[diagnostic(severity(Warning))]
     UnusedFunctionBinder {
+        #[label("this isn't used")]
+        #[serde(with = "SourceSpanDef")]
+        location: SourceSpan,
+    },
+    #[error("unused patter binder")]
+    #[diagnostic(severity(Warning))]
+    UnusedPatternBinder {
         #[label("this isn't used")]
         #[serde(with = "SourceSpanDef")]
         location: SourceSpan,
