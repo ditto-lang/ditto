@@ -8,12 +8,14 @@ pub struct Module {
 #[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Ident(pub String);
 
+#[cfg(test)]
 macro_rules! ident {
     ($stringy:expr) => {
         $crate::ast::Ident(String::from($stringy))
     };
 }
 
+#[cfg(test)]
 pub(crate) use ident;
 
 pub struct ImportStatement {

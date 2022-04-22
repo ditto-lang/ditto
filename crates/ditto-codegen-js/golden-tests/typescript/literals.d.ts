@@ -1,9 +1,0 @@
-export declare const empty_array: Array<never>;
-export declare const float: number;
-export declare const int: number;
-export declare const int_array: Array<number>;
-export declare const nested_array: Array<Array<number>>;
-export declare const no: boolean;
-export declare const string: string;
-export declare const unit_: undefined;
-export declare const yes: boolean;

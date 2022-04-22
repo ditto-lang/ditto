@@ -5,21 +5,12 @@
 mod ast;
 mod convert;
 mod render;
-mod ts;
 
 pub use convert::Config;
 
 /// Generate a JavaScript module from a ditto module.
 pub fn codegen(config: &Config, module: ditto_ast::Module) -> String {
     render::render_module(convert::convert_module(config, module))
-}
-
-/// Generate a JavaScript module from a ditto module, with TypeScript declarations.
-#[doc(hidden)]
-pub fn codegen_with_dts(config: &Config, module: ditto_ast::Module) -> (String, String) {
-    let dts = ts::generate_declarations(config, &module.module_name, &module.exports);
-    let js = render::render_module(convert::convert_module(config, module));
-    (js, dts)
 }
 
 #[cfg(test)]
@@ -44,26 +35,6 @@ mod tests {
             },
             ast_module,
         ))
-    }
-
-    #[snapshot_test::snapshot_lf(
-        input = "golden-tests/typescript/(.*).ditto",
-        output = "golden-tests/typescript/${1}.d.ts"
-    )]
-    fn typescript(input: &str) -> String {
-        let cst_module = cst::Module::parse(input).unwrap();
-        let everything = mk_everything();
-        let (ast_module, _warnings) = checker::check_module(&everything, cst_module).unwrap();
-        prettier(
-            &js::codegen_with_dts(
-                &js::Config {
-                    module_name_to_path: Box::new(module_name_to_path),
-                    foreign_module_path: "./foreign.js".into(),
-                },
-                ast_module,
-            )
-            .1,
-        )
     }
 
     /// Use prettier to make sure the generated code is valid syntactically.
