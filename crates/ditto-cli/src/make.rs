@@ -15,69 +15,50 @@ use std::{
     path::{Path, PathBuf},
     process::{self, ExitStatus, Stdio},
     sync::mpsc,
-    time::{Duration, Instant},
+    time::Instant,
 };
 
 pub static COMPILE_SUBCOMMAND: &str = "compile";
 
 pub fn command<'a>(name: &str) -> Command<'a> {
-    Command::new(name).about("Build a project").arg(
-        Arg::new("watch")
-            .short('w')
-            .long("watch")
-            .help("Watch files for changes"),
-    )
+    Command::new(name)
+        .about("Build a project")
+        .arg(
+            Arg::new("watch")
+                .short('w')
+                .long("watch")
+                .help("Watch files for changes"),
+        )
+        // Useful for debugging why watches are/aren't triggering.
+        // Should remove it eventually.
+        .arg(Arg::new("debug-watcher").long("debug-watcher").hide(true))
 }
 
 pub async fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
+    // Read the ditto.toml immediately,
+    // failing early if it's not present.
+    let config_path: PathBuf = [".", CONFIG_FILE_NAME].iter().collect();
+    let config = read_config(&config_path)?;
+
     if matches.is_present("watch") {
-        run_watch(matches, ditto_version).await
+        run_watch(matches, ditto_version, &config_path, config).await
     } else {
-        run_once(matches, ditto_version).await?.exit()
+        run_once(matches, ditto_version, &config_path, &config)
+            .await?
+            .exit()
     }
 }
 
-struct EventForwarder {
-    tx: mpsc::Sender<notify::Result<notify::Event>>,
-    debounce_duration: Duration,
-    last_run: Option<Instant>,
-}
-
-impl EventForwarder {
-    fn new(tx: mpsc::Sender<notify::Result<notify::Event>>) -> Self {
-        Self {
-            tx,
-            // Debounce 100ms seems reasonable
-            debounce_duration: Duration::from_millis(100),
-            last_run: None,
-        }
-    }
-}
-
-impl notify::EventHandler for EventForwarder {
-    fn handle_event(&mut self, event: notify::Result<notify::Event>) {
-        let now = Instant::now();
-        if let Some(last_run) = self.last_run {
-            // Debouncing
-            if now.duration_since(last_run) > self.debounce_duration {
-                if let Err(err) = self.tx.send(event) {
-                    log::error!("Error sending notify event: {:?}", err);
-                }
-                self.last_run = Some(now);
-            }
-        } else {
-            if let Err(err) = self.tx.send(event) {
-                log::error!("Error sending notify event: {:?}", err);
-            }
-            self.last_run = Some(now);
-        }
-    }
-}
-
-pub async fn run_watch(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
+pub async fn run_watch(
+    matches: &ArgMatches,
+    ditto_version: &Version,
+    config_path: &Path,
+    config: Config,
+) -> Result<()> {
     // Set up the channel
     let (tx, rx) = mpsc::channel();
-    let mut watcher = notify::RecommendedWatcher::new(EventForwarder::new(tx)).into_diagnostic()?;
+
+    let mut watcher = notify::RecommendedWatcher::new(tx).into_diagnostic()?;
 
     // Watch ditto.toml and src/**
     // NOTE not watching packages as that seems wasteful...
@@ -90,38 +71,21 @@ pub async fn run_watch(matches: &ArgMatches, ditto_version: &Version) -> Result<
         )
         .into_diagnostic()?;
     watcher
-        .watch(
-            // TODO use src config value
-            &PathBuf::from("src"),
-            notify::RecursiveMode::Recursive,
-        )
+        .watch(&config.src_dir, notify::RecursiveMode::Recursive)
         .into_diagnostic()?;
 
-    run_once_watch(matches, ditto_version).await;
+    run_once_watch(matches, ditto_version, config_path, &config).await;
 
     // Listen for changes...
     loop {
         let event = rx.recv().into_diagnostic()?;
 
         match event {
-            Ok(notify::Event {
-                kind: notify::EventKind::Modify(_),
-                mut paths,
-                ..
-            }) if paths.len() == 1 => {
-                let path = paths.pop().unwrap();
-                let event_path_extension = path.extension().and_then(|ext| ext.to_str());
-                // Be selective about what we re-run for.
-                // I.e. don't re-run for foreign files etc.
-                if matches!(
-                    event_path_extension,
-                    // ditto source file
-                    Some("ditto") | 
-                    // config file
-                    Some("toml")
-                ) {
-                    run_once_watch(matches, ditto_version).await;
+            Ok(ref event) if should_run_for_event(event) => {
+                if matches.is_present("debug-watcher") {
+                    dbg!(event);
                 }
+                run_once_watch(matches, ditto_version, config_path, &config).await;
             }
             other => {
                 log::trace!("Ignoring notify event: {:?}", other);
@@ -129,12 +93,39 @@ pub async fn run_watch(matches: &ArgMatches, ditto_version: &Version) -> Result<
         }
     }
 
-    async fn run_once_watch(matches: &ArgMatches, ditto_version: &Version) {
-        if let Err(_err) = clearscreen::clear() {
-            // doesn't matter, let it fail?
+    fn should_run_for_event(event: &notify::Event) -> bool {
+        use notify::{event::ModifyKind, EventKind};
+        let event_kind_is_interesting = matches!(
+            event.kind,
+            EventKind::Modify(ModifyKind::Data(_)) | EventKind::Create(_) | EventKind::Remove(_)
+        );
+
+        if !event_kind_is_interesting {
+            return false;
         }
 
-        match run_once(matches, ditto_version).await {
+        // Be selective about what we re-run for.
+        // I.e. don't re-run for foreign files etc.
+        let mut event_path_extensions = event
+            .paths
+            .iter()
+            .flat_map(|path| path.extension().and_then(|ext| ext.to_str()));
+        event_path_extensions.any(|ext| matches!(ext, "toml" | "ditto"))
+    }
+
+    async fn run_once_watch(
+        matches: &ArgMatches,
+        ditto_version: &Version,
+        config_path: &Path,
+        config: &Config,
+    ) {
+        if !matches.is_present("debug-watcher") {
+            if let Err(_err) = clearscreen::clear() {
+                // doesn't matter, let it fail?
+            }
+        }
+
+        match run_once(matches, ditto_version, config_path, config).await {
             Err(err) => {
                 // print the error but don't exit!
                 eprintln!("{:?}", err);
@@ -179,19 +170,21 @@ impl WhatHappened {
 }
 
 /// If successful returns the exit status of `ninja` and whether anything actually happened.
-async fn run_once(_matches: &ArgMatches, ditto_version: &Version) -> Result<WhatHappened> {
-    let config_path: PathBuf = [".", CONFIG_FILE_NAME].iter().collect();
-    let config = read_config(&config_path)?;
-
+async fn run_once(
+    _matches: &ArgMatches,
+    ditto_version: &Version,
+    config_path: &Path,
+    config: &Config,
+) -> Result<WhatHappened> {
     // Need to acquire a lock on the build directory as lots of `ditto make`
     // processes running concurrently will cause problems!
-    let lock = acquire_lock(&config)?;
+    let lock = acquire_lock(config)?;
     debug!("Lock acquired");
 
     // Install/remove packages as needed
     // (this is a nicer pattern than requiring a run of a separate CLI command, IMO)
     if !config.dependencies.is_empty() {
-        pkg::check_packages_up_to_date(&config)
+        pkg::check_packages_up_to_date(config)
             .await
             .wrap_err("error checking packages are up to date")?;
     }
@@ -199,7 +192,7 @@ async fn run_once(_matches: &ArgMatches, ditto_version: &Version) -> Result<What
     let now = Instant::now(); // for timing
 
     // Do the thing
-    let result = make(&config_path, &config, ditto_version).await;
+    let result = make(config_path, config, ditto_version).await;
 
     lock.unlock()
         .into_diagnostic()

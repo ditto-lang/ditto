@@ -22,7 +22,7 @@ log = "0.4"
 toml = "0.5"
 flexi_logger = "0.22"
 # https://github.com/notify-rs/notify/issues/249
-notify = "5.0.0-pre.13"
+notify = "5.0.0-pre.14"
 clearscreen = "1.0"
 symlink = "0.1.0"
 tokio = { version = "1.17", features = ["full"] }
