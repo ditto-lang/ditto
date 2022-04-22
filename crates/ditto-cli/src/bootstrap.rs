@@ -69,10 +69,9 @@ pub fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
             project_dir.to_string_lossy()
         ))?;
 
-    let config = write_files(package_name, &project_dir, ditto_version)?;
-    if matches.is_present("javascript") {
-        write_js_files(&config, &project_dir)?;
-    }
+    let flavour = get_flavour(matches)?;
+
+    write_files(package_name, &project_dir, ditto_version, &flavour)?;
 
     // Run an initial `ditto make` in the new directory to kick things off
     if let Ok(ditto) = current_exe() {
@@ -88,15 +87,34 @@ pub fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
     Ok(())
 }
 
+enum Flavour {
+    Bland,
+    JavaScript, // `--javascript`
+}
+
+fn get_flavour(matches: &ArgMatches) -> Result<Flavour> {
+    if matches.is_present("javascript") {
+        return Ok(Flavour::JavaScript);
+    }
+    Ok(Flavour::Bland)
+}
+
 fn write_files(
     package_name: PackageName,
     project_dir: &Path,
     ditto_version: &Version,
-) -> Result<config::Config> {
-    let config = write_new_config(package_name, project_dir, ditto_version)?;
+    flavour: &Flavour,
+) -> Result<()> {
+    let config = write_new_config(package_name, project_dir, ditto_version, flavour)?;
     write_empty_ditto_module(&config, project_dir)?;
-    write_new_gitignore(&config, project_dir)?;
-    Ok(config)
+    write_new_gitignore(&config, project_dir, flavour)?;
+    match flavour {
+        Flavour::Bland => {}
+        Flavour::JavaScript => {
+            write_js_files(&config, project_dir)?;
+        }
+    }
+    Ok(())
 }
 
 fn write_js_files(config: &config::Config, project_dir: &Path) -> Result<()> {
@@ -134,12 +152,19 @@ fn write_new_config(
     package_name: PackageName,
     project_dir: &Path,
     ditto_version: &Version,
+    flavour: &Flavour,
 ) -> Result<config::Config> {
-    let config = config::Config::new(package_name);
-
+    let mut config = config::Config::new(package_name);
+    match flavour {
+        Flavour::Bland => {}
+        Flavour::JavaScript => {
+            config.targets =
+                std::collections::HashSet::from([config::Target::Web, config::Target::Nodejs]);
+        }
+    }
     let mut config_path = project_dir.to_path_buf();
     config_path.push(config::CONFIG_FILE_NAME);
-    let config_string = toml::to_string_pretty(&config)
+    let config_string = toml::to_string(&config)
         .into_diagnostic()
         .wrap_err("error serializing new config file")?;
 
@@ -162,12 +187,23 @@ fn write_new_config(
     Ok(config)
 }
 
-fn write_new_gitignore(config: &config::Config, project_dir: &Path) -> Result<()> {
+fn write_new_gitignore(
+    config: &config::Config,
+    project_dir: &Path,
+    flavour: &Flavour,
+) -> Result<()> {
     let mut path = project_dir.to_path_buf();
     path.push(".gitignore");
 
-    #[allow(clippy::useless_format)] // there's more logic coming
-    fs::write(&path, format!("{}", config.ditto_dir.to_string_lossy()))
+    let mut ignore_lines = vec![config.ditto_dir.to_string_lossy().into_owned()];
+    match flavour {
+        Flavour::Bland => {}
+        Flavour::JavaScript => {
+            ignore_lines.push(String::from("node_modules"));
+        }
+    }
+
+    fs::write(&path, ignore_lines.join("\n"))
         .into_diagnostic()
         .wrap_err(format!(
             "error writing .gitignore to {:?}",
