@@ -14,7 +14,12 @@ pub const EXTENSION_JS: &str = "js";
 pub const EXTENSION_CHECKER_WARNINGS: &str = "checker-warnings";
 
 pub fn module_name_to_file_stem(module_name: ModuleName) -> PathBuf {
-    module_name.into_string(".").into()
+    // NOTE: don't join with "." because it can interact badly with
+    // extension-based logic elsewhere.
+    //
+    // For example, if we join with "." calling `.set_extension` will
+    // replace the last part of the module name.
+    module_name.into_string("_").into()
 }
 
 /// Serialize a value using a JSON if this is a debug build, and CBOR otherwise.

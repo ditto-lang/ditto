@@ -37,6 +37,7 @@ mod tests {
                 "fixtures/all-good/src/B.ditto",
                 "fixtures/all-good/src/C.ditto",
                 "fixtures/all-good/src/D.ditto",
+                "fixtures/all-good/src/D/E.ditto",
             ]
         );
     }
