@@ -25,7 +25,7 @@ pub fn convert_module(config: &Config, ast_module: ditto_ast::Module) -> Module 
 
     // As we convert the values we track imported value references,
     // so that we import only what's needed.
-    let mut imported_idents = ImportedIdentReferences::new();
+    let mut imported_module_idents = ImportedModuleIdents::new();
 
     for scc in values_toposorted.into_iter() {
         // REVIEW need to think about what we do if we have a mix of value
@@ -37,7 +37,7 @@ pub fn convert_module(config: &Config, ast_module: ditto_ast::Module) -> Module 
                     .map(|(name, expression)| {
                         (
                             Ident::from(name),
-                            convert_expression(&mut imported_idents, expression),
+                            convert_expression(&mut imported_module_idents, expression),
                         )
                     })
                     .collect::<Vec<_>>();
@@ -70,15 +70,16 @@ pub fn convert_module(config: &Config, ast_module: ditto_ast::Module) -> Module 
             }
             Scc::Acyclic((name, expression)) => {
                 let ident = Ident::from(name);
-                let expression = convert_expression(&mut imported_idents, expression);
+                let expression = convert_expression(&mut imported_module_idents, expression);
                 statements.push(expression_to_module_statement(ident, expression));
             }
         }
     }
 
-    let mut imports: Vec<ImportStatement> = imported_idents
+    let mut imports: Vec<ImportStatement> = imported_module_idents
         .into_iter()
-        .map(|(imported_module, mut idents)| {
+        .map(|(imported_module, idents)| {
+            let mut idents = idents.into_iter().collect::<Vec<_>>();
             // Sort imported idents for determinism in tests
             if cfg!(debug_assertions) {
                 idents.sort_by(|a, b| a.0 .0.cmp(&b.0 .0));
@@ -192,7 +193,7 @@ fn convert_module_constructors(
     statements
 }
 
-type ImportedIdentReferences = HashMap<ImportedModule, Vec<ImportedIdent>>;
+type ImportedModuleIdents = HashMap<ImportedModule, ImportedIdents>;
 
 #[derive(PartialEq, Eq, Hash)]
 enum ImportedModule {
@@ -200,11 +201,11 @@ enum ImportedModule {
     Module(ditto_ast::FullyQualifiedModuleName),
 }
 
-/// (foo, Some$Module$foo)
-type ImportedIdent = (Ident, Ident);
+type ImportedIdents = HashSet<ImportedIdent>; // need to be unique!
+type ImportedIdent = (Ident, Ident); // (foo, Some$Module$foo)
 
 fn convert_expression(
-    imported_idents: &mut ImportedIdentReferences,
+    imported_module_idents: &mut ImportedModuleIdents,
     ast_expression: ditto_ast::Expression,
 ) -> Expression {
     match ast_expression {
@@ -216,7 +217,7 @@ fn convert_expression(
                 })
                 .collect(),
             body: Box::new(ArrowFunctionBody::Expression(convert_expression(
-                imported_idents,
+                imported_module_idents,
                 *body,
             ))),
         },
@@ -226,12 +227,12 @@ fn convert_expression(
             arguments,
             ..
         } => Expression::Call {
-            function: Box::new(convert_expression(imported_idents, *function)),
+            function: Box::new(convert_expression(imported_module_idents, *function)),
             arguments: arguments
                 .into_iter()
                 .map(|arg| match arg {
                     ditto_ast::Argument::Expression(expr) => {
-                        convert_expression(imported_idents, expr)
+                        convert_expression(imported_module_idents, expr)
                     }
                 })
                 .collect(),
@@ -243,9 +244,9 @@ fn convert_expression(
             false_clause,
             ..
         } => Expression::Conditional {
-            condition: Box::new(convert_expression(imported_idents, *condition)),
-            true_clause: Box::new(convert_expression(imported_idents, *true_clause)),
-            false_clause: Box::new(convert_expression(imported_idents, *false_clause)),
+            condition: Box::new(convert_expression(imported_module_idents, *condition)),
+            true_clause: Box::new(convert_expression(imported_module_idents, *true_clause)),
+            false_clause: Box::new(convert_expression(imported_module_idents, *false_clause)),
         },
 
         ditto_ast::Expression::LocalVariable { variable, .. } => {
@@ -256,11 +257,14 @@ fn convert_expression(
             let module_name = ImportedModule::ForeignModule;
             let aliased = Ident::from(variable.clone());
             let ident = mk_foreign_ident(variable.0);
-            if let Some(idents) = imported_idents.get_mut(&module_name) {
-                idents.push((aliased, ident.clone()));
+            if let Some(idents) = imported_module_idents.get_mut(&module_name) {
+                idents.insert((aliased, ident.clone()));
                 Expression::Variable(ident)
             } else {
-                imported_idents.insert(module_name, vec![(aliased, ident.clone())]);
+                imported_module_idents.insert(
+                    module_name,
+                    ImportedIdents::from([(aliased, ident.clone())]),
+                );
                 Expression::Variable(ident)
             }
         }
@@ -268,11 +272,14 @@ fn convert_expression(
             let aliased = Ident::from(variable.value.clone());
             let module_name = ImportedModule::Module(variable.module_name.clone());
             let ident = Ident::from(variable);
-            if let Some(idents) = imported_idents.get_mut(&module_name) {
-                idents.push((aliased, ident.clone()));
+            if let Some(idents) = imported_module_idents.get_mut(&module_name) {
+                idents.insert((aliased, ident.clone()));
                 Expression::Variable(ident)
             } else {
-                imported_idents.insert(module_name, vec![(aliased, ident.clone())]);
+                imported_module_idents.insert(
+                    module_name,
+                    ImportedIdents::from([(aliased, ident.clone())]),
+                );
                 Expression::Variable(ident)
             }
         }
@@ -283,11 +290,14 @@ fn convert_expression(
             let aliased = Ident::from(constructor.value.clone());
             let module_name = ImportedModule::Module(constructor.module_name.clone());
             let ident = Ident::from(constructor);
-            if let Some(idents) = imported_idents.get_mut(&module_name) {
-                idents.push((aliased, ident.clone()));
+            if let Some(idents) = imported_module_idents.get_mut(&module_name) {
+                idents.insert((aliased, ident.clone()));
                 Expression::Variable(ident)
             } else {
-                imported_idents.insert(module_name, vec![(aliased, ident.clone())]);
+                imported_module_idents.insert(
+                    module_name,
+                    ImportedIdents::from([(aliased, ident.clone())]),
+                );
                 Expression::Variable(ident)
             }
         }
@@ -298,7 +308,7 @@ fn convert_expression(
         ditto_ast::Expression::Array { elements, .. } => Expression::Array(
             elements
                 .into_iter()
-                .map(|element| convert_expression(imported_idents, element))
+                .map(|element| convert_expression(imported_module_idents, element))
                 .collect(),
         ),
         ditto_ast::Expression::True { .. } => Expression::True,
@@ -310,7 +320,7 @@ fn convert_expression(
             arms,
             ..
         } => {
-            let expression = convert_expression(imported_idents, expression);
+            let expression = convert_expression(imported_module_idents, expression);
             let err = iife!(Block(vec![BlockStatement::Throw(String::from(
                 // TODO: mention the file location here?
                 "Pattern match error",
@@ -320,13 +330,14 @@ fn convert_expression(
                     let (condition, assignments) = convert_pattern(expression.clone(), pattern);
 
                     let expression = if assignments.is_empty() {
-                        convert_expression(imported_idents, arm_expression)
+                        convert_expression(imported_module_idents, arm_expression)
                     } else {
                         let mut block_statements = assignments
                             .into_iter()
                             .map(|(ident, value)| BlockStatement::ConstAssignment { ident, value })
                             .collect::<Vec<_>>();
-                        let arm_expression = convert_expression(imported_idents, arm_expression);
+                        let arm_expression =
+                            convert_expression(imported_module_idents, arm_expression);
                         block_statements.push(BlockStatement::Return(Some(arm_expression)));
                         iife!(Block(block_statements))
                     };
@@ -344,7 +355,7 @@ fn convert_expression(
         }
         ditto_ast::Expression::Effect { effect, .. } => {
             let mut block_statements = Vec::new();
-            convert_effect(imported_idents, &mut block_statements, effect);
+            convert_effect(imported_module_idents, &mut block_statements, effect);
             let block = Block(block_statements);
             Expression::ArrowFunction {
                 parameters: vec![],
@@ -355,13 +366,13 @@ fn convert_expression(
 }
 
 fn convert_effect(
-    imported_idents: &mut ImportedIdentReferences,
+    imported_module_idents: &mut ImportedModuleIdents,
     block_statements: &mut Vec<BlockStatement>,
     effect: ditto_ast::Effect,
 ) {
     match effect {
         ditto_ast::Effect::Return { box expression } => {
-            let expression = convert_expression(imported_idents, expression);
+            let expression = convert_expression(imported_module_idents, expression);
             block_statements.push(BlockStatement::Return(Some(expression)));
         }
         ditto_ast::Effect::Bind {
@@ -373,23 +384,23 @@ fn convert_effect(
             block_statements.push(BlockStatement::ConstAssignment {
                 ident,
                 value: Expression::Call {
-                    function: Box::new(convert_expression(imported_idents, expression)),
+                    function: Box::new(convert_expression(imported_module_idents, expression)),
                     arguments: vec![],
                 },
             });
-            convert_effect(imported_idents, block_statements, rest);
+            convert_effect(imported_module_idents, block_statements, rest);
         }
         ditto_ast::Effect::Expression {
             box expression,
             rest,
         } => {
             let expression = Expression::Call {
-                function: Box::new(convert_expression(imported_idents, expression)),
+                function: Box::new(convert_expression(imported_module_idents, expression)),
                 arguments: vec![],
             };
             block_statements.push(BlockStatement::Expression(expression));
             if let Some(box rest) = rest {
-                convert_effect(imported_idents, block_statements, rest);
+                convert_effect(imported_module_idents, block_statements, rest);
             }
         }
     }

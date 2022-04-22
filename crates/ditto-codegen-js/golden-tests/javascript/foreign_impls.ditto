@@ -6,6 +6,8 @@ type Attr = Attr(String, String);
 
 foreign h : (String, Array(Attr)) -> Html(msg);
 
+div = (attrs: Array(Attr)): Html(msg) -> h("div", attrs);
+
 span = (attrs: Array(Attr)): Html(msg) -> h("span", attrs);
 
 foreign array_map_impl : ((a) -> b, Array(a)) -> Array(b);
