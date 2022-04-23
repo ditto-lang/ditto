@@ -81,6 +81,9 @@ impl HasComments for Expression {
                     || effect.has_comments()
                     || close_brace.0.has_comments()
             }
+            Self::BinOp { lhs, operator, rhs } => {
+                lhs.has_comments() || operator.has_comments() || rhs.has_comments()
+            }
         }
     }
 
@@ -101,6 +104,7 @@ impl HasComments for Expression {
             Self::Call { function, .. } => function.has_leading_comments(),
             Self::Match { match_keyword, .. } => match_keyword.0.has_leading_comments(),
             Self::Effect { do_keyword, .. } => do_keyword.0.has_leading_comments(),
+            Self::BinOp { lhs, .. } => lhs.has_leading_comments(),
         }
     }
 }
@@ -174,6 +178,19 @@ impl HasComments for Pattern {
             Self::NullaryConstructor { constructor } => constructor.has_leading_comments(),
             Self::Constructor { constructor, .. } => constructor.has_leading_comments(),
             Self::Variable { name } => name.has_leading_comments(),
+        }
+    }
+}
+
+impl HasComments for BinOp {
+    fn has_comments(&self) -> bool {
+        match self {
+            Self::RightPizza(token) => token.0.has_comments(),
+        }
+    }
+    fn has_leading_comments(&self) -> bool {
+        match self {
+            Self::RightPizza(token) => token.0.has_leading_comments(),
         }
     }
 }
