@@ -1,12 +1,9 @@
 
   × syntax error
    ╭─[golden:1:1]
- 1 │ -- Waiting for https://github.com/zkat/miette/issues/130
- 2 │ module Missing.Semicolon exports (..)
- 3 │ 
-   ·  ▲
-   ·  ╰── expected: semicolon
- 4 │ import Some.Module;
+ 1 │ module Missing.Semicolon exports (..)
+ 2 │ 
+ 3 │ import Some.Module;
    · ▲
    · ╰── expected: semicolon
    ╰────
