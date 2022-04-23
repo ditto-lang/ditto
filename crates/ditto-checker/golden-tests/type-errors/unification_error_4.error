@@ -1,0 +1,12 @@
+
+  × types don't unify
+   ╭─[golden:2:1]
+ 2 │ 
+ 3 │ identity_int = (n: Int): Int -> n;
+ 4 │ 
+ 5 │ huh = "nope" |> identity_int;
+   ·       ───┬──
+   ·          ╰── here
+   ╰────
+  help: expected Int
+        got String

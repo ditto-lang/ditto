@@ -8,5 +8,6 @@ mod function;
 mod int;
 pub(self) mod macros;
 mod r#match;
+mod right_pipe;
 mod string;
 mod unit;
