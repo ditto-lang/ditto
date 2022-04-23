@@ -131,19 +131,22 @@ pub enum ParseErrorReport {
 
 impl ParseError {
     /// Create a pretty error report.
-    pub fn into_report(self, name: impl AsRef<str>, input: String) -> ParseErrorReport {
-        let input = if input.is_empty() {
+    pub fn into_report(self, name: impl AsRef<str>, mut input: String) -> ParseErrorReport {
+        if input.is_empty() {
             // fixes miette panic: get_lines should always return at least one line?
-            NamedSource::new(name, String::from("\n"))
+            input = String::from("\n");
+        }
+        let location = if self.span.start_offset == input.len() {
+            let source_span_offset = input.len() - 1;
+            let source_span_length = 0;
+            (source_span_offset, source_span_length).into()
         } else {
-            NamedSource::new(name, input)
+            let source_span_offset = self.span.start_offset;
+            let source_span_length = self.span.end_offset - self.span.start_offset;
+            (source_span_offset, source_span_length).into()
         };
 
-        let location = (
-            self.span.start_offset,
-            self.span.end_offset - self.span.start_offset,
-        )
-            .into();
+        let input = NamedSource::new(name, input);
 
         // positives -> expected
         // negatives -> unexpected
@@ -162,7 +165,7 @@ impl ParseError {
             },
             (false, false) => ParseErrorReport::Helpful {
                 input,
-                expected_location: location.clone(),
+                expected_location: location,
                 expected: self.positives.join(", "),
                 unexpected_location: location,
                 unexpected: self.negatives.join(", "),
@@ -182,6 +185,7 @@ mod tests {
         let parse_error = Module::parse(input)
             .unwrap_err()
             .into_report("golden", input.to_string());
+        dbg!(&parse_error);
         render_diagnostic(&parse_error)
     }
 
