@@ -1,8 +1,8 @@
 use crate::{
     BracketsList, CloseBrace, Colon, DoKeyword, ElseKeyword, FalseKeyword, IfKeyword, LeftArrow,
     MatchKeyword, Name, OpenBrace, Parens, ParensList, ParensList1, Pipe, QualifiedName,
-    QualifiedProperName, ReturnKeyword, RightArrow, Semicolon, StringToken, ThenKeyword,
-    TrueKeyword, Type, UnitKeyword, WithKeyword,
+    QualifiedProperName, ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon, StringToken,
+    ThenKeyword, TrueKeyword, Type, UnitKeyword, WithKeyword,
 };
 
 /// A value expression.
@@ -125,6 +125,22 @@ pub enum Expression {
     Float(StringToken),
     /// `[this, is, an, array]`
     Array(BracketsList<Box<Self>>),
+    /// Binary operator expression.s
+    BinOp {
+        /// The left-hand side of the operator.
+        lhs: Box<Self>,
+        /// The binary operator.
+        operator: BinOp,
+        /// The right-hand side of the operator.
+        rhs: Box<Self>,
+    },
+}
+
+/// A binary operator.
+#[derive(Debug, Clone)]
+pub enum BinOp {
+    /// `|>`
+    RightPizza(RightPizzaOperator),
 }
 
 /// A chain of Effect statements.

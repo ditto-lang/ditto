@@ -110,6 +110,7 @@ impl Expression {
             Self::True(true_keyword) => true_keyword.0.get_span(),
             Self::False(false_keyword) => false_keyword.0.get_span(),
             Self::Unit(unit_keyword) => unit_keyword.0.get_span(),
+            Self::BinOp { lhs, rhs, .. } => lhs.get_span().merge(&rhs.get_span()),
         }
     }
 }

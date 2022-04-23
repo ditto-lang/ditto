@@ -5,7 +5,7 @@ use crate::{
     AsKeyword, CloseBrace, CloseBracket, CloseParen, Colon, Comma, Comment, DoKeyword, DoubleDot,
     EmptyToken, Equals, ExportsKeyword, FalseKeyword, ForeignKeyword, ImportKeyword, LeftArrow,
     LetKeyword, ModuleKeyword, OpenBrace, OpenBracket, OpenParen, Pipe, ReturnKeyword, RightArrow,
-    Span, StringToken, TrueKeyword, TypeKeyword, UnitKeyword,
+    RightPizzaOperator, Span, StringToken, TrueKeyword, TypeKeyword, UnitKeyword,
 };
 use pest::iterators::{Pair, Pairs};
 
@@ -52,6 +52,7 @@ impl_from_pair!(WithKeyword, rule = Rule::with_keyword);
 //impl_from_pair!(LetKeyword, rule = Rule::let_keyword);
 impl_from_pair!(DoKeyword, rule = Rule::do_keyword);
 impl_from_pair!(ReturnKeyword, rule = Rule::return_keyword);
+impl_from_pair!(RightPizzaOperator, rule = Rule::right_pizza);
 
 impl StringToken {
     pub(super) fn from_pairs(pairs: &mut Pairs<Rule>) -> Self {
