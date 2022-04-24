@@ -1,7 +1,7 @@
 module Value.Declarations exports (..);
 
 
-my_really_long_value_name: (oooooooooooooooooooooooooooooooooooooooong) -> Int =
+my_really_long_value_name: (oooooooooooooooooooooooooooooooooooooooong) -> Nat =
     test();
 
 inline_fives =
@@ -14,4 +14,4 @@ hanging_fives = [
     5,
 ];
 
-foreign some_npm_function: (Int) -> Int;
+foreign some_npm_function: (Nat) -> Nat;

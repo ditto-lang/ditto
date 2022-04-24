@@ -1,5 +1,5 @@
 module Test exports (..);
 
-my_fn = (n : Int) -> n;
+my_fn = (n : Nat) -> n;
 
 five = my_fn(5.0);

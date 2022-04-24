@@ -70,7 +70,7 @@ mod tests {
             module Data.Stuff exports (..);
             type Maybe(a) = Just(a) | Nothing;
             type Five = Five;
-            five : Int = 5;
+            five : Nat = 5;
             five_string = "five" ;
 
             id = (a) -> a;

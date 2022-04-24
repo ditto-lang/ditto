@@ -3,7 +3,7 @@
    ╭─[golden:1:1]
  1 │ module Test exports (..);
  2 │ 
- 3 │ foreign five : Int;
+ 3 │ foreign five : Nat;
    · ─────────┬─────────
    ·          ╰── this isn't being used
    ╰────

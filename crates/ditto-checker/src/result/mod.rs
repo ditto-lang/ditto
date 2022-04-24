@@ -64,7 +64,7 @@ mod tests {
             type Maybe(a) = Just(a) | Nothing;
             type Five = Five;
             type Abstract = Abstract;
-            five : Int = 5;
+            five : Nat = 5;
             five_string = "five";
             five_ctor = Five;
             id = (a) -> a;

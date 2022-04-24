@@ -8,7 +8,7 @@ fn it_handles_value_imports() {
         r#" 
         module Test exports (..);
         import Foo as F (five);
-        another_five : Int = F.id(five);
+        another_five : Nat = F.id(five);
         "#,
         warnings = [],
         [r#" 
@@ -25,7 +25,7 @@ fn it_handles_type_imports() {
         r#" 
         module Test exports (..);
         import Data.Maybe as M (Maybe(..));
-        maybe_fives : Array(M.Maybe(Int)) = [M.Just(5), Just(5)];
+        maybe_fives : Array(M.Maybe(Nat)) = [M.Just(5), Just(5)];
         "#,
         warnings = [],
         [r#" 
@@ -88,7 +88,7 @@ fn it_warns_as_expected() {
         warnings = [Warning::UnusedImport { .. }],
         [r#"
         module Data.Five exports (five);
-        five : Int = 5;
+        five : Nat = 5;
         "#],
     );
 

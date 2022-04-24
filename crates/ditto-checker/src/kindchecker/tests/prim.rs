@@ -3,7 +3,7 @@ use crate::TypeError::*;
 
 #[test]
 fn it_kindchecks_as_expected() {
-    assert_kind!("Int", "Type");
+    assert_kind!("Nat", "Type");
     assert_kind!("(Float)", "Type");
     assert_kind!("String", "Type");
     assert_kind!("((Bool))", "Type");
@@ -13,7 +13,7 @@ fn it_kindchecks_as_expected() {
 
 #[test]
 fn it_errors_as_expected() {
-    assert_type_error!("Int(a, b)", TypeNotAFunction { .. });
+    assert_type_error!("Nat(a, b)", TypeNotAFunction { .. });
     assert_type_error!(
         "Array(a, b, c)",
         TypeArgumentLengthMismatch {

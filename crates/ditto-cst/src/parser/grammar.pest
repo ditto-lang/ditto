@@ -157,7 +157,7 @@ expression_0 = _
   | expression_array
   | expression_string
   | expression_float
-  | expression_integer
+  | expression_nat
   }
 
 // Left-associative (so needs some left recursion hacking)
@@ -207,7 +207,7 @@ expression_string = { string_literal }
 
 expression_float = { float_literal }
 
-expression_integer = { integer_literal }
+expression_nat = { nat_literal }
 
 expression_true = { true_keyword }
 
@@ -246,7 +246,7 @@ proper_name = ${ (WHITESPACE | LINE_COMMENT)* ~ PROPER_NAME ~ HORIZONTAL_WHITESP
 
 package_name = ${ (WHITESPACE | LINE_COMMENT)* ~ PACKAGE_NAME ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
-integer_literal = ${ (WHITESPACE | LINE_COMMENT)* ~ INTEGER ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+nat_literal = ${ (WHITESPACE | LINE_COMMENT)* ~ NAT ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
 float_literal = ${ (WHITESPACE | LINE_COMMENT)* ~ FLOAT ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
@@ -327,7 +327,7 @@ PROPER_NAME = @{ UPPERCASE_LETTER ~ (LETTER | ASCII_DIGIT | "_")* }
 
 PACKAGE_NAME = @{ LOWERCASE_LETTER ~ (LOWERCASE_LETTER | ASCII_DIGIT | "-")* } 
 
-INTEGER = @{ ASCII_DIGIT ~ (ASCII_DIGIT | "_")* } 
+NAT = @{ ASCII_DIGIT ~ (ASCII_DIGIT | "_")* } 
 
 FLOAT = @{ ASCII_DIGIT ~ (ASCII_DIGIT | "_")* ~ DOT ~ ASCII_DIGIT ~ (ASCII_DIGIT | "_")* } 
 

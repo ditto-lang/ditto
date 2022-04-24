@@ -2,12 +2,12 @@
   × types don't unify
    ╭─[golden:4:1]
  4 │ 
- 5 │ nah = (maybe_foo : Maybe(Int)): Int -> 
+ 5 │ nah = (maybe_foo : Maybe(Nat)): Nat -> 
  6 │   match maybe_foo with
  7 │   | Just(n) -> unit
    ·                ──┬─
    ·                  ╰── here
  8 │   | Nothing -> unit;
    ╰────
-  help: expected Int
+  help: expected Nat
         got Unit

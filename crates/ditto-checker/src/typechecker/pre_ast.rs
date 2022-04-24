@@ -53,7 +53,7 @@ pub enum Expression {
         span: Span,
         value: String,
     },
-    Int {
+    Nat {
         span: Span,
         value: String,
     },
@@ -196,7 +196,7 @@ fn convert_cst(
         cst::Expression::True { .. } => Ok(Expression::True { span }),
         cst::Expression::False { .. } => Ok(Expression::False { span }),
         cst::Expression::String(cst::Token { value, .. }) => Ok(Expression::String { span, value }),
-        cst::Expression::Int(cst::Token { value, .. }) => Ok(Expression::Int {
+        cst::Expression::Nat(cst::Token { value, .. }) => Ok(Expression::Nat {
             span,
             value: strip_number_separators(value),
         }),
@@ -485,7 +485,7 @@ fn substitute_type_annotations(subst: &Substitution, expression: Expression) -> 
         Constructor { span, constructor } => Constructor { span, constructor },
         Variable { span, variable } => Variable { span, variable },
         String { span, value } => String { span, value },
-        Int { span, value } => Int { span, value },
+        Nat { span, value } => Nat { span, value },
         Float { span, value } => Float { span, value },
         Array { span, elements } => Array {
             span,

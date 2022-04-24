@@ -4,7 +4,7 @@ use crate::TypeError::*;
 #[test]
 fn it_typechecks_as_expected() {
     assert_type!(r#" if true then "yea" else "nay" "#, "String");
-    assert_type!(r#" if false then 0 else 1        "#, "Int");
+    assert_type!(r#" if false then 0 else 1        "#, "Nat");
     assert_type!(r#" if true then false else true  "#, "Bool");
     assert_type!(r#" if true then [] else []       "#, "Array($1)");
 }

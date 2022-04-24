@@ -1,6 +1,6 @@
 module Test exports (fives, curry);
 
-five : Int = 
+five : Nat = 
   -- this comment should get removed
   5;
 

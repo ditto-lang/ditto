@@ -104,7 +104,7 @@ impl Expression {
                 ..
             } => do_keyword.0.get_span().merge(&close_brace.0.get_span()),
             Self::String(string_token) => string_token.get_span(),
-            Self::Int(int_token) => int_token.get_span(),
+            Self::Nat(nat_token) => nat_token.get_span(),
             Self::Float(float_token) => float_token.get_span(),
             Self::Array(brackets) => brackets.get_span(),
             Self::True(true_keyword) => true_keyword.0.get_span(),

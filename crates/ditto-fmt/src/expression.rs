@@ -28,7 +28,7 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
         Expression::Constructor(constructor) => gen_qualified_proper_name(constructor),
         Expression::Variable(variable) => gen_qualified_name(variable),
         Expression::Float(token) => gen_string_token(token),
-        Expression::Int(token) => gen_string_token(token),
+        Expression::Nat(token) => gen_string_token(token),
         Expression::String(token) => gen_string_token(StringToken {
             span: token.span,
             leading_comments: token.leading_comments,
@@ -464,14 +464,14 @@ mod tests {
             "(\n\tfoo,  -- comment\n) -> foo"
         );
 
-        assert_fmt!("(): Int \n-> foo", "(): Int -> foo");
-        assert_fmt!("(): Int  -- comment\n -> foo");
+        assert_fmt!("(): Nat \n-> foo", "(): Nat -> foo");
+        assert_fmt!("(): Nat  -- comment\n -> foo");
 
-        assert_fmt!("(a: Int): Int -> foo");
-        assert_fmt!("(a: Int, b: Bool): Float -> unit");
+        assert_fmt!("(a: Nat): Nat -> foo");
+        assert_fmt!("(a: Nat, b: Bool): Float -> unit");
         assert_fmt!(
-            "(\n -- comment\na: Int): Int -> foo",
-            "(\n\t-- comment\n\ta: Int,\n): Int -> foo"
+            "(\n -- comment\na: Nat): Nat -> foo",
+            "(\n\t-- comment\n\ta: Nat,\n): Nat -> foo"
         );
         assert_fmt!("() -> [\n\t-- comment\n]");
         assert_fmt!("() ->\n\t-- comment\n\t[5]");

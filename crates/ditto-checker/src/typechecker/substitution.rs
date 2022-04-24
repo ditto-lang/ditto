@@ -214,7 +214,7 @@ impl Substitution {
             False { .. } => expression,
             Unit { .. } => expression,
             String { .. } => expression,
-            Int { .. } => expression,
+            Nat { .. } => expression,
             Float { .. } => expression,
         }
     }

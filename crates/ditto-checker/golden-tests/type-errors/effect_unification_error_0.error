@@ -11,4 +11,4 @@
  6 │ };
    ╰────
   help: expected Effect($1)
-        got Int
+        got Nat

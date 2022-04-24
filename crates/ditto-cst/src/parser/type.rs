@@ -87,7 +87,7 @@ mod tests {
     #[test]
     fn it_parses_functions() {
         assert_parses!("() -> a", Type::Function { .. });
-        assert_parses!("(Int) -> Array(Int)", Type::Function { .. });
+        assert_parses!("(Nat) -> Array(Nat)", Type::Function { .. });
         assert_parses!("(Array(a), (a) -> b) -> Array(b)", Type::Function { .. });
         assert_parses!(
             "(a) -> (b) -> a",
@@ -101,7 +101,7 @@ mod tests {
     #[test]
     fn it_parses_calls() {
         assert_parses!("Foo(a)", Type::Call { .. });
-        assert_parses!("Foo(a, Int, c)", Type::Call { .. });
+        assert_parses!("Foo(a, Nat, c)", Type::Call { .. });
         assert_parses!(
             "Foo(a, Prim.Bool,)",
             Type::Call {

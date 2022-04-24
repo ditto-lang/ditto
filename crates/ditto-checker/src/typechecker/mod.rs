@@ -129,7 +129,7 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
         pre::Expression::False { span } => Ok(Expression::False { span }),
         pre::Expression::Unit { span } => Ok(Expression::Unit { span }),
         pre::Expression::String { span, value } => Ok(Expression::String { span, value }),
-        pre::Expression::Int { span, value } => Ok(Expression::Int { span, value }),
+        pre::Expression::Nat { span, value } => Ok(Expression::Nat { span, value }),
         pre::Expression::Float { span, value } => Ok(Expression::Float { span, value }),
         pre::Expression::Array { span, elements } => {
             if let Some((head, tail)) = split_first_owned(elements) {

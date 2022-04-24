@@ -2,6 +2,6 @@ module E exports (..);
 
 type E;
 
-e_from_int = e_from_int_impl;
+e_from_nat = e_from_nat_impl;
 
-foreign e_from_int_impl : (Int) -> E;
+foreign e_from_nat_impl : (Nat) -> E;

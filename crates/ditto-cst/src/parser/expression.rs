@@ -93,7 +93,7 @@ impl Expression {
                     false_clause,
                 }
             }
-            Rule::expression_integer => Expression::Int(StringToken::from_pairs(
+            Rule::expression_nat => Expression::Nat(StringToken::from_pairs(
                 &mut pair.into_inner().next().unwrap().into_inner(),
             )),
             Rule::expression_float => Expression::Float(StringToken::from_pairs(
@@ -297,26 +297,30 @@ mod tests {
     }
 
     #[test]
-    fn it_parses_integers() {
+    fn it_parses_natural_numbers() {
         assert_parses!(
             "5",
-            Expression::Int(StringToken { value, .. }) if value == "5"
+            Expression::Nat(StringToken { value, .. }) if value == "5"
+        );
+        assert_parses!(
+            "0",
+            Expression::Nat(StringToken { value, .. }) if value == "0"
         );
         assert_parses!(
             "123456789000000",
-            Expression::Int(StringToken { value, .. }) if value == "123456789000000"
+            Expression::Nat(StringToken { value, .. }) if value == "123456789000000"
         );
         assert_parses!(
             "0005",
-            Expression::Int(StringToken { value, .. }) if value == "0005"
+            Expression::Nat(StringToken { value, .. }) if value == "0005"
         );
         assert_parses!(
             "10_000_000",
-            Expression::Int(StringToken { value, .. }) if value == "10_000_000"
+            Expression::Nat(StringToken { value, .. }) if value == "10_000_000"
         );
         assert_parses!(
             "--leading\n--leading0\n10 --trailing",
-            Expression::Int(StringToken { value, .. }) if value == "10"
+            Expression::Nat(StringToken { value, .. }) if value == "10"
         );
     }
 
@@ -325,6 +329,10 @@ mod tests {
         assert_parses!(
             "5.0",
             Expression::Float(StringToken { value, .. }) if value == "5.0"
+        );
+        assert_parses!(
+            "0.0",
+            Expression::Float(StringToken { value, .. }) if value == "0.0"
         );
         assert_parses!(
             "5.0000",
@@ -417,8 +425,8 @@ mod tests {
             "if true then 1 else 0",
             Expression::If {
                 condition: box Expression::True { .. },
-                true_clause: box Expression::Int { .. },
-                false_clause: box Expression::Int { .. },
+                true_clause: box Expression::Nat { .. },
+                false_clause: box Expression::Nat { .. },
 
                 ..
             }
@@ -432,8 +440,8 @@ mod tests {
                     false_clause: box Expression::False { .. },
                     ..
                 },
-                true_clause: box Expression::Int { .. },
-                false_clause: box Expression::Int { .. },
+                true_clause: box Expression::Nat { .. },
+                false_clause: box Expression::Nat { .. },
                 ..
             }
         );
@@ -448,14 +456,14 @@ mod tests {
                 },
                 true_clause: box Expression::If {
                     condition: box Expression::True { .. },
-                    true_clause: box Expression::Int { .. },
-                    false_clause: box Expression::Int { .. },
+                    true_clause: box Expression::Nat { .. },
+                    false_clause: box Expression::Nat { .. },
                     ..
                 },
                 false_clause: box Expression::If {
                     condition: box Expression::True { .. },
-                    true_clause: box Expression::Int { .. },
-                    false_clause: box Expression::Int { .. },
+                    true_clause: box Expression::Nat { .. },
+                    false_clause: box Expression::Nat { .. },
                     ..
                 },
                 ..

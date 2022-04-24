@@ -38,9 +38,9 @@ fn it_kindchecks_as_expected() {
         [("Phantom", "Phantom(a$0)"),]
     );
     assert_type_declaration!(
-        "type HigherKinded(f) = HK(f(Int))",
+        "type HigherKinded(f) = HK(f(Nat))",
         ("HigherKinded", "((Type) -> Type) -> Type"),
-        [("HK", "(f$0(Int)) -> HigherKinded(f$0)"),]
+        [("HK", "(f$0(Nat)) -> HigherKinded(f$0)"),]
     );
     assert_type_declaration!(
         "type HigherKinded(f, a) = HK(f(a))",
@@ -56,10 +56,10 @@ fn it_kindchecks_as_expected() {
         module Test exports (..);
 
         always = (a) -> (b) -> a;
-        five: Int = always(5)(true);
+        five: Nat = always(5)(true);
 
-        always_five: (a) -> Int = always(5);
-        another_five: Int = always_five(unit);
+        always_five: (a) -> Nat = always(5);
+        another_five: Nat = always_five(unit);
         "#
     );
 }
@@ -67,7 +67,7 @@ fn it_kindchecks_as_expected() {
 #[test]
 fn it_errors_as_expected() {
     assert_type_declaration_error!(
-        "type HigherKinded(f) = HK(f(Int), f)",
+        "type HigherKinded(f) = HK(f(Nat), f)",
         KindsNotEqual {
             expected: ditto_ast::Kind::Type,
             actual: ditto_ast::Kind::Function { .. },

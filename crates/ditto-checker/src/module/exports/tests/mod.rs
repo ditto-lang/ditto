@@ -17,7 +17,7 @@ fn it_handles_value_exports() {
         constructors = [],
         values = [
             ("", "a", "Float"),
-            ("", "b", "Int"),
+            ("", "b", "Nat"),
             ("", "c", "Bool"),
             ("", "id", "($0) -> $0"),
         ]
@@ -38,7 +38,7 @@ fn it_handles_value_exports() {
         constructors = [],
         values = [
             ("it's a classic", "id", "($0) -> $0"),
-            ("the number one", "a", "Int"),
+            ("the number one", "a", "Nat"),
         ]
     );
 }
@@ -93,13 +93,13 @@ fn it_doesnt_export_foreign_values() {
     assert_module_exports!(
         r#"
         module Test exports (..);
-        foreign example_impl : (Int, Float) -> Unit;
+        foreign example_impl : (Nat, Float) -> Unit;
         -- implemented elsewhere
         example = example_impl;
         "#,
         types = [],
         constructors = [],
-        values = [("implemented elsewhere", "example", "(Int, Float) -> Unit")]
+        values = [("implemented elsewhere", "example", "(Nat, Float) -> Unit")]
     );
 }
 

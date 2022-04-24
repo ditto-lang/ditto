@@ -3,9 +3,9 @@
    ╭─[golden:1:1]
  1 │ module Test exports (..);
  2 │ 
- 3 │ five : Int = 5.0;
+ 3 │ five : Nat = 5.0;
    ·              ─┬─
    ·               ╰── here
    ╰────
-  help: expected Int
+  help: expected Nat
         got Float

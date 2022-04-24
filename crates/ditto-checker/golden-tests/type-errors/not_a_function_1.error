@@ -7,4 +7,4 @@
    ·            ┬
    ·            ╰── can't call this
    ╰────
-  help: expression has type: Int
+  help: expression has type: Nat

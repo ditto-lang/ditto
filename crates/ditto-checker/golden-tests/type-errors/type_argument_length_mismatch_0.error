@@ -3,7 +3,7 @@
    ╭─[golden:1:1]
  1 │ module Test exports (..);
  2 │ 
- 3 │ fives : Array(Int, Bool) = [1, 2, 3];
+ 3 │ fives : Array(Nat, Bool) = [1, 2, 3];
    ·         ──┬──
    ·           ╰── this expects 1 type parameter
    ╰────

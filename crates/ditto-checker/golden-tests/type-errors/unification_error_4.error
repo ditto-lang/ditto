@@ -2,11 +2,11 @@
   × types don't unify
    ╭─[golden:2:1]
  2 │ 
- 3 │ identity_int = (n: Int): Int -> n;
+ 3 │ identity_nat = (n: Nat): Nat -> n;
  4 │ 
- 5 │ huh = "nope" |> identity_int;
+ 5 │ huh = "nope" |> identity_nat;
    ·       ───┬──
    ·          ╰── here
    ╰────
-  help: expected Int
+  help: expected Nat
         got String

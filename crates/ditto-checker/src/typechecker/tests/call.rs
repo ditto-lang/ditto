@@ -3,7 +3,7 @@ use crate::TypeError::*;
 
 #[test]
 fn it_typechecks_as_expected() {
-    assert_type!("(() -> 2)()", "Int");
+    assert_type!("(() -> 2)()", "Nat");
     assert_type!("((a) -> a)(2.0)", "Float");
     assert_type!("((a, b) -> b)(2.0, true)", "Bool");
 }

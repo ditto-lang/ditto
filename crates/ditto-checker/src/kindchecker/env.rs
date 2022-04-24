@@ -15,8 +15,8 @@ lazy_static! {
             EnvType::PrimConstructor(PrimType::String),
         ),
         (
-            unqualified(PrimType::Int.as_proper_name()),
-            EnvType::PrimConstructor(PrimType::Int),
+            unqualified(PrimType::Nat.as_proper_name()),
+            EnvType::PrimConstructor(PrimType::Nat),
         ),
         (
             unqualified(PrimType::Float.as_proper_name()),

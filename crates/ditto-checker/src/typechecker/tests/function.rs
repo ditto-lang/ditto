@@ -3,10 +3,10 @@ use crate::{TypeError::*, Warning::*};
 
 #[test]
 fn it_typechecks_as_expected() {
-    assert_type!("() -> 2               ", "() -> Int");
-    assert_type!("() -> (() -> 2)       ", "() -> () -> Int");
+    assert_type!("() -> 2               ", "() -> Nat");
+    assert_type!("() -> (() -> 2)       ", "() -> () -> Nat");
     assert_type!("(fn, a) -> fn(a)      ", "(($1) -> $2, $1) -> $2");
-    assert_type!("(fn, a): Int -> fn(a) ", "(($1) -> Int, $1) -> Int");
+    assert_type!("(fn, a): Nat -> fn(a) ", "(($1) -> Nat, $1) -> Nat");
 
     assert_type!("(x) -> x        ", "($0) -> $0");
     assert_type!("(x: a) -> (x)   ", "(a) -> a");
@@ -54,7 +54,7 @@ fn it_errors_as_expected() {
     assert_type_error!("(a: a): a -> (b: b): a -> b", TypesNotEqual { .. });
 
     assert_type_error!(
-        "((fn: (Int, Int) -> Bool) -> unit)((lhs: Int) -> true)",
+        "((fn: (Nat, Nat) -> Bool) -> unit)((lhs: Nat) -> true)",
         TypesNotEqual { .. }
     );
 }

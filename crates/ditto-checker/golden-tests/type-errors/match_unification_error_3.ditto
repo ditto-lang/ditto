@@ -2,7 +2,7 @@ module Test exports (..);
 
 type Maybe(a) = Just(a) | Nothing;
 
-nah = (maybe_foo : Maybe(Int)) -> 
+nah = (maybe_foo : Maybe(Nat)) -> 
   match maybe_foo with
   | Just -> unit
   | Nothing -> unit;

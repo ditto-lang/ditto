@@ -168,7 +168,7 @@ mod tests {
 
     #[test]
     fn it_parses_value_declarations() {
-        assert_value_declaration!("five : Int = 5;", ValueDeclaration { .. });
+        assert_value_declaration!("five : Nat = 5;", ValueDeclaration { .. });
     }
 
     #[test]
@@ -223,7 +223,7 @@ mod tests {
 
     #[test]
     fn it_parses_foreign_value_declarations() {
-        assert_foreign_value_declaration!("foreign five : Int;", ForeignValueDeclaration { .. });
+        assert_foreign_value_declaration!("foreign five : Nat;", ForeignValueDeclaration { .. });
         assert_foreign_value_declaration!(
             "foreign map_impl : ((a) -> b, Array(a)) -> Array(b);",
             ForeignValueDeclaration { .. }

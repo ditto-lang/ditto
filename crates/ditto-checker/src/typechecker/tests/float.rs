@@ -12,5 +12,5 @@ fn it_typechecks_as_expected() {
 #[test]
 fn it_errors_as_expected() {
     assert_type_error!("(): Float -> 5", TypesNotEqual { .. });
-    assert_type_error!("(): Int -> 5.0", TypesNotEqual { .. });
+    assert_type_error!("(): Nat -> 5.0", TypesNotEqual { .. });
 }

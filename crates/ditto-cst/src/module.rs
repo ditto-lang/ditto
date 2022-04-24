@@ -221,7 +221,7 @@ pub struct Constructor<P = Pipe> {
 /// A foreign value import.
 ///
 /// ```ditto
-/// foreign foo : Int;
+/// foreign foo : Nat;
 /// ```
 #[derive(Debug, Clone)]
 pub struct ForeignValueDeclaration {

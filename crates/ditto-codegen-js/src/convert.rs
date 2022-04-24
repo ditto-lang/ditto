@@ -302,7 +302,7 @@ fn convert_expression(
             }
         }
         ditto_ast::Expression::String { value, .. } => Expression::String(value),
-        ditto_ast::Expression::Float { value, .. } | ditto_ast::Expression::Int { value, .. } => {
+        ditto_ast::Expression::Float { value, .. } | ditto_ast::Expression::Nat { value, .. } => {
             Expression::Number(value)
         }
         ditto_ast::Expression::Array { elements, .. } => Expression::Array(

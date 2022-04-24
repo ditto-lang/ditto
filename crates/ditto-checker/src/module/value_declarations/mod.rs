@@ -491,7 +491,7 @@ fn toposort_value_declarations(
             // noop
             Expression::Constructor(_qualified_proper_name) => {}
             Expression::String(_) => {}
-            Expression::Int(_) => {}
+            Expression::Nat(_) => {}
             Expression::Float(_) => {}
             Expression::True(_) => {}
             Expression::False(_) => {}

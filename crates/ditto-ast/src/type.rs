@@ -25,8 +25,8 @@ pub enum Type {
     /// The type of functions.
     ///
     /// ```ditto
-    /// () -> Int
-    /// (String, Float) -> Int
+    /// () -> Bool
+    /// (String, Float) -> Bool
     /// ```
     Function {
         /// The types of the arguments this function accepts (if any).
@@ -59,13 +59,13 @@ pub enum Type {
 /// Ditto's primitive types.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum PrimType {
-    /// `do { return 5 } : Effect(Int)`
+    /// `do { return 5 } : Effect(Nat)`
     Effect,
     /// `[] : Array(a)`
     Array,
-    /// `5 : Int`
-    Int,
-    /// `5.0 : Int`
+    /// `5 : Nat`
+    Nat,
+    /// `5.0 : Float`
     Float,
     /// `"five" : String`
     String,
@@ -80,7 +80,7 @@ impl fmt::Display for PrimType {
         match self {
             Self::Effect => write!(f, "Effect"),
             Self::Array => write!(f, "Array"),
-            Self::Int => write!(f, "Int"),
+            Self::Nat => write!(f, "Nat"),
             Self::Float => write!(f, "Float"),
             Self::String => write!(f, "String"),
             Self::Bool => write!(f, "Bool"),
@@ -103,7 +103,7 @@ impl PrimType {
             Self::Array => Kind::Function {
                 parameters: NonEmpty::new(Kind::Type),
             },
-            Self::Int => Kind::Type,
+            Self::Nat => Kind::Type,
             Self::Float => Kind::Type,
             Self::String => Kind::Type,
             Self::Bool => Kind::Type,

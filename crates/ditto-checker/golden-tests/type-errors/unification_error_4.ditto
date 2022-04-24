@@ -1,5 +1,5 @@
 module Test exports (..);
 
-identity_int = (n: Int): Int -> n;
+identity_nat = (n: Nat): Nat -> n;
 
-huh = "nope" |> identity_int;
+huh = "nope" |> identity_nat;

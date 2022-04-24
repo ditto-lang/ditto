@@ -1,5 +1,5 @@
 module Test exports (..);
 
-identity_int = (n : Int) -> n;
+identity_nat = (n : Nat) -> n;
 
-huh  = identity_int(5)();
+huh  = identity_nat(5)();

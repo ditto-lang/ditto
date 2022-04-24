@@ -5,9 +5,9 @@ fn it_handles_foreign_values() {
     assert_module_ok!(
         r#"
         module Test exports (..);
-        foreign ffi_int : Int;
-        id_int = (n: Int) -> n;
-        foo = id_int(ffi_int);
+        foreign ffi_int : Nat;
+        id_nat = (n: Nat) -> n;
+        foo = id_nat(ffi_int);
     "#
     );
 
@@ -27,7 +27,7 @@ fn it_warns_for_unused() {
     assert_module_ok!(
         r#"
         module Test exports (..);
-        foreign foo : (Int) -> Bool;
+        foreign foo : (Nat) -> Bool;
     "#,
         [Warning::UnusedForeignValue { .. }]
     );

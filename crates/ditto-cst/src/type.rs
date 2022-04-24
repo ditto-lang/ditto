@@ -25,8 +25,8 @@ pub enum Type {
     /// The type of functions.
     ///
     /// ```ditto
-    /// () -> Int
-    /// (String, Float) -> Int
+    /// () -> Float
+    /// (String, Float) -> Bool
     /// ```
     Function {
         /// The types of parameters this function accepts (if any).

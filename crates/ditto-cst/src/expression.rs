@@ -107,21 +107,11 @@ pub enum Expression {
     String(StringToken),
     /// `5`
     ///
-    /// The value is a [StringToken] because:
-    ///
-    /// 1. We want to avoid any compile-time evaluation that would result in parsing the string.
-    /// For example, if the integer appears in ditto source as "005" we want to preserve that in the
-    /// generated code.
-    /// 2. Storing as a string avoids overflow issues.
-    Int(StringToken),
+    /// This value is a [String] mostly to avoid overflow issues that could result from parsing.
+    Nat(StringToken),
     /// `5.0`
     ///
-    /// The value is a [StringToken] because:
-    ///
-    /// 1. We want to avoid any compile-time evaluation that would result in parsing the string.
-    /// For example, if the float appears in ditto source as "5.00" we want to preserve that in the
-    /// generated code.
-    /// 2. Storing as a string avoids float overflow and precision issues.
+    /// This value is a [String] mostly to avoid overflow issues that could result from parsing.
     Float(StringToken),
     /// `[this, is, an, array]`
     Array(BracketsList<Box<Self>>),

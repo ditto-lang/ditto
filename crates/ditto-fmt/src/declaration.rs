@@ -201,10 +201,10 @@ mod tests {
         #[test]
         fn it_formats_value_declarations() {
             assert_fmt!("foo = 5;");
-            assert_fmt!("foo: Int = 5;");
-            assert_fmt!("foo: Int = 5;", "foo: Int =\n\t5;", 5);
-            assert_fmt!("foo: Int =  -- comment\n\t5;");
-            assert_fmt!("foo: Int =\n\t-- comment\n\t5;");
+            assert_fmt!("foo: Nat = 5;");
+            assert_fmt!("foo: Nat = 5;", "foo: Nat =\n\t5;", 5);
+            assert_fmt!("foo: Nat =  -- comment\n\t5;");
+            assert_fmt!("foo: Nat =\n\t-- comment\n\t5;");
             assert_fmt!("f: (a, b) -> c =\n\t-- comment\n\t[1, 2, 3, 4, 5];");
             assert_fmt!("f: Dunno =  -- comment\n\t-- comment\n\tbody;");
             assert_fmt!(
@@ -213,8 +213,8 @@ mod tests {
                 10
             );
             assert_fmt!("to_string = (dunno: Unknown): Maybe(String) -> to_string_impl(\n\tdunno,\n\tJust,\n\tNothing,\n);");
-            assert_fmt!("xs: Array(Int) = [\n\t-- comment\n\t1,\n];");
-            assert_fmt!("xs: Array(Int) =  -- comment\n\t-- comment\n\t[5];");
+            assert_fmt!("xs: Array(Nat) = [\n\t-- comment\n\t1,\n];");
+            assert_fmt!("xs: Array(Nat) =  -- comment\n\t-- comment\n\t[5];");
             assert_fmt!(
                 "whytho = looooong(looooong(loooooong(loooooong(5))));",
                 "whytho =\n\tlooooong(\n\t\tlooooong(\n\t\t\tloooooong(\n\t\t\t\tloooooong(\n\t\t\t\t\t5,\n\t\t\t\t),\n\t\t\t),\n\t\t),\n\t);",
@@ -241,8 +241,8 @@ mod tests {
 
         #[test]
         fn it_formats_foreign_value_declarations() {
-            assert_fmt!("foreign foo: Int;");
-            assert_fmt!("foreign  --comment\n foo: Int;");
+            assert_fmt!("foreign foo: Nat;");
+            assert_fmt!("foreign  --comment\n foo: Nat;");
             assert_fmt!("foreign foo: (\n\t-- comment a,\n) -> b;");
         }
     }

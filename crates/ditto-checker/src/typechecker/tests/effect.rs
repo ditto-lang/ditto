@@ -3,7 +3,7 @@ use crate::{TypeError::*, Warning::*};
 
 #[test]
 fn it_typechecks_as_expected() {
-    assert_type!(r#" do { return 5 } "#, "Effect(Int)");
+    assert_type!(r#" do { return 5 } "#, "Effect(Nat)");
     assert_type!(r#" do { do { return unit } } "#, "Effect(Unit)");
     assert_type!(
         r#" do { hi <- do { return "hi" }; return hi } "#,
@@ -26,7 +26,7 @@ fn it_errors_as_expected() {
 fn it_warns_as_expected() {
     assert_type!(
         "do { x <- do { return 5 }; return 10 }",
-        "Effect(Int)",
+        "Effect(Nat)",
         [UnusedEffectBinder { .. }]
     );
 }

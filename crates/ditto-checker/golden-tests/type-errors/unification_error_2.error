@@ -7,5 +7,5 @@
    ·                            ─┬─
    ·                             ╰── here
    ╰────
-  help: expected Int
+  help: expected Nat
         got String

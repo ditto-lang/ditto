@@ -14,7 +14,7 @@ fn it_errors_for_duplicates() {
         r#"
         module Test exports (..);
         a : Bool = true;
-        a : Int = 5;
+        a : Nat = 5;
     "#,
         TypeError::DuplicateValueDeclaration { .. }
     );
@@ -26,7 +26,7 @@ fn it_warns_for_unused() {
         r#"
         module Test exports (a);
         a : Bool = true;
-        b : Int = 5;
+        b : Nat = 5;
     "#,
         [Warning::UnusedValueDeclaration { .. }]
     );
@@ -35,7 +35,7 @@ fn it_warns_for_unused() {
         r#"
         module Test exports (a, c);
         a : Bool = true;
-        b : Int = 5;
+        b : Nat = 5;
         c = (b) -> b; -- not referencing `b` above, that is still unused
     "#,
         [Warning::UnusedValueDeclaration { .. }]

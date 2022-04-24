@@ -148,18 +148,13 @@ pub enum Expression {
         /// `"string"`
         value: String,
     },
-    /// An integer literal.
-    Int {
+    /// A natural number literal.
+    Nat {
         /// The source span for this expression.
         span: Span,
         /// `5`
         ///
-        /// This value is a [String] because:
-        ///
-        /// 1. We want to avoid any compile-time evaluation that would result in parsing the string.
-        /// For example, if the integer appears in ditto source as "005" we want to preserve that in the
-        /// generated code.
-        /// 2. Storing as a string avoids overflow issues.
+        /// This value is a [String] mostly to avoid overflow issues that could result from parsing.
         value: String,
     },
     /// A floating point number literal.
@@ -168,12 +163,7 @@ pub enum Expression {
         span: Span,
         /// `5.0`
         ///
-        /// This value is a [String] because:
-        ///
-        /// 1. We want to avoid any compile-time evaluation that would result in parsing the string.
-        /// For example, if the float appears in ditto source as "5.00" we want to preserve that in the
-        /// generated code.
-        /// 2. Storing as a string avoids float overflow and precision issues.
+        /// This value is a [String] mostly to avoid overflow issues that could result from parsing.
         value: String,
     },
     /// An array literal.
@@ -236,7 +226,7 @@ impl Expression {
             Self::ForeignVariable { variable_type, .. } => variable_type.clone(),
             Self::ImportedVariable { variable_type, .. } => variable_type.clone(),
             Self::String { .. } => Type::PrimConstructor(PrimType::String),
-            Self::Int { .. } => Type::PrimConstructor(PrimType::Int),
+            Self::Nat { .. } => Type::PrimConstructor(PrimType::Nat),
             Self::Float { .. } => Type::PrimConstructor(PrimType::Float),
             Self::Array { element_type, .. } => Type::Call {
                 function: Box::new(Type::PrimConstructor(PrimType::Array)),
@@ -261,7 +251,7 @@ impl Expression {
             Self::ImportedVariable { span, .. } => *span,
             Self::Effect { span, .. } => *span,
             Self::String { span, .. } => *span,
-            Self::Int { span, .. } => *span,
+            Self::Nat { span, .. } => *span,
             Self::Float { span, .. } => *span,
             Self::Array { span, .. } => *span,
             Self::True { span, .. } => *span,
