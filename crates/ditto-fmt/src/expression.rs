@@ -7,11 +7,11 @@ use super::{
     token::{
         gen_close_brace, gen_colon, gen_do_keyword, gen_else_keyword, gen_false_keyword,
         gen_if_keyword, gen_left_arrow, gen_match_keyword, gen_open_brace, gen_pipe,
-        gen_return_keyword, gen_right_arrow, gen_semicolon, gen_string_token, gen_then_keyword,
-        gen_true_keyword, gen_unit_keyword, gen_with_keyword,
+        gen_return_keyword, gen_right_arrow, gen_right_pizza_operator, gen_semicolon,
+        gen_string_token, gen_then_keyword, gen_true_keyword, gen_unit_keyword, gen_with_keyword,
     },
 };
-use ditto_cst::{Effect, Expression, MatchArm, Pattern, StringToken, TypeAnnotation};
+use ditto_cst::{BinOp, Effect, Expression, MatchArm, Pattern, StringToken, TypeAnnotation};
 use dprint_core::formatting::{
     condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext, Info,
     PrintItems, Signal,
@@ -207,6 +207,19 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
             }
             items
         }
+        Expression::BinOp {
+            box lhs,
+            operator: BinOp::RightPizza(right_pizza_operator),
+            box rhs,
+        } => {
+            let mut items = PrintItems::new();
+            items.extend(gen_expression(lhs));
+            items.push_signal(Signal::ExpectNewLine);
+            items.extend(gen_right_pizza_operator(right_pizza_operator));
+            items.extend(space());
+            items.extend(gen_expression(rhs));
+            items
+        }
     }
 }
 
@@ -294,8 +307,15 @@ pub fn gen_body_expression(expr: Expression, force_use_new_lines: bool) -> Print
     let end_info = Info::new("end");
 
     let has_leading_comments = expr.has_leading_comments();
-    let deserves_new_line_if_multi_lines =
-        matches!(expr, Expression::If { .. } | Expression::Match { .. });
+    let deserves_new_line_if_multi_lines = matches!(
+        expr,
+        Expression::If { .. }
+            | Expression::Match { .. }
+            | Expression::BinOp {
+                operator: BinOp::RightPizza(_),
+                ..
+            }
+    );
 
     let expression_should_be_on_new_line: ConditionResolver =
         Rc::new(move |ctx: &mut ConditionResolverContext| -> Option<bool> {
@@ -495,5 +515,13 @@ mod tests {
         assert_fmt!("do {\n\tsome_effect()\n}");
         assert_fmt!("do {\n\tx <- some_effect();\n\treturn x\n}");
         assert_fmt!("do {\n\tsome_effect();\n\treturn 5\n}");
+    }
+
+    #[test]
+    fn it_formats_pipes() {
+        assert_fmt!("x\n|> y");
+        assert_fmt!("-- comment\nx\n|> y");
+        assert_fmt!("x\n|> y\n|> z");
+        assert_fmt!("(x |> y) |> z", "(\n\tx\n\t|> y\n)\n|> z");
     }
 }

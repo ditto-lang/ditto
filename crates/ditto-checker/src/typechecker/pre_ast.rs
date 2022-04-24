@@ -302,6 +302,39 @@ fn convert_cst(
                 body: Box::new(body),
             })
         }
+        cst::Expression::BinOp {
+            box lhs,
+            // Desugar!
+            operator: cst::BinOp::RightPizza(_),
+            box rhs,
+        } => {
+            let lhs = convert_cst(env, state, lhs)?;
+            let rhs = convert_cst(env, state, rhs)?;
+            match rhs {
+                Expression::Call {
+                    span,
+                    function,
+                    arguments: original_arguments,
+                } => {
+                    // Push the lhs as the first argument to the rhs
+                    let mut arguments = vec![Argument::Expression(lhs)];
+                    arguments.extend(original_arguments);
+                    Ok(Expression::Call {
+                        span,
+                        function,
+                        arguments,
+                    })
+                }
+                function => {
+                    let arguments = vec![Argument::Expression(lhs)];
+                    Ok(Expression::Call {
+                        span,
+                        function: Box::new(function),
+                        arguments,
+                    })
+                }
+            }
+        }
     }
 }
 

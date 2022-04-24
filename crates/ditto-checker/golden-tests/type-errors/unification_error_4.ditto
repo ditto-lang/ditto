@@ -1,0 +1,5 @@
+module Test exports (..);
+
+identity_int = (n: Int): Int -> n;
+
+huh = "nope" |> identity_int;

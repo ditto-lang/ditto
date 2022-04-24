@@ -1,0 +1,20 @@
+module Pipe exports (..);
+
+
+long_pipe =
+    a
+    |> Some.function()  -- comment
+    -- comment
+    |> Some.other_function
+    |> Some.function_with_arguments(a, b, c)
+    |> Some.function_with_multiline_arguments(
+        -- comment
+        a,
+        b,
+        [],
+    )
+    |> (
+        a
+        |> b
+    )
+    |> done;

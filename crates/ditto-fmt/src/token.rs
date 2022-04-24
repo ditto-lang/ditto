@@ -54,6 +54,7 @@ gen_empty_token_like!(gen_left_arrow, cst::LeftArrow, "<-");
 gen_empty_token_like!(gen_module_keyword, cst::ModuleKeyword, "module");
 gen_empty_token_like!(gen_do_keyword, cst::DoKeyword, "do");
 gen_empty_token_like!(gen_return_keyword, cst::ReturnKeyword, "return");
+gen_empty_token_like!(gen_right_pizza_operator, cst::RightPizzaOperator, "|>");
 gen_empty_token_like!(
     gen_close_bracket,
     cst::CloseBracket,

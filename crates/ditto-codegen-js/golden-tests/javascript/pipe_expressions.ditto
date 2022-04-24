@@ -1,0 +1,18 @@
+module Test exports (..);
+
+identity = (a) -> a;
+
+with_parens = 5 |> identity;
+without_parens = 5 |> identity();
+
+inline_function = 5 |> ((n) -> n);
+
+tagged_identity = (a, tag) -> a;
+
+-- these two should look the same in the generated code!
+want = tagged_identity(tagged_identity(tagged_identity(5, "1"), "2"), "3");
+got_ = 
+    5 
+    |> tagged_identity("1") 
+    |> tagged_identity("2") 
+    |> tagged_identity("3");

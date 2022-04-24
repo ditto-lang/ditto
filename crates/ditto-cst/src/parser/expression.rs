@@ -1,9 +1,10 @@
 use super::{parse_rule, Result, Rule};
 use crate::{
-    BracketsList, CloseBrace, Colon, DoKeyword, Effect, ElseKeyword, Expression, FalseKeyword,
-    IfKeyword, LeftArrow, MatchArm, MatchKeyword, Name, OpenBrace, Parens, ParensList, ParensList1,
-    Pattern, Pipe, QualifiedName, QualifiedProperName, ReturnKeyword, RightArrow, Semicolon,
-    StringToken, ThenKeyword, TrueKeyword, Type, TypeAnnotation, UnitKeyword, WithKeyword,
+    BinOp, BracketsList, CloseBrace, Colon, DoKeyword, Effect, ElseKeyword, Expression,
+    FalseKeyword, IfKeyword, LeftArrow, MatchArm, MatchKeyword, Name, OpenBrace, Parens,
+    ParensList, ParensList1, Pattern, Pipe, QualifiedName, QualifiedProperName, ReturnKeyword,
+    RightArrow, RightPizzaOperator, Semicolon, StringToken, ThenKeyword, TrueKeyword, Type,
+    TypeAnnotation, UnitKeyword, WithKeyword,
 };
 use pest::iterators::Pair;
 
@@ -151,6 +152,24 @@ impl Expression {
                     close_brace,
                 }
             }
+            Rule::expression_right_pipe => {
+                let mut inner = pair.into_inner();
+                let lhs = Box::new(Expression::from_pair(inner.next().unwrap()));
+                let operator =
+                    BinOp::RightPizza(RightPizzaOperator::from_pair(inner.next().unwrap()));
+                let rhs = Box::new(Expression::from_pair(inner.next().unwrap()));
+                let mut expression = Self::BinOp { lhs, operator, rhs };
+                while let Some(pair) = inner.next() {
+                    let operator = BinOp::RightPizza(RightPizzaOperator::from_pair(pair));
+                    let rhs = Box::new(Expression::from_pair(inner.next().unwrap()));
+                    expression = Self::BinOp {
+                        lhs: Box::new(expression),
+                        operator,
+                        rhs,
+                    }
+                }
+                expression
+            }
             other => unreachable!("{:#?} {:#?}", other, pair.into_inner()),
         }
     }
@@ -263,7 +282,7 @@ impl TypeAnnotation {
 #[cfg(test)]
 mod tests {
     use super::test_macros::*;
-    use crate::{Brackets, CommaSep1, Expression, Parens, StringToken};
+    use crate::{BinOp, Brackets, CommaSep1, Expression, Parens, StringToken};
 
     #[test]
     fn it_parses_constructors() {
@@ -623,6 +642,51 @@ mod tests {
                     },
                     ..
                 },
+                ..
+            }
+        );
+    }
+
+    #[test]
+    fn it_parses_pipes() {
+        assert_parses!(
+            "x |> y",
+            Expression::BinOp {
+                operator: BinOp::RightPizza(_),
+                ..
+            }
+        );
+
+        assert_parses!(
+            "x() |> y()",
+            Expression::BinOp {
+                operator: BinOp::RightPizza(_),
+                ..
+            }
+        );
+        // Left associative
+        assert_parses!(
+            "x |> y |> z",
+            Expression::BinOp {
+                operator: BinOp::RightPizza(_),
+                lhs: box Expression::BinOp {
+                    operator: BinOp::RightPizza(_),
+                    ..
+                },
+                ..
+            }
+        );
+        assert_parses!(
+            "x |> (y |> z)",
+            Expression::BinOp {
+                operator: BinOp::RightPizza(_),
+                rhs: box Expression::Parens(Parens {
+                    value: box Expression::BinOp {
+                        operator: BinOp::RightPizza(_),
+                        ..
+                    },
+                    ..
+                }),
                 ..
             }
         );

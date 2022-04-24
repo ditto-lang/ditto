@@ -207,3 +207,7 @@ pub struct DoKeyword(pub EmptyToken);
 /// `return`
 #[derive(Debug, Clone)]
 pub struct ReturnKeyword(pub EmptyToken);
+
+/// `|>`
+#[derive(Debug, Clone)]
+pub struct RightPizzaOperator(pub EmptyToken);

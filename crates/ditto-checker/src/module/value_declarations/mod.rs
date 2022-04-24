@@ -480,6 +480,14 @@ fn toposort_value_declarations(
             Expression::Parens(parens) => {
                 get_connected_nodes_rec(&parens.value, nodes, accum);
             }
+            Expression::BinOp {
+                box lhs,
+                operator: _,
+                box rhs,
+            } => {
+                get_connected_nodes_rec(lhs, nodes, accum);
+                get_connected_nodes_rec(rhs, nodes, accum);
+            }
             // noop
             Expression::Constructor(_qualified_proper_name) => {}
             Expression::String(_) => {}
