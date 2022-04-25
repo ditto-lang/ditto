@@ -205,77 +205,7 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
             span,
             box function,
             arguments,
-        } => {
-            let function = infer(env, state, function)?;
-            let function_type = state.substitution.apply(function.get_type());
-
-            match function_type {
-                Type::Function {
-                    parameters,
-                    return_type: box call_type,
-                } => {
-                    let arguments_len = arguments.len();
-                    let parameters_len = parameters.len();
-                    if arguments_len != parameters_len {
-                        return Err(TypeError::ArgumentLengthMismatch {
-                            function_span: function.get_span(),
-                            wanted: parameters_len,
-                            got: arguments_len,
-                        });
-                    }
-                    let arguments = arguments
-                        .into_iter()
-                        .zip(parameters.into_iter())
-                        .map(|(arg, expected)| match arg {
-                            pre::Argument::Expression(expr) => {
-                                check(env, state, expected, expr).map(Argument::Expression)
-                            }
-                        })
-                        .collect::<Result<Vec<_>>>()?;
-
-                    Ok(Expression::Call {
-                        span,
-                        call_type,
-                        function: Box::new(function),
-                        arguments,
-                    })
-                }
-                type_variable @ Type::Variable { .. } => {
-                    let arguments = arguments
-                        .into_iter()
-                        .map(|arg| match arg {
-                            pre::Argument::Expression(expr) => {
-                                infer(env, state, expr).map(Argument::Expression)
-                            }
-                        })
-                        .collect::<Result<Vec<_>>>()?;
-
-                    let parameters = arguments.iter().map(|arg| arg.get_type()).collect();
-
-                    let call_type = state.supply.fresh_type();
-
-                    let constraint = Constraint {
-                        expected: Type::Function {
-                            parameters,
-                            return_type: Box::new(call_type.clone()),
-                        },
-                        actual: type_variable,
-                    };
-                    unify(state, function.get_span(), constraint)?;
-
-                    Ok(Expression::Call {
-                        span,
-                        call_type,
-                        function: Box::new(function),
-                        arguments,
-                    })
-                }
-                _ => Err(TypeError::NotAFunction {
-                    span: function.get_span(),
-                    actual_type: function_type,
-                }),
-            }
-        }
+        } => infer_or_check_call(env, state, None, span, function, arguments),
         pre::Expression::Function {
             span,
             binders: pre_binders,
@@ -385,6 +315,48 @@ pub fn check(
 ) -> Result<Expression> {
     match (expr, expected) {
         (
+            pre::Expression::Array { span, elements },
+            Type::Call {
+                function: box Type::PrimConstructor(PrimType::Array),
+                arguments,
+            },
+        ) if arguments.as_slice().len() == 1 => {
+            //                          ^^^^
+            // NOTE kindchecking _should_ ensure that this is never not the case...
+            //
+            let element_type = arguments.first().clone();
+            let elements = elements
+                .into_iter()
+                .map(|element| check(env, state, element_type.clone(), element))
+                .collect::<Result<Vec<_>>>()?;
+
+            Ok(Expression::Array {
+                span,
+                element_type,
+                elements,
+            })
+        }
+        (
+            pre::Expression::If {
+                span,
+                box condition,
+                box true_clause,
+                box false_clause,
+            },
+            output_type,
+        ) => {
+            let condition = check(env, state, Type::PrimConstructor(PrimType::Bool), condition)?;
+            let true_clause = check(env, state, output_type.clone(), true_clause)?;
+            let false_clause = check(env, state, output_type.clone(), false_clause)?;
+            Ok(Expression::If {
+                span,
+                output_type,
+                condition: Box::new(condition),
+                true_clause: Box::new(true_clause),
+                false_clause: Box::new(false_clause),
+            })
+        }
+        (
             pre::Expression::Match {
                 span,
                 box expression,
@@ -392,6 +364,21 @@ pub fn check(
             },
             expected,
         ) => infer_or_check_match(env, state, span, expression, arms, Some(expected)),
+        (
+            pre::Expression::Call {
+                span,
+                box function,
+                arguments,
+            },
+            expected_call_type,
+        ) => infer_or_check_call(
+            env,
+            state,
+            Some(expected_call_type),
+            span,
+            function,
+            arguments,
+        ),
         (
             pre::Expression::Effect { span, effect },
             Type::Call {
@@ -422,6 +409,97 @@ pub fn check(
             )?;
             Ok(expression)
         }
+    }
+}
+
+fn infer_or_check_call(
+    env: &Env,
+    state: &mut State,
+    expected_call_type: Option<Type>,
+    span: Span,
+    function: pre::Expression,
+    arguments: Vec<pre::Argument>,
+) -> Result<Expression> {
+    let function = infer(env, state, function)?;
+    let function_span = function.get_span();
+    let function_type = state.substitution.apply(function.get_type());
+
+    match function_type {
+        Type::Function {
+            parameters,
+            box return_type,
+        } => {
+            if let Some(expected) = expected_call_type {
+                unify(
+                    state,
+                    function_span,
+                    Constraint {
+                        expected,
+                        actual: return_type.clone(),
+                    },
+                )?;
+            }
+
+            let arguments_len = arguments.len();
+            let parameters_len = parameters.len();
+            if arguments_len != parameters_len {
+                return Err(TypeError::ArgumentLengthMismatch {
+                    function_span,
+                    wanted: parameters_len,
+                    got: arguments_len,
+                });
+            }
+            let arguments = arguments
+                .into_iter()
+                .zip(parameters.into_iter())
+                .map(|(arg, expected)| match arg {
+                    pre::Argument::Expression(expr) => {
+                        check(env, state, expected, expr).map(Argument::Expression)
+                    }
+                })
+                .collect::<Result<Vec<_>>>()?;
+
+            Ok(Expression::Call {
+                span,
+                call_type: return_type,
+                function: Box::new(function),
+                arguments,
+            })
+        }
+        type_variable @ Type::Variable { .. } => {
+            let arguments = arguments
+                .into_iter()
+                .map(|arg| match arg {
+                    pre::Argument::Expression(expr) => {
+                        infer(env, state, expr).map(Argument::Expression)
+                    }
+                })
+                .collect::<Result<Vec<_>>>()?;
+
+            let parameters = arguments.iter().map(|arg| arg.get_type()).collect();
+
+            let call_type = expected_call_type.unwrap_or_else(|| state.supply.fresh_type());
+
+            let constraint = Constraint {
+                expected: Type::Function {
+                    parameters,
+                    return_type: Box::new(call_type.clone()),
+                },
+                actual: type_variable,
+            };
+            unify(state, function_span, constraint)?;
+
+            Ok(Expression::Call {
+                span,
+                call_type,
+                function: Box::new(function),
+                arguments,
+            })
+        }
+        _ => Err(TypeError::NotAFunction {
+            span: function_span,
+            actual_type: function_type,
+        }),
     }
 }
 
