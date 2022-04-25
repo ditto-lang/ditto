@@ -303,6 +303,10 @@ mod tests {
             Expression::Int(StringToken { value, .. }) if value == "5"
         );
         assert_parses!(
+            "0",
+            Expression::Int(StringToken { value, .. }) if value == "0"
+        );
+        assert_parses!(
             "123456789000000",
             Expression::Int(StringToken { value, .. }) if value == "123456789000000"
         );
@@ -325,6 +329,10 @@ mod tests {
         assert_parses!(
             "5.0",
             Expression::Float(StringToken { value, .. }) if value == "5.0"
+        );
+        assert_parses!(
+            "0.0",
+            Expression::Float(StringToken { value, .. }) if value == "0.0"
         );
         assert_parses!(
             "5.0000",
