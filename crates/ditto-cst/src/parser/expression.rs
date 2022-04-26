@@ -608,6 +608,18 @@ mod tests {
             "match x with | Foo -> 2 | Bar -> 3",
             Expression::Match { tail_arms, .. } if tail_arms.len() == 1
         );
+
+        // Right associative!
+        assert_parses!(
+            r#"
+            match x with
+            | outer0 ->
+                match x with
+                | inner0 -> x
+                | inner1 -> x
+            "#,
+            Expression::Match { tail_arms, .. } if tail_arms.is_empty()
+        );
     }
 
     #[test]
