@@ -1,0 +1,5 @@
+module Spec exports (test);
+
+test = test_impl;
+
+foreign test_impl : (String, Effect(Unit)) -> Effect(Unit);

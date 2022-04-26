@@ -1,0 +1,7 @@
+module TestSuite exports (main);
+
+import A.Test (test_it_works);
+
+main = do {
+    test_it_works
+};

@@ -17,7 +17,10 @@ use std::{
     path::{Path, PathBuf},
 };
 
-pub async fn check_packages_up_to_date(config: &Config) -> Result<()> {
+pub async fn check_packages_up_to_date(
+    config: &Config,
+    include_test_dependencies: bool,
+) -> Result<()> {
     debug!("Checking if packages are up to date");
 
     let available_packages = config.resolve_packages()?.clone();
@@ -60,11 +63,17 @@ pub async fn check_packages_up_to_date(config: &Config) -> Result<()> {
     }
 
     let installed_packages = get_installed_packages(&packages_dir)?;
+
+    let mut dependencies = config.dependencies.clone();
+    if include_test_dependencies {
+        dependencies.extend(config.test_dependencies.clone());
+    }
+
     let mut multi_progress = MultiProgress::new();
     update_dependencies(
         &mut multi_progress,
         &packages_dir,
-        &config.dependencies,
+        &dependencies,
         &mut Dependencies::new(),
         &installed_packages,
         &available_packages,

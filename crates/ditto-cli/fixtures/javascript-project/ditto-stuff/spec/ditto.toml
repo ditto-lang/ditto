@@ -1,0 +1,2 @@
+name = "spec"
+targets = ["web"]

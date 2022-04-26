@@ -1,0 +1,5 @@
+module A.Test exports (test_it_works);
+
+test_it_works = do {
+    return unit
+};

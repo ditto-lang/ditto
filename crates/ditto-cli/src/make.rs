@@ -29,6 +29,11 @@ pub fn command<'a>(name: &str) -> Command<'a> {
                 .long("watch")
                 .help("Watch files for changes"),
         )
+        .arg(
+            Arg::new("no-tests")
+                .long("no-tests")
+                .help("Ignore test modules and dependencies"),
+        )
         // Useful for debugging why watches are/aren't triggering.
         // Should remove it eventually.
         .arg(Arg::new("debug-watcher").long("debug-watcher").hide(true))
@@ -73,6 +78,14 @@ pub async fn run_watch(
     watcher
         .watch(&config.src_dir, notify::RecursiveMode::Recursive)
         .into_diagnostic()?;
+
+    if config.tests_dir.exists() {
+        watcher
+            .watch(&config.tests_dir, notify::RecursiveMode::Recursive)
+            .into_diagnostic()?;
+    }
+
+    // TODO: allow watching more files via config or a flag?
 
     run_once_watch(
         matches,
@@ -149,15 +162,15 @@ pub async fn run_watch(
             }
         }
 
-        match run_once(
+        let result = run_once(
             matches,
             ditto_version,
             config_path,
             config,
             install_packages,
         )
-        .await
-        {
+        .await;
+        match result {
             Err(err) => {
                 // print the error but don't exit!
                 eprintln!("{:?}", err);
@@ -203,7 +216,7 @@ impl WhatHappened {
 
 /// If successful returns the exit status of `ninja` and whether anything actually happened.
 async fn run_once(
-    _matches: &ArgMatches,
+    matches: &ArgMatches,
     ditto_version: &Version,
     config_path: &Path,
     config: &Config,
@@ -214,10 +227,12 @@ async fn run_once(
     let lock = acquire_lock(config)?;
     debug!("Lock acquired");
 
+    let include_test_stuff = !matches.is_present("no-tests");
+
     // Install/remove packages as needed
     // (this is a nicer pattern than requiring a run of a separate CLI command, IMO)
     if install_packages && !config.dependencies.is_empty() {
-        pkg::check_packages_up_to_date(config, true)
+        pkg::check_packages_up_to_date(config, include_test_stuff)
             .await
             .wrap_err("error checking packages are up to date")?;
     }
@@ -225,7 +240,7 @@ async fn run_once(
     let now = Instant::now(); // for timing
 
     // Do the thing
-    let result = make(config_path, config, ditto_version).await;
+    let result = make(config_path, config, ditto_version, include_test_stuff).await;
 
     lock.unlock()
         .into_diagnostic()
@@ -241,19 +256,22 @@ async fn make(
     config_path: &Path,
     config: &Config,
     ditto_version: &Version,
+    include_test_sources: bool,
 ) -> Result<WhatHappened> {
-    let (build_ninja, get_warnings) = generate_build_ninja(config_path, config, ditto_version)
-        .map_err(|err| {
-            // This is a bit brittle, but we want parse errors encountered during
-            // build planning to be indistinguishable from parse errors encountered
-            // during the actual build
-            if err.root_cause().to_string() == "syntax error" {
-                //                                  ^^ BEWARE relying on this string is brittle!
-                err
-            } else {
-                err.wrap_err("error generating build.ninja")
-            }
-        })?;
+    let (build_ninja, get_warnings) =
+        generate_build_ninja(config_path, config, ditto_version, include_test_sources).map_err(
+            |err| {
+                // This is a bit brittle, but we want parse errors encountered during
+                // build planning to be indistinguishable from parse errors encountered
+                // during the actual build
+                if err.root_cause().to_string() == "syntax error" {
+                    //                                  ^^ BEWARE relying on this string is brittle!
+                    err
+                } else {
+                    err.wrap_err("error generating build.ninja")
+                }
+            },
+        )?;
 
     trace!("build.ninja generated");
 
@@ -400,6 +418,7 @@ fn generate_build_ninja(
     config_path: &Path,
     config: &Config,
     ditto_version: &Version,
+    include_test_sources: bool,
 ) -> Result<(BuildNinja, GetWarnings)> {
     let mut build_dir = config.ditto_dir.to_path_buf();
     build_dir.push("build");
@@ -409,11 +428,14 @@ fn generate_build_ninja(
         .into_diagnostic()
         .wrap_err("error getting current executable")?;
 
-    let ditto_sources = find_ditto_files(&config.src_dir)?;
+    let mut ditto_files = find_ditto_files(&config.src_dir)?; // src
+    if include_test_sources && config.tests_dir.exists() {
+        ditto_files.extend(find_ditto_files(&config.tests_dir)?); // tests
+    }
 
     let sources = Sources {
         config: config_path.to_path_buf(),
-        ditto: ditto_sources,
+        ditto: ditto_files,
     };
 
     let package_sources =

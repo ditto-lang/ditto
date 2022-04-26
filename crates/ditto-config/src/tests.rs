@@ -42,6 +42,16 @@ mod successes {
     }
 
     #[test]
+    fn it_parses_test_dependencies() {
+        assert_parses!(
+            r#"
+            name = "test" 
+            test-dependencies = ["fancy-test-lib"]
+        "#
+        );
+    }
+
+    #[test]
     fn it_parses_ditto_version_requirements() {
         assert_parses!(
             r#"
