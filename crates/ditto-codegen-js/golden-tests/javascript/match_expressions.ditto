@@ -4,6 +4,7 @@ import Data.Stuff (Five(..));
 
 type Maybe(a) = Just(a) | Nothing;
 
+type ManyFields(a, b, c, d) = ManyFields(a, b, c, d);
 
 with_default = (maybe: Maybe(a), default: a): a ->
     match maybe with
@@ -13,3 +14,7 @@ with_default = (maybe: Maybe(a), default: a): a ->
 mk_five = (five) ->
     match five with
     | Five -> 5;
+
+many_fields_to_array = (mf : ManyFields(a, a, a, a)): Array(a) -> 
+    match mf with
+    | ManyFields(a, b, c, d) -> [a, b, c, d];

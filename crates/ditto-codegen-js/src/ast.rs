@@ -61,21 +61,22 @@ impl ModuleStatement {
 
 /// A bunch of statements surrounded by braces.
 #[derive(Clone)]
-pub struct Block(pub Vec<BlockStatement>);
-
-/// A single JavaScript statement.
-///
-/// These end with a semicolon.
-#[derive(Clone)]
-pub enum BlockStatement {
+pub enum Block {
     /// ```javascript
     /// const ident = expression;
     /// ```
-    ConstAssignment { ident: Ident, value: Expression },
+    ConstAssignment {
+        ident: Ident,
+        value: Expression,
+        rest: Box<Self>,
+    },
     /// ```javascript
     /// console.log("hi");
     /// ```
-    Expression(Expression),
+    Expression {
+        expression: Expression,
+        rest: Option<Box<Self>>,
+    },
     /// ```javascript
     /// throw new Error("message")
     /// ```

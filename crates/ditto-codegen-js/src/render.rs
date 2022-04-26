@@ -1,6 +1,5 @@
 use crate::ast::{
-    ArrowFunctionBody, Block, BlockStatement, Expression, Ident, ImportStatement, Module,
-    ModuleStatement, Operator,
+    ArrowFunctionBody, Block, Expression, Ident, ImportStatement, Module, ModuleStatement, Operator,
 };
 
 pub fn render_module(module: Module) -> String {
@@ -97,38 +96,42 @@ impl Render for ModuleStatement {
 impl Render for Block {
     fn render(&self, accum: &mut String) {
         accum.push('{');
-        self.0.iter().for_each(|stmt| {
-            stmt.render(accum);
-        });
+        render_block_statements(self, accum);
         accum.push('}');
     }
 }
 
-impl Render for BlockStatement {
-    fn render(&self, accum: &mut String) {
-        match self {
-            Self::Return(None) => {
-                accum.push_str("return;");
+fn render_block_statements(block: &Block, accum: &mut String) {
+    match block {
+        Block::Return(None) => {
+            accum.push_str("return;");
+        }
+        Block::Return(Some(expression)) => {
+            accum.push_str("return ");
+            expression.render(accum);
+            accum.push(';');
+        }
+        Block::Expression { expression, rest } => {
+            expression.render(accum);
+            accum.push(';');
+            if let Some(rest) = rest {
+                render_block_statements(rest, accum);
             }
-            Self::Return(Some(expression)) => {
-                accum.push_str("return ");
-                expression.render(accum);
-                accum.push(';');
-            }
-            Self::Expression(expression) => {
-                expression.render(accum);
-                accum.push(';');
-            }
-            Self::Throw(message) => {
-                accum.push_str("throw new Error(\"");
-                accum.push_str(message);
-                accum.push_str("\");");
-            }
-            Self::ConstAssignment { ident, value } => {
-                accum.push_str(&format!("const {ident} = ", ident = ident.0));
-                value.render(accum);
-                accum.push(';');
-            }
+        }
+        Block::Throw(message) => {
+            accum.push_str("throw new Error(\"");
+            accum.push_str(message);
+            accum.push_str("\");");
+        }
+        Block::ConstAssignment {
+            ident,
+            value,
+            box rest,
+        } => {
+            accum.push_str(&format!("const {ident} = ", ident = ident.0));
+            value.render(accum);
+            accum.push(';');
+            render_block_statements(rest, accum);
         }
     }
 }
@@ -296,9 +299,9 @@ mod tests {
         assert_render!(
             Expression::ArrowFunction {
                 parameters: vec![ident!("a")],
-                body: Box::new(ArrowFunctionBody::Block(Block(vec![
-                    BlockStatement::Return(Some(Expression::String("hello".to_string())))
-                ]))),
+                body: Box::new(ArrowFunctionBody::Block(Block::Return(Some(
+                    Expression::String("hello".to_string())
+                ))))
             },
             "(a) => {return \"hello\";}"
         );
@@ -411,24 +414,8 @@ mod tests {
     }
 
     #[test]
-    fn it_renders_block_statements() {
-        assert_render!(
-            BlockStatement::Return(Some(Expression::True)),
-            "return true;"
-        );
-        assert_render!(BlockStatement::Return(None), "return;");
-        assert_render!(
-            BlockStatement::Throw(String::from("aaaahhh")),
-            "throw new Error(\"aaaahhh\");"
-        )
-    }
-
-    #[test]
     fn it_renders_blocks() {
-        assert_render!(
-            Block(vec![BlockStatement::Return(Some(Expression::True)),]),
-            "{return true;}"
-        );
+        assert_render!(Block::Return(Some(Expression::True)), "{return true;}");
     }
 
     #[test]
@@ -437,9 +424,7 @@ mod tests {
             ModuleStatement::Function {
                 ident: ident!("identity"),
                 parameters: vec![ident!("a")],
-                body: Block(vec![BlockStatement::Return(Some(Expression::Variable(
-                    ident!("a")
-                ))),]),
+                body: Block::Return(Some(Expression::Variable(ident!("a"))))
             },
             "function identity(a){return a;}"
         );

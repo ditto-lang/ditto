@@ -1,6 +1,6 @@
 use crate::ast::{
-    iife, ArrowFunctionBody, Block, BlockStatement, Expression, Ident, ImportStatement, Module,
-    ModuleStatement, Operator,
+    iife, ArrowFunctionBody, Block, Expression, Ident, ImportStatement, Module, ModuleStatement,
+    Operator,
 };
 use ditto_ast::graph::Scc;
 use lazy_static::lazy_static;
@@ -131,9 +131,7 @@ fn expression_to_module_statement(ident: Ident, expression: Expression) -> Modul
             ident,
             parameters,
             body: match body {
-                ArrowFunctionBody::Expression(expression) => {
-                    Block(vec![BlockStatement::Return(Some(expression))])
-                }
+                ArrowFunctionBody::Expression(expression) => Block::Return(Some(expression)),
                 ArrowFunctionBody::Block(block) => block,
             },
         }
@@ -182,7 +180,7 @@ fn convert_module_constructors(
             statements.push(ModuleStatement::Function {
                 ident: Ident::from(proper_name),
                 parameters: field_idents.collect(),
-                body: Block(vec![BlockStatement::Return(Some(return_expr))]),
+                body: Block::Return(Some(return_expr)),
             });
         }
     }
@@ -321,10 +319,10 @@ fn convert_expression(
             ..
         } => {
             let expression = convert_expression(imported_module_idents, expression);
-            let err = iife!(Block(vec![BlockStatement::Throw(String::from(
+            let err = iife!(Block::Throw(String::from(
                 // TODO: mention the file location here?
                 "Pattern match error",
-            ))]));
+            )));
             arms.into_iter()
                 .fold(err, |false_clause, (pattern, arm_expression)| {
                     let (condition, assignments) = convert_pattern(expression.clone(), pattern);
@@ -332,14 +330,19 @@ fn convert_expression(
                     let expression = if assignments.is_empty() {
                         convert_expression(imported_module_idents, arm_expression)
                     } else {
-                        let mut block_statements = assignments
-                            .into_iter()
-                            .map(|(ident, value)| BlockStatement::ConstAssignment { ident, value })
-                            .collect::<Vec<_>>();
                         let arm_expression =
                             convert_expression(imported_module_idents, arm_expression);
-                        block_statements.push(BlockStatement::Return(Some(arm_expression)));
-                        iife!(Block(block_statements))
+
+                        // NOTE: order of the assignments doesn't currently matter
+                        let block = assignments.into_iter().fold(
+                            Block::Return(Some(arm_expression)),
+                            |rest, (ident, value)| Block::ConstAssignment {
+                                ident,
+                                value,
+                                rest: Box::new(rest),
+                            },
+                        );
+                        iife!(block)
                     };
 
                     if let Some(condition) = condition {
@@ -354,9 +357,7 @@ fn convert_expression(
                 })
         }
         ditto_ast::Expression::Effect { effect, .. } => {
-            let mut block_statements = Vec::new();
-            convert_effect(imported_module_idents, &mut block_statements, effect);
-            let block = Block(block_statements);
+            let block = convert_effect(imported_module_idents, effect);
             Expression::ArrowFunction {
                 parameters: vec![],
                 body: Box::new(ArrowFunctionBody::Block(block)),
@@ -367,29 +368,25 @@ fn convert_expression(
 
 fn convert_effect(
     imported_module_idents: &mut ImportedModuleIdents,
-    block_statements: &mut Vec<BlockStatement>,
     effect: ditto_ast::Effect,
-) {
+) -> Block {
     match effect {
         ditto_ast::Effect::Return { box expression } => {
             let expression = convert_expression(imported_module_idents, expression);
-            block_statements.push(BlockStatement::Return(Some(expression)));
+            Block::Return(Some(expression))
         }
         ditto_ast::Effect::Bind {
             name,
             box expression,
             box rest,
-        } => {
-            let ident = Ident::from(name);
-            block_statements.push(BlockStatement::ConstAssignment {
-                ident,
-                value: Expression::Call {
-                    function: Box::new(convert_expression(imported_module_idents, expression)),
-                    arguments: vec![],
-                },
-            });
-            convert_effect(imported_module_idents, block_statements, rest);
-        }
+        } => Block::ConstAssignment {
+            ident: Ident::from(name),
+            value: Expression::Call {
+                function: Box::new(convert_expression(imported_module_idents, expression)),
+                arguments: vec![],
+            },
+            rest: Box::new(convert_effect(imported_module_idents, rest)),
+        },
         ditto_ast::Effect::Expression {
             box expression,
             rest,
@@ -398,9 +395,13 @@ fn convert_effect(
                 function: Box::new(convert_expression(imported_module_idents, expression)),
                 arguments: vec![],
             };
-            block_statements.push(BlockStatement::Expression(expression));
             if let Some(box rest) = rest {
-                convert_effect(imported_module_idents, block_statements, rest);
+                Block::Expression {
+                    expression,
+                    rest: Some(Box::new(convert_effect(imported_module_idents, rest))),
+                }
+            } else {
+                Block::Return(Some(expression))
             }
         }
     }

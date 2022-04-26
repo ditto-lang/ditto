@@ -8,7 +8,7 @@ function get_name() {
   return "jane";
 }
 function main() {
-  effect_map(get_name, name => undefined)();
+  return effect_map(get_name, name => undefined)();
 }
 function get_names() {
   const name = get_name();
