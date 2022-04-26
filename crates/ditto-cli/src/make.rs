@@ -43,7 +43,7 @@ pub async fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
     if matches.is_present("watch") {
         run_watch(matches, ditto_version, &config_path, config).await
     } else {
-        run_once(matches, ditto_version, &config_path, &config)
+        run_once(matches, ditto_version, &config_path, &config, true)
             .await?
             .exit()
     }
@@ -74,7 +74,15 @@ pub async fn run_watch(
         .watch(&config.src_dir, notify::RecursiveMode::Recursive)
         .into_diagnostic()?;
 
-    run_once_watch(matches, ditto_version, config_path, &config).await;
+    run_once_watch(
+        matches,
+        ditto_version,
+        config_path,
+        &config,
+        // Check packages are up to date on the first run
+        true,
+    )
+    .await;
 
     // Listen for changes...
     loop {
@@ -85,7 +93,22 @@ pub async fn run_watch(
                 if matches.is_present("debug-watcher") {
                     dbg!(event);
                 }
-                run_once_watch(matches, ditto_version, config_path, &config).await;
+
+                let config_file_changed = event
+                    .paths
+                    .iter()
+                    .flat_map(|path| path.extension().and_then(|ext| ext.to_str()))
+                    .any(|ext| ext == "toml");
+
+                run_once_watch(
+                    matches,
+                    ditto_version,
+                    config_path,
+                    &config,
+                    // Check packages are up to date if the ditto.toml was touched
+                    config_file_changed,
+                )
+                .await;
             }
             other => {
                 log::trace!("Ignoring notify event: {:?}", other);
@@ -118,6 +141,7 @@ pub async fn run_watch(
         ditto_version: &Version,
         config_path: &Path,
         config: &Config,
+        install_packages: bool,
     ) {
         if !matches.is_present("debug-watcher") {
             if let Err(_err) = clearscreen::clear() {
@@ -125,7 +149,15 @@ pub async fn run_watch(
             }
         }
 
-        match run_once(matches, ditto_version, config_path, config).await {
+        match run_once(
+            matches,
+            ditto_version,
+            config_path,
+            config,
+            install_packages,
+        )
+        .await
+        {
             Err(err) => {
                 // print the error but don't exit!
                 eprintln!("{:?}", err);
@@ -175,6 +207,7 @@ async fn run_once(
     ditto_version: &Version,
     config_path: &Path,
     config: &Config,
+    install_packages: bool,
 ) -> Result<WhatHappened> {
     // Need to acquire a lock on the build directory as lots of `ditto make`
     // processes running concurrently will cause problems!
@@ -183,8 +216,8 @@ async fn run_once(
 
     // Install/remove packages as needed
     // (this is a nicer pattern than requiring a run of a separate CLI command, IMO)
-    if !config.dependencies.is_empty() {
-        pkg::check_packages_up_to_date(config)
+    if install_packages && !config.dependencies.is_empty() {
+        pkg::check_packages_up_to_date(config, true)
             .await
             .wrap_err("error checking packages are up to date")?;
     }
