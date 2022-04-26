@@ -155,7 +155,10 @@ impl Render for Expression {
                 arguments,
             } => {
                 render_in_parens_if(
-                    matches!(function, Self::ArrowFunction { .. }),
+                    matches!(
+                        function,
+                        Self::ArrowFunction { .. } | Self::Conditional { .. } // | Self::Operator { .. } <-- we wrap operators in parens
+                    ),
                     function,
                     accum,
                 );
@@ -171,7 +174,7 @@ impl Render for Expression {
                 render_in_parens_if(
                     matches!(
                         condition,
-                        Self::ArrowFunction { .. } | Self::Conditional { .. }
+                        Self::ArrowFunction { .. } | Self::Conditional { .. } // | Self::Operator { .. } <-- we wrap operators in parens
                     ),
                     condition,
                     accum,
@@ -204,7 +207,7 @@ impl Render for Expression {
                 accum.push_str("undefined");
             }
             Self::Operator { op, lhs, rhs } => {
-                // Always use parens rather than worry about precedence
+                // Always use parens rather than worry about precedence/associativity
                 accum.push('(');
                 lhs.render(accum);
                 accum.push_str(match op {
@@ -328,6 +331,18 @@ mod tests {
                 arguments: vec![]
             },
             "(() => true)()"
+        );
+
+        assert_render!(
+            Expression::Call {
+                function: Box::new(Expression::Conditional {
+                    condition: Box::new(Expression::True),
+                    true_clause: Box::new(Expression::Number("0".to_string())),
+                    false_clause: Box::new(Expression::Number("1".to_string())),
+                }),
+                arguments: vec![]
+            },
+            "(true?0:1)()"
         );
 
         assert_render!(
