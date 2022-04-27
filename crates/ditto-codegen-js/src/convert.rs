@@ -300,8 +300,28 @@ fn convert_expression(
             }
         }
         ditto_ast::Expression::String { value, .. } => Expression::String(value),
-        ditto_ast::Expression::Float { value, .. } | ditto_ast::Expression::Int { value, .. } => {
-            Expression::Number(value)
+        ditto_ast::Expression::Float { value, .. } => {
+            // Need to trim leading '0's as ditto allows them (and so does rust)
+            // but JavaScript will interpret as an octal literal.
+            let value = value.trim_start_matches('0');
+            if value.starts_with('.') {
+                // Handle the case where `value` was `0.0` (or similar)
+                let mut zero_value = String::from("0");
+                zero_value.push_str(value);
+                Expression::Number(zero_value)
+            } else {
+                Expression::Number(value.to_owned())
+            }
+        }
+        ditto_ast::Expression::Int { value, .. } => {
+            // Need to trim leading '0's as ditto allows them (and so does rust)
+            // but JavaScript will interpret as an octal literal.
+            let value = value.trim_start_matches('0');
+            if value.is_empty() {
+                Expression::Number(String::from("0"))
+            } else {
+                Expression::Number(value.to_owned())
+            }
         }
         ditto_ast::Expression::Array { elements, .. } => Expression::Array(
             elements

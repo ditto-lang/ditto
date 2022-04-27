@@ -1,0 +1,10 @@
+module Test exports (..);
+
+five : Int = 0000000005;
+zero : Int = 0;
+silly_zero : Int = 0000;
+five_hundred : Int = 0500;
+
+floaty_five : Float = 0000000005.00;
+floaty_zero : Float = 0.0;
+silly_floaty_zero : Float = 00000.000;
