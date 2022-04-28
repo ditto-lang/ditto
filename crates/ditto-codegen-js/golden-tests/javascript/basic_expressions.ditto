@@ -15,7 +15,7 @@ identity = (a: a) -> a;
 curry = (fn) -> (a) -> (b) -> fn(a, b);
 uncurry = (fn) -> (a, b) -> fn(a)(b);
 
-always = (a) -> (b) -> a;
+always = (a) -> (_b) -> a;
 select = (c, x, y) -> if c then x else y;
  
 -- REVIEW `return undefined` is redundant

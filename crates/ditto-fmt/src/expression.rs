@@ -11,7 +11,9 @@ use super::{
         gen_string_token, gen_then_keyword, gen_true_keyword, gen_unit_keyword, gen_with_keyword,
     },
 };
-use ditto_cst::{BinOp, Effect, Expression, MatchArm, Pattern, StringToken, TypeAnnotation};
+use ditto_cst::{
+    BinOp, Effect, Expression, FunctionParameter, MatchArm, Pattern, StringToken, TypeAnnotation,
+};
 use dprint_core::formatting::{
     condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext, Info,
     PrintItems, Signal,
@@ -153,9 +155,16 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
             box body,
         } => {
             let mut items = PrintItems::new();
-            items.extend(gen_parens_list(parameters, |(name, type_annotation)| {
+            items.extend(gen_parens_list(parameters, |(param, type_annotation)| {
                 let mut items = PrintItems::new();
-                items.extend(gen_name(name));
+                match param {
+                    FunctionParameter::Name(name) => {
+                        items.extend(gen_name(name));
+                    }
+                    FunctionParameter::Unused(unused_name) => {
+                        items.extend(gen_unused_name(unused_name));
+                    }
+                }
                 if let Some(type_annotation) = type_annotation {
                     items.extend(gen_type_annotation(type_annotation));
                 }

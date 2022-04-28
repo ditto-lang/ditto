@@ -1,10 +1,10 @@
 use super::{parse_rule, Result, Rule};
 use crate::{
     BinOp, BracketsList, CloseBrace, Colon, DoKeyword, Effect, ElseKeyword, Expression,
-    FalseKeyword, IfKeyword, LeftArrow, MatchArm, MatchKeyword, Name, OpenBrace, Parens,
-    ParensList, ParensList1, Pattern, Pipe, QualifiedName, QualifiedProperName, ReturnKeyword,
-    RightArrow, RightPizzaOperator, Semicolon, StringToken, ThenKeyword, TrueKeyword, Type,
-    TypeAnnotation, UnitKeyword, WithKeyword,
+    FalseKeyword, FunctionParameter, IfKeyword, LeftArrow, MatchArm, MatchKeyword, Name, OpenBrace,
+    Parens, ParensList, ParensList1, Pattern, Pipe, QualifiedName, QualifiedProperName,
+    ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon, StringToken, ThenKeyword,
+    TrueKeyword, Type, TypeAnnotation, UnitKeyword, UnusedName, WithKeyword,
 };
 use pest::iterators::Pair;
 
@@ -46,12 +46,20 @@ impl Expression {
             }
             Rule::expression_function => {
                 let mut inner = pair.into_inner();
-                let parameters = ParensList::list_from_pair(inner.next().unwrap(), |param_pair| {
-                    let mut param_inner = param_pair.into_inner();
-                    let name = Name::from_pair(param_inner.next().unwrap());
-                    let type_annotation = param_inner.next().map(TypeAnnotation::from_pair);
-                    (name, type_annotation)
-                });
+                let parameters =
+                    ParensList::list_from_pair(inner.next().unwrap(), |param_and_ann_pair| {
+                        let mut inner = param_and_ann_pair.into_inner();
+                        let param = inner.next().unwrap();
+                        let param = match param.as_rule() {
+                            Rule::name => FunctionParameter::Name(Name::from_pair(param)),
+                            Rule::unused_name => {
+                                FunctionParameter::Unused(UnusedName::from_pair(param))
+                            }
+                            other => unreachable!("{:#?} {:#?}", other, param.into_inner()),
+                        };
+                        let type_annotation = inner.next().map(TypeAnnotation::from_pair);
+                        (param, type_annotation)
+                    });
                 let arrow_or_type_annotation = inner.next().unwrap();
                 if arrow_or_type_annotation.as_rule() == Rule::return_type_annotation {
                     let return_type_annotation =
@@ -481,6 +489,8 @@ mod tests {
             Expression::Function { .. }
         );
         assert_parses!("((x) -> x)(x)", Expression::Call { .. });
+
+        assert_parses!("(_x) -> 5", Expression::Function { .. });
     }
 
     #[test]

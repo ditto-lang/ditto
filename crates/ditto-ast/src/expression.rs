@@ -1,4 +1,7 @@
-use crate::{FullyQualifiedName, FullyQualifiedProperName, Name, PrimType, ProperName, Span, Type};
+use crate::{
+    FullyQualifiedName, FullyQualifiedProperName, Name, PrimType, ProperName, Span, Type,
+    UnusedName,
+};
 use non_empty_vec::NonEmpty;
 use serde::{Deserialize, Serialize};
 
@@ -313,6 +316,15 @@ pub enum FunctionBinder {
         /// The name being bound.
         value: Name,
     },
+    /// An unused binder (not referenced in the body of the function).
+    Unused {
+        /// The source span for this binder.
+        span: Span,
+        /// The type of this binder.
+        binder_type: Type,
+        /// The unused name.
+        value: UnusedName,
+    },
 }
 
 impl FunctionBinder {
@@ -320,12 +332,14 @@ impl FunctionBinder {
     pub fn get_type(&self) -> Type {
         match self {
             Self::Name { binder_type, .. } => binder_type.clone(),
+            Self::Unused { binder_type, .. } => binder_type.clone(),
         }
     }
     /// Return the source [Span] for this [FunctionBinder].
     pub fn get_span(&self) -> Span {
         match self {
             Self::Name { span, .. } => *span,
+            Self::Unused { span, .. } => *span,
         }
     }
 }

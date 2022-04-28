@@ -197,7 +197,7 @@ expression_function = { expression_function_parameters ~ return_type_annotation?
 
 expression_function_parameters = { open_paren ~ (expression_function_parameter ~ (comma ~ expression_function_parameter)* ~ comma?)?  ~ close_paren }
 
-expression_function_parameter = { name ~ type_annotation? }
+expression_function_parameter = { (name | unused_name) ~ type_annotation? }
 
 expression_if = { if_keyword ~ expression ~ then_keyword ~ expression ~ else_keyword ~ expression }
 

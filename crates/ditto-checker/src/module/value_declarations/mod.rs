@@ -435,7 +435,12 @@ fn toposort_value_declarations(
                         .difference(
                             &parameters
                                 .iter()
-                                .map(|(param, _)| param.0.value.clone())
+                                .filter_map(|(param, _)| match param {
+                                    cst::FunctionParameter::Name(name) => {
+                                        Some(name.0.value.clone())
+                                    }
+                                    cst::FunctionParameter::Unused(_unused) => None,
+                                })
                                 .collect(),
                         )
                         .cloned()

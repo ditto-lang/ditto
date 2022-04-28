@@ -212,6 +212,7 @@ fn convert_expression(
                 .into_iter()
                 .map(|binder| match binder {
                     ditto_ast::FunctionBinder::Name { value, .. } => Ident::from(value),
+                    ditto_ast::FunctionBinder::Unused { value, .. } => Ident::from(value),
                 })
                 .collect(),
             body: Box::new(ArrowFunctionBody::Expression(convert_expression(

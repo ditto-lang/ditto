@@ -8,7 +8,7 @@ use crate::{
     result::{Result, Warnings},
     supply::Supply,
 };
-use ditto_ast::{Kind, Name, QualifiedName, QualifiedProperName, Span, Type};
+use ditto_ast::{Kind, Name, QualifiedName, QualifiedProperName, Span, Type, UnusedName};
 use ditto_cst as cst;
 use non_empty_vec::NonEmpty;
 use std::collections::hash_map;
@@ -82,6 +82,11 @@ pub enum FunctionBinder {
         span: Span,
         type_annotation: Option<Type>,
         value: Name,
+    },
+    Unused {
+        span: Span,
+        type_annotation: Option<Type>,
+        value: UnusedName,
     },
 }
 
@@ -254,8 +259,8 @@ fn convert_cst(
 
             let mut binders = Vec::new();
             if let Some(parameters) = parameters.value {
-                for (name, type_annotation) in parameters.into_iter() {
-                    let span = name.get_span();
+                for (param, type_annotation) in parameters.into_iter() {
+                    let span = param.get_span();
                     let type_annotation = if let Some(type_annotation) = type_annotation {
                         Some(check_type_annotation(
                             &env.types,
@@ -266,12 +271,22 @@ fn convert_cst(
                     } else {
                         None
                     };
-                    let value = Name::from(name);
-                    binders.push(FunctionBinder::Name {
-                        span,
-                        type_annotation,
-                        value,
-                    });
+                    match param {
+                        cst::FunctionParameter::Name(name) => {
+                            binders.push(FunctionBinder::Name {
+                                span,
+                                type_annotation,
+                                value: Name::from(name),
+                            });
+                        }
+                        cst::FunctionParameter::Unused(unused_name) => {
+                            binders.push(FunctionBinder::Unused {
+                                span,
+                                type_annotation,
+                                value: UnusedName::from(unused_name),
+                            });
+                        }
+                    }
                 }
             }
 
@@ -431,6 +446,15 @@ fn substitute_type_annotations(subst: &Substitution, expression: Expression) -> 
                         type_annotation,
                         value,
                     } => FunctionBinder::Name {
+                        span,
+                        type_annotation: type_annotation.map(|t| subst.apply_type(t)),
+                        value,
+                    },
+                    FunctionBinder::Unused {
+                        span,
+                        type_annotation,
+                        value,
+                    } => FunctionBinder::Unused {
                         span,
                         type_annotation: type_annotation.map(|t| subst.apply_type(t)),
                         value,

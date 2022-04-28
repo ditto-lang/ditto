@@ -109,6 +109,22 @@ impl HasComments for Expression {
     }
 }
 
+impl HasComments for FunctionParameter {
+    fn has_comments(&self) -> bool {
+        match self {
+            Self::Name(name) => name.has_comments(),
+            Self::Unused(unused_name) => unused_name.has_comments(),
+        }
+    }
+
+    fn has_leading_comments(&self) -> bool {
+        match self {
+            Self::Name(name) => name.has_leading_comments(),
+            Self::Unused(unused_name) => unused_name.has_leading_comments(),
+        }
+    }
+}
+
 impl HasComments for Effect {
     fn has_comments(&self) -> bool {
         match self {

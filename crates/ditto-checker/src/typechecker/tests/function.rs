@@ -9,6 +9,7 @@ fn it_typechecks_as_expected() {
     assert_type!("(fn, a): Int -> fn(a) ", "(($1) -> Int, $1) -> Int");
 
     assert_type!("(x) -> x        ", "($0) -> $0");
+    assert_type!("(_x) -> 5       ", "($0) -> Int");
     assert_type!("(x: a) -> (x)   ", "(a) -> a");
     assert_type!("(x): a -> ((x)) ", "(a) -> a");
     assert_type!("(x: a): a -> x  ", "(a) -> a");
