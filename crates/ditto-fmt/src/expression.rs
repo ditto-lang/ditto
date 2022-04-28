@@ -186,7 +186,7 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
             match_keyword,
             box expression,
             with_keyword,
-            head_arm,
+            box head_arm,
             tail_arms,
         } => {
             let mut items = PrintItems::new();

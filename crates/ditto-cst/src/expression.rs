@@ -69,7 +69,7 @@ pub enum Expression {
         /// `with`
         with_keyword: WithKeyword,
         /// The first match arm (there should be at least one).
-        head_arm: MatchArm,
+        head_arm: Box<MatchArm>,
         /// More match arms.
         tail_arms: Vec<MatchArm>,
     },
@@ -194,6 +194,7 @@ pub struct MatchArm {
 
 /// A pattern to be matched.
 #[derive(Debug, Clone)]
+#[allow(clippy::large_enum_variant)]
 pub enum Pattern {
     /// A constructor pattern without arguments.
     NullaryConstructor {

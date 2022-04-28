@@ -137,21 +137,18 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
     let mut output_package_name = None;
     for output in outputs.iter() {
         let path = Path::new(&output);
-        match full_extension(path) {
-            Some(common::EXTENSION_AST | common::EXTENSION_AST_EXPORTS) => {
-                if let Some(parent) = path.parent() {
-                    // Extract a package name
-                    if parent.to_str() != Some(build_dir) {
-                        let dir = parent
-                            .file_name()
-                            .and_then(|file_name| file_name.to_str())
-                            .unwrap();
+        if let Some(common::EXTENSION_AST | common::EXTENSION_AST_EXPORTS) = full_extension(path) {
+            if let Some(parent) = path.parent() {
+                // Extract a package name
+                if parent.to_str() != Some(build_dir) {
+                    let dir = parent
+                        .file_name()
+                        .and_then(|file_name| file_name.to_str())
+                        .unwrap();
 
-                        output_package_name = Some(ditto_ast::PackageName(dir.to_owned()));
-                    }
+                    output_package_name = Some(ditto_ast::PackageName(dir.to_owned()));
                 }
             }
-            _ => {}
         }
     }
 

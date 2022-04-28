@@ -230,7 +230,7 @@ impl Render for Expression {
     }
 }
 
-fn render_comma_sep<T: Render>(ts: &Vec<T>, accum: &mut String) {
+fn render_comma_sep<T: Render>(ts: &[T], accum: &mut String) {
     let len = ts.len();
     for (i, t) in ts.iter().enumerate() {
         t.render(accum);

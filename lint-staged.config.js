@@ -6,7 +6,9 @@ function prepareFilenames(filenames) {
 module.exports = {
   "*.rs": filenames => [
     `cargo fmt -- ${prepareFilenames(filenames)}`,
-    "cargo clippy --workspace --fix --allow-dirty --allow-staged",
+    // If this fails, try running
+    //   cargo clippy --workspace --fix --allow-dirty --allow-staged
+    "cargo clippy --workspace -- -D warnings",
   ],
   "*.{yaml,yml,md,js,ts,json}": filenames => [
     `prettier --write ${prepareFilenames(filenames)}`,

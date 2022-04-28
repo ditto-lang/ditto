@@ -129,7 +129,7 @@ impl Expression {
                 let match_keyword = MatchKeyword::from_pair(inner.next().unwrap());
                 let expression = Box::new(Expression::from_pair(inner.next().unwrap()));
                 let with_keyword = WithKeyword::from_pair(inner.next().unwrap());
-                let head_arm = MatchArm::from_pair(inner.next().unwrap());
+                let head_arm = Box::new(MatchArm::from_pair(inner.next().unwrap()));
                 let tail_arms = inner.into_iter().map(MatchArm::from_pair).collect();
                 Self::Match {
                     match_keyword,
@@ -563,7 +563,7 @@ mod tests {
         assert_parses!(
             "match x with | foo -> 2",
             Expression::Match {
-                head_arm: MatchArm {
+                head_arm: box MatchArm {
                     pattern: Pattern::Variable { .. },
                     ..
                 },
@@ -573,7 +573,7 @@ mod tests {
         assert_parses!(
             "match x with | Foo -> 2",
             Expression::Match {
-                head_arm: MatchArm {
+                head_arm: box MatchArm {
                     pattern: Pattern::NullaryConstructor { .. },
                     ..
                 },
@@ -583,7 +583,7 @@ mod tests {
         assert_parses!(
             "match x with | F.Foo -> 2",
             Expression::Match {
-                head_arm: MatchArm {
+                head_arm: box MatchArm {
                     pattern: Pattern::NullaryConstructor { .. },
                     ..
                 },
@@ -593,7 +593,7 @@ mod tests {
         assert_parses!(
             "match x with | Foo(bar) -> 2",
             Expression::Match {
-                head_arm: MatchArm {
+                head_arm: box MatchArm {
                     pattern: Pattern::Constructor { .. },
                     ..
                 },
