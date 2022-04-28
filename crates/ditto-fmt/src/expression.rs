@@ -1,7 +1,7 @@
 use super::{
     has_comments::HasComments,
     helpers::{group, space},
-    name::{gen_name, gen_qualified_name, gen_qualified_proper_name},
+    name::{gen_name, gen_qualified_name, gen_qualified_proper_name, gen_unused_name},
     r#type::gen_type,
     syntax::{gen_brackets_list, gen_parens, gen_parens_list, gen_parens_list1},
     token::{

@@ -17,6 +17,13 @@ impl Name {
     }
 }
 
+impl UnusedName {
+    /// Get the source span.
+    pub fn get_span(&self) -> Span {
+        self.0.get_span()
+    }
+}
+
 impl ProperName {
     /// Get the source span.
     pub fn get_span(&self) -> Span {

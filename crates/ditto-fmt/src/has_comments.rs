@@ -404,6 +404,15 @@ impl HasComments for Name {
     }
 }
 
+impl HasComments for UnusedName {
+    fn has_comments(&self) -> bool {
+        self.0.has_comments()
+    }
+    fn has_leading_comments(&self) -> bool {
+        self.0.has_leading_comments()
+    }
+}
+
 impl HasComments for ProperName {
     fn has_comments(&self) -> bool {
         self.0.has_comments()

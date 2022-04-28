@@ -21,6 +21,8 @@ expression_only = _ { SOI ~ expression ~ EOI }
 
 name_only = _ { SOI ~ name ~ EOI }
 
+unused_name_only = _ { SOI ~ unused_name ~ EOI }
+
 proper_name_only = _ { SOI ~ proper_name ~ EOI }
 
 package_name_only = _ { SOI ~ package_name ~ EOI }
@@ -242,6 +244,8 @@ qualifier = { proper_name ~ dot }
 
 name = ${ (WHITESPACE | LINE_COMMENT)* ~ NAME ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
+unused_name = ${ (WHITESPACE | LINE_COMMENT)* ~ UNUSED_NAME ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
 proper_name = ${ (WHITESPACE | LINE_COMMENT)* ~ PROPER_NAME ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
 package_name = ${ (WHITESPACE | LINE_COMMENT)* ~ PACKAGE_NAME ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
@@ -322,6 +326,9 @@ close_brace = ${ (WHITESPACE | LINE_COMMENT)* ~ CLOSE_BRACE ~ HORIZONTAL_WHITESP
 // Atom rules (uppercase by convention)
 
 NAME = @{ LOWERCASE_LETTER ~ (LETTER | ASCII_DIGIT | "_")* } 
+
+// REVIEW: maybe this restriction on the second letter is too strict?
+UNUSED_NAME = @{ "_" ~ (LOWERCASE_LETTER ~ (LETTER | ASCII_DIGIT | "_")*)? }
 
 PROPER_NAME = @{ UPPERCASE_LETTER ~ (LETTER | ASCII_DIGIT | "_")* } 
 

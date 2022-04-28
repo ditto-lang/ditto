@@ -1,5 +1,7 @@
 use super::token::{gen_dot, gen_string_token};
-use ditto_cst::{ModuleName, Name, PackageName, ProperName, QualifiedName, QualifiedProperName};
+use ditto_cst::{
+    ModuleName, Name, PackageName, ProperName, QualifiedName, QualifiedProperName, UnusedName,
+};
 use dprint_core::formatting::PrintItems;
 
 pub fn gen_module_name(module_name: ModuleName) -> PrintItems {
@@ -44,6 +46,10 @@ pub fn gen_proper_name(proper_name: ProperName) -> PrintItems {
 
 pub fn gen_name(name: Name) -> PrintItems {
     gen_string_token(name.0)
+}
+
+pub fn gen_unused_name(unused_name: UnusedName) -> PrintItems {
+    gen_string_token(unused_name.0)
 }
 
 pub fn gen_package_name(package_name: PackageName) -> PrintItems {

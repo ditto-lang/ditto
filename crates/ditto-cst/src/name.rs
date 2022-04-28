@@ -8,6 +8,10 @@ pub struct ProperName(pub StringToken);
 #[derive(Debug, Clone)]
 pub struct Name(pub StringToken);
 
+/// An "unused name" begins with a single underscore.
+#[derive(Debug, Clone)]
+pub struct UnusedName(pub StringToken);
+
 /// A package name consists of lower case letters, numbers and hyphens. It must start with a letter.
 #[derive(Debug, Clone)]
 pub struct PackageName(pub StringToken);

@@ -516,6 +516,12 @@ impl From<ditto_ast::Name> for Ident {
     }
 }
 
+impl From<ditto_ast::UnusedName> for Ident {
+    fn from(ast_unused_name: ditto_ast::UnusedName) -> Self {
+        Self(name_string_to_ident_string(ast_unused_name.0))
+    }
+}
+
 impl From<ditto_ast::ProperName> for Ident {
     fn from(ast_proper_name: ditto_ast::ProperName) -> Self {
         Self(ast_proper_name.0)
