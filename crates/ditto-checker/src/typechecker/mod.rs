@@ -761,6 +761,11 @@ fn check_pattern(
             );
             Ok(Pattern::Variable { span, name })
         }
+        pre::Pattern::Unused { span, unused_name } => {
+            // REVIEW: check for duplicate patterns?
+
+            Ok(Pattern::Unused { span, unused_name })
+        }
     }
 }
 

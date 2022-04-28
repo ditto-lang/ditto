@@ -222,6 +222,11 @@ pub enum Pattern {
         /// Name to bind.
         name: Name,
     },
+    /// An unused variable binding pattern.
+    Unused {
+        /// The unused binder.
+        unused_name: UnusedName,
+    },
 }
 
 /// `: String`

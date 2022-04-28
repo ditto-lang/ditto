@@ -187,6 +187,7 @@ impl HasComments for Pattern {
                 arguments,
             } => constructor.has_comments() || arguments.has_comments(),
             Self::Variable { name } => name.has_comments(),
+            Self::Unused { unused_name } => unused_name.has_comments(),
         }
     }
     fn has_leading_comments(&self) -> bool {
@@ -194,6 +195,7 @@ impl HasComments for Pattern {
             Self::NullaryConstructor { constructor } => constructor.has_leading_comments(),
             Self::Constructor { constructor, .. } => constructor.has_leading_comments(),
             Self::Variable { name } => name.has_leading_comments(),
+            Self::Unused { unused_name } => unused_name.has_leading_comments(),
         }
     }
 }

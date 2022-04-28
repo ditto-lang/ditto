@@ -464,6 +464,9 @@ fn convert_pattern_rec(
             let assignment = (name.into(), expression);
             assignments.push(assignment)
         }
+        ditto_ast::Pattern::Unused { .. } => {
+            // noop
+        }
         ditto_ast::Pattern::LocalConstructor {
             constructor,
             arguments,

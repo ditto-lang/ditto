@@ -372,6 +372,13 @@ pub enum Pattern {
         /// Name to bind.
         name: Name,
     },
+    /// An unused pattern.
+    Unused {
+        /// The source span for this pattern.
+        span: Span,
+        /// The unused name.
+        unused_name: UnusedName,
+    },
 }
 
 /// A chain of Effect statements.

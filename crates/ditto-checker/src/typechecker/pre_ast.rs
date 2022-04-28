@@ -536,6 +536,10 @@ pub enum Pattern {
         span: Span,
         name: Name,
     },
+    Unused {
+        span: Span,
+        unused_name: UnusedName,
+    },
 }
 
 impl From<cst::Pattern> for Pattern {
@@ -562,6 +566,10 @@ impl From<cst::Pattern> for Pattern {
             cst::Pattern::Variable { name } => Pattern::Variable {
                 span,
                 name: Name::from(name),
+            },
+            cst::Pattern::Unused { unused_name } => Pattern::Unused {
+                span,
+                unused_name: UnusedName::from(unused_name),
             },
         }
     }

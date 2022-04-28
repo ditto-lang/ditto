@@ -291,6 +291,7 @@ fn gen_match_arm(match_arm: MatchArm) -> PrintItems {
 fn gen_pattern(pattern: Pattern) -> PrintItems {
     match pattern {
         Pattern::Variable { name } => gen_name(name),
+        Pattern::Unused { unused_name } => gen_unused_name(unused_name),
         Pattern::NullaryConstructor { constructor } => gen_qualified_proper_name(constructor),
         Pattern::Constructor {
             constructor,

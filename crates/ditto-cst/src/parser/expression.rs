@@ -273,6 +273,11 @@ impl Pattern {
                 let name = Name::from_pair(pattern_inner.next().unwrap());
                 Self::Variable { name }
             }
+            Rule::pattern_unused => {
+                let mut pattern_inner = pattern.into_inner();
+                let unused_name = UnusedName::from_pair(pattern_inner.next().unwrap());
+                Self::Unused { unused_name }
+            }
             other => unreachable!("{:#?} {:#?}", other, pattern.into_inner()),
         }
     }
@@ -611,7 +616,7 @@ mod tests {
             }
         );
         assert_parses!(
-            "match x with | Foo(Bar, Baz(bar, Bar)) -> 2",
+            "match x with | Foo(Bar, Baz(_, Bar), _x) -> 2",
             Expression::Match { .. }
         );
         assert_parses!(

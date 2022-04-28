@@ -5,6 +5,15 @@ function ManyFields($0, $1, $2, $3) {
   return ["ManyFields", $0, $1, $2, $3];
 }
 const Nothing = ["Nothing"];
+function is_just(maybe) {
+  return maybe[0] === "Nothing"
+    ? false
+    : maybe[0] === "Just"
+    ? true
+    : (() => {
+        throw new Error("Pattern match error");
+      })();
+}
 function many_fields_to_array(mf) {
   return mf[0] === "ManyFields"
     ? (() => {
@@ -41,6 +50,7 @@ export {
   Just,
   ManyFields,
   Nothing,
+  is_just,
   many_fields_to_array,
   mk_five,
   with_default,

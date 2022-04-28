@@ -34,8 +34,8 @@ map_maybe = (fn, maybe) ->
 
 all_the_args = () ->
     match not_sure with
-    | Foo(a, b, c, d) -> unit
-    | Bar(Foo(a, b), b, Baz.Barrr, d) -> unit
+    | Foo(a, b, _c, d) -> unit
+    | Bar(Foo(a, b), b, Baz.Barrr, _) -> unit
     | Foo(
         -- comment
         a,

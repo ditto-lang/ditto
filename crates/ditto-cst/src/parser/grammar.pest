@@ -220,6 +220,7 @@ expression_unit = { unit_keyword }
 pattern = 
   { pattern_constructor
   | pattern_variable
+  | pattern_unused
   }
 
 pattern_constructor = { pattern_constructor_proper_name ~ pattern_constructor_arguments? }
@@ -229,6 +230,8 @@ pattern_constructor_proper_name = { qualified_proper_name }
 pattern_constructor_arguments = { open_paren ~ (pattern ~ (comma ~ pattern)* ~ comma?)?  ~ close_paren }
 
 pattern_variable = { name }
+
+pattern_unused = { unused_name }
 
 // -----------------------------------------------------------------------------
 // Names

@@ -206,6 +206,7 @@ impl Pattern {
                 arguments,
             } => constructor.get_span().merge(&arguments.get_span()),
             Self::Variable { name } => name.get_span(),
+            Self::Unused { unused_name } => unused_name.get_span(),
         }
     }
 }
