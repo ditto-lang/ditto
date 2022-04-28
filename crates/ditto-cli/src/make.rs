@@ -34,6 +34,13 @@ pub fn command<'a>(name: &str) -> Command<'a> {
                 .long("no-tests")
                 .help("Ignore test modules and dependencies"),
         )
+        .arg(
+            Arg::new("execs")
+                .long("exec")
+                .help("Shell command to run on success")
+                .takes_value(true)
+                .multiple_occurrences(true),
+        )
         // Useful for debugging why watches are/aren't triggering.
         // Should remove it eventually.
         .arg(Arg::new("debug-watcher").long("debug-watcher").hide(true))
@@ -188,16 +195,19 @@ pub async fn run_watch(
 }
 
 enum WhatHappened {
+    /// "ninja: no work to do"
+    ///
+    /// Warnings may have been printed, though.
     Nothing {
         ninja_exit_status: ExitStatus,
         warnings_printed: bool,
     },
-    Error {
-        ninja_exit_status: ExitStatus,
-    },
-    Success {
-        warnings_printed: bool,
-    },
+    /// Ninja had a non-zero exit status.
+    ///
+    /// Errors will have been printed.
+    Error { ninja_exit_status: ExitStatus },
+    /// Ninja ran successfully. Warnings may have been printed.
+    Success { warnings_printed: bool },
 }
 
 impl WhatHappened {
@@ -243,12 +253,72 @@ async fn run_once(
     let result = make(config_path, config, ditto_version, include_test_stuff).await;
 
     lock.unlock()
-        .into_diagnostic()
-        .wrap_err("error releasing lock")?;
+        // Crash if we fail to release the lock otherwise things are likely to misbehave...
+        .expect("Error releasing lock on build directory");
 
     debug!("make ran in {}ms", now.elapsed().as_millis());
 
+    // Run `--exec` hooks if everything passed successfully
+    if matches!(
+        result,
+        Ok(WhatHappened::Nothing { .. } | WhatHappened::Success { .. })
+    ) {
+        if let Some(execs) = matches.values_of("execs") {
+            run_execs(execs)
+        }
+    }
+
     result
+}
+
+fn run_execs(execs: clap::Values) {
+    for exec in execs {
+        if let Some(shell_words) = shlex::split(exec) {
+            if let Some((program, args)) = shell_words.split_first() {
+                print_feedback(format!("running {:?}", exec));
+                let result = process::Command::new(program).args(args).status();
+                match result {
+                    Ok(exit_status) => {
+                        if !exit_status.success() {
+                            print_error(format!(
+                                "non-zero exit from {:?} {}, stopping there",
+                                exec, exit_status
+                            ));
+                            // Stop there, multiple `--exec` flags are effectively
+                            // `&&` together
+                            return;
+                        }
+                    }
+                    Err(err) => {
+                        print_error(format!("ERROR {}", err));
+                        // Stop there, multiple `--exec` flags are effectively
+                        // `&&` together
+                        return;
+                    }
+                }
+            } else {
+                print_feedback(format!("don't know how to execute {:?}, skipping", exec));
+            }
+        } else {
+            unreachable!("Unexpected `None` value from shlex for {:?}", exec);
+        }
+    }
+
+    fn print_feedback(message: String) {
+        if common::is_plain() {
+            println!("{}", message);
+        } else {
+            println!("{}", Style::new().yellow().apply_to(message))
+        }
+    }
+
+    fn print_error(message: String) {
+        if common::is_plain() {
+            eprintln!("{}", message);
+        } else {
+            eprintln!("{}", Style::new().red().bold().apply_to(message))
+        }
+    }
 }
 
 /// If successful returns the exit status of `ninja` and whether anything actually happened.
