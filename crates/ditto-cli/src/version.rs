@@ -7,7 +7,7 @@ static GIT_DIRTY: &str = env!("GIT_DIRTY");
 static BUILD_TIME: &str = env!("BUILD_TIME");
 static PROFILE: &str = env!("PROFILE");
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Version {
     pub semversion: semver::Version,
     pub git_rev: String,

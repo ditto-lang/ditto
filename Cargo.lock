@@ -356,6 +356,7 @@ dependencies = [
  "clearscreen",
  "console",
  "convert_case",
+ "crossbeam-channel",
  "dirs 4.0.0",
  "ditto-ast",
  "ditto-config",

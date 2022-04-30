@@ -14,7 +14,6 @@ use std::{
     io::{BufRead, BufReader, Write},
     path::{Path, PathBuf},
     process::{self, ExitStatus, Stdio},
-    sync::mpsc,
     time::Instant,
 };
 
@@ -67,27 +66,31 @@ pub async fn run_watch(
     matches: &ArgMatches,
     ditto_version: &Version,
     config_path: &Path,
-    config: Config,
+    mut config: Config,
 ) -> Result<()> {
-    // Set up the channel
-    let (tx, rx) = mpsc::channel();
+    let (event_sender, event_receiver) = crossbeam_channel::unbounded();
+    let mut watcher = notify::RecommendedWatcher::new(event_sender).into_diagnostic()?;
 
-    let mut watcher = notify::RecommendedWatcher::new(tx).into_diagnostic()?;
-
-    // Watch ditto.toml and src/**
+    // Watch ditto.toml, src/** and test/**
+    //
     // NOTE not watching packages as that seems wasteful...
-    // package source isn't going to be touched the majority of the time?
+    // Package source isn't going to be touched the majority of the time?
     // We could consider watching packages that are symlinks (i.e. local)
+
+    // watch `./ditto.toml`
     watcher
         .watch(
             &PathBuf::from(CONFIG_FILE_NAME),
             notify::RecursiveMode::NonRecursive,
         )
         .into_diagnostic()?;
+
+    // watch `./src` (should really be present)
     watcher
         .watch(&config.src_dir, notify::RecursiveMode::Recursive)
         .into_diagnostic()?;
 
+    // watch `./tests` (if it's present)
     if config.tests_dir.exists() {
         watcher
             .watch(&config.tests_dir, notify::RecursiveMode::Recursive)
@@ -96,20 +99,42 @@ pub async fn run_watch(
 
     // TODO: allow watching more files via config or a flag?
 
-    run_once_watch(
-        matches,
-        ditto_version,
-        config_path,
-        &config,
-        // Check packages are up to date on the first run
-        true,
-    )
-    .await;
+    let (run_sender, run_receiver) = crossbeam_channel::bounded::<(Config, bool)>(1);
+    let (done_sender, done_receiver) = crossbeam_channel::bounded::<()>(1);
 
-    // Listen for changes...
-    loop {
-        let event = rx.recv().into_diagnostic()?;
+    // Clone unchanging things that need to be moved into the new thread
+    let matches_clone = matches.clone();
+    let ditto_version_clone = ditto_version.clone();
+    let config_path_clone = config_path.to_path_buf();
 
+    tokio::spawn(async move {
+        loop {
+            let (config, install_packages) = run_receiver.recv().unwrap();
+            run_once_watch(
+                &matches_clone,
+                &ditto_version_clone,
+                &config_path_clone,
+                &config,
+                install_packages,
+            )
+            .await;
+            done_sender.send(()).unwrap();
+        }
+    });
+
+    run_sender.send((config.clone(), true)).unwrap();
+    //                               ^^^^
+    //              Check packages are up to date on the first run
+
+    // Track whether there is a run in progress (if so, we ignore notify events).
+    // This is true initially due to the previous line ☝️
+    let mut run_in_progress = true;
+
+    // NOTE: this closure is a thing mostly because rustfmt doesn't handle
+    // the `crossbeam_channel::select` macro, so I don't want to have much
+    // logic there.
+    type EventResult = std::result::Result<notify::Event, notify::Error>;
+    let mut handle_event_result = |event: EventResult| -> bool {
         match event {
             Ok(ref event) if should_run_for_event(event) => {
                 if matches.is_present("debug-watcher") {
@@ -122,19 +147,54 @@ pub async fn run_watch(
                     .flat_map(|path| path.extension().and_then(|ext| ext.to_str()))
                     .any(|ext| ext == "toml");
 
-                run_once_watch(
-                    matches,
-                    ditto_version,
-                    config_path,
-                    &config,
-                    // Check packages are up to date if the ditto.toml was touched
-                    config_file_changed,
-                )
-                .await;
+                // If the config file was touched,
+                // then update the `config` value..
+                if config_file_changed {
+                    match read_config(&config_path) {
+                        Ok(latest_config) => {
+                            config = latest_config;
+                        }
+                        Err(err) => {
+                            eprintln!("{:?}", err);
+                            return false;
+                        }
+                    }
+                }
+
+                run_sender
+                    .send((
+                        config.clone(),
+                        // Check packages are up to date if the ditto.toml was touched
+                        config_file_changed,
+                    ))
+                    .unwrap();
+
+                true // return that a new run was started
             }
             other => {
                 log::trace!("Ignoring notify event: {:?}", other);
+
+                false // return that no new run was started
             }
+        }
+    };
+
+    loop {
+        crossbeam_channel::select! {
+            recv(done_receiver) -> _ => {
+                // Done!
+                run_in_progress = false
+            },
+            recv(event_receiver) -> receive_result => {
+                if let Ok(event_result) = receive_result {
+                    if !run_in_progress {
+                        let run_started = handle_event_result(event_result);
+                        if run_started {
+                            run_in_progress = true;
+                        }
+                    }
+                }
+            },
         }
     }
 
