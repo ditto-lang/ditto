@@ -55,9 +55,11 @@ pub async fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
     if matches.is_present("watch") {
         run_watch(matches, ditto_version, &config_path, config).await
     } else {
-        run_once(matches, ditto_version, &config_path, &config, true)
-            .await?
-            .exit()
+        let what_happened = run_once(matches, ditto_version, &config_path, &config, true).await?;
+        if !what_happened.is_error() {
+            run_execs(matches)
+        }
+        what_happened.exit()
     }
 }
 
@@ -182,14 +184,33 @@ pub async fn run_watch(
                 // print the error but don't exit!
                 eprintln!("{:?}", err);
             }
-            Ok(WhatHappened::Nothing {
-                warnings_printed: false,
-                ..
-            }) => println!("{}", Style::new().white().dim().apply_to("Nothing to do")),
-            Ok(WhatHappened::Success {
-                warnings_printed: false,
-            }) => println!("{}", Style::new().green().bold().apply_to("All good!")),
-            _ => {}
+            Ok(what_happened) => {
+                if what_happened.is_error() {
+                    // If there was an error, stop here.
+                    return;
+                }
+
+                // Print a "finished" message if no warnings were printed
+                match what_happened {
+                    WhatHappened::Nothing {
+                        warnings_printed: false,
+                        ..
+                    } => {
+                        println!("{}", Style::new().white().dim().apply_to("Nothing to do"));
+                    }
+                    WhatHappened::Success {
+                        warnings_printed: false,
+                    } => {
+                        println!("{}", Style::new().green().bold().apply_to("All good!"));
+                    }
+                    _ => {
+                        // Don't print anything, as
+                    }
+                }
+
+                // Run shell hooks
+                run_execs(matches);
+            }
         }
     }
 }
@@ -221,6 +242,9 @@ impl WhatHappened {
             } => process::exit(ninja_exit_status.code().unwrap_or(0)),
             Self::Success { .. } => process::exit(0),
         }
+    }
+    fn is_error(&self) -> bool {
+        matches!(self, Self::Error { .. })
     }
 }
 
@@ -258,49 +282,41 @@ async fn run_once(
 
     debug!("make ran in {}ms", now.elapsed().as_millis());
 
-    // Run `--exec` hooks if everything passed successfully
-    if matches!(
-        result,
-        Ok(WhatHappened::Nothing { .. } | WhatHappened::Success { .. })
-    ) {
-        if let Some(execs) = matches.values_of("execs") {
-            run_execs(execs)
-        }
-    }
-
     result
 }
 
-fn run_execs(execs: clap::Values) {
-    for exec in execs {
-        if let Some(shell_words) = shlex::split(exec) {
-            if let Some((program, args)) = shell_words.split_first() {
-                print_feedback(format!("running {:?}", exec));
-                let result = process::Command::new(program).args(args).status();
-                match result {
-                    Ok(exit_status) => {
-                        if !exit_status.success() {
-                            print_error(format!(
-                                "non-zero exit from {:?} {}, stopping there",
-                                exec, exit_status
-                            ));
+fn run_execs(matches: &ArgMatches) {
+    if let Some(execs) = matches.values_of("execs") {
+        for exec in execs {
+            if let Some(shell_words) = shlex::split(exec) {
+                if let Some((program, args)) = shell_words.split_first() {
+                    print_feedback(format!("running {:?}", exec));
+                    let result = process::Command::new(program).args(args).status();
+                    match result {
+                        Ok(exit_status) => {
+                            if !exit_status.success() {
+                                print_error(format!(
+                                    "non-zero exit from {:?} {}, stopping there",
+                                    exec, exit_status
+                                ));
+                                // Stop there, multiple `--exec` flags are effectively
+                                // `&&` together
+                                return;
+                            }
+                        }
+                        Err(err) => {
+                            print_error(format!("ERROR {}", err));
                             // Stop there, multiple `--exec` flags are effectively
                             // `&&` together
                             return;
                         }
                     }
-                    Err(err) => {
-                        print_error(format!("ERROR {}", err));
-                        // Stop there, multiple `--exec` flags are effectively
-                        // `&&` together
-                        return;
-                    }
+                } else {
+                    print_feedback(format!("don't know how to execute {:?}, skipping", exec));
                 }
             } else {
-                print_feedback(format!("don't know how to execute {:?}, skipping", exec));
+                unreachable!("Unexpected `None` value from shlex for {:?}", exec);
             }
-        } else {
-            unreachable!("Unexpected `None` value from shlex for {:?}", exec);
         }
     }
 
