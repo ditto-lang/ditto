@@ -145,6 +145,10 @@ pub enum TypeError {
         new_binding: Span,
         variable: QualifiedName,
     },
+    MatchNotExhaustive {
+        match_span: Span,
+        missing_patterns: Vec<String>,
+    },
 }
 
 impl TypeError {
@@ -396,6 +400,15 @@ impl TypeError {
                 previous_binding: span_to_source_span(previous_binding),
                 new_binding: span_to_source_span(new_binding),
                 constructor_name: constructor_name.to_string(),
+            },
+
+            Self::MatchNotExhaustive {
+                match_span,
+                missing_patterns,
+            } => TypeErrorReport::MatchNotExhaustive {
+                input,
+                location: span_to_source_span(match_span),
+                missing_patterns: missing_patterns.join("\n"),
             },
         }
     }
@@ -717,6 +730,15 @@ pub enum TypeErrorReport {
         #[label("imported again here")]
         new_binding: SourceSpan,
         constructor_name: String,
+    },
+    #[error("match not exhaustive")]
+    #[diagnostic(severity(Error), help("patterns not covered:\n{missing_patterns}"))]
+    MatchNotExhaustive {
+        #[source_code]
+        input: NamedSource,
+        #[label("this match expression")]
+        location: SourceSpan,
+        missing_patterns: String,
     },
 }
 

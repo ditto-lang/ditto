@@ -1,0 +1,9 @@
+module Test exports (..);
+
+type Option(a) = Some(a) | None;
+
+redundant = (o: Option(a)): Float -> 
+  match o with
+  | _x -> 5.0
+  | Some(_x) -> 5.0
+  | None -> 5.0;

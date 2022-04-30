@@ -1,4 +1,5 @@
 mod common;
+mod coverage;
 mod env;
 pub mod pre_ast;
 mod scheme;
@@ -660,12 +661,60 @@ fn infer_or_check_match(
         }
     }
 
+    check_exhaustiveness(
+        env,
+        state,
+        span,
+        state.substitution.apply(pattern_type),
+        arms.clone().into_iter().map(|arm| arm.0).collect(),
+    )?;
+
     Ok(Expression::Match {
         span,
         match_type,
         expression: Box::new(expression),
         arms,
     })
+}
+
+fn check_exhaustiveness(
+    env: &Env,
+    state: &mut State,
+    match_span: Span,
+    pattern_type: Type,
+    patterns: Vec<Pattern>,
+) -> Result<()> {
+    match coverage::is_exhaustive(&env.constructors, pattern_type, patterns) {
+        None => Ok(()),
+        Some(coverage::Error::RedundantClauses(clause_patterns)) => {
+            state
+                .warnings
+                .extend(clause_patterns.into_iter().map(|clause_pattern| {
+                    Warning::RedundantMatchPattern {
+                        span: clause_pattern.get_span(),
+                    }
+                }));
+            Ok(())
+        }
+        Some(coverage::Error::NotCovered(ideal_patterns)) => {
+            let mut missing_patterns = ideal_patterns
+                .into_iter()
+                .map(|ideal_pattern| ideal_pattern.render())
+                .collect::<Vec<_>>();
+
+            // Sort by pattern length first, then alphabetically.
+            missing_patterns.sort_by_key(|string| (string.len(), string.clone()));
+
+            Err(TypeError::MatchNotExhaustive {
+                match_span,
+                missing_patterns,
+            })
+        }
+        // These should all be caught by type checking, so should be unreachable!
+        Some(wut) => {
+            unreachable!("{:#?}", wut);
+        }
+    }
 }
 
 fn check_pattern(

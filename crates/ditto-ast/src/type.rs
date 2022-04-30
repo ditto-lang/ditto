@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 
 /// The type of expressions.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(tag = "type", content = "data")]
 pub enum Type {
     /// A `Call` type invokes a parameterized type.
@@ -57,7 +57,7 @@ pub enum Type {
 }
 
 /// Ditto's primitive types.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum PrimType {
     /// `do { return 5 } : Effect(Int)`
     Effect,

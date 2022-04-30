@@ -3,7 +3,14 @@ macro_rules! assert_module_ok {
         $crate::module::tests::macros::assert_module_ok!($source, _)
     }};
     ($source:expr, $warnings:pat_param) => {{
-        let result = $crate::module::tests::macros::parse_and_check_module!($source);
+        $crate::module::tests::macros::assert_module_ok!(
+            $source,
+            $warnings,
+            &$crate::module::Everything::default()
+        )
+    }};
+    ($source:expr, $warnings:pat_param, $everything:expr) => {{
+        let result = $crate::module::tests::macros::parse_and_check_module!($source, $everything);
         assert!(matches!(result, Ok(_)), "{:#?}", result.unwrap_err());
         let (module, warnings) = result.unwrap();
         assert!(matches!(warnings.as_slice(), $warnings), "{:#?}", warnings);

@@ -177,7 +177,7 @@ impl EnvConstructor {
         self.get_scheme().instantiate(supply)
     }
 
-    fn get_scheme(&self) -> Scheme {
+    pub fn get_scheme(&self) -> Scheme {
         match self {
             Self::ModuleConstructor {
                 constructor_scheme, ..

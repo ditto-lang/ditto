@@ -1,0 +1,7 @@
+module Test exports (..);
+
+type ABC = A | B | C;
+
+y_tho = (abc: ABC) ->
+  match abc with
+  | A -> 0;
