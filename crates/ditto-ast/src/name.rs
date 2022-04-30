@@ -19,6 +19,22 @@ impl From<cst::Name> for Name {
     }
 }
 
+/// An "unused name" begins with a single underscore.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+pub struct UnusedName(pub String);
+
+impl fmt::Display for UnusedName {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
+impl From<cst::UnusedName> for UnusedName {
+    fn from(unused_name: cst::UnusedName) -> Self {
+        Self(unused_name.0.value)
+    }
+}
+
 /// A "proper name" begins with an upper case letter.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct ProperName(pub String);

@@ -1,7 +1,7 @@
 use super::{parse_rule, Result, Rule};
 use crate::{
     Dot, ModuleName, Name, PackageName, ProperName, Qualified, QualifiedName, QualifiedProperName,
-    StringToken,
+    StringToken, UnusedName,
 };
 use pest::iterators::{Pair, Pairs};
 
@@ -14,6 +14,19 @@ impl Name {
 
     pub(super) fn from_pair(pair: Pair<Rule>) -> Self {
         debug_assert_eq!(pair.as_rule(), Rule::name);
+        Self(StringToken::from_pairs(&mut pair.into_inner()))
+    }
+}
+
+impl UnusedName {
+    /// Parse an [UnusedName].
+    pub fn parse(input: &str) -> Result<Self> {
+        let mut pairs = parse_rule(Rule::unused_name_only, input)?;
+        Ok(Self::from_pair(pairs.next().unwrap()))
+    }
+
+    pub(super) fn from_pair(pair: Pair<Rule>) -> Self {
+        debug_assert_eq!(pair.as_rule(), Rule::unused_name);
         Self(StringToken::from_pairs(&mut pair.into_inner()))
     }
 }
@@ -142,6 +155,22 @@ mod tests {
     }
 
     #[test]
+    fn it_parses_unused_names() {
+        assert_unused_name!(vanilla, "_abcde");
+        assert_unused_name!(underscores, "_a_b_cde_");
+        assert_unused_name!(numbers, "_a123456789");
+        assert_unused_name!(unicode, "_héllö");
+
+        assert_unused_name!(
+            commented,
+            "-- leading0 \n-- leading1 \n_foo -- trailing",
+            "_foo",
+            &["-- leading0 ", "-- leading1 "],
+            "-- trailing"
+        );
+    }
+
+    #[test]
     fn it_parses_proper_names() {
         assert_proper_name!(vanilla, "Abcde");
         assert_proper_name!(underscores, "A_b_cde_");
@@ -211,6 +240,33 @@ mod test_macros {
         };
     }
     pub(super) use assert_name;
+
+    macro_rules! assert_unused_name {
+        ($ident:ident, $expr:expr) => {
+            {
+                let $ident = crate::UnusedName::parse($expr);
+                assert!(
+                    matches!($ident, Ok(crate::UnusedName(crate::StringToken { ref value, .. })) if value == $expr),
+                    "{:#?}",
+                    $ident
+                );
+            }
+        };
+        ($ident:ident, $expr:expr, $want:expr, $leading_comments:expr, $trailing_comment:expr) => {
+            {
+                let $ident = crate::UnusedName::parse($expr);
+                assert!(
+                    matches!($ident.clone(), Ok(crate::UnusedName(crate::StringToken { ref value, leading_comments, trailing_comment, .. }))
+                        if value == $want
+                        && leading_comments.iter().map(|comment| comment.0.as_str()).collect::<Vec<&str>>() == $leading_comments.to_vec()
+                        && trailing_comment.clone().unwrap().0.as_str() == $trailing_comment),
+                    "{:#?}",
+                    $ident
+                );
+            }
+        };
+    }
+    pub(super) use assert_unused_name;
 
     macro_rules! assert_proper_name {
         ($ident:ident, $expr:expr) => {

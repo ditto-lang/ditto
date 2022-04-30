@@ -2,7 +2,7 @@ use crate::{
     BracketsList, CloseBrace, Colon, DoKeyword, ElseKeyword, FalseKeyword, IfKeyword, LeftArrow,
     MatchKeyword, Name, OpenBrace, Parens, ParensList, ParensList1, Pipe, QualifiedName,
     QualifiedProperName, ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon, StringToken,
-    ThenKeyword, TrueKeyword, Type, UnitKeyword, WithKeyword,
+    ThenKeyword, TrueKeyword, Type, UnitKeyword, UnusedName, WithKeyword,
 };
 
 /// A value expression.
@@ -17,7 +17,7 @@ pub enum Expression {
     /// ```
     Function {
         /// The parameters to be bound and added to the scope of `body`.
-        parameters: Box<ParensList<(Name, Option<TypeAnnotation>)>>,
+        parameters: Box<ParensList<(FunctionParameter, Option<TypeAnnotation>)>>,
         /// Optional type annotation for `body`.
         return_type_annotation: Box<Option<TypeAnnotation>>,
         /// `->`
@@ -136,6 +136,15 @@ pub enum Expression {
     },
 }
 
+/// A function expression parameter.
+#[derive(Debug, Clone)]
+pub enum FunctionParameter {
+    /// A name to be bound in the body of the function.
+    Name(Name),
+    /// A name _not_ to be bound in the body of the function.
+    Unused(UnusedName),
+}
+
 /// A binary operator.
 #[derive(Debug, Clone)]
 pub enum BinOp {
@@ -212,6 +221,11 @@ pub enum Pattern {
     Variable {
         /// Name to bind.
         name: Name,
+    },
+    /// An unused variable binding pattern.
+    Unused {
+        /// The unused binder.
+        unused_name: UnusedName,
     },
 }
 

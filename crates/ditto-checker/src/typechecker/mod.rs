@@ -262,12 +262,27 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
                             value,
                         });
                     }
+                    pre_ast::FunctionBinder::Unused {
+                        span,
+                        type_annotation,
+                        value,
+                    } => {
+                        // REVIEW: Check this binder doesn't conflict with existing binders?
+                        let binder_type =
+                            type_annotation.unwrap_or_else(|| state.supply.fresh_type());
+
+                        binders.push(FunctionBinder::Unused {
+                            span,
+                            binder_type,
+                            value,
+                        });
+                    }
                 }
             }
             let env_values = binders
                 .clone()
                 .into_iter()
-                .map(LocalValue::from_function_binder)
+                .filter_map(LocalValue::from_function_binder)
                 .collect();
 
             let (body, unused_spans) =
@@ -746,6 +761,11 @@ fn check_pattern(
             );
             Ok(Pattern::Variable { span, name })
         }
+        pre::Pattern::Unused { span, unused_name } => {
+            // REVIEW: check for duplicate patterns?
+
+            Ok(Pattern::Unused { span, unused_name })
+        }
     }
 }
 
@@ -756,16 +776,18 @@ struct LocalValue {
 }
 
 impl LocalValue {
-    fn from_function_binder(binder: FunctionBinder) -> Self {
-        let FunctionBinder::Name {
-            span,
-            binder_type: value_type,
-            value: name,
-        } = binder;
-        Self {
-            span,
-            value_type,
-            name,
+    fn from_function_binder(binder: FunctionBinder) -> Option<Self> {
+        match binder {
+            FunctionBinder::Name {
+                span,
+                binder_type: value_type,
+                value: name,
+            } => Some(Self {
+                span,
+                value_type,
+                name,
+            }),
+            FunctionBinder::Unused { .. } => None,
         }
     }
 }

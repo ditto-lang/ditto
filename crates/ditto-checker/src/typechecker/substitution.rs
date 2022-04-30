@@ -109,6 +109,15 @@ impl Substitution {
                             binder_type: self.apply(binder_type),
                             value,
                         },
+                        FunctionBinder::Unused {
+                            span,
+                            binder_type,
+                            value,
+                        } => FunctionBinder::Unused {
+                            span,
+                            binder_type: self.apply(binder_type),
+                            value,
+                        },
                     })
                     .collect(),
                 body: Box::new(self.apply_expression(body)),

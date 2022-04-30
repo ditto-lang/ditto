@@ -109,6 +109,22 @@ impl HasComments for Expression {
     }
 }
 
+impl HasComments for FunctionParameter {
+    fn has_comments(&self) -> bool {
+        match self {
+            Self::Name(name) => name.has_comments(),
+            Self::Unused(unused_name) => unused_name.has_comments(),
+        }
+    }
+
+    fn has_leading_comments(&self) -> bool {
+        match self {
+            Self::Name(name) => name.has_leading_comments(),
+            Self::Unused(unused_name) => unused_name.has_leading_comments(),
+        }
+    }
+}
+
 impl HasComments for Effect {
     fn has_comments(&self) -> bool {
         match self {
@@ -171,6 +187,7 @@ impl HasComments for Pattern {
                 arguments,
             } => constructor.has_comments() || arguments.has_comments(),
             Self::Variable { name } => name.has_comments(),
+            Self::Unused { unused_name } => unused_name.has_comments(),
         }
     }
     fn has_leading_comments(&self) -> bool {
@@ -178,6 +195,7 @@ impl HasComments for Pattern {
             Self::NullaryConstructor { constructor } => constructor.has_leading_comments(),
             Self::Constructor { constructor, .. } => constructor.has_leading_comments(),
             Self::Variable { name } => name.has_leading_comments(),
+            Self::Unused { unused_name } => unused_name.has_leading_comments(),
         }
     }
 }
@@ -396,6 +414,15 @@ impl HasComments for Comma {
 }
 
 impl HasComments for Name {
+    fn has_comments(&self) -> bool {
+        self.0.has_comments()
+    }
+    fn has_leading_comments(&self) -> bool {
+        self.0.has_leading_comments()
+    }
+}
+
+impl HasComments for UnusedName {
     fn has_comments(&self) -> bool {
         self.0.has_comments()
     }

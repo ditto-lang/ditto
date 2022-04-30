@@ -212,6 +212,7 @@ fn convert_expression(
                 .into_iter()
                 .map(|binder| match binder {
                     ditto_ast::FunctionBinder::Name { value, .. } => Ident::from(value),
+                    ditto_ast::FunctionBinder::Unused { value, .. } => Ident::from(value),
                 })
                 .collect(),
             body: Box::new(ArrowFunctionBody::Expression(convert_expression(
@@ -463,6 +464,9 @@ fn convert_pattern_rec(
             let assignment = (name.into(), expression);
             assignments.push(assignment)
         }
+        ditto_ast::Pattern::Unused { .. } => {
+            // noop
+        }
         ditto_ast::Pattern::LocalConstructor {
             constructor,
             arguments,
@@ -513,6 +517,12 @@ fn convert_pattern_rec(
 impl From<ditto_ast::Name> for Ident {
     fn from(ast_name: ditto_ast::Name) -> Self {
         Self(name_string_to_ident_string(ast_name.0))
+    }
+}
+
+impl From<ditto_ast::UnusedName> for Ident {
+    fn from(ast_unused_name: ditto_ast::UnusedName) -> Self {
+        Self(name_string_to_ident_string(ast_unused_name.0))
     }
 }
 

@@ -21,6 +21,8 @@ expression_only = _ { SOI ~ expression ~ EOI }
 
 name_only = _ { SOI ~ name ~ EOI }
 
+unused_name_only = _ { SOI ~ unused_name ~ EOI }
+
 proper_name_only = _ { SOI ~ proper_name ~ EOI }
 
 package_name_only = _ { SOI ~ package_name ~ EOI }
@@ -195,7 +197,7 @@ expression_function = { expression_function_parameters ~ return_type_annotation?
 
 expression_function_parameters = { open_paren ~ (expression_function_parameter ~ (comma ~ expression_function_parameter)* ~ comma?)?  ~ close_paren }
 
-expression_function_parameter = { name ~ type_annotation? }
+expression_function_parameter = { (name | unused_name) ~ type_annotation? }
 
 expression_if = { if_keyword ~ expression ~ then_keyword ~ expression ~ else_keyword ~ expression }
 
@@ -218,6 +220,7 @@ expression_unit = { unit_keyword }
 pattern = 
   { pattern_constructor
   | pattern_variable
+  | pattern_unused
   }
 
 pattern_constructor = { pattern_constructor_proper_name ~ pattern_constructor_arguments? }
@@ -227,6 +230,8 @@ pattern_constructor_proper_name = { qualified_proper_name }
 pattern_constructor_arguments = { open_paren ~ (pattern ~ (comma ~ pattern)* ~ comma?)?  ~ close_paren }
 
 pattern_variable = { name }
+
+pattern_unused = { unused_name }
 
 // -----------------------------------------------------------------------------
 // Names
@@ -241,6 +246,8 @@ qualifier = { proper_name ~ dot }
 // Token rules
 
 name = ${ (WHITESPACE | LINE_COMMENT)* ~ NAME ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+
+unused_name = ${ (WHITESPACE | LINE_COMMENT)* ~ UNUSED_NAME ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
 proper_name = ${ (WHITESPACE | LINE_COMMENT)* ~ PROPER_NAME ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
 
@@ -322,6 +329,9 @@ close_brace = ${ (WHITESPACE | LINE_COMMENT)* ~ CLOSE_BRACE ~ HORIZONTAL_WHITESP
 // Atom rules (uppercase by convention)
 
 NAME = @{ LOWERCASE_LETTER ~ (LETTER | ASCII_DIGIT | "_")* } 
+
+// REVIEW: maybe this restriction on the second letter is too strict?
+UNUSED_NAME = @{ "_" ~ (LOWERCASE_LETTER ~ (LETTER | ASCII_DIGIT | "_")*)? }
 
 PROPER_NAME = @{ UPPERCASE_LETTER ~ (LETTER | ASCII_DIGIT | "_")* } 
 

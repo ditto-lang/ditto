@@ -18,3 +18,8 @@ mk_five = (five) ->
 many_fields_to_array = (mf : ManyFields(a, a, a, a)): Array(a) -> 
     match mf with
     | ManyFields(a, b, c, d) -> [a, b, c, d];
+
+is_just = (maybe): Bool ->
+    match maybe with
+    | Just(_) -> true
+    | Nothing -> false;

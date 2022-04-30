@@ -5,7 +5,7 @@ function select(c, x, y) {
   return c ? x : y;
 }
 function always(a) {
-  return b => a;
+  return _b => a;
 }
 function uncurry(fn) {
   return (a, b) => fn(a)(b);
