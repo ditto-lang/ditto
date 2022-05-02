@@ -118,6 +118,15 @@ fn it_errors_for_non_exhaustive_patterns() {
         "#,
         &["Err(_)", "Ok(None)", "Ok(Just(Just(_)))"]
     );
+    assert_not_covered!(
+        r#"
+        module Test exports (..);
+        type Maybe(a) = Just(a) | None;
+        type A = A(Maybe(Maybe(Int)));
+        test = (a: A) -> match a with | A(Just(Just(n))) -> "yeh?";
+        "#,
+        &["A(None)", "A(Just(None))"]
+    );
 
     // TODO: for exhaustiveness checking we drop qualifiers from constructors.
     // This could make for confusing errors if nested patterns share the same
