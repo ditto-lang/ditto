@@ -8,7 +8,7 @@ use crate::{supply::Supply, typechecker::env::EnvConstructors};
 use ditto_ast::{
     self as ast, FullyQualifiedProperName, ProperName, QualifiedProperName, Span, Type,
 };
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 pub fn is_exhaustive(
     env_constructors: &EnvConstructors,
@@ -82,17 +82,16 @@ impl std::convert::From<ast::Pattern> for ClausePattern {
     }
 }
 
-#[derive(Debug, Clone)]
-pub enum IdealPattern {
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum IdealPattern<Var = FreshName> {
     Constructor {
         constructor: ProperName,
         arguments: Vec<Self>,
     },
     Variable {
-        var: FreshName,
+        var: Var,
     },
 }
-type IdealPatterns = Vec<IdealPattern>;
 
 impl IdealPattern {
     fn from_clause(clause_pattern: &ClausePattern, supply: &mut Supply) -> Self {
@@ -114,6 +113,20 @@ impl IdealPattern {
         }
     }
 
+    fn void(&self) -> IdealPattern<()> {
+        match self {
+            Self::Constructor {
+                constructor,
+                arguments,
+            } => IdealPattern::Constructor {
+                constructor: constructor.clone(),
+                arguments: arguments.iter().map(|arg| arg.void()).collect(),
+            },
+            Self::Variable { .. } => IdealPattern::Variable { var: () },
+        }
+    }
+}
+impl IdealPattern<()> {
     pub fn render(&self) -> String {
         let mut accum = String::new();
         self.render_rec(&mut accum);
@@ -171,7 +184,7 @@ type Result<T = ()> = std::result::Result<T, Error>;
 #[derive(Debug)]
 pub enum Error {
     RedundantClauses(ClausePatterns),
-    NotCovered(IdealPatterns),
+    NotCovered(NotCovered),
     // These shouldn't happen if the patterns are well-typed,
     // but it's up to the caller to handle them as `unreachable!` (or not)
     MalformedPattern {
@@ -180,6 +193,8 @@ pub enum Error {
         malformed_pattern: ClausePattern,
     },
 }
+
+type NotCovered = HashSet<IdealPattern<()>>;
 
 type Env = HashMap<FreshName, Constructors>;
 
@@ -331,7 +346,7 @@ fn check_coverage(
         .map(Clause::new)
         .collect::<Vec<_>>();
 
-    let mut not_covered = IdealPatterns::new();
+    let mut not_covered = NotCovered::new();
     let checked_clauses = covered_by(
         env,
         env_constructors,
@@ -369,7 +384,7 @@ fn covered_by(
     supply: &mut Supply,
     ideal: &IdealPattern,
     clauses: &[Clause],
-    not_covered: &mut IdealPatterns,
+    not_covered: &mut NotCovered,
 ) -> Result<Vec<Clause>> {
     use IsInjectiveResult::*;
 
@@ -417,7 +432,7 @@ fn covered_by(
             Ok(checked_clauses)
         }
     } else {
-        not_covered.push(ideal.clone());
+        not_covered.insert(ideal.void());
         Ok(clauses.to_vec())
     }
 }
