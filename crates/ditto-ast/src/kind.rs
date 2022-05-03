@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 /// The kind of types.
 ///
 /// Note that there is currently no source representation for kinds.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Kind {
     /// Also known as `*` to functional programming folk.
     Type,

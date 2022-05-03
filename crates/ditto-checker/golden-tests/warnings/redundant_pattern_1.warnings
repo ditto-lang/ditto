@@ -1,0 +1,10 @@
+
+  ⚠ redundant match pattern
+   ╭─[golden:5:1]
+ 5 │ redundant: Float = 
+ 6 │   match Five with
+ 7 │   | Five -> 5.0
+ 8 │   | Five -> 5.0;
+   ·     ──┬─
+   ·       ╰── unreachable
+   ╰────

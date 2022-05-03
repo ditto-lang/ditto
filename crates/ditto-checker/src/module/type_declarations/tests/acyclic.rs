@@ -66,6 +66,7 @@ fn it_kindchecks_as_expected() {
 
 #[test]
 fn it_errors_as_expected() {
+    assert_type_declaration_error!("type Foo = Foo(a)", UnknownTypeVariable { .. });
     assert_type_declaration_error!(
         "type HigherKinded(f) = HK(f(Int), f)",
         KindsNotEqual {

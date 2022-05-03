@@ -187,7 +187,7 @@ where
 pub type FullyQualifiedModuleName = (Option<PackageName>, ModuleName);
 
 /// The canonical name for an identifier.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct FullyQualified<Value> {
     /// The package and module to which it belongs.
     pub module_name: FullyQualifiedModuleName,

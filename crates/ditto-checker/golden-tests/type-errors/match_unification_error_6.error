@@ -1,0 +1,13 @@
+
+  × types don't unify
+   ╭─[golden:4:1]
+ 4 │ 
+ 5 │ nah = (dunno : a): Int -> 
+ 6 │   match dunno with
+ 7 │   | Just(n) -> unit
+   ·     ───┬───
+   ·        ╰── here
+ 8 │   | Nothing -> unit;
+   ╰────
+  help: expected a
+        got Maybe($2)

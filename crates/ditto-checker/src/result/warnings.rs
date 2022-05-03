@@ -50,6 +50,9 @@ pub enum Warning {
     UnusedImport {
         span: Span,
     },
+    RedundantMatchPattern {
+        span: Span,
+    },
 }
 
 impl Warning {
@@ -106,6 +109,9 @@ impl Warning {
                 location: span_to_source_span(span),
             },
             Self::UnusedImport { span } => WarningReport::UnusedImport {
+                location: span_to_source_span(span),
+            },
+            Self::RedundantMatchPattern { span } => WarningReport::RedundantMatchPattern {
                 location: span_to_source_span(span),
             },
         }
@@ -212,6 +218,13 @@ pub enum WarningReport {
     #[diagnostic(severity(Warning))]
     UnusedImport {
         #[label("not needed")]
+        #[serde(with = "SourceSpanDef")]
+        location: SourceSpan,
+    },
+    #[error("redundant match pattern")]
+    #[diagnostic(severity(Warning))]
+    RedundantMatchPattern {
+        #[label("unreachable")]
         #[serde(with = "SourceSpanDef")]
         location: SourceSpan,
     },

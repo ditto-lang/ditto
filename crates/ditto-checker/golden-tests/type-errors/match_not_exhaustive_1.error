@@ -1,0 +1,13 @@
+
+  × match not exhaustive
+   ╭─[golden:3:1]
+ 3 │     type ABC = A | B | C;
+ 4 │     
+ 5 │     y_tho = (abc: ABC) ->
+ 6 │ ╭─▶   match abc with
+ 7 │ ├─▶   | A -> 0;
+   · ╰──── this match expression
+   ╰────
+  help: patterns not covered:
+        B
+        C
