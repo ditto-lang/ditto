@@ -6,45 +6,39 @@ function ManyFields($0, $1, $2, $3) {
 }
 const Nothing = ["Nothing"];
 function is_just(maybe) {
-  return maybe[0] === "Nothing"
-    ? false
-    : maybe[0] === "Just"
-    ? true
-    : (() => {
-        throw new Error("Pattern match error");
-      })();
+  if (maybe[0] === "Nothing") {
+    return false;
+  }
+  if (maybe[0] === "Just") {
+    return true;
+  }
+  throw new Error("Pattern match error");
 }
 function many_fields_to_array(mf) {
-  return mf[0] === "ManyFields"
-    ? (() => {
-        const d = mf[4];
-        const c = mf[3];
-        const b = mf[2];
-        const a = mf[1];
-        return [a, b, c, d];
-      })()
-    : (() => {
-        throw new Error("Pattern match error");
-      })();
+  if (mf[0] === "ManyFields") {
+    const d = mf[4];
+    const c = mf[3];
+    const b = mf[2];
+    const a = mf[1];
+    return [a, b, c, d];
+  }
+  throw new Error("Pattern match error");
 }
 function mk_five(five) {
-  return five[0] === "Five"
-    ? 5
-    : (() => {
-        throw new Error("Pattern match error");
-      })();
+  if (five[0] === "Five") {
+    return 5;
+  }
+  throw new Error("Pattern match error");
 }
 function with_default(maybe, $default) {
-  return maybe[0] === "Nothing"
-    ? $default
-    : maybe[0] === "Just"
-    ? (() => {
-        const a = maybe[1];
-        return a;
-      })()
-    : (() => {
-        throw new Error("Pattern match error");
-      })();
+  if (maybe[0] === "Nothing") {
+    return $default;
+  }
+  if (maybe[0] === "Just") {
+    const a = maybe[1];
+    return a;
+  }
+  throw new Error("Pattern match error");
 }
 export {
   Just,

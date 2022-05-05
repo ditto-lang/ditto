@@ -10,7 +10,7 @@ doctest = false
 [dependencies]
 ditto-ast = { path = "../ditto-ast" }
 lazy_static = "1.4"
-#egg = "xx"  <-- should come in useful for optimizations later down the line
+egg = "0.7"
 
 [dev-dependencies]
 ditto-checker = { path = "../ditto-checker" }
@@ -18,3 +18,4 @@ ditto-cst = { path = "../ditto-cst" }
 non-empty-vec = { version = "0.2" }
 snapshot-test = { path = "../snapshot-test" }
 similar-asserts = "1.2"
+quickcheck = "1.0"
