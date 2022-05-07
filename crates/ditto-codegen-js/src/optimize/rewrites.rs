@@ -4,7 +4,7 @@ use egg::{ENodeOrVar, Var};
 
 pub type Rewrite = egg::Rewrite<Expression, ()>;
 
-pub fn rewrites() -> [Rewrite; 7] {
+pub fn rewrites() -> [Rewrite; 8] {
     [
         rewrite_ternary_with_static_true_condition(),
         rewrite_ternary_with_static_false_condition(),
@@ -13,6 +13,7 @@ pub fn rewrites() -> [Rewrite; 7] {
         rewrite_tenaray_with_iife_true_clause_to_block(),
         rewrite_tenaray_with_iife_false_clause_to_block(),
         rewrite_inline_returned_iife_block(),
+        rewrite_redundant_return_undefined(),
     ]
 }
 
@@ -265,12 +266,30 @@ fn rewrite_inline_returned_iife_block() -> Rewrite {
     .unwrap()
 }
 
+// `return undefined` in JavaScript is redundant
+fn rewrite_redundant_return_undefined() -> Rewrite {
+    let mut searcher = egg::RecExpr::default();
+    let undefined_id = searcher.add(ENodeOrVar::ENode(Expression::Undefined));
+    searcher.add(ENodeOrVar::ENode(Expression::BlockReturn {
+        children: [undefined_id],
+    }));
+
+    let mut applier = egg::RecExpr::default();
+    applier.add(ENodeOrVar::ENode(Expression::BlockReturnVoid));
+    Rewrite::new(
+        egg::Symbol::from("redundant_return_undefined"),
+        egg::Pattern::new(searcher),
+        egg::Pattern::new(applier),
+    )
+    .unwrap()
+}
+
 #[cfg(test)]
 mod tests {
     use crate::optimize::test_macros::assert_optimized;
 
     #[test]
-    fn rewrites_ifs() {
+    fn it_rewrites_ifs() {
         assert_optimized!("if true then 1 else 2", "1");
         assert_optimized!(r#"if false then "yeh" else "nah""#, r#""nah""#);
         assert_optimized!("if true then (if false then 1 else 2) else 3", "2");
@@ -280,7 +299,7 @@ mod tests {
     }
 
     #[test]
-    fn rewrites_matches() {
+    fn it_rewrites_matches() {
         assert_optimized!(
             "(x) -> match x with | y -> y",
             "(x) => {const y = x;return y;}"
@@ -289,5 +308,10 @@ mod tests {
             "(bc) -> match bc with | B -> 1 | C -> 2",
             "(bc) => {if ((bc[0] === \"B\")){return 1;}if ((bc[0] === \"C\")){return 2;}throw new Error(\"Pattern match error\");}"
         );
+    }
+
+    #[test]
+    fn it_removes_redundant_return_unit() {
+        assert_optimized!("(x) -> do { return unit }", "(x) => () => {return;}");
     }
 }
