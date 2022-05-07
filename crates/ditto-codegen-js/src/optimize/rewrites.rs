@@ -1,10 +1,11 @@
 use super::Expression;
+use crate::ast::Ident;
 use core::str::FromStr;
 use egg::{ENodeOrVar, Var};
 
 pub type Rewrite = egg::Rewrite<Expression, ()>;
 
-pub fn rewrites() -> [Rewrite; 8] {
+pub fn rewrites() -> [Rewrite; 9] {
     [
         rewrite_ternary_with_static_true_condition(),
         rewrite_ternary_with_static_false_condition(),
@@ -14,6 +15,7 @@ pub fn rewrites() -> [Rewrite; 8] {
         rewrite_tenaray_with_iife_false_clause_to_block(),
         rewrite_inline_returned_iife_block(),
         rewrite_redundant_return_undefined(),
+        rewrite_inline_immediate_identity_call(),
     ]
 }
 
@@ -258,6 +260,7 @@ fn rewrite_inline_returned_iife_block() -> Rewrite {
 
     let mut applier = egg::RecExpr::default();
     applier.add(searcher[block_id].clone());
+
     Rewrite::new(
         egg::Symbol::from("inline_returned_iife_block"),
         egg::Pattern::new(searcher),
@@ -276,8 +279,37 @@ fn rewrite_redundant_return_undefined() -> Rewrite {
 
     let mut applier = egg::RecExpr::default();
     applier.add(ENodeOrVar::ENode(Expression::BlockReturnVoid));
+
     Rewrite::new(
         egg::Symbol::from("redundant_return_undefined"),
+        egg::Pattern::new(searcher),
+        egg::Pattern::new(applier),
+    )
+    .unwrap()
+}
+
+// Immediately invoked identity functions can be replaced with the argument.
+//
+//      ((x) => x)(y)
+//      👉 y
+//
+fn rewrite_inline_immediate_identity_call() -> Rewrite {
+    let expr_var = Var::from_str("?var").unwrap();
+    let mut searcher = egg::RecExpr::default();
+    let identity_id = searcher.add(ENodeOrVar::ENode(Expression::ArrowFunctionIdentity(Ident(
+        // NOTE: this identifier is ignored during Expression matching so can be anything
+        "whatever".to_string(),
+    ))));
+    let expr_id = searcher.add(ENodeOrVar::Var(expr_var));
+    searcher.add(ENodeOrVar::ENode(Expression::Call {
+        children: vec![identity_id, expr_id],
+    }));
+
+    let mut applier = egg::RecExpr::default();
+    applier.add(searcher[expr_id].clone());
+
+    Rewrite::new(
+        egg::Symbol::from("inline_immediate_identity_call"),
         egg::Pattern::new(searcher),
         egg::Pattern::new(applier),
     )
@@ -313,5 +345,11 @@ mod tests {
     #[test]
     fn it_removes_redundant_return_unit() {
         assert_optimized!("(x) -> do { return unit }", "(x) => () => {return;}");
+    }
+
+    #[test]
+    fn it_inlines_identity_calls() {
+        assert_optimized!("((x) -> x)(5)", "5");
+        assert_optimized!("((x) -> x)((a) -> a)", "(a) => a");
     }
 }

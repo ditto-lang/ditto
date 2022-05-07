@@ -53,6 +53,7 @@ pub enum Expression {
         children: [Id; 2],
     },
     ArrowFunctionParameters(Vec<ast::Ident>),
+    ArrowFunctionIdentity(ast::Ident),
     IndexAccess {
         children: [Id; 2],
     },
@@ -96,6 +97,7 @@ impl egg::Language for Expression {
             (Self::ArrowFunctionExpr0 { .. }, Self::ArrowFunctionExpr0 { .. }) => true,
             (Self::ArrowFunctionExpr { .. }, Self::ArrowFunctionExpr { .. }) => true,
             (Self::ArrowFunctionParameters { .. }, Self::ArrowFunctionParameters { .. }) => true,
+            (Self::ArrowFunctionIdentity { .. }, Self::ArrowFunctionIdentity { .. }) => true,
             (Self::IndexAccess { .. }, Self::IndexAccess { .. }) => true,
             (Self::Operator { op: x, .. }, Self::Operator { op: y, .. }) => x == y,
             // Blocks
@@ -124,6 +126,7 @@ impl egg::Language for Expression {
             Self::ArrowFunctionExpr0 { children, .. } => children,
             Self::ArrowFunctionExpr { children, .. } => children,
             Self::ArrowFunctionParameters { .. } => &[],
+            Self::ArrowFunctionIdentity { .. } => &[],
             Self::Call { children } => children,
             Self::IndexAccess { children } => children,
             Self::Operator { children, .. } => children,
@@ -152,6 +155,7 @@ impl egg::Language for Expression {
             Self::ArrowFunctionExpr0 { children, .. } => children,
             Self::ArrowFunctionExpr { children, .. } => children,
             Self::ArrowFunctionParameters { .. } => &mut [],
+            Self::ArrowFunctionIdentity { .. } => &mut [],
             Self::Call { children } => children,
             Self::IndexAccess { children } => children,
             Self::Operator { children, .. } => children,
@@ -205,41 +209,45 @@ fn ast_expr_to_rec_expr(ast_expr: &ast::Expression, rec_expr: &mut RecExpr) -> I
         ast::Expression::ArrowFunction {
             parameters,
             body: box ast::ArrowFunctionBody::Block(body),
-        } if parameters.is_empty() => {
-            let body = ast_block_to_rec_expr(body, rec_expr);
-            let children = [body];
-            let node = Expression::ArrowFunctionBlock0 { children };
-            rec_expr.add(node)
-        }
-        ast::Expression::ArrowFunction {
-            parameters,
-            body: box ast::ArrowFunctionBody::Block(body),
-        } => {
-            let parameters = rec_expr.add(Expression::ArrowFunctionParameters(parameters.to_vec()));
-            let body = ast_block_to_rec_expr(body, rec_expr);
-            let children = [parameters, body];
-            let node = Expression::ArrowFunctionBlock { children };
-            rec_expr.add(node)
-        }
-        ast::Expression::ArrowFunction {
-            parameters,
-            body: box ast::ArrowFunctionBody::Expression(body),
-        } if parameters.is_empty() => {
-            let body = ast_expr_to_rec_expr(body, rec_expr);
-            let children = [body];
-            let node = Expression::ArrowFunctionExpr0 { children };
-            rec_expr.add(node)
-        }
+        } => match parameters.as_slice() {
+            [] => {
+                let body = ast_block_to_rec_expr(body, rec_expr);
+                let children = [body];
+                let node = Expression::ArrowFunctionBlock0 { children };
+                rec_expr.add(node)
+            }
+            _ => {
+                let parameters =
+                    rec_expr.add(Expression::ArrowFunctionParameters(parameters.to_vec()));
+                let body = ast_block_to_rec_expr(body, rec_expr);
+                let children = [parameters, body];
+                let node = Expression::ArrowFunctionBlock { children };
+                rec_expr.add(node)
+            }
+        },
         ast::Expression::ArrowFunction {
             parameters,
             body: box ast::ArrowFunctionBody::Expression(body),
-        } => {
-            let parameters = rec_expr.add(Expression::ArrowFunctionParameters(parameters.to_vec()));
-            let body = ast_expr_to_rec_expr(body, rec_expr);
-            let children = [parameters, body];
-            let node = Expression::ArrowFunctionExpr { children };
-            rec_expr.add(node)
-        }
+        } => match (parameters.as_slice(), body) {
+            ([], _) => {
+                let body = ast_expr_to_rec_expr(body, rec_expr);
+                let children = [body];
+                let node = Expression::ArrowFunctionExpr0 { children };
+                rec_expr.add(node)
+            }
+            ([ident_param], ast::Expression::Variable(ident_body)) if ident_param == ident_body => {
+                let node = Expression::ArrowFunctionIdentity(ident_param.clone());
+                rec_expr.add(node)
+            }
+            _ => {
+                let parameters =
+                    rec_expr.add(Expression::ArrowFunctionParameters(parameters.to_vec()));
+                let body = ast_expr_to_rec_expr(body, rec_expr);
+                let children = [parameters, body];
+                let node = Expression::ArrowFunctionExpr { children };
+                rec_expr.add(node)
+            }
+        },
         ast::Expression::Call {
             function,
             arguments,
@@ -355,6 +363,7 @@ fn unbuild_rec_expr(expr: &Expression, rec_expr: &RecExpr) -> BlockOrExpression 
         | Expression::ArrowFunctionBlock { .. }
         | Expression::ArrowFunctionExpr0 { .. }
         | Expression::ArrowFunctionExpr { .. }
+        | Expression::ArrowFunctionIdentity { .. }
         | Expression::IndexAccess { .. }
         | Expression::Operator { .. }
         | Expression::True
@@ -440,6 +449,12 @@ fn rec_expr_to_ast_expr(expr: &Expression, rec_expr: &RecExpr) -> ast::Expressio
                 unreachable!()
             }
         }
+        Expression::ArrowFunctionIdentity(ident) => ast::Expression::ArrowFunction {
+            parameters: vec![ident.clone()],
+            body: Box::new(ast::ArrowFunctionBody::Expression(
+                ast::Expression::Variable(ident.clone()),
+            )),
+        },
         Expression::IndexAccess {
             children: [target_id, index_id],
         } => ast::Expression::IndexAccess {
@@ -469,13 +484,10 @@ fn rec_expr_to_ast_expr(expr: &Expression, rec_expr: &RecExpr) -> ast::Expressio
         | Expression::BlockReturnVoid
         | Expression::BlockConstAssignment { .. }
         | Expression::BlockIf { .. } => {
-            unreachable!("Unexpected Block in Expression: {:?}", expr);
+            unreachable!();
         }
         Expression::ArrowFunctionParameters { .. } => {
-            unreachable!(
-                "Unexpected stanadlone arrow function parameters: {:?}",
-                expr
-            );
+            unreachable!();
         }
     }
 }
@@ -531,6 +543,7 @@ fn rec_expr_to_ast_block(expr: &Expression, rec_expr: &RecExpr) -> ast::Block {
         | Expression::ArrowFunctionBlock { .. }
         | Expression::ArrowFunctionExpr0 { .. }
         | Expression::ArrowFunctionExpr { .. }
+        | Expression::ArrowFunctionIdentity { .. }
         | Expression::IndexAccess { .. }
         | Expression::Operator { .. }
         | Expression::True
@@ -539,8 +552,9 @@ fn rec_expr_to_ast_block(expr: &Expression, rec_expr: &RecExpr) -> ast::Block {
         | Expression::Number { .. }
         | Expression::String { .. }
         | Expression::Variable { .. } => {
-            unreachable!("Unexpected Expression in Block: {:?}", expr);
+            unreachable!();
         }
+        // rlly wut
         Expression::ArrowFunctionParameters { .. } => {
             unreachable!();
         }
@@ -554,7 +568,7 @@ mod test {
     use quickcheck::{quickcheck, Arbitrary, Gen};
 
     #[test]
-    fn roundtrip_edge_cases() {
+    fn roundtrippin() {
         assert_optimized!("(x, _y) -> x", "(x,_y) => x", &[]);
         assert_optimized!("(x, _y) -> if x then 5 else 10", "(x,_y) => x?5:10", &[]);
         assert_optimized!(
