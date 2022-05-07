@@ -569,7 +569,7 @@ mod test {
         );
         assert_optimized!(
             "(bc) -> match bc with | B -> 1 | C -> 2",
-            "(bc) => (bc[0] === \"C\")?2:(bc[0] === \"B\")?1:(() => {throw new Error(\"Pattern match error\");})()",
+            "(bc) => (bc[0] === \"B\")?1:(bc[0] === \"C\")?2:(() => {throw new Error(\"Pattern match error\");})()",
             &[]
         );
     }

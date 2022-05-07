@@ -287,7 +287,7 @@ mod tests {
         );
         assert_optimized!(
             "(bc) -> match bc with | B -> 1 | C -> 2",
-            "(bc) => {if ((bc[0] === \"C\")){return 2;}if ((bc[0] === \"B\")){return 1;}throw new Error(\"Pattern match error\");}"
+            "(bc) => {if ((bc[0] === \"B\")){return 1;}if ((bc[0] === \"C\")){return 2;}throw new Error(\"Pattern match error\");}"
         );
     }
 }

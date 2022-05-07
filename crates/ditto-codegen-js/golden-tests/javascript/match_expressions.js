@@ -6,11 +6,11 @@ function ManyFields($0, $1, $2, $3) {
 }
 const Nothing = ["Nothing"];
 function is_just(maybe) {
-  if (maybe[0] === "Nothing") {
-    return false;
-  }
   if (maybe[0] === "Just") {
     return true;
+  }
+  if (maybe[0] === "Nothing") {
+    return false;
   }
   throw new Error("Pattern match error");
 }
@@ -31,12 +31,12 @@ function mk_five(five) {
   throw new Error("Pattern match error");
 }
 function with_default(maybe, $default) {
-  if (maybe[0] === "Nothing") {
-    return $default;
-  }
   if (maybe[0] === "Just") {
     const a = maybe[1];
     return a;
+  }
+  if (maybe[0] === "Nothing") {
+    return $default;
   }
   throw new Error("Pattern match error");
 }

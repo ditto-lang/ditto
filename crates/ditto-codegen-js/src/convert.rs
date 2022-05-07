@@ -360,6 +360,11 @@ pub(crate) fn convert_expression(
                 // TODO: mention the file location here?
                 "Pattern match error",
             )));
+
+            // Reverse the arm order ahead of folding so the generated code
+            // kinda resembles the ditto source
+            let mut arms = arms.to_vec();
+            arms.reverse();
             arms.into_iter()
                 .fold(err, |false_clause, (pattern, arm_expression)| {
                     let (condition, assignments) = convert_pattern(expression.clone(), pattern);
