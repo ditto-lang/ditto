@@ -1,3 +1,12 @@
+function Err($0) {
+  return ["Err", $0];
+}
+function Ok($0) {
+  return ["Ok", $0];
+}
+function always(_a, b) {
+  return b;
+}
 function effect_map(effect_a, fn) {
   return () => {
     const a = effect_a();
@@ -15,4 +24,31 @@ function get_names() {
   const another_name = get_name();
   return [name, another_name];
 }
-export { effect_map, get_name, get_names, main };
+function get_names_from_result(res) {
+  return () => {
+    get_name();
+    return (() => {
+      if (res[0] === "Ok") {
+        const a = res[1];
+        return always(a, get_names);
+      }
+      if (res[0] === "Err") {
+        const e = res[1];
+        return always(e, get_names);
+      }
+      return () => {
+        throw new Error("Pattern match error");
+      };
+    })()();
+  };
+}
+export {
+  Err,
+  Ok,
+  always,
+  effect_map,
+  get_name,
+  get_names,
+  get_names_from_result,
+  main,
+};

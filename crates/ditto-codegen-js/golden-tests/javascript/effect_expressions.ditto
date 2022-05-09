@@ -15,6 +15,17 @@ effect_map = (effect_a: Effect(a), fn: (a) -> b): Effect(b) -> do {
     return fn(a)
 };
 
+type Result(a, e) = Ok(a) | Err(e);
+
+always = (_a, b) -> b;
+
+get_names_from_result = (res) -> do {
+    get_name;
+    match res with
+    | Ok(a) -> always(a, get_names)
+    | Err(e) -> always(e, get_names)
+};
+
 main : Effect(Unit) = do {
     effect_map(get_name, (name) -> unit)
 };

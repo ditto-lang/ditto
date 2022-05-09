@@ -1,2 +1,2 @@
-function test_it_works(){return;}
+function test_it_works(){return undefined;}
 export {test_it_works};

@@ -351,15 +351,13 @@ pub(crate) fn convert_expression(
         ditto_ast::Expression::Unit { .. } => Expression::Undefined, // REVIEW could use `null` or `null` here?
         ditto_ast::Expression::Match {
             span: _,
+            match_type,
             box expression,
             arms,
             ..
         } => {
             let expression = convert_expression(imported_module_idents, expression);
-            let err = iife!(Block::Throw(String::from(
-                // TODO: mention the file location here?
-                "Pattern match error",
-            )));
+            let err = mk_pattern_match_err(match_type);
 
             // Reverse the arm order ahead of folding so the generated code
             // kinda resembles the ditto source
@@ -403,6 +401,47 @@ pub(crate) fn convert_expression(
             Expression::ArrowFunction {
                 parameters: vec![],
                 body: Box::new(ArrowFunctionBody::Block(block)),
+            }
+        }
+    }
+}
+
+fn mk_pattern_match_err(match_type: ditto_ast::Type) -> Expression {
+    match mk_err(&match_type) {
+        ArrowFunctionBody::Expression(expr) => {
+            return expr;
+        }
+        ArrowFunctionBody::Block(block) => {
+            return iife!(block);
+        }
+    }
+
+    fn mk_err(match_type: &ditto_ast::Type) -> ArrowFunctionBody {
+        use ditto_ast::{PrimType, Type};
+        match match_type {
+            Type::Function {
+                parameters,
+                box return_type,
+            } => ArrowFunctionBody::Expression(Expression::ArrowFunction {
+                parameters: parameters
+                    .iter()
+                    .enumerate()
+                    .map(|(i, _)| Ident(format!("_{}", i)))
+                    .collect(),
+                body: Box::new(mk_err(return_type)),
+            }),
+            Type::Call {
+                function: box Type::PrimConstructor(PrimType::Effect),
+                arguments,
+            } => ArrowFunctionBody::Expression(Expression::ArrowFunction {
+                parameters: vec![],
+                body: Box::new(mk_err(arguments.split_first().0)),
+            }),
+            _ => {
+                ArrowFunctionBody::Block(Block::Throw(String::from(
+                    // TODO: mention the file location here?
+                    "Pattern match error",
+                )))
             }
         }
     }

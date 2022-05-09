@@ -23,3 +23,18 @@ is_just = (maybe): Bool ->
     match maybe with
     | Just(_) -> true
     | Nothing -> false;
+
+function_arms = (maybe: Maybe(Int)) ->
+    match maybe with
+    | Just(a) -> (b, c) -> [a, b, c]
+    | Nothing -> (b, c) -> [1, b, c];
+
+very_function_arms = (maybe: Maybe(Int)) ->
+    match maybe with
+    | Just(a) -> (b) -> (c) -> (d) -> [a, b, c]
+    | Nothing -> (b) -> (c) -> (d) -> [1, b, c];
+
+effect_arms = (maybe) ->
+    match maybe with
+    | Just(a) -> do { return a }
+    | Nothing -> do { return 5 };
