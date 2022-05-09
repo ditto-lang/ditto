@@ -37,7 +37,10 @@ pub fn convert_module(config: &Config, ast_module: ditto_ast::Module) -> Module 
                     .map(|(name, expression)| {
                         (
                             Ident::from(name),
-                            convert_expression(&mut imported_module_idents, expression),
+                            convert_expression_and_optimize(
+                                &mut imported_module_idents,
+                                expression,
+                            ),
                         )
                     })
                     .collect::<Vec<_>>();
@@ -70,7 +73,8 @@ pub fn convert_module(config: &Config, ast_module: ditto_ast::Module) -> Module 
             }
             Scc::Acyclic((name, expression)) => {
                 let ident = Ident::from(name);
-                let expression = convert_expression(&mut imported_module_idents, expression);
+                let expression =
+                    convert_expression_and_optimize(&mut imported_module_idents, expression);
                 statements.push(expression_to_module_statement(ident, expression));
             }
         }
@@ -191,10 +195,10 @@ fn convert_module_constructors(
     statements
 }
 
-type ImportedModuleIdents = HashMap<ImportedModule, ImportedIdents>;
+pub(crate) type ImportedModuleIdents = HashMap<ImportedModule, ImportedIdents>;
 
 #[derive(PartialEq, Eq, Hash)]
-enum ImportedModule {
+pub(crate) enum ImportedModule {
     ForeignModule,
     Module(ditto_ast::FullyQualifiedModuleName),
 }
@@ -202,7 +206,19 @@ enum ImportedModule {
 type ImportedIdents = HashSet<ImportedIdent>; // need to be unique!
 type ImportedIdent = (Ident, Ident); // (foo, Some$Module$foo)
 
-fn convert_expression(
+pub(crate) fn convert_expression_and_optimize(
+    imported_module_idents: &mut ImportedModuleIdents,
+    ast_expression: ditto_ast::Expression,
+) -> Expression {
+    use crate::optimize::{optimize_expression, BlockOrExpression};
+    let expr = convert_expression(imported_module_idents, ast_expression);
+    match optimize_expression(expr) {
+        BlockOrExpression::Expression(expr) => expr,
+        BlockOrExpression::Block(block) => iife!(block),
+    }
+}
+
+pub(crate) fn convert_expression(
     imported_module_idents: &mut ImportedModuleIdents,
     ast_expression: ditto_ast::Expression,
 ) -> Expression {
@@ -344,6 +360,11 @@ fn convert_expression(
                 // TODO: mention the file location here?
                 "Pattern match error",
             )));
+
+            // Reverse the arm order ahead of folding so the generated code
+            // kinda resembles the ditto source
+            let mut arms = arms.to_vec();
+            arms.reverse();
             arms.into_iter()
                 .fold(err, |false_clause, (pattern, arm_expression)| {
                     let (condition, assignments) = convert_pattern(expression.clone(), pattern);
@@ -419,7 +440,7 @@ fn convert_effect(
             if let Some(box rest) = rest {
                 Block::Expression {
                     expression,
-                    rest: Some(Box::new(convert_effect(imported_module_idents, rest))),
+                    rest: Box::new(convert_effect(imported_module_idents, rest)),
                 }
             } else {
                 Block::Return(Some(expression))

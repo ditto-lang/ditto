@@ -4,6 +4,7 @@
 
 mod ast;
 mod convert;
+mod optimize;
 mod render;
 
 pub use convert::Config;

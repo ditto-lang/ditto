@@ -5,7 +5,8 @@ identity = (a) -> a;
 with_parens = 5 |> identity;
 without_parens = 5 |> identity();
 
-inline_function = 5 |> ((n) -> n);
+five = 5 |> ((n) -> n);
+inline_function = 5 |> ((n) -> [4, n]);
 
 tagged_identity = (a, tag) -> a;
 

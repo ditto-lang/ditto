@@ -1,6 +1,24 @@
 module Test exports (..);
 
-result =
+result = (c0, c1, c2, c3, c4) ->
+  if
+    if c0 then
+      c1
+    else
+      c2
+  then
+    if c3 then
+      if c4 then
+        0
+      else
+        1
+    else
+      2
+  else
+    3;
+
+-- This will get rewritten to 0 :chef-kiss:
+rewritten =
   if
     if true then
       true

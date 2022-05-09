@@ -392,8 +392,10 @@ dependencies = [
  "ditto-ast",
  "ditto-checker",
  "ditto-cst",
+ "egg",
  "lazy_static",
  "non-empty-vec",
+ "quickcheck",
  "similar-asserts",
  "snapshot-test",
 ]
@@ -494,6 +496,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "egg"
+version = "0.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a9f1058c150e258252353a8f8e6d41036ced7d266390114d121abf2ace6e1b6b"
+dependencies = [
+ "fxhash",
+ "hashbrown",
+ "indexmap",
+ "instant",
+ "log",
+ "once_cell",
+ "smallvec",
+ "symbolic_expressions",
+ "thiserror",
+]
+
+[[package]]
 name = "either"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -512,6 +531,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7896dc8abb250ffdda33912550faa54c88ec8b998dec0b2c55ab224921ce11df"
 dependencies = [
  "cfg-if 1.0.0",
+]
+
+[[package]]
+name = "env_logger"
+version = "0.8.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a19187fea3ac7e84da7dacf48de0c45d63c6a76f9490dae389aead16c243fce3"
+dependencies = [
+ "log",
+ "regex",
 ]
 
 [[package]]
@@ -676,6 +705,15 @@ dependencies = [
  "pin-project-lite",
  "pin-utils",
  "slab",
+]
+
+[[package]]
+name = "fxhash"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c31b6d751ae2c7f11320402d34e41349dd1016f8d5d45e48c4312bc8625af50c"
+dependencies = [
+ "byteorder",
 ]
 
 [[package]]
@@ -1393,7 +1431,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "17367f0cc86f2d25802b2c26ee58a7b23faeccf78a396094c13dced0d0182526"
 dependencies = [
  "phf_shared",
- "rand",
+ "rand 0.7.3",
 ]
 
 [[package]]
@@ -1439,6 +1477,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "quickcheck"
+version = "1.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "588f6378e4dd99458b60ec275b4477add41ce4fa9f64dcba6f15adccb19b50d6"
+dependencies = [
+ "env_logger",
+ "log",
+ "rand 0.8.5",
+]
+
+[[package]]
 name = "quote"
 version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1456,9 +1505,18 @@ dependencies = [
  "getrandom 0.1.16",
  "libc",
  "rand_chacha",
- "rand_core",
+ "rand_core 0.5.1",
  "rand_hc",
  "rand_pcg",
+]
+
+[[package]]
+name = "rand"
+version = "0.8.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "34af8d1a0e25924bc5b7c43c079c942339d8f0a8b57c39049bef581b46327404"
+dependencies = [
+ "rand_core 0.6.3",
 ]
 
 [[package]]
@@ -1468,7 +1526,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f4c8ed856279c9737206bf725bf36935d8666ead7aa69b52be55af369d193402"
 dependencies = [
  "ppv-lite86",
- "rand_core",
+ "rand_core 0.5.1",
 ]
 
 [[package]]
@@ -1481,12 +1539,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "rand_core"
+version = "0.6.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d34f1408f55294453790c48b2f1ebbb1c5b4b7563eb1f418bcfcfdbb06ebb4e7"
+dependencies = [
+ "getrandom 0.2.5",
+]
+
+[[package]]
 name = "rand_hc"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ca3129af7b92a17112d59ad498c6f81eaf463253766b90396d39ea7a39d6613c"
 dependencies = [
- "rand_core",
+ "rand_core 0.5.1",
 ]
 
 [[package]]
@@ -1495,7 +1562,7 @@ version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "16abd0c1b639e9eb4d7c50c0b8100b0d0f849be2349829c740fe8e6eb4816429"
 dependencies = [
- "rand_core",
+ "rand_core 0.5.1",
 ]
 
 [[package]]
@@ -1855,6 +1922,12 @@ checksum = "a8b945e45b417b125a8ec51f1b7df2f8df7920367700d1f98aedd21e5735f8b2"
 dependencies = [
  "atty",
 ]
+
+[[package]]
+name = "symbolic_expressions"
+version = "5.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7c68d531d83ec6c531150584c42a4290911964d5f0d79132b193b67252a23b71"
 
 [[package]]
 name = "symlink"

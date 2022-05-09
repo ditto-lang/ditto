@@ -60,7 +60,7 @@ impl ModuleStatement {
 }
 
 /// A bunch of statements surrounded by braces.
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Block {
     /// ```javascript
     /// const ident = expression;
@@ -70,12 +70,21 @@ pub enum Block {
         value: Expression,
         rest: Box<Self>,
     },
+
+    /// ```javascript
+    /// if (condition) { true_branch } false_branch
+    /// ```
+    If {
+        condition: Expression,
+        true_branch: Box<Self>,
+        false_branch: Box<Self>,
+    },
     /// ```javascript
     /// console.log("hi");
     /// ```
     Expression {
         expression: Expression,
-        rest: Option<Box<Self>>,
+        rest: Box<Self>,
     },
     /// ```javascript
     /// throw new Error("message")
@@ -88,7 +97,7 @@ pub enum Block {
     Return(Option<Expression>),
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Expression {
     /// `true`
     True,
@@ -157,14 +166,14 @@ pub enum Expression {
 }
 
 /// A binary operator.
-#[derive(Clone)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Operator {
     And,
     Equals,
 }
 
 /// The _body_ of an arrow function.
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ArrowFunctionBody {
     /// ```javascript
     /// () => expression;

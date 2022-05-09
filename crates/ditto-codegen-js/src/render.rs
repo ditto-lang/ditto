@@ -114,9 +114,7 @@ fn render_block_statements(block: &Block, accum: &mut String) {
         Block::Expression { expression, rest } => {
             expression.render(accum);
             accum.push(';');
-            if let Some(rest) = rest {
-                render_block_statements(rest, accum);
-            }
+            render_block_statements(rest, accum);
         }
         Block::Throw(message) => {
             accum.push_str("throw new Error(\"");
@@ -132,6 +130,17 @@ fn render_block_statements(block: &Block, accum: &mut String) {
             value.render(accum);
             accum.push(';');
             render_block_statements(rest, accum);
+        }
+        Block::If {
+            condition,
+            true_branch,
+            false_branch,
+        } => {
+            accum.push_str("if (");
+            condition.render(accum);
+            accum.push(')');
+            true_branch.render(accum);
+            render_block_statements(false_branch, accum);
         }
     }
 }

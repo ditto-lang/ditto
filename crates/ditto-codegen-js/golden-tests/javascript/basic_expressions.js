@@ -26,7 +26,7 @@ const fives = [
   select(true, 5, 50),
   always(five)(floaty_five),
   uncurry(always)(five, true),
-  (a => a)(5),
+  ((a, _b) => a)(5, undefined),
   uncurry(always)(five, fifth_string),
   always(identity)(false)(five),
 ];
