@@ -135,6 +135,10 @@ fn expression_to_module_statement(ident: Ident, expression: Expression) -> Modul
             ident,
             parameters,
             body: match body {
+                ArrowFunctionBody::Expression(Expression::Undefined) => {
+                    // don't undo the rewrite rule
+                    Block::Return(None)
+                }
                 ArrowFunctionBody::Expression(expression) => Block::Return(Some(expression)),
                 ArrowFunctionBody::Block(block) => block,
             },

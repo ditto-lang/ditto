@@ -1,5 +1,5 @@
 function denied(a) {
-  return undefined;
+  return;
 }
 function select(c, x, y) {
   return c ? x : y;
