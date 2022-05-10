@@ -10,11 +10,10 @@ function effect_arms(maybe) {
     const a = maybe[1];
     return () => a;
   }
-  return maybe[0] === "Nothing"
-    ? () => 5
-    : () => {
-        throw new Error("Pattern match error");
-      };
+  if (maybe[0] === "Nothing") {
+    return () => 5;
+  }
+  throw new Error("Pattern match error");
 }
 function very_function_arms(maybe) {
   if (maybe[0] === "Just") {
@@ -23,9 +22,9 @@ function very_function_arms(maybe) {
   }
   return maybe[0] === "Nothing"
     ? b => c => d => [1, b, c]
-    : _0 => _0 => _0 => {
+    : (() => {
         throw new Error("Pattern match error");
-      };
+      })();
 }
 function function_arms(maybe) {
   if (maybe[0] === "Just") {
@@ -34,9 +33,9 @@ function function_arms(maybe) {
   }
   return maybe[0] === "Nothing"
     ? (b, c) => [1, b, c]
-    : (_0, _1) => {
+    : (() => {
         throw new Error("Pattern match error");
-      };
+      })();
 }
 function is_just(maybe) {
   if (maybe[0] === "Just") {

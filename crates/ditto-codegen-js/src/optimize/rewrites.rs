@@ -5,7 +5,7 @@ use egg::{ENodeOrVar, Var};
 
 pub type Rewrite = egg::Rewrite<Expression, ()>;
 
-pub fn rewrites() -> [Rewrite; 13] {
+pub fn rewrites() -> [Rewrite; 12] {
     [
         rewrite_ternary_with_static_true_condition(),
         rewrite_ternary_with_static_false_condition(),
@@ -16,7 +16,6 @@ pub fn rewrites() -> [Rewrite; 13] {
         rewrite_inline_returned_iife_block(),
         rewrite_redundant_return_undefined(),
         rewrite_inline_immediate_identity_call(),
-        rewrite_ternary_call0(), // TODO: introduce `CallParams` variant and handle n-ary ternary calls
         rewrite_redundant_arrow0_block(),
         rewrite_redundant_arrow_block(),
         rewrite_redundant_iife(),
@@ -321,50 +320,6 @@ fn rewrite_inline_immediate_identity_call() -> Rewrite {
     .unwrap()
 }
 
-// Prefer calling the arms of a tenary rather than the whole thing wrapped in parens.
-//
-//      (cond ? f : g)()
-//      👉 cond ? f() : g()
-//
-fn rewrite_ternary_call0() -> Rewrite {
-    let condition_var = Var::from_str("?cond").unwrap();
-    let true_clause_var = Var::from_str("?true_clause").unwrap();
-    let false_clause_var = Var::from_str("?false_clause").unwrap();
-
-    let mut searcher = egg::RecExpr::default();
-
-    let condition_id = searcher.add(ENodeOrVar::Var(condition_var));
-    let true_clause_id = searcher.add(ENodeOrVar::Var(true_clause_var));
-    let false_clause_id = searcher.add(ENodeOrVar::Var(false_clause_var));
-    let ternary_id = searcher.add(ENodeOrVar::ENode(Expression::Conditional {
-        children: [condition_id, true_clause_id, false_clause_id],
-    }));
-    searcher.add(ENodeOrVar::ENode(Expression::Call {
-        children: vec![ternary_id],
-    }));
-
-    let mut applier = egg::RecExpr::default();
-    let condition_id = applier.add(searcher[condition_id].clone());
-    let true_clause_id = applier.add(searcher[true_clause_id].clone());
-    let true_clause_id = applier.add(ENodeOrVar::ENode(Expression::Call {
-        children: vec![true_clause_id],
-    }));
-    let false_clause_id = applier.add(searcher[false_clause_id].clone());
-    let false_clause_id = applier.add(ENodeOrVar::ENode(Expression::Call {
-        children: vec![false_clause_id],
-    }));
-    applier.add(ENodeOrVar::ENode(Expression::Conditional {
-        children: [condition_id, true_clause_id, false_clause_id],
-    }));
-
-    Rewrite::new(
-        egg::Symbol::from("ternary_call0"),
-        egg::Pattern::new(searcher),
-        egg::Pattern::new(applier),
-    )
-    .unwrap()
-}
-
 // Rewrite a redundant (nullary) arrow block body.
 //
 //      () => { return x }
@@ -472,7 +427,7 @@ mod tests {
         assert_optimized!("(x: Bool) -> if x then true else false", "(x) => x");
         assert_optimized!(
             "(cond, fn) -> (if cond then fn else fn)()",
-            "(cond,fn) => cond?fn():fn()"
+            "(cond,fn) => (cond?fn:fn)()"
         );
     }
 

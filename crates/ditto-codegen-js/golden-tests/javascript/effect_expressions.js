@@ -27,19 +27,21 @@ function get_names() {
 function get_names_from_result(res) {
   return () => {
     get_name();
-    return (() => {
-      if (res[0] === "Ok") {
-        const a = res[1];
-        return always(a, get_names);
-      }
-      if (res[0] === "Err") {
-        const e = res[1];
-        return always(e, get_names);
-      }
-      return () => {
-        throw new Error("Pattern match error");
-      };
-    })()();
+    return (
+      res[0] === "Ok"
+        ? (() => {
+            const a = res[1];
+            return always(a, get_names);
+          })()
+        : res[0] === "Err"
+        ? (() => {
+            const e = res[1];
+            return always(e, get_names);
+          })()
+        : (() => {
+            throw new Error("Pattern match error");
+          })()
+    )();
   };
 }
 export {
