@@ -5,17 +5,20 @@ use egg::{ENodeOrVar, Var};
 
 pub type Rewrite = egg::Rewrite<Expression, ()>;
 
-pub fn rewrites() -> [Rewrite; 9] {
+pub fn rewrites() -> [Rewrite; 12] {
     [
         rewrite_ternary_with_static_true_condition(),
         rewrite_ternary_with_static_false_condition(),
         rewrite_redundant_ternary(),
         rewrite_arrow_expr_iife_to_arrow_block(),
-        rewrite_tenaray_with_iife_true_clause_to_block(),
-        rewrite_tenaray_with_iife_false_clause_to_block(),
+        rewrite_ternary_with_iife_true_clause_to_block(),
+        rewrite_ternary_with_iife_false_clause_to_block(),
         rewrite_inline_returned_iife_block(),
         rewrite_redundant_return_undefined(),
         rewrite_inline_immediate_identity_call(),
+        rewrite_redundant_arrow0_block(),
+        rewrite_redundant_arrow_block(),
+        rewrite_redundant_iife(),
     ]
 }
 
@@ -144,7 +147,7 @@ fn rewrite_arrow_expr_iife_to_arrow_block() -> Rewrite {
 //      condition ? (() => { block })() : 5
 //      👉 (() => { if (condition) { block } return 5 })()
 //
-fn rewrite_tenaray_with_iife_true_clause_to_block() -> Rewrite {
+fn rewrite_ternary_with_iife_true_clause_to_block() -> Rewrite {
     let condition_var = Var::from_str("?condition").unwrap();
     let block_var = Var::from_str("?block").unwrap();
     let false_clause_var = Var::from_str("?false_clause").unwrap();
@@ -181,7 +184,7 @@ fn rewrite_tenaray_with_iife_true_clause_to_block() -> Rewrite {
     }));
 
     Rewrite::new(
-        egg::Symbol::from("tenaray_with_iife_true_clause_to_block"),
+        egg::Symbol::from("ternary_with_iife_true_clause_to_block"),
         egg::Pattern::new(searcher),
         egg::Pattern::new(applier),
     )
@@ -193,7 +196,7 @@ fn rewrite_tenaray_with_iife_true_clause_to_block() -> Rewrite {
 //      condition ? 5 : (() => { block })()
 //      👉 (() => { if (condition) { return 5 } block })()
 //
-fn rewrite_tenaray_with_iife_false_clause_to_block() -> Rewrite {
+fn rewrite_ternary_with_iife_false_clause_to_block() -> Rewrite {
     let condition_var = Var::from_str("?condition").unwrap();
     let block_var = Var::from_str("?block").unwrap();
     let true_clause_var = Var::from_str("?true_clause").unwrap();
@@ -231,7 +234,7 @@ fn rewrite_tenaray_with_iife_false_clause_to_block() -> Rewrite {
     }));
 
     Rewrite::new(
-        egg::Symbol::from("tenaray_with_iife_false_clause_to_block"),
+        egg::Symbol::from("ternary_with_iife_false_clause_to_block"),
         egg::Pattern::new(searcher),
         egg::Pattern::new(applier),
     )
@@ -295,6 +298,7 @@ fn rewrite_redundant_return_undefined() -> Rewrite {
 //
 fn rewrite_inline_immediate_identity_call() -> Rewrite {
     let expr_var = Var::from_str("?var").unwrap();
+
     let mut searcher = egg::RecExpr::default();
     let identity_id = searcher.add(ENodeOrVar::ENode(Expression::ArrowFunctionIdentity(Ident(
         // NOTE: this identifier is ignored during Expression matching so can be anything
@@ -316,6 +320,99 @@ fn rewrite_inline_immediate_identity_call() -> Rewrite {
     .unwrap()
 }
 
+// Rewrite a redundant (nullary) arrow block body.
+//
+//      () => { return x }
+//      👉 () => x
+//
+fn rewrite_redundant_arrow0_block() -> Rewrite {
+    let expr_var = Var::from_str("?expr").unwrap();
+
+    let mut searcher = egg::RecExpr::default();
+    let expr_id = searcher.add(ENodeOrVar::Var(expr_var));
+    let return_id = searcher.add(ENodeOrVar::ENode(Expression::BlockReturn {
+        children: [expr_id],
+    }));
+    searcher.add(ENodeOrVar::ENode(Expression::ArrowFunctionBlock0 {
+        children: [return_id],
+    }));
+
+    let mut applier = egg::RecExpr::default();
+    let expr_id = applier.add(searcher[expr_id].clone());
+    applier.add(ENodeOrVar::ENode(Expression::ArrowFunctionExpr0 {
+        children: [expr_id],
+    }));
+
+    Rewrite::new(
+        egg::Symbol::from("redundant_arrow0_block"),
+        egg::Pattern::new(searcher),
+        egg::Pattern::new(applier),
+    )
+    .unwrap()
+}
+
+// Rewrite a redundant arrow block body.
+//
+//      (...args) => { return x }
+//      👉 (...args) => x
+//
+fn rewrite_redundant_arrow_block() -> Rewrite {
+    let expr_var = Var::from_str("?expr").unwrap();
+    let params_var = Var::from_str("?params").unwrap();
+
+    let mut searcher = egg::RecExpr::default();
+    let params_id = searcher.add(ENodeOrVar::Var(params_var));
+    let expr_id = searcher.add(ENodeOrVar::Var(expr_var));
+    let return_id = searcher.add(ENodeOrVar::ENode(Expression::BlockReturn {
+        children: [expr_id],
+    }));
+    searcher.add(ENodeOrVar::ENode(Expression::ArrowFunctionBlock {
+        children: [params_id, return_id],
+    }));
+
+    let mut applier = egg::RecExpr::default();
+    let params_id = applier.add(searcher[params_id].clone());
+    let expr_id = applier.add(searcher[expr_id].clone());
+    applier.add(ENodeOrVar::ENode(Expression::ArrowFunctionExpr {
+        children: [params_id, expr_id],
+    }));
+
+    Rewrite::new(
+        egg::Symbol::from("redundant_arrow_block"),
+        egg::Pattern::new(searcher),
+        egg::Pattern::new(applier),
+    )
+    .unwrap()
+}
+
+// Rewrite a redundant IIFE
+//
+//      (() => x)()
+//      👉 x
+//
+fn rewrite_redundant_iife() -> Rewrite {
+    let expr_var = Var::from_str("?expr").unwrap();
+
+    let mut searcher = egg::RecExpr::default();
+    let expr_id = searcher.add(ENodeOrVar::Var(expr_var));
+    let arrow_id = searcher.add(ENodeOrVar::ENode(Expression::ArrowFunctionExpr0 {
+        children: [expr_id],
+    }));
+    searcher.add(ENodeOrVar::ENode(Expression::Call {
+        children: vec![arrow_id],
+    }));
+
+    let mut applier = egg::RecExpr::default();
+    applier.add(searcher[expr_id].clone());
+
+    Rewrite::new(
+        egg::Symbol::from("redundant_iife"),
+        egg::Pattern::new(searcher),
+        egg::Pattern::new(applier),
+    )
+    .unwrap()
+}
+
 #[cfg(test)]
 mod tests {
     use crate::optimize::test_macros::assert_optimized;
@@ -328,6 +425,10 @@ mod tests {
         assert_optimized!("[if true then 1 else 2, if false then 3 else 2]", "[1,2]");
         assert_optimized!("if true then true else false", "true");
         assert_optimized!("(x: Bool) -> if x then true else false", "(x) => x");
+        assert_optimized!(
+            "(cond, fn) -> (if cond then fn else fn)()",
+            "(cond,fn) => (cond?fn:fn)()"
+        );
     }
 
     #[test]
@@ -343,8 +444,19 @@ mod tests {
     }
 
     #[test]
+    fn it_rewrites_effects() {
+        assert_optimized!("do { return unit }", "() => undefined");
+        assert_optimized!("do { return 5 }", "() => 5");
+    }
+
+    #[test]
     fn it_removes_redundant_return_unit() {
         assert_optimized!("(x) -> do { return unit }", "(x) => () => {return;}");
+    }
+
+    #[test]
+    fn it_removes_redundant_iifes() {
+        assert_optimized!("(() -> 5)()", "5");
     }
 
     #[test]
