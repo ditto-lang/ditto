@@ -1,6 +1,6 @@
 #![allow(dead_code)] // XXX
 use crate::ast;
-use egg::Id;
+use egg::{Id, Language};
 
 mod rewrites;
 use rewrites::{rewrites, Rewrite};
@@ -14,6 +14,24 @@ pub fn optimize_expression(ast: ast::Expression) -> BlockOrExpression {
     optimize_expression_with(ast, &rewrites())
 }
 
+struct JavaScriptCostFn;
+impl egg::CostFunction<Expression> for JavaScriptCostFn {
+    type Cost = f64;
+    fn cost<C>(&mut self, expr: &Expression, mut costs: C) -> Self::Cost
+    where
+        C: FnMut(Id) -> Self::Cost,
+    {
+        let expr_cost = match expr {
+            // Assigning a greater cost to call expressions should help remove IIFEs
+            Expression::Call { .. } => 3.0,
+            _ => 1.0,
+        };
+        // This otherwise looks like the egg::AstSize cost function
+        // https://docs.rs/egg/0.8.1/src/egg/extract.rs.html#157
+        expr.fold(expr_cost, |sum, id| sum + costs(id))
+    }
+}
+
 pub(crate) fn optimize_expression_with(
     ast: ast::Expression,
     rewrites: &[Rewrite],
@@ -22,7 +40,7 @@ pub(crate) fn optimize_expression_with(
     let mut rec_expr = RecExpr::default();
     let _id = build_rec_expr(&ast, &mut rec_expr);
     let runner = Runner::default().with_expr(&rec_expr).run(rewrites);
-    let extractor = egg::Extractor::new(&runner.egraph, egg::AstDepth);
+    let extractor = egg::Extractor::new(&runner.egraph, JavaScriptCostFn);
     let (_cost, rec_expr) = extractor.find_best(runner.roots[0]);
     let best_id = Id::from(rec_expr.as_ref().len() - 1);
     let best_expr = &rec_expr[best_id];

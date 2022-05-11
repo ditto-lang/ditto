@@ -1,3 +1,6 @@
+const A = ["A"];
+const B = ["B"];
+const C = ["C"];
 function Just($0) {
   return ["Just", $0];
 }
@@ -5,6 +8,18 @@ function ManyFields($0, $1, $2, $3) {
   return ["ManyFields", $0, $1, $2, $3];
 }
 const Nothing = ["Nothing"];
+function to_string(abc) {
+  if (abc[0] === "A") {
+    return "A";
+  }
+  if (abc[0] === "B") {
+    return "C";
+  }
+  if (abc[0] === "C") {
+    return "C";
+  }
+  throw new Error("Pattern match error");
+}
 function effect_arms(maybe) {
   if (maybe[0] === "Just") {
     const a = maybe[1];
@@ -20,22 +35,20 @@ function very_function_arms(maybe) {
     const a = maybe[1];
     return b => c => d => [a, b, c];
   }
-  return maybe[0] === "Nothing"
-    ? b => c => d => [1, b, c]
-    : (() => {
-        throw new Error("Pattern match error");
-      })();
+  if (maybe[0] === "Nothing") {
+    return b => c => d => [1, b, c];
+  }
+  throw new Error("Pattern match error");
 }
 function function_arms(maybe) {
   if (maybe[0] === "Just") {
     const a = maybe[1];
     return (b, c) => [a, b, c];
   }
-  return maybe[0] === "Nothing"
-    ? (b, c) => [1, b, c]
-    : (() => {
-        throw new Error("Pattern match error");
-      })();
+  if (maybe[0] === "Nothing") {
+    return (b, c) => [1, b, c];
+  }
+  throw new Error("Pattern match error");
 }
 function is_just(maybe) {
   if (maybe[0] === "Just") {
@@ -73,6 +86,9 @@ function with_default(maybe, $default) {
   throw new Error("Pattern match error");
 }
 export {
+  A,
+  B,
+  C,
   Just,
   ManyFields,
   Nothing,
@@ -81,6 +97,7 @@ export {
   is_just,
   many_fields_to_array,
   mk_five,
+  to_string,
   very_function_arms,
   with_default,
 };
