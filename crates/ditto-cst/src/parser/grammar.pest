@@ -150,6 +150,7 @@ expression_1 = _
 
 expression_0 = _ 
   { expression_parens 
+  | expression_record
   | expression_constructor 
   | expression_true
   | expression_false
@@ -166,6 +167,10 @@ expression_0 = _
 expression_right_pipe = { expression_1 ~ right_pizza ~ expression_1 ~ (right_pizza ~ expression_1)* }
 
 expression_parens = { open_paren ~ expression ~ close_paren }
+
+expression_record = { open_brace ~ (expression_record_field ~ (comma ~ expression_record_field)* ~ comma?)?  ~ close_brace }
+
+expression_record_field = { name ~ equals ~ expression }
 
 // No left recursion yet :(
 // https://github.com/pest-parser/pest/pull/533

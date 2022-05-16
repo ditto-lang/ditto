@@ -1,10 +1,11 @@
 use super::{parse_rule, Result, Rule};
 use crate::{
-    BinOp, BracketsList, CloseBrace, Colon, DoKeyword, Effect, ElseKeyword, Expression,
-    FalseKeyword, FunctionParameter, IfKeyword, LeftArrow, MatchArm, MatchKeyword, Name, OpenBrace,
-    Parens, ParensList, ParensList1, Pattern, Pipe, QualifiedName, QualifiedProperName,
-    ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon, StringToken, ThenKeyword,
-    TrueKeyword, Type, TypeAnnotation, UnitKeyword, UnusedName, WithKeyword,
+    BinOp, BracesList, BracketsList, CloseBrace, Colon, DoKeyword, Effect, ElseKeyword, Equals,
+    Expression, FalseKeyword, FunctionParameter, IfKeyword, LeftArrow, MatchArm, MatchKeyword,
+    Name, OpenBrace, Parens, ParensList, ParensList1, Pattern, Pipe, QualifiedName,
+    QualifiedProperName, RecordField, ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon,
+    StringToken, ThenKeyword, TrueKeyword, Type, TypeAnnotation, UnitKeyword, UnusedName,
+    WithKeyword,
 };
 use pest::iterators::Pair;
 
@@ -178,6 +179,20 @@ impl Expression {
                 }
                 expression
             }
+            Rule::expression_record => {
+                let fields = BracesList::list_from_pair(pair, |field_pair| {
+                    let mut inner = field_pair.into_inner();
+                    let label = Name::from_pair(inner.next().unwrap());
+                    let equals = Equals::from_pair(inner.next().unwrap());
+                    let value = Box::new(Self::from_pair(inner.next().unwrap()));
+                    RecordField {
+                        label,
+                        equals,
+                        value,
+                    }
+                });
+                Self::Record(fields)
+            }
             other => unreachable!("{:#?} {:#?}", other, pair.into_inner()),
         }
     }
@@ -295,7 +310,7 @@ impl TypeAnnotation {
 #[cfg(test)]
 mod tests {
     use super::test_macros::*;
-    use crate::{BinOp, Brackets, CommaSep1, Expression, Parens, StringToken};
+    use crate::{BinOp, BracesList, Brackets, CommaSep1, Expression, Parens, StringToken};
 
     #[test]
     fn it_parses_constructors() {
@@ -724,6 +739,19 @@ mod tests {
                 }),
                 ..
             }
+        );
+    }
+
+    #[test]
+    fn it_parses_records() {
+        assert_parses!("{}", Expression::Record(BracesList { value: None, .. }));
+        assert_parses!(
+            "{ foo = 2 }",
+            Expression::Record(BracesList { value: Some(_), .. })
+        );
+        assert_parses!(
+            "{ foo = 2, bar = true, }",
+            Expression::Record(BracesList { value: Some(_), .. })
         );
     }
 }

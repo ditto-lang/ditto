@@ -1,7 +1,7 @@
 use super::Rule;
 use crate::{
-    BracketsList, CloseBracket, CloseParen, Comma, CommaSep1, OpenBracket, OpenParen, Parens,
-    ParensList, ParensList1,
+    BracesList, BracketsList, CloseBrace, CloseBracket, CloseParen, Comma, CommaSep1, OpenBrace,
+    OpenBracket, OpenParen, Parens, ParensList, ParensList1,
 };
 use itertools::{EitherOrBoth, Itertools};
 use pest::iterators::Pair;
@@ -94,6 +94,33 @@ impl<T> BracketsList<T> {
                     open_bracket,
                     value: Some(value),
                     close_bracket,
+                }
+            }
+        }
+    }
+}
+
+impl<T> BracesList<T> {
+    pub(super) fn list_from_pair(
+        pair: Pair<Rule>,
+        element_from_pair: impl Fn(Pair<Rule>) -> T,
+    ) -> Self {
+        let mut inner = pair.into_inner();
+        let open_brace = OpenBrace::from_pair(inner.next().unwrap());
+        let mut rest = inner.collect::<Vec<_>>();
+        let close_brace = CloseBrace::from_pair(rest.pop().unwrap());
+        match rest.split_first() {
+            None => Self {
+                open_brace,
+                value: None,
+                close_brace,
+            },
+            Some((head, tail)) => {
+                let value = CommaSep1::from_pairs(head, tail, element_from_pair);
+                Self {
+                    open_brace,
+                    value: Some(value),
+                    close_brace,
                 }
             }
         }
