@@ -1,5 +1,5 @@
 use crate::{
-    BracesList, BracketsList, CloseBrace, Colon, DoKeyword, ElseKeyword, Equals, FalseKeyword,
+    BracesList, BracketsList, CloseBrace, Colon, DoKeyword, Dot, ElseKeyword, Equals, FalseKeyword,
     IfKeyword, LeftArrow, MatchKeyword, Name, OpenBrace, Parens, ParensList, ParensList1, Pipe,
     QualifiedName, QualifiedProperName, ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon,
     StringToken, ThenKeyword, TrueKeyword, Type, UnitKeyword, UnusedName, WithKeyword,
@@ -135,6 +135,15 @@ pub enum Expression {
         operator: BinOp,
         /// The right-hand side of the operator.
         rhs: Box<Self>,
+    },
+    /// `foo.bar`
+    RecordAccess {
+        /// The record expression being accesses.
+        target: Box<Self>,
+        /// `.`
+        dot: Dot,
+        /// Label of the field being accessed.
+        label: Name,
     },
 }
 

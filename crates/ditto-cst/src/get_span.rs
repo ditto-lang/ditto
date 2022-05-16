@@ -120,6 +120,7 @@ impl Expression {
             Self::False(false_keyword) => false_keyword.0.get_span(),
             Self::Unit(unit_keyword) => unit_keyword.0.get_span(),
             Self::BinOp { lhs, rhs, .. } => lhs.get_span().merge(&rhs.get_span()),
+            Self::RecordAccess { target, label, .. } => target.get_span().merge(&label.get_span()),
         }
     }
 }

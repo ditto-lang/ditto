@@ -135,11 +135,16 @@ expression = _
   | expression_match
   | expression_effect
   | expression_if
+  | expression_3
+  }
+
+expression_3 = _
+  { expression_right_pipe
   | expression_2
   }
 
 expression_2 = _ 
-  { expression_right_pipe
+  { expression_record_access
   | expression_1
   }
 
@@ -155,7 +160,7 @@ expression_0 = _
   | expression_true
   | expression_false
   | expression_unit
-  // It's important that keyword expressions come before variable
+  // It's important that keyword expressions come before `expression_variable`
   | expression_variable 
   | expression_array
   | expression_string
@@ -163,20 +168,26 @@ expression_0 = _
   | expression_integer
   }
 
-// Left-associative (so needs some left recursion hacking)
-expression_right_pipe = { expression_1 ~ right_pizza ~ expression_1 ~ (right_pizza ~ expression_1)* }
+// LEFT-ASSOCIATIVE
+// https://github.com/pest-parser/pest/pull/533
+
+expression_right_pipe = { expression_2 ~ right_pizza ~ expression_2 ~ (right_pizza ~ expression_2)* }
+
+expression_record_access = { expression_1 ~ expression_record_access_accessor+ }
+
+expression_record_access_accessor = { dot ~ name ~ expression_call_arguments? }
+
+expression_call = { expression_0 ~ expression_call_arguments+   }
+
+expression_call_arguments = { open_paren ~ (expression ~ (comma ~ expression)* ~ comma?)?  ~ close_paren }
+
+// END LEFT-ASSOCIATIVE THINGS
 
 expression_parens = { open_paren ~ expression ~ close_paren }
 
 expression_record = { open_brace ~ (expression_record_field ~ (comma ~ expression_record_field)* ~ comma?)?  ~ close_brace }
 
 expression_record_field = { name ~ equals ~ expression }
-
-// No left recursion yet :(
-// https://github.com/pest-parser/pest/pull/533
-expression_call = { expression_0 ~ expression_call_arguments+   }
-
-expression_call_arguments = { open_paren ~ (expression ~ (comma ~ expression)* ~ comma?)?  ~ close_paren }
 
 expression_match = { match_keyword ~ expression ~ with_keyword ~ expression_match_arm+ }
 
