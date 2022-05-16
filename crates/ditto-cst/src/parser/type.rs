@@ -1,6 +1,7 @@
 use super::{parse_rule, Result, Rule};
 use crate::{
-    Name, Parens, ParensList, ParensList1, QualifiedProperName, RightArrow, Type, TypeCallFunction,
+    BracesList, Colon, Name, Parens, ParensList, ParensList1, QualifiedProperName, RecordTypeField,
+    RightArrow, Type, TypeCallFunction,
 };
 use pest::iterators::Pair;
 
@@ -43,6 +44,21 @@ impl Type {
                     right_arrow,
                     return_type,
                 }
+            }
+
+            Rule::type_record => {
+                let fields = BracesList::list_from_pair(pair, |field_pair| {
+                    let mut inner = field_pair.into_inner();
+                    let label = Name::from_pair(inner.next().unwrap());
+                    let colon = Colon::from_pair(inner.next().unwrap());
+                    let value = Box::new(Self::from_pair(inner.next().unwrap()));
+                    RecordTypeField {
+                        label,
+                        colon,
+                        value,
+                    }
+                });
+                Self::Record(fields)
             }
             other => panic!("unexpected rule: {:#?} {:#?}", other, pair.into_inner()),
         }
@@ -141,6 +157,14 @@ mod tests {
                 ..
             })
         );
+    }
+
+    #[test]
+    fn it_parses_records() {
+        assert_parses!("{}", Type::Record(braces) if braces.value.is_none());
+        assert_parses!("{ foo: Unit }", Type::Record(_));
+        assert_parses!("{ foo: Maybe(a), bar: B.Bool, }", Type::Record(_));
+        assert_parses!("{ a: { b: { c: Int, d: {} } } }", Type::Record(_));
     }
 }
 

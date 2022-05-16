@@ -147,6 +147,7 @@ impl Type {
                 .0
                 .get_span()
                 .merge(&return_type.get_span()),
+            Self::Record(braces) => braces.get_span(),
         }
     }
 }
