@@ -102,7 +102,8 @@ type_ = _
 
 type1 = _
   { type_parens
-  | type_record
+  | type_record_closed
+  | type_record_open
   | type_call
   | type_variable  
   | type_constructor
@@ -112,7 +113,9 @@ type_parens = { open_paren ~ type_ ~ close_paren }
 
 type_variable = { name }
 
-type_record = { open_brace ~ (type_record_field ~ (comma ~ type_record_field)* ~ comma?)?  ~ close_brace }
+type_record_closed = { open_brace ~ (type_record_field ~ (comma ~ type_record_field)* ~ comma?)?  ~ close_brace }
+
+type_record_open = { open_brace ~ name ~ pipe ~ type_record_field ~ (comma ~ type_record_field)* ~ comma?  ~ close_brace }
 
 type_record_field = { name ~ colon ~ type_ }
 

@@ -1,5 +1,6 @@
 use crate::{
-    BracesList, Colon, Name, Parens, ParensList, ParensList1, QualifiedProperName, RightArrow,
+    Braces, BracesList, Colon, CommaSep1, Name, Parens, ParensList, ParensList1, Pipe,
+    QualifiedProperName, RightArrow,
 };
 
 /// Syntax representation of expression types.
@@ -43,7 +44,9 @@ pub enum Type {
     /// A named type variable.
     Variable(Name),
     /// `{ foo : Int, bar: Bool }`
-    Record(BracesList<RecordTypeField>),
+    RecordClosed(BracesList<RecordTypeField>),
+    /// `{ r | foo : Int, bar: Bool }`
+    RecordOpen(Braces<(Name, Pipe, CommaSep1<RecordTypeField>)>),
 }
 
 /// A labelled type within a record.
