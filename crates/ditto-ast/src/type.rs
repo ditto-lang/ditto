@@ -61,7 +61,7 @@ pub enum Type {
     /// { a: Int, b: Float, c: String }
     /// ```
     RecordClosed {
-        /// Can be either `Kind::Type` or `Kind::Row`.
+        /// Should be either `Kind::Type` or `Kind::Row`.
         kind: Kind,
         /// The labelled types.
         row: Row,
@@ -72,7 +72,7 @@ pub enum Type {
     /// { var | a: Int, b: Float, c: String }
     /// ```
     RecordOpen {
-        /// Can be either `Kind::Type` or `Kind::Row`.
+        /// Should be either `Kind::Type` or `Kind::Row`.
         kind: Kind,
         /// The row type variable.
         var: usize, // NOTE this should be `Kind::Row`.

@@ -21,10 +21,11 @@ use crate::{
     supply::Supply,
 };
 use ditto_ast::{
-    unqualified, Argument, Effect, Expression, FunctionBinder, Name, Pattern, PrimType,
-    QualifiedName, Span, Type,
+    unqualified, Argument, Effect, Expression, FunctionBinder, Kind, Name, Pattern, PrimType,
+    QualifiedName, Row, Span, Type,
 };
 use ditto_cst as cst;
+use indexmap::IndexMap;
 use std::collections::{HashMap, HashSet};
 
 #[cfg(test)]
@@ -320,6 +321,36 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
                 effect,
             })
         }
+        pre::Expression::Record { span, fields } => {
+            let fields = fields
+                .into_iter()
+                .map(|(label, expr)| infer(env, state, expr).map(|expr| (label, expr)))
+                .collect::<Result<_>>()?;
+            Ok(Expression::Record { span, fields })
+        }
+        pre::Expression::RecordAccess {
+            span,
+            box target,
+            label,
+        } => {
+            let var = state.supply.fresh();
+            let field_type = state.supply.fresh_type();
+            let mut row = Row::new();
+            row.insert(label.clone(), field_type.clone());
+            let expected = Type::RecordOpen {
+                kind: Kind::Type,
+                var,
+                source_name: None,
+                row,
+            };
+            let target = check(env, state, expected, target)?;
+            Ok(Expression::RecordAccess {
+                span,
+                field_type,
+                target: Box::new(target),
+                label,
+            })
+        }
     }
 }
 
@@ -413,6 +444,22 @@ pub fn check(
                 effect,
             })
         }
+        (
+            pre::Expression::Record {
+                span,
+                fields: pre_fields,
+            },
+            Type::RecordClosed { row, .. },
+        ) if pre_fields.len() == row.len()
+            && pre_fields.iter().all(|(label, _)| row.contains_key(label)) =>
+        {
+            let mut fields = IndexMap::new();
+            for (label, pre_expr) in pre_fields {
+                let expr = check(env, state, row.get(&label).cloned().unwrap(), pre_expr)?;
+                fields.insert(label, expr);
+            }
+            Ok(Expression::Record { span, fields })
+        }
         (expr, expected) => {
             let expression = infer(env, state, expr)?;
             unify(
@@ -438,7 +485,21 @@ fn infer_or_check_call(
 ) -> Result<Expression> {
     let function = infer(env, state, function)?;
     let function_span = function.get_span();
-    let function_type = state.substitution.apply(function.get_type());
+    let mut function_type = state.substitution.apply(function.get_type());
+
+    if matches!(function, Expression::Function { .. }) {
+        // This handles an edge case where we immediately invoke a function expression:
+        //
+        //   (a: a) -> ((b : b) -> b)(a)
+        //              ^^^^^^^^^^^^
+        //              Unless we anonymize this function type
+        //              it will fail to unify because `a /= b`
+        //
+        // Note this is only necessary when _immediately invoking_ a function expression
+        // as a function bound to an identifier will be generalized and instantiated,
+        // which drops the type variable name.
+        function_type = function_type.anonymize()
+    }
 
     match function_type {
         Type::Function {
@@ -903,7 +964,7 @@ fn with_extended_env<T>(
     Ok((result, unused_spans))
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Constraint {
     expected: Type,
     actual: Type,
@@ -928,7 +989,13 @@ fn unify_else(
     constraint: Constraint,
     err: Option<&TypeError>,
 ) -> Result<()> {
-    match state.substitution.apply_constraint(constraint) {
+    let constraint = state.substitution.apply_constraint(constraint);
+    let err = err.cloned().unwrap_or(TypeError::TypesNotEqual {
+        span,
+        expected: constraint.expected.clone(),
+        actual: constraint.actual.clone(),
+    });
+    match constraint {
         // An explicitly named type variable (named in the source) will only unify
         // with another type variable with the same name, or an anonymous type
         // variable.
@@ -958,8 +1025,8 @@ fn unify_else(
                     ..
                 },
             actual: t,
-        } => bind(state, span, var, t),
-        Constraint {
+        }
+        | Constraint {
             expected: t,
             actual:
                 Type::Variable {
@@ -999,18 +1066,6 @@ fn unify_else(
                     arguments: actual_arguments,
                 },
         } => {
-            let err = TypeError::TypesNotEqual {
-                span,
-                expected: Type::Call {
-                    function: Box::new(expected_function.clone()),
-                    arguments: expected_arguments.clone(),
-                },
-                actual: Type::Call {
-                    function: Box::new(actual_function.clone()),
-                    arguments: actual_arguments.clone(),
-                },
-            };
-
             unify_else(
                 state,
                 span,
@@ -1057,18 +1112,6 @@ fn unify_else(
                     return_type: box actual_return_type,
                 },
         } => {
-            let err = TypeError::TypesNotEqual {
-                span,
-                expected: Type::Function {
-                    parameters: expected_parameters.clone(),
-                    return_type: Box::new(expected_return_type.clone()),
-                },
-                actual: Type::Function {
-                    parameters: actual_parameters.clone(),
-                    return_type: Box::new(actual_return_type.clone()),
-                },
-            };
-
             let expected_parameters_len = expected_parameters.len();
             let actual_parameters_len = actual_parameters.len();
             if expected_parameters_len != actual_parameters_len {
@@ -1103,12 +1146,258 @@ fn unify_else(
             Ok(())
         }
 
+        // Records
+        Constraint {
+            expected:
+                Type::RecordClosed {
+                    kind: _,
+                    row: expected_row,
+                },
+            actual:
+                Type::RecordClosed {
+                    kind: _,
+                    row: mut actual_row,
+                },
+        } => {
+            for (label, expected_type) in expected_row {
+                if let Some(actual_type) = actual_row.remove(&label) {
+                    let constraint = Constraint {
+                        expected: expected_type,
+                        actual: actual_type,
+                    };
+                    unify_else(state, span, constraint, Some(&err))?;
+                }
+            }
+            if !actual_row.is_empty() {
+                // If `actual_row` still has entries then these entries
+                // aren't in both record types, so fail.
+                return Err(err);
+            }
+            Ok(())
+        }
+        Constraint {
+            expected:
+                Type::RecordClosed {
+                    kind: _,
+                    row: closed_row,
+                },
+            actual:
+                Type::RecordOpen {
+                    kind: _,
+                    var,
+                    row: mut open_row,
+                    source_name: _,
+                },
+        } => {
+            for (label, expected_type) in closed_row.iter() {
+                if let Some(actual_type) = open_row.remove(label) {
+                    let constraint = Constraint {
+                        expected: expected_type.clone(),
+                        actual: actual_type,
+                    };
+                    unify_else(state, span, constraint, Some(&err))?;
+                }
+            }
+            if !open_row.is_empty() {
+                // If `open_row` still has entries then these entries
+                // aren't in both record types, so fail.
+                return Err(err);
+            }
+            let bound_type = Type::RecordClosed {
+                kind: Kind::Type,
+                row: closed_row,
+            };
+            bind(state, span, var, bound_type)?;
+            Ok(())
+        }
+        Constraint {
+            expected:
+                Type::RecordOpen {
+                    kind: _,
+                    var,
+                    row: mut open_row,
+                    // only unify an open record with a closed record if the
+                    // open record has been inferred (i.e. not from a source type annotation)
+                    source_name: None,
+                },
+            actual:
+                Type::RecordClosed {
+                    kind: _,
+                    row: closed_row,
+                },
+        } => {
+            for (label, actual_type) in closed_row.iter() {
+                if let Some(expected_type) = open_row.remove(label) {
+                    let constraint = Constraint {
+                        expected: expected_type,
+                        actual: actual_type.clone(),
+                    };
+                    unify_else(state, span, constraint, Some(&err))?;
+                }
+            }
+            if !open_row.is_empty() {
+                // If `open_row` still has entries then these entries
+                // aren't in both record types, so fail.
+                return Err(err);
+            }
+            let bound_type = Type::RecordClosed {
+                kind: Kind::Type,
+                row: closed_row,
+            };
+            bind(state, span, var, bound_type)?;
+            Ok(())
+        }
+        Constraint {
+            expected:
+                Type::RecordOpen {
+                    kind: _,
+                    var: _,
+                    row: expected_row,
+                    source_name: Some(expected_source_name),
+                },
+            actual:
+                Type::RecordOpen {
+                    kind: _,
+                    var: _,
+                    row: mut actual_row,
+                    source_name: Some(actual_source_name),
+                },
+        } if expected_source_name == actual_source_name => {
+            for (label, expected_type) in expected_row.iter() {
+                if let Some(actual_type) = actual_row.remove(label) {
+                    let constraint = Constraint {
+                        expected: expected_type.clone(),
+                        actual: actual_type,
+                    };
+                    unify_else(state, span, constraint, Some(&err))?;
+                }
+            }
+            if !actual_row.is_empty() {
+                // If `actual_row` still has entries then these entries
+                // aren't in both record types, so fail.
+                return Err(err);
+            }
+            Ok(())
+        }
+        Constraint {
+            expected:
+                Type::RecordOpen {
+                    kind: _,
+                    var: named_var,
+                    row: named_row,
+                    source_name: source_name @ Some(_),
+                },
+            actual:
+                Type::RecordOpen {
+                    kind: _,
+                    var: unnamed_var,
+                    row: mut unnamed_row,
+                    source_name: None,
+                },
+        } => {
+            for (label, expected_type) in named_row.iter() {
+                if let Some(actual_type) = unnamed_row.remove(label) {
+                    let constraint = Constraint {
+                        expected: expected_type.clone(),
+                        actual: actual_type,
+                    };
+                    unify_else(state, span, constraint, Some(&err))?;
+                }
+            }
+            if !unnamed_row.is_empty() {
+                return Err(err);
+            }
+            let var = state.supply.fresh();
+            let bound_type = Type::RecordOpen {
+                kind: Kind::Type,
+                var,
+                row: named_row,
+                source_name,
+            };
+            bind(state, span, unnamed_var, bound_type.clone())?;
+            bind(state, span, named_var, bound_type)?;
+            Ok(())
+        }
+        Constraint {
+            expected:
+                Type::RecordOpen {
+                    kind: _,
+                    var: unnamed_var,
+                    row: mut unnamed_row,
+                    source_name: None,
+                },
+            actual:
+                Type::RecordOpen {
+                    kind: _,
+                    var: named_var,
+                    row: named_row,
+                    source_name: source_name @ Some(_),
+                },
+        } => {
+            for (label, actual_type) in named_row.iter() {
+                if let Some(expected_type) = unnamed_row.remove(label) {
+                    let constraint = Constraint {
+                        expected: expected_type,
+                        actual: actual_type.clone(),
+                    };
+                    unify_else(state, span, constraint, Some(&err))?;
+                }
+            }
+            if !unnamed_row.is_empty() {
+                return Err(err);
+            }
+            let var = state.supply.fresh();
+            let bound_type = Type::RecordOpen {
+                kind: Kind::Type,
+                var,
+                row: named_row,
+                source_name,
+            };
+            bind(state, span, unnamed_var, bound_type.clone())?;
+            bind(state, span, named_var, bound_type)?;
+            Ok(())
+        }
+        Constraint {
+            expected:
+                Type::RecordOpen {
+                    kind: _,
+                    var: expected_var,
+                    row: expected_row,
+                    source_name: None,
+                },
+            actual:
+                Type::RecordOpen {
+                    kind: _,
+                    var: actual_var,
+                    row: actual_row,
+                    source_name: None,
+                },
+        } => {
+            let mut row = actual_row.clone();
+            for (expected_label, expected_type) in expected_row.iter() {
+                if let Some(actual_type) = actual_row.get(expected_label) {
+                    let constraint = Constraint {
+                        expected: expected_type.clone(),
+                        actual: actual_type.clone(),
+                    };
+                    unify_else(state, span, constraint, Some(&err))?;
+                }
+                row.insert(expected_label.clone(), expected_type.clone());
+            }
+            let var = state.supply.fresh();
+            let bound_type = Type::RecordOpen {
+                kind: Kind::Type,
+                var,
+                row,
+                source_name: None,
+            };
+            bind(state, span, expected_var, bound_type.clone())?;
+            bind(state, span, actual_var, bound_type)?;
+            Ok(())
+        }
+
         // BANG
-        Constraint { expected, actual } => Err(err.cloned().unwrap_or(TypeError::TypesNotEqual {
-            span,
-            expected,
-            actual,
-        })),
+        _ => Err(err),
     }
 }
 

@@ -546,5 +546,26 @@ fn requalify_type(ast_type: Type, package_name: &PackageName) -> Type {
             return_type: Box::new(requalify_type(return_type, package_name)),
         },
         Type::PrimConstructor(prim_type) => Type::PrimConstructor(prim_type),
+        Type::RecordClosed { kind, row } => Type::RecordClosed {
+            kind,
+            row: row
+                .into_iter()
+                .map(|(label, t)| (label, requalify_type(t, package_name)))
+                .collect(),
+        },
+        Type::RecordOpen {
+            kind,
+            var,
+            source_name,
+            row,
+        } => Type::RecordOpen {
+            kind,
+            var,
+            source_name,
+            row: row
+                .into_iter()
+                .map(|(label, t)| (label, requalify_type(t, package_name)))
+                .collect(),
+        },
     }
 }

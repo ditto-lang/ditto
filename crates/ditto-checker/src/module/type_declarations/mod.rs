@@ -631,6 +631,24 @@ fn toposort_type_declarations(
                 }
             }
             Variable { .. } => {}
+            RecordClosed(braces) => {
+                if let Some(ref fields) = braces.value {
+                    fields
+                        .iter()
+                        .for_each(|cst::RecordTypeField { value, .. }| {
+                            get_connected_nodes_type_rec(value, nodes, accum);
+                        })
+                }
+            }
+            RecordOpen(braces) => {
+                braces
+                    .value
+                    .2
+                    .iter()
+                    .for_each(|cst::RecordTypeField { value, .. }| {
+                        get_connected_nodes_type_rec(value, nodes, accum);
+                    })
+            }
         };
     }
 }

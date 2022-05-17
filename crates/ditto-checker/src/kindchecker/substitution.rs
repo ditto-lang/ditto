@@ -36,6 +36,7 @@ impl Substitution {
                 },
             },
             Kind::Type => Kind::Type,
+            Kind::Row => Kind::Row,
         }
     }
     pub fn apply_type(&self, ast_type: Type) -> Type {
@@ -86,6 +87,27 @@ impl Substitution {
                 source_value,
             },
             Type::PrimConstructor(prim_type) => Type::PrimConstructor(prim_type),
+            Type::RecordClosed { kind, row } => Type::RecordClosed {
+                kind: self.apply(kind),
+                row: row
+                    .into_iter()
+                    .map(|(label, t)| (label, self.apply_type(t)))
+                    .collect(),
+            },
+            Type::RecordOpen {
+                kind,
+                var,
+                row,
+                source_name,
+            } => Type::RecordOpen {
+                kind: self.apply(kind),
+                var,
+                source_name,
+                row: row
+                    .into_iter()
+                    .map(|(label, t)| (label, self.apply_type(t)))
+                    .collect(),
+            },
         }
     }
     pub fn apply_constructor(&self, constructor: ModuleConstructor) -> ModuleConstructor {

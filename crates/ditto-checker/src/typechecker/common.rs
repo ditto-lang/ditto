@@ -29,11 +29,21 @@ fn type_variables_rec(ast_type: &Type, accum: &mut HashSet<usize>) {
             });
             type_variables_rec(return_type, accum);
         }
-        Constructor { .. } => {}
-        PrimConstructor { .. } => {}
         Variable { var, .. } => {
             accum.insert(*var);
         }
+        RecordOpen { var, row, .. } => {
+            accum.insert(*var);
+            for (_label, t) in row {
+                type_variables_rec(t, accum);
+            }
+        }
+        RecordClosed { row, .. } => {
+            for (_label, t) in row {
+                type_variables_rec(t, accum);
+            }
+        }
+        Constructor { .. } | PrimConstructor { .. } => {}
     }
 }
 
@@ -76,6 +86,26 @@ fn cst_type_variables_rec(t: &cst::Type, accum: &mut HashSet<Name>) {
         Constructor { .. } => {}
         Variable(var) => {
             accum.insert(Name::from(var.clone()));
+        }
+        RecordClosed(braces) => {
+            if let Some(ref fields) = braces.value {
+                fields
+                    .iter()
+                    .for_each(|cst::RecordTypeField { value, .. }| {
+                        cst_type_variables_rec(value, accum);
+                    });
+            }
+        }
+        RecordOpen(cst::Braces {
+            value: (var, _pipe, fields),
+            ..
+        }) => {
+            accum.insert(Name::from(var.clone()));
+            fields
+                .iter()
+                .for_each(|cst::RecordTypeField { value, .. }| {
+                    cst_type_variables_rec(value, accum);
+                });
         }
     }
 }

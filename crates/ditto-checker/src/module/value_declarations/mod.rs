@@ -482,6 +482,16 @@ fn toposort_value_declarations(
                     })
                 }
             }
+            Expression::Record(fields) => {
+                if let Some(ref fields) = fields.value {
+                    fields.iter().for_each(|cst::RecordField { value, .. }| {
+                        get_connected_nodes_rec(value, nodes, accum);
+                    })
+                }
+            }
+            Expression::RecordAccess { target, .. } => {
+                get_connected_nodes_rec(target, nodes, accum);
+            }
             Expression::Parens(parens) => {
                 get_connected_nodes_rec(&parens.value, nodes, accum);
             }

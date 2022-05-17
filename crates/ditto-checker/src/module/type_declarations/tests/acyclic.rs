@@ -1,5 +1,5 @@
 use super::macros::*;
-use crate::{module::tests::macros::assert_module_ok, TypeError::*};
+use crate::TypeError::*;
 
 #[test]
 fn it_kindchecks_as_expected() {
@@ -51,16 +51,18 @@ fn it_kindchecks_as_expected() {
     assert_type_declaration!("type Unknown", ("Unknown", "Type"), []);
     assert_type_declaration!("type Unknown(a)", ("Unknown", "($1) -> Type"), []);
 
-    assert_module_ok!(
-        r#"
-        module Test exports (..);
-
-        always = (a) -> (b) -> a;
-        five: Int = always(5)(true);
-
-        always_five: (a) -> Int = always(5);
-        another_five: Int = always_five(unit);
-        "#
+    assert_type_declaration!(
+        "type Props = Props({ foo: Int })",
+        ("Props", "Type"),
+        [("Props", "({ foo: Int }) -> Props")]
+    );
+    assert_type_declaration!(
+        "type ExtensibleProps(r) = ExtensibleProps({ r | foo: Int })",
+        ("ExtensibleProps", "(Row) -> Type"),
+        [(
+            "ExtensibleProps",
+            "({ r$0 | foo: Int }) -> ExtensibleProps(r$0)"
+        )]
     );
 }
 

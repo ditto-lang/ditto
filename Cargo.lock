@@ -337,6 +337,7 @@ version = "0.0.1"
 dependencies = [
  "ditto-ast",
  "ditto-cst",
+ "indexmap",
  "lazy_static",
  "miette",
  "non-empty-vec",

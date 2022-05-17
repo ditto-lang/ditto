@@ -1,0 +1,11 @@
+
+  × kinds don't unify
+   ╭─[golden:1:1]
+ 1 │ module Test exports (..);
+ 2 │ 
+ 3 │ foo = (r : { r | foo: Unit}): r -> unit;
+   ·                               ┬
+   ·                               ╰── here
+   ╰────
+  help: expected Type
+        got Row
