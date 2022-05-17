@@ -1,10 +1,11 @@
 use crate::{FullyQualifiedProperName, Kind, Name, ProperName, QualifiedProperName};
+use indexmap::IndexMap;
 use non_empty_vec::NonEmpty;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
 /// The type of expressions.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(tag = "type", content = "data")]
 pub enum Type {
     /// A `Call` type invokes a parameterized type.
@@ -54,10 +55,39 @@ pub enum Type {
         /// Optional name for this type if one was present in the source.
         source_name: Option<Name>,
     },
+    /// A _closed_ record type.
+    ///
+    /// ```ditto
+    /// { a: Int, b: Float, c: String }
+    /// ```
+    RecordClosed {
+        /// Can be either `Kind::Type` or `Kind::Row`.
+        kind: Kind,
+        /// The labelled types.
+        row: Row,
+    },
+    /// An _open_ record type.
+    ///
+    /// ```ditto
+    /// { var | a: Int, b: Float, c: String }
+    /// ```
+    RecordOpen {
+        /// Can be either `Kind::Type` or `Kind::Row`.
+        kind: Kind,
+        /// The row type variable.
+        var: usize, // NOTE this should be `Kind::Row`.
+        /// Optional name for the type `var`.
+        source_name: Option<Name>,
+        /// The labelled types.
+        row: Row,
+    },
 }
 
+/// Labelled types.
+pub type Row = IndexMap<Name, Type>;
+
 /// Ditto's primitive types.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum PrimType {
     /// `do { return 5 } : Effect(Int)`
     Effect,
@@ -122,8 +152,62 @@ impl Type {
                 constructor_kind, ..
             } => constructor_kind.clone(),
             Self::PrimConstructor(prim) => prim.get_kind(),
-            Self::Call { .. } => Kind::Type, // we don't have curried types!
+            Self::Call { .. } => Kind::Type, // NOTE: we don't have curried types!
+            Self::RecordClosed { kind, .. } | Self::RecordOpen { kind, .. } => kind.clone(),
             Self::Function { .. } => Kind::Type,
+        }
+    }
+
+    /// Removes any type variable names.
+    pub fn anonymize(&self) -> Self {
+        match self {
+            Self::Variable {
+                variable_kind,
+                var,
+                source_name: _,
+            } => Self::Variable {
+                variable_kind: variable_kind.clone(),
+                var: *var,
+                source_name: None,
+            },
+            Self::RecordOpen {
+                kind,
+                var,
+                source_name: _,
+                row,
+            } => Self::RecordOpen {
+                kind: kind.clone(),
+                var: *var,
+                source_name: None,
+                row: row
+                    .iter()
+                    .map(|(label, t)| (label.clone(), t.anonymize()))
+                    .collect(),
+            },
+            Self::RecordClosed { kind, row } => Self::RecordClosed {
+                kind: kind.clone(),
+                row: row
+                    .iter()
+                    .map(|(label, t)| (label.clone(), t.anonymize()))
+                    .collect(),
+            },
+            Self::Call {
+                function,
+                arguments,
+            } => Self::Call {
+                function: Box::new(function.anonymize()),
+                arguments: unsafe {
+                    NonEmpty::new_unchecked(arguments.iter().map(|arg| arg.anonymize()).collect())
+                },
+            },
+            Self::Function {
+                parameters,
+                return_type,
+            } => Self::Function {
+                parameters: parameters.iter().map(|param| param.anonymize()).collect(),
+                return_type: Box::new(return_type.anonymize()),
+            },
+            Self::PrimConstructor { .. } | Self::Constructor { .. } => self.clone(),
         }
     }
 
@@ -219,6 +303,49 @@ impl Type {
                 });
                 output.push_str(") -> ");
                 return_type.debug_render_rec(render_var, output);
+            }
+            Self::RecordOpen {
+                kind,
+                var,
+                source_name,
+                row,
+            } => {
+                if cfg!(debug_assertions) && *kind == Kind::Row {
+                    output.push('#');
+                }
+                output.push_str("{ ");
+                output.push_str(&render_var(*var, source_name.clone()));
+                output.push_str(" | ");
+                let row_len = row.len();
+                row.iter().enumerate().for_each(|(i, (label, t))| {
+                    output.push_str(&label.0);
+                    output.push_str(": ");
+                    t.debug_render_rec(render_var, output);
+                    if i != row_len - 1 {
+                        output.push_str(", ");
+                    }
+                });
+                output.push_str(" }");
+            }
+            Self::RecordClosed { kind, row } => {
+                if cfg!(debug_assertions) && *kind == Kind::Row {
+                    output.push('#');
+                }
+                if row.is_empty() {
+                    output.push_str("{}");
+                    return;
+                }
+                output.push_str("{ ");
+                let row_len = row.len();
+                row.iter().enumerate().for_each(|(i, (label, t))| {
+                    output.push_str(&label.0);
+                    output.push_str(": ");
+                    t.debug_render_rec(render_var, output);
+                    if i != row_len - 1 {
+                        output.push_str(", ");
+                    }
+                });
+                output.push_str(" }");
             }
         };
     }

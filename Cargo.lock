@@ -325,6 +325,7 @@ name = "ditto-ast"
 version = "0.0.1"
 dependencies = [
  "ditto-cst",
+ "indexmap",
  "non-empty-vec",
  "petgraph",
  "serde",

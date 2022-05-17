@@ -22,6 +22,8 @@ pub enum Kind {
         /// The kinds of the arguments this type expects.
         parameters: NonEmpty<Self>,
     },
+    /// A series of labelled types. Used for records.
+    Row,
 }
 
 impl Kind {
@@ -54,6 +56,7 @@ impl Kind {
                 output.push_str(") -> Type");
                 output
             }
+            Self::Row => String::from("Row"),
         }
     }
 }

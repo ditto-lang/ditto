@@ -1,7 +1,8 @@
 use crate::{
-    FullyQualifiedName, FullyQualifiedProperName, Name, PrimType, ProperName, Span, Type,
+    FullyQualifiedName, FullyQualifiedProperName, Kind, Name, PrimType, ProperName, Span, Type,
     UnusedName,
 };
+use indexmap::IndexMap;
 use non_empty_vec::NonEmpty;
 use serde::{Deserialize, Serialize};
 
@@ -179,6 +180,17 @@ pub enum Expression {
         /// 2. Storing as a string avoids float overflow and precision issues.
         value: String,
     },
+    /// `foo.bar`
+    RecordAccess {
+        /// The source span for this expression.
+        span: Span,
+        /// The type of the field being accessed.
+        field_type: Type,
+        /// The expression being accessed.
+        target: Box<Self>,
+        /// The record label being accessed.
+        label: Name,
+    },
     /// An array literal.
     Array {
         /// The source span for this expression.
@@ -187,6 +199,13 @@ pub enum Expression {
         element_type: Type,
         /// Array elements.
         elements: Vec<Self>,
+    },
+    /// A record literal.
+    Record {
+        /// The source span for this expression.
+        span: Span,
+        /// Record fields.
+        fields: IndexMap<Name, Self>,
     },
     /// `true`
     True {
@@ -238,12 +257,20 @@ impl Expression {
             Self::LocalVariable { variable_type, .. } => variable_type.clone(),
             Self::ForeignVariable { variable_type, .. } => variable_type.clone(),
             Self::ImportedVariable { variable_type, .. } => variable_type.clone(),
+            Self::RecordAccess { field_type, .. } => field_type.clone(),
             Self::String { .. } => Type::PrimConstructor(PrimType::String),
             Self::Int { .. } => Type::PrimConstructor(PrimType::Int),
             Self::Float { .. } => Type::PrimConstructor(PrimType::Float),
             Self::Array { element_type, .. } => Type::Call {
                 function: Box::new(Type::PrimConstructor(PrimType::Array)),
                 arguments: NonEmpty::new(element_type.clone()),
+            },
+            Self::Record { fields, .. } => Type::RecordClosed {
+                kind: Kind::Type,
+                row: fields
+                    .iter()
+                    .map(|(label, element)| (label.clone(), element.get_type()))
+                    .collect(),
             },
             Self::True { .. } => Type::PrimConstructor(PrimType::Bool),
             Self::False { .. } => Type::PrimConstructor(PrimType::Bool),
@@ -263,9 +290,11 @@ impl Expression {
             Self::ForeignVariable { span, .. } => *span,
             Self::ImportedVariable { span, .. } => *span,
             Self::Effect { span, .. } => *span,
+            Self::RecordAccess { span, .. } => *span,
             Self::String { span, .. } => *span,
             Self::Int { span, .. } => *span,
             Self::Float { span, .. } => *span,
+            Self::Record { span, .. } => *span,
             Self::Array { span, .. } => *span,
             Self::True { span, .. } => *span,
             Self::False { span, .. } => *span,
