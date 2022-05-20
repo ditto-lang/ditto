@@ -1,8 +1,12 @@
 use super::{
     has_comments::HasComments,
-    token::{gen_close_bracket, gen_close_paren, gen_comma, gen_open_bracket, gen_open_paren},
+    helpers::space,
+    token::{
+        gen_close_brace, gen_close_bracket, gen_close_paren, gen_comma, gen_open_brace,
+        gen_open_bracket, gen_open_paren,
+    },
 };
-use ditto_cst::{BracketsList, Comma, CommaSep1, Parens, ParensList, ParensList1};
+use ditto_cst::{BracesList, BracketsList, Comma, CommaSep1, Parens, ParensList, ParensList1};
 use dprint_core::formatting::{
     condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext, Info,
     PrintItems, Signal,
@@ -84,7 +88,7 @@ where
 
     items.extend(gen_open_paren(parens.open_paren));
     let gen_separated_values_result =
-        gen_comma_sep1_new(parens.value, gen_element, force_use_new_lines);
+        gen_comma_sep1(parens.value, gen_element, force_use_new_lines);
     let element_items = gen_separated_values_result.items;
     items.extend(element_items);
     items.extend(gen_close_paren(parens.close_paren));
@@ -102,7 +106,7 @@ where
     let mut items = PrintItems::new();
     items.extend(gen_open_bracket(brackets.open_bracket));
     if let Some(elements) = brackets.value {
-        let gen_separated_values_result = gen_comma_sep1_new(elements, gen_element, false);
+        let gen_separated_values_result = gen_comma_sep1(elements, gen_element, false);
         let element_items = gen_separated_values_result.items;
         items.extend(element_items);
     }
@@ -110,7 +114,35 @@ where
     items
 }
 
-fn gen_comma_sep1_new<T: HasComments, GenElement>(
+pub fn gen_braces_list<T, GenElement>(braces: BracesList<T>, gen_element: GenElement) -> PrintItems
+where
+    T: HasComments + Clone,
+    GenElement: FnOnce(T) -> PrintItems + Copy,
+{
+    let mut items = PrintItems::new();
+    items.extend(gen_open_brace(braces.open_brace));
+    if let Some(elements) = braces.value {
+        let gen_separated_values_result = gen_comma_sep1(elements, gen_element, false);
+
+        let is_multiple_lines = gen_separated_values_result.is_multi_line_condition_ref;
+        items.push_condition(conditions::if_false(
+            "spaceAfterOpenBrace",
+            is_multiple_lines.create_resolver(),
+            space(),
+        ));
+        let element_items = gen_separated_values_result.items;
+        items.extend(element_items);
+        items.push_condition(conditions::if_false(
+            "spaceBeforeCloseBrace",
+            is_multiple_lines.create_resolver(),
+            space(),
+        ));
+    }
+    items.extend(gen_close_brace(braces.close_brace));
+    items
+}
+
+pub fn gen_comma_sep1<T: HasComments, GenElement>(
     comma_sep1: CommaSep1<T>,
     gen_element: GenElement,
     force_use_new_lines: bool,
