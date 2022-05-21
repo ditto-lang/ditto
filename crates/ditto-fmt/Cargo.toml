@@ -9,7 +9,7 @@ doctest = false
 
 [dependencies]
 ditto-cst = { path = "../ditto-cst" }
-dprint-core = "0.54"
+dprint-core = "0.58"
 
 [dev-dependencies]
 snapshot-test = { path = "../snapshot-test" }
