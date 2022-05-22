@@ -395,6 +395,7 @@ dependencies = [
  "ditto-checker",
  "ditto-cst",
  "egg",
+ "indexmap",
  "lazy_static",
  "non-empty-vec",
  "quickcheck",
