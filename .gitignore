@@ -6,3 +6,7 @@ target
 
 # NPM
 node_modules
+
+# Local benchmarks
+control.bench
+latest.bench
