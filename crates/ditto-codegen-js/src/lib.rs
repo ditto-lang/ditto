@@ -56,10 +56,9 @@ mod tests {
             .spawn()
             .unwrap();
 
-        let child_stdin = child.stdin.as_mut().unwrap();
-        child_stdin.write_all(text.as_bytes()).unwrap();
-        // Close stdin to finish and avoid indefinite blocking
-        drop(child_stdin);
+        let mut stdin = child.stdin.take().unwrap();
+        stdin.write_all(text.as_bytes()).unwrap();
+        drop(stdin);
 
         let output = child.wait_with_output().unwrap();
         assert!(output.status.success());

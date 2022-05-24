@@ -1,4 +1,7 @@
-use crate::{Name, Parens, ParensList, ParensList1, QualifiedProperName, RightArrow};
+use crate::{
+    Braces, BracesList, Colon, CommaSep1, Name, Parens, ParensList, ParensList1, Pipe,
+    QualifiedProperName, RightArrow,
+};
 
 /// Syntax representation of expression types.
 #[derive(Debug, Clone)]
@@ -40,6 +43,21 @@ pub enum Type {
     Constructor(QualifiedProperName),
     /// A named type variable.
     Variable(Name),
+    /// `{ foo : Int, bar: Bool }`
+    RecordClosed(BracesList<RecordTypeField>),
+    /// `{ r | foo : Int, bar: Bool }`
+    RecordOpen(Braces<(Name, Pipe, CommaSep1<RecordTypeField>)>),
+}
+
+/// A labelled type within a record.
+#[derive(Debug, Clone)]
+pub struct RecordTypeField {
+    /// The field label.
+    pub label: Name,
+    /// `:`
+    pub colon: Colon,
+    /// The type to be associated with the `label`.
+    pub value: Box<Type>,
 }
 
 /// Valid targets for a type call.

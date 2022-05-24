@@ -256,14 +256,19 @@ fn constructors_for_type(pattern_type: &Type, env_constructors: &EnvConstructors
                             ..
                         }) = get_function_return_type(&constructor_type)
                         {
-                            let type_subst: HashMap<Type, Type> = generic_arguments
+                            // NOTE using an association list because we can't
+                            // derive `Hash` for `Type`
+                            let type_subst: Vec<(Type, Type)> = generic_arguments
                                 .into_iter()
                                 .zip(specific_arguments.clone())
                                 .collect();
+
                             constructor_arguments = constructor_arguments
                                 .into_iter()
                                 .map(|arg| {
-                                    if let Some(t) = type_subst.get(&arg).cloned() {
+                                    if let Some((_, t)) =
+                                        type_subst.iter().find(|(t, _)| *t == arg).cloned()
+                                    {
                                         t
                                     } else {
                                         arg

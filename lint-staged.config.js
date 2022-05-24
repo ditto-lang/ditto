@@ -1,9 +1,11 @@
-const path = require("node:path");
+import path from "node:path";
+
 function prepareFilenames(filenames) {
   const cwd = process.cwd();
   return filenames.map(file => path.relative(cwd, file)).join(" ");
 }
-module.exports = {
+
+export default {
   "*.rs": filenames => [
     `cargo fmt -- ${prepareFilenames(filenames)}`,
     // If this fails, try running

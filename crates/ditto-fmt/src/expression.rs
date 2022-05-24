@@ -3,16 +3,17 @@ use super::{
     helpers::{group, space},
     name::{gen_name, gen_qualified_name, gen_qualified_proper_name, gen_unused_name},
     r#type::gen_type,
-    syntax::{gen_brackets_list, gen_parens, gen_parens_list, gen_parens_list1},
+    syntax::{gen_braces_list, gen_brackets_list, gen_parens, gen_parens_list, gen_parens_list1},
     token::{
-        gen_close_brace, gen_colon, gen_do_keyword, gen_else_keyword, gen_false_keyword,
-        gen_if_keyword, gen_left_arrow, gen_match_keyword, gen_open_brace, gen_pipe,
-        gen_return_keyword, gen_right_arrow, gen_right_pizza_operator, gen_semicolon,
+        gen_close_brace, gen_colon, gen_do_keyword, gen_dot, gen_else_keyword, gen_equals,
+        gen_false_keyword, gen_if_keyword, gen_left_arrow, gen_match_keyword, gen_open_brace,
+        gen_pipe, gen_return_keyword, gen_right_arrow, gen_right_pizza_operator, gen_semicolon,
         gen_string_token, gen_then_keyword, gen_true_keyword, gen_unit_keyword, gen_with_keyword,
     },
 };
 use ditto_cst::{
-    BinOp, Effect, Expression, FunctionParameter, MatchArm, Pattern, StringToken, TypeAnnotation,
+    BinOp, Effect, Expression, FunctionParameter, MatchArm, Pattern, RecordField, StringToken,
+    TypeAnnotation,
 };
 use dprint_core::formatting::{
     condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext, Info,
@@ -229,6 +230,33 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
             items.extend(gen_expression(rhs));
             items
         }
+        Expression::RecordAccess {
+            box target,
+            dot,
+            label,
+        } => {
+            let mut items = PrintItems::new();
+            items.extend(gen_expression(target));
+            items.extend(gen_dot(dot));
+            items.extend(gen_name(label));
+            items
+        }
+        Expression::Record(braces) => gen_braces_list(
+            braces,
+            |RecordField {
+                 label,
+                 equals,
+                 box value,
+             }| {
+                let mut items = PrintItems::new();
+                items.extend(gen_name(label));
+                items.extend(space());
+                items.extend(gen_equals(equals));
+                let force_use_new_lines = value.has_leading_comments();
+                items.extend(group(gen_expression(value), force_use_new_lines));
+                items
+            },
+        ),
     }
 }
 
@@ -533,5 +561,22 @@ mod tests {
         assert_fmt!("-- comment\nx\n|> y");
         assert_fmt!("x\n|> y\n|> z");
         assert_fmt!("(x |> y) |> z", "(\n\tx\n\t|> y\n)\n|> z");
+    }
+
+    #[test]
+    fn it_formats_record_literals() {
+        assert_fmt!("{}");
+        assert_fmt!("{\n\t-- comment\n}");
+        assert_fmt!("{  -- comment\n}");
+        assert_fmt!("{ foo = true }");
+        assert_fmt!("{ foo = true, bar = false, baz = () -> true }");
+        assert_fmt!("{\n\t-- comment\n\tfoo = Foo,\n\tbar = Bar,\n\tbaz = {},\n}");
+        assert_fmt!("{\n\t-- comment\n\tfoo =\n\t\t-- comment\n\t\tFoo,\n}");
+    }
+
+    #[test]
+    fn it_formats_record_access() {
+        assert_fmt!("foo.bar");
+        assert_fmt!("foo.bar.baz");
     }
 }

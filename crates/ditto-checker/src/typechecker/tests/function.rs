@@ -30,6 +30,8 @@ fn it_typechecks_as_expected() {
         "($2) -> (a, String) -> String"
     );
 
+    assert_type!("(a: a) -> ((b : b) -> b)(a)", "(a) -> a");
+
     // REVIEW is this legit?
     assert_type!(
         "(fn: (a) -> a): ((a) -> a) -> ((x) -> x)",

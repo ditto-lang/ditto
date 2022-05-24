@@ -11,9 +11,21 @@ impl Substitution {
         self.0.insert(var, ast_type);
     }
     pub fn apply(&self, ast_type: Type) -> Type {
+        if self.0.is_empty() {
+            return ast_type;
+        }
         self.apply_rec(ast_type, 0)
     }
     fn apply_rec(&self, ast_type: Type, depth: usize) -> Type {
+        // NOTE: substitution proceeds to a fixed point (i.e. recursively),
+        // which is why we need an occurs check during unification!
+        if depth > 100 {
+            // Panicking like this is nicer than a stackoverflow
+            panic!(
+                "Substitution exceeded max depth: ast_type = {:#?}",
+                ast_type
+            );
+        }
         match ast_type {
             // NOTE: avoid using `..` in these patterns so that we're forced
             // to update this logic along with any changes to [Type]
@@ -23,18 +35,75 @@ impl Substitution {
                 source_name: _,
             } => {
                 if let Some(t) = self.0.get(&var) {
-                    // NOTE: substitution proceeds to a fixed point (i.e. recursively),
-                    // which is why we need an occurs check during unification!
-                    if depth > 100 {
-                        // Panicking like this is nicer than a stackoverflow
-                        panic!(
-                            "Substitution exceeded max depth: var = {}: ast_type = {:#?}",
-                            var, ast_type
-                        );
-                    }
                     self.apply_rec(t.clone(), depth + 1)
                 } else {
                     ast_type
+                }
+            }
+            Type::RecordOpen {
+                kind,
+                var,
+                row,
+                source_name,
+            } => {
+                match self.0.get(&var) {
+                    Some(Type::RecordOpen {
+                        kind,
+                        var,
+                        source_name,
+                        row: new_row,
+                    }) => {
+                        let t = Type::RecordOpen {
+                            kind: kind.clone(), // yeh?
+                            var: *var,
+                            source_name: source_name.clone(),
+                            row: row
+                                .into_iter()
+                                .chain(new_row.clone())
+                                .map(|(label, t)| (label, self.apply_rec(t, depth)))
+                                .collect(),
+                        };
+                        self.apply_rec(t, depth + 1)
+                    }
+                    Some(Type::RecordClosed { kind, row: new_row }) => {
+                        Type::RecordClosed {
+                            kind: kind.clone(), // yeh?
+                            row: row
+                                .into_iter()
+                                .chain(new_row.clone())
+                                .map(|(label, t)| (label, self.apply_rec(t, depth)))
+                                .collect(),
+                        }
+                    }
+                    // This will happen as a result of instantiation
+                    Some(Type::Variable {
+                        var, source_name, ..
+                    }) => {
+                        let t = Type::RecordOpen {
+                            // swap out the var
+                            var: *var,
+                            source_name: source_name.clone(),
+
+                            kind,
+                            row: row
+                                .into_iter()
+                                .map(|(label, t)| (label, self.apply_rec(t, depth)))
+                                .collect(),
+                        };
+                        self.apply_rec(t, depth + 1)
+                    }
+                    Some(wut) => {
+                        unreachable!("unexpected open record substitution: {:?}", wut)
+                    }
+                    None => Type::RecordOpen {
+                        kind,
+                        var,
+                        source_name,
+                        row: row
+                            .into_iter()
+                            .map(|(label, t)| (label, self.apply_rec(t, depth)))
+                            .collect(),
+                    },
                 }
             }
             Type::Call {
@@ -61,16 +130,27 @@ impl Substitution {
                     .collect(),
                 return_type: Box::new(self.apply_rec(return_type, depth)),
             },
+            Type::RecordClosed { kind, row } => Type::RecordClosed {
+                kind,
+                row: row
+                    .into_iter()
+                    .map(|(label, t)| (label, self.apply_rec(t, depth)))
+                    .collect(),
+            },
             Type::Constructor {
                 constructor_kind: _,
                 canonical_value: _,
                 source_value: _,
-            } => ast_type,
-            Type::PrimConstructor(_) => ast_type,
+            }
+            | Type::PrimConstructor(_) => ast_type,
         }
     }
 
     pub fn apply_expression(&self, expression: Expression) -> Expression {
+        if self.0.is_empty() {
+            return expression;
+        }
+
         use Expression::*;
         match expression {
             Call {
@@ -218,6 +298,25 @@ impl Substitution {
                     .map(|element| self.apply_expression(element))
                     .collect(),
             },
+            Record { span, fields } => Record {
+                span,
+                fields: fields
+                    .into_iter()
+                    .map(|(label, expr)| (label, self.apply_expression(expr)))
+                    .collect(),
+            },
+            RecordAccess {
+                span,
+                field_type,
+                box target,
+                label,
+            } => RecordAccess {
+                span,
+                field_type: self.apply(field_type),
+                target: Box::new(self.apply_expression(target)),
+                label,
+            },
+
             // noop
             True { .. } => expression,
             False { .. } => expression,
@@ -229,6 +328,10 @@ impl Substitution {
     }
 
     fn apply_effect(&self, effect: Effect) -> Effect {
+        if self.0.is_empty() {
+            return effect;
+        }
+
         match effect {
             Effect::Return { expression } => Effect::Return { expression },
             Effect::Bind {

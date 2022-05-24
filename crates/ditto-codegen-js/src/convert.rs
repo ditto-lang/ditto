@@ -409,6 +409,23 @@ pub(crate) fn convert_expression(
                 body: Box::new(ArrowFunctionBody::Block(block)),
             }
         }
+        ditto_ast::Expression::RecordAccess {
+            box target, label, ..
+        } => {
+            let target = convert_expression(imported_module_idents, target);
+            let index = Expression::String(label.0);
+            Expression::IndexAccess {
+                target: Box::new(target),
+                index: Box::new(index),
+            }
+        }
+        ditto_ast::Expression::Record { fields, .. } => {
+            let entries = fields
+                .into_iter()
+                .map(|(name, expr)| (name.0, convert_expression(imported_module_idents, expr)))
+                .collect();
+            Expression::Object(entries)
+        }
     }
 }
 

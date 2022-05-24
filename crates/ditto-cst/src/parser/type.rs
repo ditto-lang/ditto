@@ -1,6 +1,7 @@
 use super::{parse_rule, Result, Rule};
 use crate::{
-    Name, Parens, ParensList, ParensList1, QualifiedProperName, RightArrow, Type, TypeCallFunction,
+    Braces, BracesList, CloseBrace, Colon, CommaSep1, Name, OpenBrace, Parens, ParensList,
+    ParensList1, Pipe, QualifiedProperName, RecordTypeField, RightArrow, Type, TypeCallFunction,
 };
 use pest::iterators::Pair;
 
@@ -43,6 +44,47 @@ impl Type {
                     right_arrow,
                     return_type,
                 }
+            }
+            Rule::type_record_closed => {
+                let fields = BracesList::list_from_pair(pair, |field_pair| {
+                    let mut inner = field_pair.into_inner();
+                    let label = Name::from_pair(inner.next().unwrap());
+                    let colon = Colon::from_pair(inner.next().unwrap());
+                    let value = Box::new(Self::from_pair(inner.next().unwrap()));
+                    RecordTypeField {
+                        label,
+                        colon,
+                        value,
+                    }
+                });
+                Self::RecordClosed(fields)
+            }
+
+            Rule::type_record_open => {
+                let mut inner = pair.into_inner();
+                let open_brace = OpenBrace::from_pair(inner.next().unwrap());
+                let name = Name::from_pair(inner.next().unwrap());
+                let pipe = Pipe::from_pair(inner.next().unwrap());
+                let mut rest = inner.collect::<Vec<_>>();
+                let close_brace = CloseBrace::from_pair(rest.pop().unwrap());
+                let (head, tail) = rest.split_first().unwrap();
+                let fields = CommaSep1::from_pairs(head, tail, |field_pair| {
+                    let mut inner = field_pair.into_inner();
+                    let label = Name::from_pair(inner.next().unwrap());
+                    let colon = Colon::from_pair(inner.next().unwrap());
+                    let value = Box::new(Self::from_pair(inner.next().unwrap()));
+                    RecordTypeField {
+                        label,
+                        colon,
+                        value,
+                    }
+                });
+                let value = (name, pipe, fields);
+                Self::RecordOpen(Braces {
+                    open_brace,
+                    value,
+                    close_brace,
+                })
             }
             other => panic!("unexpected rule: {:#?} {:#?}", other, pair.into_inner()),
         }
@@ -140,6 +182,24 @@ mod tests {
                 }),
                 ..
             })
+        );
+    }
+
+    #[test]
+    fn it_parses_closed_records() {
+        assert_parses!("{}", Type::RecordClosed(braces) if braces.value.is_none());
+        assert_parses!("{ foo: Unit }", Type::RecordClosed(_));
+        assert_parses!("{ foo: Maybe(a), bar: B.Bool, }", Type::RecordClosed(_));
+        assert_parses!("{ a: { b: { c: Int, d: {} } } }", Type::RecordClosed(_));
+    }
+
+    #[test]
+    fn it_parses_open_records() {
+        assert_parses!("{ r | foo: Unit }", Type::RecordOpen(_));
+        assert_parses!("{ r | foo: Unit, bar: {} }", Type::RecordOpen(_));
+        assert_parses!(
+            "{ r | foo: Unit, bar: {}, baz: Array(Unit), }",
+            Type::RecordOpen(_)
         );
     }
 }

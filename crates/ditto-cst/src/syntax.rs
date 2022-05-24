@@ -1,4 +1,4 @@
-use crate::{CloseBracket, CloseParen, Comma, OpenBracket, OpenParen};
+use crate::{CloseBrace, CloseBracket, CloseParen, Comma, OpenBrace, OpenBracket, OpenParen};
 use std::iter;
 
 /// A value surrounded by parentheses.
@@ -21,6 +21,17 @@ pub struct Brackets<T> {
     pub value: T,
     /// `]`
     pub close_bracket: CloseBracket,
+}
+
+/// A value surrounded by braces.
+#[derive(Debug, Clone)]
+pub struct Braces<T> {
+    /// `{`
+    pub open_brace: OpenBrace,
+    /// The contents of the braces.
+    pub value: T,
+    /// `}`
+    pub close_brace: CloseBrace,
 }
 
 /// A list of items surrounded by parentheses
@@ -57,6 +68,17 @@ pub type ParensList1<T> = Parens<CommaSep1<T>>;
 /// [foo, bar, baz,]
 /// ```
 pub type BracketsList<T> = Brackets<Option<CommaSep1<T>>>;
+
+/// A list of items surrounded by braces.
+///
+/// Used to represent the following:
+///
+/// ```ditto
+/// {}
+/// { foo = 2 }
+/// {foo = bar, baz = bar, }
+/// ```
+pub type BracesList<T> = Braces<Option<CommaSep1<T>>>;
 
 /// A comma-separated, non-empty list of items.
 ///

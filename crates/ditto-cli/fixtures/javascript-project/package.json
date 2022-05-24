@@ -3,6 +3,6 @@
   "type": "module",
   "workspaces": ["packages/*"],
   "scripts": {
-    "test": "node --input-type=module --eval \"import * as D from './dist/D.js'; console.log(D)\""
+    "test": "node --eval \"import * as D from './dist/D.js'; console.log(D)\""
   }
 }

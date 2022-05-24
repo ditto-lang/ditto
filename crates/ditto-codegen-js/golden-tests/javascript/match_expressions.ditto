@@ -38,3 +38,14 @@ effect_arms = (maybe) ->
     match maybe with
     | Just(a) -> do { return a }
     | Nothing -> do { return 5 };
+
+type ABC =
+    | A
+    | B
+    | C;
+
+to_string = (abc) ->
+    match abc with
+    | A -> "A"
+    | B -> "C"
+    | C -> "C";

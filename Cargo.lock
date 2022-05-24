@@ -325,6 +325,7 @@ name = "ditto-ast"
 version = "0.0.1"
 dependencies = [
  "ditto-cst",
+ "indexmap",
  "non-empty-vec",
  "petgraph",
  "serde",
@@ -336,6 +337,7 @@ version = "0.0.1"
 dependencies = [
  "ditto-ast",
  "ditto-cst",
+ "indexmap",
  "lazy_static",
  "miette",
  "non-empty-vec",
@@ -393,6 +395,7 @@ dependencies = [
  "ditto-checker",
  "ditto-cst",
  "egg",
+ "indexmap",
  "lazy_static",
  "non-empty-vec",
  "quickcheck",

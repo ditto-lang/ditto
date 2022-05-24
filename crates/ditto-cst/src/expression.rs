@@ -1,8 +1,8 @@
 use crate::{
-    BracketsList, CloseBrace, Colon, DoKeyword, ElseKeyword, FalseKeyword, IfKeyword, LeftArrow,
-    MatchKeyword, Name, OpenBrace, Parens, ParensList, ParensList1, Pipe, QualifiedName,
-    QualifiedProperName, ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon, StringToken,
-    ThenKeyword, TrueKeyword, Type, UnitKeyword, UnusedName, WithKeyword,
+    BracesList, BracketsList, CloseBrace, Colon, DoKeyword, Dot, ElseKeyword, Equals, FalseKeyword,
+    IfKeyword, LeftArrow, MatchKeyword, Name, OpenBrace, Parens, ParensList, ParensList1, Pipe,
+    QualifiedName, QualifiedProperName, ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon,
+    StringToken, ThenKeyword, TrueKeyword, Type, UnitKeyword, UnusedName, WithKeyword,
 };
 
 /// A value expression.
@@ -125,6 +125,8 @@ pub enum Expression {
     Float(StringToken),
     /// `[this, is, an, array]`
     Array(BracketsList<Box<Self>>),
+    /// `{ this = "is a record" }`
+    Record(BracesList<RecordField>),
     /// Binary operator expression.s
     BinOp {
         /// The left-hand side of the operator.
@@ -134,6 +136,26 @@ pub enum Expression {
         /// The right-hand side of the operator.
         rhs: Box<Self>,
     },
+    /// `foo.bar`
+    RecordAccess {
+        /// The record expression being accesses.
+        target: Box<Self>,
+        /// `.`
+        dot: Dot,
+        /// Label of the field being accessed.
+        label: Name,
+    },
+}
+
+/// A labelled expression within a record.
+#[derive(Debug, Clone)]
+pub struct RecordField {
+    /// The field label.
+    pub label: Name,
+    /// `=`
+    pub equals: Equals,
+    /// The value to be associated with the `label`.
+    pub value: Box<Expression>,
 }
 
 /// A function expression parameter.

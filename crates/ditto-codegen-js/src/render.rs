@@ -229,11 +229,34 @@ impl Render for Expression {
                 rhs.render(accum);
                 accum.push(')');
             }
-            Self::IndexAccess { target, index } => {
-                target.render(accum);
+            Self::IndexAccess { box target, index } => {
+                render_in_parens_if(
+                    matches!(
+                        target,
+                        Self::ArrowFunction { .. }
+                            | Self::Conditional { .. }
+                            | Self::Operator { .. }
+                    ),
+                    target,
+                    accum,
+                );
                 accum.push('[');
                 index.render(accum);
                 accum.push(']');
+            }
+            Self::Object(entries) => {
+                accum.push('{');
+                let len = entries.len();
+                for (i, (key, value)) in entries.iter().enumerate() {
+                    accum.push('"');
+                    accum.push_str(key);
+                    accum.push_str("\":");
+                    value.render(accum);
+                    if i != len - 1 {
+                        accum.push(',');
+                    }
+                }
+                accum.push('}');
             }
         }
     }
@@ -263,6 +286,11 @@ impl Render for ArrowFunctionBody {
     fn render(&self, accum: &mut String) {
         match self {
             Self::Block(block) => block.render(accum),
+            Self::Expression(object @ Expression::Object { .. }) => {
+                accum.push('(');
+                object.render(accum);
+                accum.push(')');
+            }
             Self::Expression(expression) => expression.render(accum),
         }
     }

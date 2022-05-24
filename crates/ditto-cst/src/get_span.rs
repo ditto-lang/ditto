@@ -1,6 +1,6 @@
 use crate::{
-    Brackets, Expression, FunctionParameter, ModuleName, Name, PackageName, Parens, Pattern,
-    ProperName, QualifiedName, QualifiedProperName, Span, Token, Type, TypeAnnotation,
+    Braces, Brackets, Expression, FunctionParameter, ModuleName, Name, PackageName, Parens,
+    Pattern, ProperName, QualifiedName, QualifiedProperName, Span, Token, Type, TypeAnnotation,
     TypeCallFunction, UnusedName,
 };
 
@@ -115,10 +115,12 @@ impl Expression {
             Self::Int(int_token) => int_token.get_span(),
             Self::Float(float_token) => float_token.get_span(),
             Self::Array(brackets) => brackets.get_span(),
+            Self::Record(braces) => braces.get_span(),
             Self::True(true_keyword) => true_keyword.0.get_span(),
             Self::False(false_keyword) => false_keyword.0.get_span(),
             Self::Unit(unit_keyword) => unit_keyword.0.get_span(),
             Self::BinOp { lhs, rhs, .. } => lhs.get_span().merge(&rhs.get_span()),
+            Self::RecordAccess { target, label, .. } => target.get_span().merge(&label.get_span()),
         }
     }
 }
@@ -145,6 +147,8 @@ impl Type {
                 .0
                 .get_span()
                 .merge(&return_type.get_span()),
+            Self::RecordClosed(braces) => braces.get_span(),
+            Self::RecordOpen(braces) => braces.get_span(),
         }
     }
 }
@@ -193,6 +197,15 @@ impl<T> Brackets<T> {
             .0
             .get_span()
             .merge(&self.close_bracket.0.get_span())
+    }
+}
+impl<T> Braces<T> {
+    /// Get the source span.
+    pub fn get_span(&self) -> Span {
+        self.open_brace
+            .0
+            .get_span()
+            .merge(&self.close_brace.0.get_span())
     }
 }
 

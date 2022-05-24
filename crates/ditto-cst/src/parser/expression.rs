@@ -1,10 +1,11 @@
 use super::{parse_rule, Result, Rule};
 use crate::{
-    BinOp, BracketsList, CloseBrace, Colon, DoKeyword, Effect, ElseKeyword, Expression,
-    FalseKeyword, FunctionParameter, IfKeyword, LeftArrow, MatchArm, MatchKeyword, Name, OpenBrace,
-    Parens, ParensList, ParensList1, Pattern, Pipe, QualifiedName, QualifiedProperName,
-    ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon, StringToken, ThenKeyword,
-    TrueKeyword, Type, TypeAnnotation, UnitKeyword, UnusedName, WithKeyword,
+    BinOp, BracesList, BracketsList, CloseBrace, Colon, DoKeyword, Dot, Effect, ElseKeyword,
+    Equals, Expression, FalseKeyword, FunctionParameter, IfKeyword, LeftArrow, MatchArm,
+    MatchKeyword, Name, OpenBrace, Parens, ParensList, ParensList1, Pattern, Pipe, QualifiedName,
+    QualifiedProperName, RecordField, ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon,
+    StringToken, ThenKeyword, TrueKeyword, Type, TypeAnnotation, UnitKeyword, UnusedName,
+    WithKeyword,
 };
 use pest::iterators::Pair;
 
@@ -178,6 +179,62 @@ impl Expression {
                 }
                 expression
             }
+            Rule::expression_record => {
+                let fields = BracesList::list_from_pair(pair, |field_pair| {
+                    let mut inner = field_pair.into_inner();
+                    let label = Name::from_pair(inner.next().unwrap());
+                    let equals = Equals::from_pair(inner.next().unwrap());
+                    let value = Box::new(Self::from_pair(inner.next().unwrap()));
+                    RecordField {
+                        label,
+                        equals,
+                        value,
+                    }
+                });
+                Self::Record(fields)
+            }
+            Rule::expression_record_access => {
+                let mut inner = pair.into_inner();
+                let target = Self::from_pair(inner.next().unwrap());
+
+                let mut accessor = inner.next().unwrap().into_inner();
+                let dot = Dot::from_pair(accessor.next().unwrap());
+                let label = Name::from_pair(accessor.next().unwrap());
+                let mut expression = Self::RecordAccess {
+                    target: Box::new(target),
+                    dot,
+                    label,
+                };
+                if let Some(pair) = accessor.next() {
+                    let arguments = ParensList::list_from_pair(pair, |expr_pair| {
+                        Box::new(Self::from_pair(expr_pair))
+                    });
+                    expression = Self::Call {
+                        function: Box::new(expression),
+                        arguments,
+                    }
+                }
+                for accessor in inner {
+                    let mut accessor = accessor.into_inner();
+                    let dot = Dot::from_pair(accessor.next().unwrap());
+                    let label = Name::from_pair(accessor.next().unwrap());
+                    expression = Self::RecordAccess {
+                        target: Box::new(expression),
+                        dot,
+                        label,
+                    };
+                    if let Some(pair) = accessor.next() {
+                        let arguments = ParensList::list_from_pair(pair, |expr_pair| {
+                            Box::new(Self::from_pair(expr_pair))
+                        });
+                        expression = Self::Call {
+                            function: Box::new(expression),
+                            arguments,
+                        }
+                    }
+                }
+                expression
+            }
             other => unreachable!("{:#?} {:#?}", other, pair.into_inner()),
         }
     }
@@ -295,7 +352,9 @@ impl TypeAnnotation {
 #[cfg(test)]
 mod tests {
     use super::test_macros::*;
-    use crate::{BinOp, Brackets, CommaSep1, Expression, Parens, StringToken};
+    use crate::{
+        BinOp, BracesList, Brackets, CommaSep1, Expression, Parens, Qualified, StringToken,
+    };
 
     #[test]
     fn it_parses_constructors() {
@@ -722,6 +781,97 @@ mod tests {
                     },
                     ..
                 }),
+                ..
+            }
+        );
+    }
+
+    #[test]
+    fn it_parses_records() {
+        assert_parses!("{}", Expression::Record(BracesList { value: None, .. }));
+        assert_parses!(
+            "{ foo = 2 }",
+            Expression::Record(BracesList { value: Some(_), .. })
+        );
+        assert_parses!(
+            "{ foo = 2, bar = true, }",
+            Expression::Record(BracesList { value: Some(_), .. })
+        );
+    }
+
+    #[test]
+    fn it_parses_record_access() {
+        assert_parses!("foo.bar", Expression::RecordAccess { .. });
+        assert_parses!(
+            "Foo.bar.baz",
+            Expression::RecordAccess {
+                target: box Expression::Variable(Qualified {
+                    module_name: Some(_),
+                    ..
+                }),
+                ..
+            }
+        );
+        assert_parses!(
+            "foo.bar.baz",
+            Expression::RecordAccess {
+                target: box Expression::RecordAccess {
+                    target: box Expression::Variable { .. },
+                    ..
+                },
+                ..
+            }
+        );
+        assert_parses!(
+            "foo().bar",
+            Expression::RecordAccess {
+                target: box Expression::Call { .. },
+                ..
+            }
+        );
+        assert_parses!(
+            "foo().bar.baz",
+            Expression::RecordAccess {
+                target: box Expression::RecordAccess {
+                    target: box Expression::Call { .. },
+                    ..
+                },
+                ..
+            }
+        );
+        assert_parses!(
+            "foo.bar.baz()",
+            Expression::Call {
+                function: box Expression::RecordAccess {
+                    target: box Expression::RecordAccess { .. },
+                    ..
+                },
+                ..
+            }
+        );
+        assert_parses!(
+            "foo().bar()",
+            Expression::Call {
+                function: box Expression::RecordAccess {
+                    target: box Expression::Call { .. },
+                    ..
+                },
+                ..
+            }
+        );
+        assert_parses!(
+            "Foo.foo().bar().baz",
+            Expression::RecordAccess {
+                target: box Expression::Call {
+                    function: box Expression::RecordAccess {
+                        target: box Expression::Call {
+                            function: box Expression::Variable(..),
+                            ..
+                        },
+                        ..
+                    },
+                    ..
+                },
                 ..
             }
         );

@@ -12,7 +12,6 @@ fn node_can_execute_generated_code() -> io::Result<()> {
         if let Some("js") = path.extension().and_then(OsStr::to_str) {
             let output = Command::new("node")
                 .args([
-                    "--input-type=module",
                     "--eval",
                     &format!(
                         "import * as x from '{path}';console.log(x)",

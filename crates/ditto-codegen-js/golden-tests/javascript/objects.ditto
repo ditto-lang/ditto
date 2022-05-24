@@ -1,0 +1,17 @@
+module Test exports (..);
+
+empty_object : {} = {};
+
+just_object_things = { yep = true, huh = unit, why = () -> {} };
+
+-- FIXME: parsing this is hilariously slow
+very_nested = { a = { b = { c = { d = [] }}}};
+
+d = very_nested.a.b.c.d;
+
+get_foo = (x : { r | foo: a }) -> x.foo;
+mk_has_foo = (a) -> { foo = a };
+foo = mk_has_foo(true).foo;
+
+pure_object = () -> {};
+do_object = do { return {} };

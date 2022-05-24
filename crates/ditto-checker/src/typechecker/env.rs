@@ -123,7 +123,6 @@ pub enum EnvConstructor {
         constructor_scheme: Scheme,
         constructor: ProperName,
     },
-    #[allow(dead_code)]
     ImportedConstructor {
         constructor_scheme: Scheme,
         constructor: FullyQualifiedProperName,

@@ -9,7 +9,7 @@ pub use state::*;
 pub use substitution::*;
 
 use crate::result::{Result, TypeError};
-use ditto_ast::{Kind, Name, QualifiedProperName, Span, Type};
+use ditto_ast::{Kind, Name, QualifiedProperName, Row, Span, Type};
 use ditto_cst as cst;
 use non_empty_vec::NonEmpty;
 use std::collections::HashSet;
@@ -189,18 +189,85 @@ pub fn infer(env: &Env, state: &mut State, cst_type: cst::Type) -> Result<Type> 
                 }),
             }
         }
+        record_type @ (RecordClosed { .. } | RecordOpen { .. }) => {
+            let (_, kind) = state.supply.fresh_kind();
+            check(env, state, kind, record_type)
+        }
     }
 }
 
 pub fn check(env: &Env, state: &mut State, expected: Kind, cst_type: cst::Type) -> Result<Type> {
-    let span = cst_type.get_span(); // grab before the move
-    let ast_type = infer(env, state, cst_type)?;
-    let constraint = Constraint {
-        expected,
-        actual: ast_type.get_kind(),
-    };
-    unify(state, span, constraint)?;
-    Ok(ast_type)
+    use cst::Type::*;
+
+    match (cst_type, expected) {
+        (RecordClosed(braces), expected) => {
+            let mut row = Row::new();
+            if let Some(fields) = braces.value {
+                for cst::RecordTypeField {
+                    label, box value, ..
+                } in fields
+                {
+                    let value = infer(env, state, value)?;
+                    row.insert(label.into(), value);
+                }
+            }
+            Ok(Type::RecordClosed {
+                kind: expected,
+                row,
+            })
+        }
+        (
+            RecordOpen(cst::Braces {
+                value: (variable, _pipe, fields),
+                ..
+            }),
+            expected,
+        ) => {
+            let span = variable.get_span();
+            let variable = Name::from(variable);
+            let EnvTypeVariable { variable_kind, var } = env
+                .type_variables
+                .get(&variable)
+                .ok_or_else(|| TypeError::UnknownTypeVariable {
+                    span,
+                    variable: variable.clone(),
+                })
+                .cloned()?;
+            unify(
+                state,
+                span,
+                Constraint {
+                    expected: Kind::Row,
+                    actual: variable_kind,
+                },
+            )?;
+            let mut row = Row::new();
+            for cst::RecordTypeField {
+                label, box value, ..
+            } in fields
+            {
+                let value = infer(env, state, value)?;
+                row.insert(label.into(), value);
+            }
+            Ok(Type::RecordOpen {
+                kind: expected,
+                var,
+                source_name: Some(variable),
+                row,
+            })
+        }
+
+        (cst_type, expected) => {
+            let span = cst_type.get_span(); // grab before the move
+            let ast_type = infer(env, state, cst_type)?;
+            let constraint = Constraint {
+                expected,
+                actual: ast_type.get_kind(),
+            };
+            unify(state, span, constraint)?;
+            Ok(ast_type)
+        }
+    }
 }
 
 pub struct Constraint {
@@ -227,10 +294,13 @@ fn unify(state: &mut State, span: Span, constraint: Constraint) -> Result<()> {
             actual: Kind::Variable(var),
             expected: kind,
         } => bind(state, span, var, kind),
-
         Constraint {
             actual: Kind::Type,
             expected: Kind::Type,
+        } => Ok(()),
+        Constraint {
+            actual: Kind::Row,
+            expected: Kind::Row,
         } => Ok(()),
         Constraint {
             expected:
@@ -318,11 +388,11 @@ fn kind_variables_rec(kind: &Kind, accum: &mut HashSet<usize>) {
         Kind::Variable(var) => {
             accum.insert(*var);
         }
-        Kind::Type => {}
         Kind::Function { parameters } => {
             parameters.iter().for_each(|k| {
                 kind_variables_rec(k, accum);
             });
         }
+        Kind::Type | Kind::Row => {}
     }
 }

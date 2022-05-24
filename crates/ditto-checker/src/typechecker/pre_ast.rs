@@ -65,6 +65,15 @@ pub enum Expression {
         span: Span,
         elements: Vec<Self>,
     },
+    Record {
+        span: Span,
+        fields: Vec<(Name, Self)>,
+    },
+    RecordAccess {
+        span: Span,
+        target: Box<Self>,
+        label: Name,
+    },
     True {
         span: Span,
     },
@@ -350,6 +359,29 @@ fn convert_cst(
                 }
             }
         }
+        cst::Expression::Record(braces) => {
+            let mut fields = Vec::new();
+            if let Some(cst_fields) = braces.value {
+                for cst::RecordField {
+                    label, box value, ..
+                } in cst_fields.into_iter()
+                {
+                    let field = convert_cst(env, state, value)?;
+                    fields.push((label.into(), field));
+                }
+            }
+            Ok(Expression::Record { span, fields })
+        }
+        cst::Expression::RecordAccess {
+            box target, label, ..
+        } => {
+            let target = convert_cst(env, state, target)?;
+            Ok(Expression::RecordAccess {
+                span,
+                target: Box::new(target),
+                label: label.into(),
+            })
+        }
     }
 }
 
@@ -511,6 +543,22 @@ fn substitute_type_annotations(subst: &Substitution, expression: Expression) -> 
         String { span, value } => String { span, value },
         Int { span, value } => Int { span, value },
         Float { span, value } => Float { span, value },
+        Record { span, fields } => Record {
+            span,
+            fields: fields
+                .into_iter()
+                .map(|(label, expr)| (label, substitute_type_annotations(subst, expr)))
+                .collect(),
+        },
+        RecordAccess {
+            span,
+            box target,
+            label,
+        } => RecordAccess {
+            span,
+            target: Box::new(substitute_type_annotations(subst, target)),
+            label,
+        },
         Array { span, elements } => Array {
             span,
             elements: elements

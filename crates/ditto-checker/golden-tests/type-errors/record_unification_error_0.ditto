@@ -1,0 +1,4 @@
+module Test exports (..);
+
+nah = (x : { foo: Int, bar: Int, baz: Float }) ->
+    [x.foo, x.bar, x.baz];

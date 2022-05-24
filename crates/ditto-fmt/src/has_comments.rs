@@ -84,6 +84,14 @@ impl HasComments for Expression {
             Self::BinOp { lhs, operator, rhs } => {
                 lhs.has_comments() || operator.has_comments() || rhs.has_comments()
             }
+            Self::RecordAccess { target, dot, label } => {
+                target.has_comments() || dot.has_comments() || label.has_comments()
+            }
+            Self::Record(braces) => {
+                braces.open_brace.0.has_comments()
+                    || braces.value.has_comments()
+                    || braces.close_brace.0.has_comments()
+            }
         }
     }
 
@@ -105,6 +113,8 @@ impl HasComments for Expression {
             Self::Match { match_keyword, .. } => match_keyword.0.has_leading_comments(),
             Self::Effect { do_keyword, .. } => do_keyword.0.has_leading_comments(),
             Self::BinOp { lhs, .. } => lhs.has_leading_comments(),
+            Self::RecordAccess { target, .. } => target.has_leading_comments(),
+            Self::Record(braces) => braces.open_brace.0.has_leading_comments(),
         }
     }
 }
@@ -122,6 +132,26 @@ impl HasComments for FunctionParameter {
             Self::Name(name) => name.has_leading_comments(),
             Self::Unused(unused_name) => unused_name.has_leading_comments(),
         }
+    }
+}
+
+impl HasComments for RecordField {
+    fn has_comments(&self) -> bool {
+        self.label.has_comments() || self.equals.0.has_comments() || self.value.has_comments()
+    }
+
+    fn has_leading_comments(&self) -> bool {
+        self.label.has_leading_comments()
+    }
+}
+
+impl HasComments for RecordTypeField {
+    fn has_comments(&self) -> bool {
+        self.label.has_comments() || self.colon.0.has_comments() || self.value.has_comments()
+    }
+
+    fn has_leading_comments(&self) -> bool {
+        self.label.has_leading_comments()
     }
 }
 
@@ -156,7 +186,11 @@ impl HasComments for Effect {
         }
     }
     fn has_leading_comments(&self) -> bool {
-        todo!()
+        match self {
+            Self::Return { return_keyword, .. } => return_keyword.0.has_leading_comments(),
+            Self::Bind { name, .. } => name.has_leading_comments(),
+            Self::Expression { expression, .. } => expression.has_leading_comments(),
+        }
     }
 }
 
@@ -232,6 +266,18 @@ impl HasComments for Type {
                 function,
                 arguments,
             } => function.has_comments() || arguments.has_comments(),
+            Self::RecordClosed(braces) => {
+                braces.open_brace.0.has_comments()
+                    || braces.value.has_comments()
+                    || braces.close_brace.0.has_comments()
+            }
+            Self::RecordOpen(braces) => {
+                braces.open_brace.0.has_comments()
+                    || braces.value.0.has_comments() // type variable
+                    || braces.value.1 .0.has_comments() // pipe
+                    || braces.value.2.has_comments() // fields
+                    || braces.close_brace.0.has_comments()
+            }
         }
     }
     fn has_leading_comments(&self) -> bool {
@@ -241,6 +287,8 @@ impl HasComments for Type {
             Self::Constructor(constructor) => constructor.has_leading_comments(),
             Self::Function { parameters, .. } => parameters.open_paren.0.has_leading_comments(),
             Self::Call { function, .. } => function.has_leading_comments(),
+            Self::RecordClosed(braces) => braces.open_brace.0.has_leading_comments(),
+            Self::RecordOpen(braces) => braces.open_brace.0.has_leading_comments(),
         }
     }
 }

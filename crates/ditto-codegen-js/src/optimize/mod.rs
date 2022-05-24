@@ -1,6 +1,6 @@
 #![allow(dead_code)] // XXX
 use crate::ast;
-use egg::Id;
+use egg::{Id, Language};
 
 mod rewrites;
 use rewrites::{rewrites, Rewrite};
@@ -14,6 +14,24 @@ pub fn optimize_expression(ast: ast::Expression) -> BlockOrExpression {
     optimize_expression_with(ast, &rewrites())
 }
 
+struct JavaScriptCostFn;
+impl egg::CostFunction<Expression> for JavaScriptCostFn {
+    type Cost = f64;
+    fn cost<C>(&mut self, expr: &Expression, mut costs: C) -> Self::Cost
+    where
+        C: FnMut(Id) -> Self::Cost,
+    {
+        let expr_cost = match expr {
+            // Assigning a greater cost to call expressions should help remove IIFEs
+            Expression::Call { .. } => 3.0,
+            _ => 1.0,
+        };
+        // This otherwise looks like the egg::AstSize cost function
+        // https://docs.rs/egg/0.8.1/src/egg/extract.rs.html#157
+        expr.fold(expr_cost, |sum, id| sum + costs(id))
+    }
+}
+
 pub(crate) fn optimize_expression_with(
     ast: ast::Expression,
     rewrites: &[Rewrite],
@@ -22,7 +40,7 @@ pub(crate) fn optimize_expression_with(
     let mut rec_expr = RecExpr::default();
     let _id = build_rec_expr(&ast, &mut rec_expr);
     let runner = Runner::default().with_expr(&rec_expr).run(rewrites);
-    let extractor = egg::Extractor::new(&runner.egraph, egg::AstDepth);
+    let extractor = egg::Extractor::new(&runner.egraph, JavaScriptCostFn);
     let (_cost, rec_expr) = extractor.find_best(runner.roots[0]);
     let best_id = Id::from(rec_expr.as_ref().len() - 1);
     let best_expr = &rec_expr[best_id];
@@ -60,6 +78,10 @@ pub enum Expression {
     Operator {
         op: ast::Operator,
         children: [Id; 2],
+    },
+    Object {
+        keys: Vec<String>,
+        values: Vec<Id>,
     },
     // Blocks
     BlockExpression {
@@ -100,6 +122,7 @@ impl egg::Language for Expression {
             (Self::ArrowFunctionIdentity { .. }, Self::ArrowFunctionIdentity { .. }) => true,
             (Self::IndexAccess { .. }, Self::IndexAccess { .. }) => true,
             (Self::Operator { op: x, .. }, Self::Operator { op: y, .. }) => x == y,
+            (Self::Object { .. }, Self::Object { .. }) => true, // check entries.len ?
             // Blocks
             (Self::BlockExpression { .. }, Self::BlockExpression { .. }) => true,
             (Self::BlockReturn { .. }, Self::BlockReturn { .. }) => true,
@@ -130,6 +153,7 @@ impl egg::Language for Expression {
             Self::Call { children } => children,
             Self::IndexAccess { children } => children,
             Self::Operator { children, .. } => children,
+            Self::Object { values, .. } => values,
             // Blocks
             Self::BlockExpression { children } => children,
             Self::BlockConstAssignment { children, .. } => children,
@@ -159,6 +183,7 @@ impl egg::Language for Expression {
             Self::Call { children } => children,
             Self::IndexAccess { children } => children,
             Self::Operator { children, .. } => children,
+            Self::Object { values, .. } => values,
             // Blocks
             Self::BlockConstAssignment { children, .. } => children,
             Self::BlockExpression { children } => children,
@@ -280,6 +305,16 @@ fn ast_expr_to_rec_expr(ast_expr: &ast::Expression, rec_expr: &mut RecExpr) -> I
             };
             rec_expr.add(node)
         }
+        ast::Expression::Object(entries) => {
+            let mut keys = Vec::with_capacity(entries.len());
+            let mut values = Vec::with_capacity(entries.len());
+            for (key, value) in entries {
+                keys.push(key.clone());
+                values.push(ast_expr_to_rec_expr(value, rec_expr));
+            }
+            let node = Expression::Object { keys, values };
+            rec_expr.add(node)
+        }
         // Leaves
         ast::Expression::True => rec_expr.add(Expression::True),
         ast::Expression::False => rec_expr.add(Expression::False),
@@ -366,6 +401,7 @@ fn unbuild_rec_expr(expr: &Expression, rec_expr: &RecExpr) -> BlockOrExpression 
         | Expression::ArrowFunctionIdentity { .. }
         | Expression::IndexAccess { .. }
         | Expression::Operator { .. }
+        | Expression::Object { .. }
         | Expression::True
         | Expression::False
         | Expression::Undefined
@@ -469,6 +505,14 @@ fn rec_expr_to_ast_expr(expr: &Expression, rec_expr: &RecExpr) -> ast::Expressio
             lhs: Box::new(rec_expr_to_ast_expr(&rec_expr[*lhs_id], rec_expr)),
             rhs: Box::new(rec_expr_to_ast_expr(&rec_expr[*rhs_id], rec_expr)),
         },
+        Expression::Object { keys, values } => {
+            let mut entries = indexmap::IndexMap::with_capacity(keys.len());
+            for (key, value_id) in keys.iter().zip(values) {
+                let value = rec_expr_to_ast_expr(&rec_expr[*value_id], rec_expr);
+                entries.insert(key.clone(), value);
+            }
+            ast::Expression::Object(entries)
+        }
         // Leaves
         Expression::True => ast::Expression::True,
         Expression::False => ast::Expression::False,
@@ -546,6 +590,7 @@ fn rec_expr_to_ast_block(expr: &Expression, rec_expr: &RecExpr) -> ast::Block {
         | Expression::ArrowFunctionIdentity { .. }
         | Expression::IndexAccess { .. }
         | Expression::Operator { .. }
+        | Expression::Object { .. }
         | Expression::True
         | Expression::False
         | Expression::Undefined
@@ -607,7 +652,7 @@ mod test {
 
     impl ast::Expression {
         fn arbitrary_stacksafe(g: &mut Gen, depth: usize) -> Self {
-            if depth <= 0 {
+            if depth == 0 {
                 // Generate leaf
                 let variable = Self::Variable(ast::Ident::arbitrary(g));
                 let number = Self::Number(String::arbitrary(g));
@@ -632,6 +677,7 @@ mod test {
                         3, // Array
                         4, // Operator
                         5, // IndexAccess
+                        6, // IndexAccess
                     ])
                     .cloned()
                     .unwrap();
@@ -678,6 +724,22 @@ mod test {
                         target: Box::new(Self::arbitrary_stacksafe(g, depth - 1)),
                         index: Box::new(Self::arbitrary_stacksafe(g, depth - 1)),
                     },
+                    6 => Self::Object({
+                        let mut entries = indexmap::IndexMap::with_capacity(3);
+                        entries.insert(
+                            String::arbitrary(g),
+                            Self::arbitrary_stacksafe(g, depth - 1),
+                        );
+                        entries.insert(
+                            String::arbitrary(g),
+                            Self::arbitrary_stacksafe(g, depth - 1),
+                        );
+                        entries.insert(
+                            String::arbitrary(g),
+                            Self::arbitrary_stacksafe(g, depth - 1),
+                        );
+                        entries
+                    }),
                     _ => unreachable!(),
                 }
             }
@@ -687,7 +749,7 @@ mod test {
     impl ast::Block {
         fn arbitrary_stacksafe(g: &mut Gen, depth: usize) -> Self {
             // Generate leaf
-            if depth <= 0 {
+            if depth == 0 {
                 let return_expr = Self::Return(Some(ast::Expression::arbitrary_stacksafe(g, 0)));
                 let throw = Self::Throw(String::arbitrary(g));
                 g.choose(&[throw, return_expr, Self::Return(None)])
