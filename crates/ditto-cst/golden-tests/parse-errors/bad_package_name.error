@@ -1,0 +1,10 @@
+
+  × unexpected token
+   ╭─[golden:1:1]
+ 1 │ module Test exports (..);
+ 2 │ 
+ 3 │ import (foo_bar) Foo.Bar;
+   ·         ───┬───
+   ·            ╰── here
+   ╰────
+  help: expected "package-name"

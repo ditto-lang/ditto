@@ -208,6 +208,14 @@ pub struct DoKeyword(pub EmptyToken);
 #[derive(Debug, Clone)]
 pub struct ReturnKeyword(pub EmptyToken);
 
+/// `fn`
+#[derive(Debug, Clone)]
+pub struct FnKeyword(pub EmptyToken);
+
+/// `end`
+#[derive(Debug, Clone)]
+pub struct EndKeyword(pub EmptyToken);
+
 /// `|>`
 #[derive(Debug, Clone)]
 pub struct RightPizzaOperator(pub EmptyToken);

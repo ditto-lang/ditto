@@ -1,8 +1,9 @@
 use crate::{
-    BracesList, BracketsList, CloseBrace, Colon, DoKeyword, Dot, ElseKeyword, Equals, FalseKeyword,
-    IfKeyword, LeftArrow, MatchKeyword, Name, OpenBrace, Parens, ParensList, ParensList1, Pipe,
-    QualifiedName, QualifiedProperName, ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon,
-    StringToken, ThenKeyword, TrueKeyword, Type, UnitKeyword, UnusedName, WithKeyword,
+    BracesList, BracketsList, CloseBrace, Colon, DoKeyword, Dot, ElseKeyword, EndKeyword, Equals,
+    FalseKeyword, FnKeyword, IfKeyword, LeftArrow, MatchKeyword, Name, OpenBrace, Parens,
+    ParensList, ParensList1, Pipe, QualifiedName, QualifiedProperName, ReturnKeyword, RightArrow,
+    RightPizzaOperator, Semicolon, StringToken, ThenKeyword, TrueKeyword, Type, UnitKeyword,
+    UnusedName, WithKeyword,
 };
 
 /// A value expression.
@@ -13,9 +14,11 @@ pub enum Expression {
     /// Everyone's favourite: the humble function
     ///
     /// ```ditto
-    /// (binder0, binder1) -> body
+    /// fn (binder0, binder1) -> body
     /// ```
     Function {
+        /// `fn`
+        fn_keyword: FnKeyword,
         /// The parameters to be bound and added to the scope of `body`.
         parameters: Box<ParensList<(FunctionParameter, Option<TypeAnnotation>)>>,
         /// Optional type annotation for `body`.
@@ -60,6 +63,7 @@ pub enum Expression {
     /// ```ditto
     /// match some_expr with
     /// | Pattern -> another_expr
+    /// end
     /// ```
     Match {
         /// `match`
@@ -72,6 +76,8 @@ pub enum Expression {
         head_arm: Box<MatchArm>,
         /// More match arms.
         tail_arms: Vec<MatchArm>,
+        /// `end`
+        end_keyword: EndKeyword,
     },
     /// A `do` expression.
     ///
