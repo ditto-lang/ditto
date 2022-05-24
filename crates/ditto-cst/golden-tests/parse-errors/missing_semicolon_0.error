@@ -1,9 +1,11 @@
 
-  × syntax error
+  × unexpected token
    ╭─[golden:1:1]
  1 │ module Missing.Semicolon exports (..)
  2 │ 
- 3 │ import Some.Module;
-   · ▲
-   · ╰── expected: semicolon
+ 3 │ -- hmm this error isn't great
+ 4 │ import Some.Module;
+   · ───┬──
+   ·    ╰── here
    ╰────
+  help: expected one of: "(", ")", ",", "->", ".", ":", ";", "=", "ProperName", "]", "else", "end", "then", "with", "|", "|>", "}"

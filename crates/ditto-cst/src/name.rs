@@ -45,6 +45,7 @@ pub struct ModuleName {
 
 impl QualifiedName {
     #[cfg(test)]
+    #[allow(dead_code)]
     pub(crate) fn render_name(&self) -> String {
         if let Some((proper_name, _dot)) = &self.module_name {
             format!("{}.{}", proper_name.0.value, self.value.0.value)
@@ -67,6 +68,7 @@ impl QualifiedProperName {
 
 impl ModuleName {
     #[cfg(test)]
+    #[allow(dead_code)]
     pub(crate) fn render(&self) -> String {
         let mut rendered = self
             .init

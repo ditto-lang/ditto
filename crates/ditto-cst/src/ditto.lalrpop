@@ -1,0 +1,356 @@
+// vi: syntax=rust
+use crate as cst;
+use crate::lexer::{Error, Token, Comments};
+
+// NOTE: An LR(1) parser only uses a single token of lookahead (that's what the 1 in LR(1) means).
+// https://github.com/lalrpop/lalrpop/issues/552
+
+grammar;
+
+// MODULE
+
+pub Module: cst::Module = {
+  <header: Header> <imports: ImportLine*> <declarations: Declaration*> => cst::Module { header, imports, declarations, trailing_comments: Vec::new() }
+}
+
+pub Header: cst::Header = {
+  <module_keyword: ModuleKeyword> <module_name: ModuleName> <exports_keyword: ExportsKeyword> <exports: Exports> <semicolon: Semicolon> => cst::Header { module_keyword, module_name, exports_keyword, exports, semicolon },
+}
+
+Exports: cst::Exports = {
+  Everything => cst::Exports::Everything(<>),
+  Box<ParensList1<Export>> => cst::Exports::List(<>),
+}
+
+Export: cst::Export = {
+  Name => cst::Export::Value(<>),
+  ProperName Everything? => cst::Export::Type(<>),
+}
+
+pub ImportLine: cst::ImportLine = {
+  <import_keyword: ImportKeyword> <package: Parens<PackageName>?> <module_name: ModuleName> <alias: (AsKeyword ProperName)?> <imports: ImportList?> <semicolon: Semicolon> => cst::ImportLine { import_keyword, package, module_name, alias, imports, semicolon }
+}
+
+ImportList: cst::ImportList = {
+  ParensList1<Import> => cst::ImportList(<>)
+}
+
+Import: cst::Import = {
+  Name => cst::Import::Value(<>),
+  ProperName Everything? => cst::Import::Type(<>),
+}
+
+Everything: cst::Everything = { Parens<DoubleDot> }
+
+Declaration: cst::Declaration = {
+  Box<TypeDeclaration> => cst::Declaration::Type(<>),
+  Box<ValueDeclaration> => cst::Declaration::Value(<>),
+  Box<ForeignValueDeclaration> => cst::Declaration::ForeignValue(<>),
+}
+
+pub TypeDeclaration: cst::TypeDeclaration = {
+  <type_keyword: TypeKeyword> <type_name: ProperName> <type_variables: ParensList1<Name>?> <equals: Equals> <head_constructor: HeadConstructor> <tail_constructors: TailConstructor*> <semicolon: Semicolon> => cst::TypeDeclaration::WithConstructors { type_keyword, type_name, type_variables, equals, head_constructor, tail_constructors, semicolon },
+  <type_keyword: TypeKeyword> <type_name: ProperName> <type_variables: ParensList1<Name>?> <semicolon: Semicolon> => cst::TypeDeclaration::WithoutConstructors { type_keyword, type_name, type_variables, semicolon },
+}
+
+HeadConstructor: cst::Constructor<Option<cst::Pipe>> = {
+  <pipe: Pipe?> <constructor_name: ProperName> <fields: ParensList1<Type>?> => cst::Constructor { pipe, constructor_name, fields },
+}
+
+TailConstructor: cst::Constructor = {
+  <pipe: Pipe> <constructor_name: ProperName> <fields: ParensList1<Type>?> => cst::Constructor { pipe, constructor_name, fields },
+}
+
+pub ValueDeclaration: cst::ValueDeclaration = {
+  <name: Name> <type_annotation: TypeAnnotation?> <equals: Equals> <expression: Expression> <semicolon: Semicolon> => cst::ValueDeclaration { name, type_annotation, equals, expression, semicolon }
+}
+
+pub ForeignValueDeclaration: cst::ForeignValueDeclaration = {
+  <foreign_keyword: ForeignKeyword> <name: Name> <type_annotation: TypeAnnotation> <semicolon: Semicolon> => cst::ForeignValueDeclaration { foreign_keyword, name, type_annotation, semicolon }
+}
+
+// TYPES
+
+pub Type: cst::Type = {
+  // (String, Float) -> Int
+  <parameters: ParensList<Box<Type>>> <right_arrow: RightArrow> <return_type: Box<Type>> => cst::Type::Function { parameters, right_arrow, return_type },
+
+  Type0
+}
+
+// Used by ReturnTypeAnnotation
+Type0: cst::Type = {
+  Parens<Box<Type>> => cst::Type::Parens(<>),
+  BracesList<RecordTypeField> => cst::Type::RecordClosed(<>),
+  Braces<(Name Pipe CommaSep1<RecordTypeField>)> => cst::Type::RecordOpen(<>),
+
+  // Effect(a)
+  <function: TypeCallFunction> <arguments: ParensList1<Box<Type>>> => cst::Type::Call { function: function, arguments },
+
+  Name => cst::Type::Variable(<>),
+  QualifiedProperName => cst::Type::Constructor(<>),
+}
+
+TypeCallFunction: cst::TypeCallFunction = {
+  QualifiedProperName => cst::TypeCallFunction::Constructor(<>),
+  Name => cst::TypeCallFunction::Variable(<>),
+}
+
+RecordTypeField: cst::RecordTypeField = {
+  <label: Name> <colon: Colon> <value: Box<Type>> => cst::RecordTypeField { label, colon, value }
+}
+
+// EXPRESSIONS
+
+pub Expression: cst::Expression = {
+  Expression3
+}
+
+Expression3: cst::Expression = {
+  // FIXME: why so much boxing here?
+  <fn_keyword: FnKeyword> <parameters: Box<ParensList<(FunctionParameter TypeAnnotation?)>>> <return_type_annotation: Box<ReturnTypeAnnotation?>> <right_arrow: RightArrow> <body: Box<Expression>> => cst::Expression::Function { fn_keyword, parameters, return_type_annotation, right_arrow, body },
+
+  // match expression with | pattern -> ...
+  <match_keyword: MatchKeyword> <expression: Box<Expression>> <with_keyword: WithKeyword> <head_arm: Box<MatchArm>> <tail_arms: MatchArm*> <end_keyword: EndKeyword> => cst::Expression::Match { match_keyword, expression, with_keyword, head_arm, tail_arms, end_keyword },
+
+  // do { stuff }
+  <do_keyword: DoKeyword> <open_brace: OpenBrace> <effect: Effect> <close_brace: CloseBrace> => cst::Expression::Effect { do_keyword, open_brace, effect, close_brace },
+
+  // if true then "yes" else "no!"
+  <if_keyword: IfKeyword> <condition: Box<Expression>> <then_keyword: ThenKeyword> <true_clause: Box<Expression>> <else_keyword: ElseKeyword> <false_clause: Box<Expression>> => cst::Expression::If { if_keyword, condition, then_keyword, true_clause, else_keyword, false_clause },
+
+  Expression2
+}
+
+Expression2: cst::Expression = {
+  // a |> f 
+  <lhs: Box<Expression2>> <operator: RightPizzaOperator> <rhs: Box<Expression1>> => cst::Expression::BinOp { lhs, operator: cst::BinOp::RightPizza(operator), rhs },
+  //        ^^^ left-associative
+
+  Expression1
+}
+
+Expression1: cst::Expression = {
+  // This can't be the target of a record access because of ambiguity 
+  // i.e. `Foo.bar` needs to parse as a QualifiedProperName rather than accessing a Constructor expression
+  QualifiedProperName => cst::Expression::Constructor(<>),
+  Expression0
+}
+
+Expression0: cst::Expression = {
+  // function(argument0, argument1)
+  <function: Box<Expression1>> <arguments: ParensList<Box<Expression>>> => cst::Expression::Call { function, arguments },
+  //             ^^^ left associative
+
+  // `foo.bar`
+  <target: Box<Expression0>> <dot: Dot> <label: Name> => cst::Expression::RecordAccess { target, dot, label },
+  //            ^^^ left associative
+
+  Parens<Box<Expression>> => cst::Expression::Parens(<>),
+  BracesList<RecordField> => cst::Expression::Record(<>),
+  TrueKeyword => cst::Expression::True(<>),
+  FalseKeyword => cst::Expression::False(<>),
+  UnitKeyword => cst::Expression::Unit(<>),
+  QualifiedName => cst::Expression::Variable(<>),
+  BracketsList<Box<Expression>> => cst::Expression::Array(<>),
+  String => cst::Expression::String(<>),
+  Float => cst::Expression::Float(<>),
+  Int => cst::Expression::Int(<>),
+}
+
+FunctionParameter: cst::FunctionParameter = {
+  Name => cst::FunctionParameter::Name(<>),
+  UnusedName => cst::FunctionParameter::Unused(<>),
+}
+
+ReturnTypeAnnotation: cst::TypeAnnotation = {
+  Colon Type0 => cst::TypeAnnotation(<>)
+}
+
+TypeAnnotation: cst::TypeAnnotation = {
+  Colon Type => cst::TypeAnnotation(<>)
+}
+
+RecordField: cst::RecordField = {
+  <label: Name> <equals: Equals> <value: Box<Expression>> => cst::RecordField { label, equals, value }
+}
+
+MatchArm: cst::MatchArm = {
+  <pipe: Pipe> <pattern: Pattern> <right_arrow: RightArrow> <expression: Box<Expression>> => cst::MatchArm { pipe, pattern, right_arrow, expression }
+}
+
+Pattern: cst::Pattern = {
+  <constructor: QualifiedProperName> <arguments: ParensList1<Box<Pattern>>> => cst::Pattern::Constructor { constructor, arguments },
+  <constructor: QualifiedProperName> => cst::Pattern::NullaryConstructor { constructor },
+  <name: Name> => cst::Pattern::Variable { name },
+  <unused_name: UnusedName> => cst::Pattern::Unused { unused_name },
+}
+
+Effect: cst::Effect = {
+  <return_keyword: ReturnKeyword> <expression: Box<Expression>> => cst::Effect::Return { return_keyword, expression },
+  <expression: Box<Expression>> <rest: (Semicolon Box<Effect>)?> => cst::Effect::Expression { expression, rest },
+  <name: Name> <left_arrow: LeftArrow> <expression: Box<Expression>> <semicolon: Semicolon> <rest: Box<Effect>> => cst::Effect::Bind { name, left_arrow, expression, semicolon, rest },
+}
+
+String: cst::StringToken = { <start_offset: @L> <token: "string"> <end_offset: @R> => cst::StringToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.0.leading, trailing_comment: token.0.trailing, value: token.1 } }
+
+Float: cst::StringToken = { <start_offset: @L> <token: "float"> <end_offset: @R> => cst::StringToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.0.leading, trailing_comment: token.0.trailing, value: token.1 } }
+
+Int: cst::StringToken = { <start_offset: @L> <token: "integer"> <end_offset: @R> => cst::StringToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.0.leading, trailing_comment: token.0.trailing, value: token.1 } }
+
+// NAMES
+
+Name: cst::Name = { <start_offset: @L> <token: "name"> <end_offset: @R> => cst::Name(cst::StringToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.0.leading, trailing_comment: token.0.trailing, value: token.1 }) }
+
+ProperName: cst::ProperName = { <start_offset: @L> <token: "ProperName"> <end_offset: @R> => cst::ProperName(cst::StringToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.0.leading, trailing_comment: token.0.trailing, value: token.1 }) }
+
+UnusedName: cst::UnusedName = { <start_offset: @L> <token: "_unused_name"> <end_offset: @R> => cst::UnusedName(cst::StringToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.0.leading, trailing_comment: token.0.trailing, value: token.1 }) }
+
+Qualified<T>: cst::Qualified<T> = {
+  <module_name: (ProperName Dot)?> <value: T> => cst::Qualified { module_name, value }
+}
+
+QualifiedName: cst::QualifiedName = { Qualified<Name> }
+
+QualifiedProperName: cst::QualifiedProperName = { Qualified<ProperName> }
+
+pub ModuleName: cst::ModuleName = {
+  <init: (ProperName Dot)*> <last: ProperName> => cst::ModuleName { init, last },
+}
+
+PackageName: cst::PackageName = { 
+  <start_offset: @L> <token: "name"> <end_offset: @R> =>? {
+    if token.1.contains('_') {
+      return Err(lalrpop_util::ParseError::UnrecognizedToken { token: (start_offset, Token::Name(token), end_offset), expected: vec![String::from("\"package-name\"")] })
+    }
+    Ok(cst::PackageName(cst::StringToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.0.leading, trailing_comment: token.0.trailing, value: token.1 }))
+  },
+  <start_offset: @L> <token: "package-name"> <end_offset: @R> => cst::PackageName(cst::StringToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.0.leading, trailing_comment: token.0.trailing, value: token.1 })
+}
+
+
+// SYNTAX
+
+ParensList1<T>: cst::ParensList1<T> = {
+  Parens<CommaSep1<T>>
+}
+
+ParensList<T>: cst::ParensList<T> = {
+  Parens<CommaSep1<T>?>
+}
+
+Parens<T>: cst::Parens<T> = {
+  <open_paren: OpenParen> <value: T> <close_paren: CloseParen> => cst::Parens { open_paren, value, close_paren },
+}
+
+BracesList<T>: cst::BracesList<T> = {
+  Braces<CommaSep1<T>?>
+}
+
+Braces<T>: cst::Braces<T> = {
+  <open_brace: OpenBrace> <value: T> <close_brace: CloseBrace> => cst::Braces { open_brace, value, close_brace },
+}
+
+BracketsList<T>: cst::BracketsList<T> = {
+  Brackets<CommaSep1<T>?>
+}
+
+Brackets<T>: cst::Brackets<T> = {
+  <open_bracket: OpenBracket> <value: T> <close_bracket: CloseBracket> => cst::Brackets { open_bracket, value, close_bracket },
+}
+
+#[inline]
+CommaSep1<T>: cst::CommaSep1<T> = {
+  <head: T> <tail: (Comma T)*> <trailing_comma: Comma?> => cst::CommaSep1 { head, tail, trailing_comma }
+}
+
+// TOKENS
+
+Dot: cst::Dot = { <start_offset: @L> <token: "."> <end_offset: @R> => cst::Dot(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+DoubleDot: cst::DoubleDot = { <start_offset: @L> <token: ".."> <end_offset: @R> => cst::DoubleDot(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+Comma: cst::Comma = { <start_offset: @L> <token: ","> <end_offset: @R> => cst::Comma(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+Colon: cst::Colon = { <start_offset: @L> <token: ":"> <end_offset: @R> => cst::Colon(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+Semicolon: cst::Semicolon = { <start_offset: @L> <token: ";"> <end_offset: @R> => cst::Semicolon(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+Equals: cst::Equals = { <start_offset: @L> <token: "="> <end_offset: @R> => cst::Equals(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+OpenParen: cst::OpenParen = { <start_offset: @L> <token: "("> <end_offset: @R> => cst::OpenParen(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+CloseParen: cst::CloseParen = { <start_offset: @L> <token: ")"> <end_offset: @R> => cst::CloseParen(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+OpenBracket: cst::OpenBracket = { <start_offset: @L> <token: "["> <end_offset: @R> => cst::OpenBracket(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+CloseBracket: cst::CloseBracket = { <start_offset: @L> <token: "]"> <end_offset: @R> => cst::CloseBracket(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+OpenBrace: cst::OpenBrace = { <start_offset: @L> <token: "{"> <end_offset: @R> => cst::OpenBrace(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+CloseBrace: cst::CloseBrace = { <start_offset: @L> <token: "}"> <end_offset: @R> => cst::CloseBrace(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+LeftArrow: cst::LeftArrow = { <start_offset: @L> <token: "<-"> <end_offset: @R> => cst::LeftArrow(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+RightArrow: cst::RightArrow = { <start_offset: @L> <token: "->"> <end_offset: @R> => cst::RightArrow(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+Pipe: cst::Pipe = { <start_offset: @L> <token: "|"> <end_offset: @R> => cst::Pipe(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+ModuleKeyword: cst::ModuleKeyword = { <start_offset: @L> <token: "module"> <end_offset: @R> => cst::ModuleKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+ExportsKeyword: cst::ExportsKeyword = { <start_offset: @L> <token: "exports"> <end_offset: @R> => cst::ExportsKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+ImportKeyword: cst::ImportKeyword = { <start_offset: @L> <token: "import"> <end_offset: @R> => cst::ImportKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+AsKeyword: cst::AsKeyword = { <start_offset: @L> <token: "as"> <end_offset: @R> => cst::AsKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+TrueKeyword: cst::TrueKeyword = { <start_offset: @L> <token: "true"> <end_offset: @R> => cst::TrueKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+FalseKeyword: cst::FalseKeyword = { <start_offset: @L> <token: "false"> <end_offset: @R> => cst::FalseKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+UnitKeyword: cst::UnitKeyword = { <start_offset: @L> <token: "unit"> <end_offset: @R> => cst::UnitKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+IfKeyword: cst::IfKeyword = { <start_offset: @L> <token: "if"> <end_offset: @R> => cst::IfKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+ThenKeyword: cst::ThenKeyword = { <start_offset: @L> <token: "then"> <end_offset: @R> => cst::ThenKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+ElseKeyword: cst::ElseKeyword = { <start_offset: @L> <token: "else"> <end_offset: @R> => cst::ElseKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+TypeKeyword: cst::TypeKeyword = { <start_offset: @L> <token: "type"> <end_offset: @R> => cst::TypeKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+ForeignKeyword: cst::ForeignKeyword = { <start_offset: @L> <token: "foreign"> <end_offset: @R> => cst::ForeignKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+MatchKeyword: cst::MatchKeyword = { <start_offset: @L> <token: "match"> <end_offset: @R> => cst::MatchKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+WithKeyword: cst::WithKeyword = { <start_offset: @L> <token: "with"> <end_offset: @R> => cst::WithKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+LetKeyword: cst::LetKeyword = { <start_offset: @L> <token: "let"> <end_offset: @R> => cst::LetKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+DoKeyword: cst::DoKeyword = { <start_offset: @L> <token: "do"> <end_offset: @R> => cst::DoKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+ReturnKeyword: cst::ReturnKeyword = { <start_offset: @L> <token: "return"> <end_offset: @R> => cst::ReturnKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+FnKeyword: cst::FnKeyword = { <start_offset: @L> <token: "fn"> <end_offset: @R> => cst::FnKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+EndKeyword: cst::EndKeyword = { <start_offset: @L> <token: "end"> <end_offset: @R> => cst::EndKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+RightPizzaOperator: cst::RightPizzaOperator = { <start_offset: @L> <token: "|>"> <end_offset: @R> => cst::RightPizzaOperator(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+
+extern {
+  type Location = usize;
+  type Error = Error;
+
+  enum Token {
+    "." => Token::Dot(<Comments>),
+    ".." => Token::DoubleDot(<Comments>),
+    "," => Token::Comma(<Comments>),
+    ":" => Token::Colon(<Comments>),
+    ";" => Token::Semicolon(<Comments>),
+    "=" => Token::Equals(<Comments>),
+    "(" => Token::OpenParen(<Comments>),
+    ")" => Token::CloseParen(<Comments>),
+    "[" => Token::OpenBracket(<Comments>),
+    "]" => Token::CloseBracket(<Comments>),
+    "{" => Token::OpenBrace(<Comments>),
+    "}" => Token::CloseBrace(<Comments>),
+    "<-" => Token::LeftArrow(<Comments>),
+    "->" => Token::RightArrow(<Comments>),
+    "|" => Token::Pipe(<Comments>),
+    "module" => Token::ModuleKeyword(<Comments>),
+    "exports" => Token::ExportsKeyword(<Comments>),
+    "import" => Token::ImportKeyword(<Comments>),
+    "as" => Token::AsKeyword(<Comments>),
+    "true" => Token::TrueKeyword(<Comments>),
+    "false" => Token::FalseKeyword(<Comments>),
+    "unit" => Token::UnitKeyword(<Comments>),
+    "if" => Token::IfKeyword(<Comments>),
+    "then" => Token::ThenKeyword(<Comments>),
+    "else" => Token::ElseKeyword(<Comments>),
+    "type" => Token::TypeKeyword(<Comments>),
+    "foreign" => Token::ForeignKeyword(<Comments>),
+    "match" => Token::MatchKeyword(<Comments>),
+    "with" => Token::WithKeyword(<Comments>),
+    "let" => Token::LetKeyword(<Comments>),
+    "do" => Token::DoKeyword(<Comments>),
+    "return" => Token::ReturnKeyword(<Comments>),
+    "fn" => Token::FnKeyword(<Comments>),
+    "end" => Token::EndKeyword(<Comments>),
+    "|>" => Token::RightPizzaOperator(<Comments>),
+    "name" => Token::Name(<(Comments, String)>),
+    "ProperName" => Token::ProperName(<(Comments, String)>),
+    "_unused_name" => Token::UnusedName(<(Comments, String)>),
+    "package-name" => Token::PackageName(<(Comments, String)>),
+    "string" => Token::String(<(Comments, String)>),
+    "integer" => Token::Int(<(Comments, String)>),
+    "float" => Token::Float(<(Comments, String)>),
+  }
+}
+
+#[inline]
+Box<T>: Box<T> = { T => Box::new(<>) }

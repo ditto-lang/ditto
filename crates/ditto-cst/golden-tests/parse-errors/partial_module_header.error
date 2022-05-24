@@ -1,8 +1,9 @@
 
-  × syntax error
+  × unexpected eof
    ╭─[golden:1:1]
  1 │ -- test
  2 │ module
    ·       ▲
-   ·       ╰── expected: module_name
+   ·       ╰── here
    ╰────
+  help: expected "ProperName"

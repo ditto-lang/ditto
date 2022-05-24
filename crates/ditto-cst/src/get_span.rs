@@ -81,17 +81,9 @@ impl Expression {
             Self::Constructor(qualified_proper_name) => qualified_proper_name.get_span(),
             Self::Match {
                 match_keyword,
-                head_arm,
-                tail_arms,
+                end_keyword,
                 ..
-            } => {
-                let start = match_keyword.0.get_span();
-                if let Some(last_arm) = tail_arms.last() {
-                    start.merge(&last_arm.expression.get_span())
-                } else {
-                    start.merge(&head_arm.expression.get_span())
-                }
-            }
+            } => match_keyword.0.get_span().merge(&end_keyword.0.get_span()),
             Self::Call {
                 function,
                 arguments,
@@ -99,8 +91,8 @@ impl Expression {
                 .get_span()
                 .merge(&arguments.close_paren.0.get_span()),
             Self::Function {
-                parameters, body, ..
-            } => parameters.open_paren.0.get_span().merge(&body.get_span()),
+                fn_keyword, body, ..
+            } => fn_keyword.0.get_span().merge(&body.get_span()),
             Self::If {
                 if_keyword,
                 false_clause,

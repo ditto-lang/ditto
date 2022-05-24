@@ -2,8 +2,12 @@
 #![feature(box_patterns)]
 #![warn(missing_docs)]
 
+#[macro_use]
+extern crate lalrpop_util;
+
 mod expression;
 mod get_span;
+mod lexer;
 mod module;
 mod name;
 mod parser;
@@ -14,7 +18,7 @@ mod r#type;
 pub use expression::*;
 pub use module::*;
 pub use name::*;
-pub use parser::*;
+pub use parser::parse_header_and_imports;
 pub use r#type::*;
 pub use syntax::*;
 pub use token::*;

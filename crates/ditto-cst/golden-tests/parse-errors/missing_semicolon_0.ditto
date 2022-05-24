@@ -1,3 +1,4 @@
 module Missing.Semicolon exports (..)
 
+-- hmm this error isn't great
 import Some.Module;
