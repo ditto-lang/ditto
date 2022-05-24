@@ -14,6 +14,8 @@ itertools = "0.10"
 serde = { version = "1.0", features = ["derive"] }
 miette = { version = "4.7", features = ["fancy"] }
 thiserror = "1.0"
+lalrpop-util = "0.19.8"
+regex = "1"
 #simsearch = "xx"   <-- for suggestions
 #unindent = "xx"  <-- might come in useful for smart multi-line strings (like Nix)
 #codespan = "xx" <-- might be a good replacement for our `Span` type
@@ -21,3 +23,6 @@ thiserror = "1.0"
 [dev-dependencies]
 snapshot-test = { path = "../snapshot-test" }
 similar-asserts = "1.2"
+
+[build-dependencies]
+lalrpop = "0.19.8"
