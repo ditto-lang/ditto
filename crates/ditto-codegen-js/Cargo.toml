@@ -10,7 +10,7 @@ doctest = false
 [dependencies]
 ditto-ast = { path = "../ditto-ast" }
 lazy_static = "1.4"
-egg = "0.7"
+egg = "0.8"
 indexmap = "1.8"
 
 [dev-dependencies]
