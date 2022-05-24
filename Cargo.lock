@@ -473,6 +473,7 @@ dependencies = [
  "ditto-config",
  "ditto-cst",
  "lazy_static",
+ "log",
  "miette",
  "path-slash",
  "pathdiff",

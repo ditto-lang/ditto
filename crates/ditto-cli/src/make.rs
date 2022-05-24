@@ -470,6 +470,11 @@ async fn make(
         .env("CLICOLOR_FORCE", "1")
         // Pass `is_plain` logic down to CLI calls made by ninja
         .env("DITTO_PLAIN", common::is_plain().to_string())
+        .envs(if let Ok(log_dir) = std::env::var("DITTO_LOG_DIR") {
+            vec![("DITTO_LOG_DIR", log_dir)]
+        } else {
+            vec![]
+        })
         .spawn()
         .into_diagnostic()
         .wrap_err(format!(

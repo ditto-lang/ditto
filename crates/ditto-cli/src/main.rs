@@ -105,6 +105,7 @@ async fn try_main() -> Result<()> {
         let args = std::env::args().collect::<Vec<_>>();
 
         let subcommand_name = matches.subcommand_name();
+        // TODO: make the log level configurable via an env var?
         flexi_logger::Logger::try_with_str("debug")
             .into_diagnostic()?
             .format_for_files(flexi_logger::default_format)

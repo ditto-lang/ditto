@@ -10,6 +10,7 @@ use std::{
     fs::File,
     io::{Read, Write},
     path::{Path, PathBuf},
+    time::SystemTime,
 };
 
 use crate::common;
@@ -199,11 +200,31 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
 
     let (ditto_input_name, ditto_input_source) = ditto_input.unwrap();
 
-    let cst = cst::Module::parse(&ditto_input_source)
-        .map_err(|err| err.into_report(&ditto_input_name, ditto_input_source.clone()))?;
+    let cst = if log::log_enabled!(log::Level::Info) {
+        log_time(
+            || {
+                cst::Module::parse(&ditto_input_source)
+                    .map_err(|err| err.into_report(&ditto_input_name, ditto_input_source.clone()))
+            },
+            format!("{} checked in", ditto_input_name),
+        )
+    } else {
+        cst::Module::parse(&ditto_input_source)
+            .map_err(|err| err.into_report(&ditto_input_name, ditto_input_source.clone()))
+    }?;
 
-    let (ast, warnings) = checker::check_module(&everything, cst)
-        .map_err(|err| err.into_report(&ditto_input_name, ditto_input_source.clone()))?;
+    let (ast, warnings) = if log::log_enabled!(log::Level::Info) {
+        log_time(
+            || {
+                checker::check_module(&everything, cst)
+                    .map_err(|err| err.into_report(&ditto_input_name, ditto_input_source.clone()))
+            },
+            format!("{} checked in", ditto_input_name),
+        )
+    } else {
+        checker::check_module(&everything, cst)
+            .map_err(|err| err.into_report(&ditto_input_name, ditto_input_source.clone()))
+    }?;
 
     let warnings = warnings
         .into_iter()
@@ -298,33 +319,39 @@ fn run_js(inputs: Vec<String>, outputs: Vec<String>) -> Result<()> {
     let foreign_module_path =
         pathdiff::diff_paths(foreign_module_path, js_output_path.parent().unwrap()).unwrap();
 
-    let js = js::codegen(
-        &js::Config {
-            // We don't want platform specific path seperators here,
-            // NodeJS will handle Unix slash paths
-            foreign_module_path: path_slash::PathBufExt::to_slash_lossy(&foreign_module_path),
-            module_name_to_path: Box::new(move |(package_name, module_name)| match package_name {
-                Some(package_name) => {
-                    format!(
-                        "{}/{}.{}",
-                        package_name,
-                        common::module_name_to_file_stem(module_name).to_string_lossy(),
-                        common::EXTENSION_JS
-                    )
-                }
-                None => {
-                    // Assume that JS files from the same ditto project are always going to be generated
-                    // into a flat directory
-                    format!(
-                        "./{}.{}",
-                        common::module_name_to_file_stem(module_name).to_string_lossy(),
-                        common::EXTENSION_JS
-                    )
-                }
-            }),
-        },
-        ast,
-    );
+    let codegen_config = js::Config {
+        // We don't want platform specific path seperators here,
+        // NodeJS will handle Unix slash paths
+        foreign_module_path: path_slash::PathBufExt::to_slash_lossy(&foreign_module_path),
+        module_name_to_path: Box::new(move |(package_name, module_name)| match package_name {
+            Some(package_name) => {
+                format!(
+                    "{}/{}.{}",
+                    package_name,
+                    common::module_name_to_file_stem(module_name).to_string_lossy(),
+                    common::EXTENSION_JS
+                )
+            }
+            None => {
+                // Assume that JS files from the same ditto project are always going to be generated
+                // into a flat directory
+                format!(
+                    "./{}.{}",
+                    common::module_name_to_file_stem(module_name).to_string_lossy(),
+                    common::EXTENSION_JS
+                )
+            }
+        }),
+    };
+
+    let js = if log::log_enabled!(log::Level::Info) {
+        log_time(
+            || js::codegen(&codegen_config, ast),
+            format!("{} generated in", js_output_path.to_string_lossy()),
+        )
+    } else {
+        js::codegen(&codegen_config, ast)
+    };
 
     let mut js_file = File::create(&js_output_path).into_diagnostic()?;
     js_file.write_all(js.as_bytes()).into_diagnostic()?;
@@ -410,4 +437,14 @@ fn full_extension(path: &Path) -> Option<&str> {
         .and_then(|file_name| file_name.to_str())
         .and_then(|str| str.split_once('.'))
         .map(|parts| parts.1)
+}
+
+fn log_time<T, Action: FnOnce() -> T>(action: Action, prefix: String) -> T {
+    let start = SystemTime::now();
+    let out = action();
+    let end = SystemTime::now();
+    if let Ok(duration) = end.duration_since(start) {
+        log::info!("{} {:?}", prefix, duration)
+    }
+    out
 }
