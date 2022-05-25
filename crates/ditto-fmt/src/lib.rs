@@ -67,8 +67,10 @@ mod test_macros {
             assert_fmt!($source, $want, $crate::config::MAX_WIDTH)
         }};
         ($source:expr, $want:expr, $max_width:expr) => {{
-            let items =
-                $crate::expression::gen_expression(ditto_cst::Expression::parse($source).unwrap());
+            let items = $crate::expression::gen_expression(
+                ditto_cst::Expression::parse($source).unwrap(),
+                true,
+            );
             $crate::test_macros::assert_fmt!(items, $source, $want, $max_width);
         }};
     }

@@ -21,10 +21,10 @@ use dprint_core::formatting::{
 };
 use std::rc::Rc;
 
-pub fn gen_expression(expr: Expression) -> PrintItems {
+pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
     match expr {
         // TODO remove redundant parens?
-        Expression::Parens(parens) => gen_parens(parens, |box expr| gen_expression(expr)),
+        Expression::Parens(parens) => gen_parens(parens, |box expr| gen_expression(expr, true)),
         Expression::True(keyword) => gen_true_keyword(keyword),
         Expression::False(keyword) => gen_false_keyword(keyword),
         Expression::Unit(keyword) => gen_unit_keyword(keyword),
@@ -39,7 +39,7 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
             value: format!("\"{}\"", token.value),
         }),
         Expression::Array(brackets) => gen_brackets_list(brackets, |box expr| {
-            ir_helpers::new_line_group(gen_expression(expr))
+            ir_helpers::new_line_group(gen_expression(expr, true))
         }),
         Expression::If {
             if_keyword,
@@ -87,20 +87,24 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
                     items.extend(gen_if_keyword(if_keyword.clone()));
                     items.push_info(start_info);
                     items.extend(space());
-                    items.extend(gen_expression(condition.clone()));
+                    items.extend(gen_expression(condition.clone(), true));
                     items.extend(space());
                     items.extend(gen_then_keyword(then_keyword.clone()));
                     items.push_signal(Signal::NewLine);
-                    items.extend(ir_helpers::with_indent(gen_expression(true_clause.clone())));
+                    items.extend(ir_helpers::with_indent(gen_expression(
+                        true_clause.clone(),
+                        true,
+                    )));
                     items.push_signal(Signal::ExpectNewLine);
                     items.extend(gen_else_keyword(else_keyword.clone()));
                     if matches!(false_clause, Expression::If { .. }) {
                         items.extend(space());
-                        items.extend(gen_expression(false_clause.clone()));
+                        items.extend(gen_expression(false_clause.clone(), true));
                     } else {
                         items.push_signal(Signal::NewLine);
                         items.extend(ir_helpers::with_indent(gen_expression(
                             false_clause.clone(),
+                            true,
                         )));
                     }
                     items
@@ -115,15 +119,15 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
                     items.extend(gen_if_keyword(if_keyword));
                     items.push_info(start_info);
                     items.push_signal(Signal::SpaceOrNewLine);
-                    items.extend(gen_expression(condition));
+                    items.extend(gen_expression(condition, true));
                     items.push_signal(Signal::SpaceOrNewLine);
                     items.extend(gen_then_keyword(then_keyword));
                     items.push_signal(Signal::SpaceOrNewLine);
-                    items.extend(gen_expression(true_clause));
+                    items.extend(gen_expression(true_clause, true));
                     items.push_signal(Signal::SpaceOrNewLine);
                     items.extend(gen_else_keyword(else_keyword));
                     items.push_signal(Signal::SpaceOrNewLine);
-                    items.extend(gen_expression(false_clause));
+                    items.extend(gen_expression(false_clause, true));
                     items
                 },
             )
@@ -186,9 +190,9 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
             arguments,
         } => {
             let mut items = PrintItems::new();
-            items.extend(gen_expression(function));
+            items.extend(gen_expression(function, true));
             items.extend(gen_parens_list(arguments, |box expr| {
-                ir_helpers::new_line_group(gen_expression(expr))
+                ir_helpers::new_line_group(gen_expression(expr, true))
             }));
             items
         }
@@ -208,7 +212,7 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
             // like we do for type declarations.
             items.extend(gen_match_keyword(match_keyword));
             items.extend(space());
-            items.extend(gen_expression(expression));
+            items.extend(gen_expression(expression, true));
             items.extend(space());
             items.extend(gen_with_keyword(with_keyword));
             items.extend(gen_match_arm(head_arm));
@@ -223,11 +227,11 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
             box rhs,
         } => {
             let mut items = PrintItems::new();
-            items.extend(gen_expression(lhs));
+            items.extend(gen_expression(lhs, true));
             items.push_signal(Signal::ExpectNewLine);
             items.extend(gen_right_pizza_operator(right_pizza_operator));
             items.extend(space());
-            items.extend(gen_expression(rhs));
+            items.extend(gen_expression(rhs, true));
             items
         }
         Expression::RecordAccess {
@@ -236,7 +240,7 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
             label,
         } => {
             let mut items = PrintItems::new();
-            items.extend(gen_expression(target));
+            items.extend(gen_expression(target, true));
             items.extend(gen_dot(dot));
             items.extend(gen_name(label));
             items
@@ -253,7 +257,7 @@ pub fn gen_expression(expr: Expression) -> PrintItems {
                 items.extend(space());
                 items.extend(gen_equals(equals));
                 let force_use_new_lines = value.has_leading_comments();
-                items.extend(group(gen_expression(value), force_use_new_lines));
+                items.extend(group(gen_expression(value, true), force_use_new_lines));
                 items
             },
         ),
@@ -269,7 +273,7 @@ fn gen_effect(effect: Effect, items: &mut PrintItems) {
         } => {
             items.extend(gen_return_keyword(return_keyword));
             items.extend(space());
-            items.extend(gen_expression(expression));
+            items.extend(gen_expression(expression, true));
         }
         Effect::Bind {
             name,
@@ -291,7 +295,7 @@ fn gen_effect(effect: Effect, items: &mut PrintItems) {
             box expression,
             rest,
         } => {
-            items.extend(gen_expression(expression));
+            items.extend(gen_expression(expression, true));
             if let Some((semicolon, box rest)) = rest {
                 items.extend(gen_semicolon(semicolon));
                 gen_effect(rest, items)
@@ -373,14 +377,14 @@ pub fn gen_body_expression(expr: Expression, force_use_new_lines: bool) -> Print
         {
             let mut items = PrintItems::new();
             items.push_info(start_info);
-            items.extend(group(gen_expression(expr.clone()), true));
+            items.extend(group(gen_expression(expr.clone(), true), true));
             items.push_info(end_info);
             items
         },
         {
             let mut items = PrintItems::new();
             items.push_info(start_info);
-            items.extend(group(gen_expression(expr), false));
+            items.extend(group(gen_expression(expr, true), false));
             items.push_info(end_info);
             items
         },
