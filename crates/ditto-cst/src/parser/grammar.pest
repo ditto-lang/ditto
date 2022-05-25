@@ -113,9 +113,9 @@ type_parens = { open_paren ~ type_ ~ close_paren }
 
 type_variable = { name }
 
-type_record_closed = { open_brace ~ (type_record_field ~ (comma ~ type_record_field)* ~ comma?)?  ~ close_brace }
+type_record_closed = { open_brace ~ close_brace | open_brace ~ type_record_field ~ (comma ~ type_record_field)* ~ comma? ~ close_brace }
 
-type_record_open = { open_brace ~ name ~ pipe ~ type_record_field ~ (comma ~ type_record_field)* ~ comma?  ~ close_brace }
+type_record_open = { open_brace ~ name ~ pipe ~ type_record_field ~ (comma ~ type_record_field)* ~ comma? ~ close_brace }
 
 type_record_field = { name ~ colon ~ type_ }
 
@@ -129,7 +129,7 @@ type_call_arguments = { open_paren ~ type_ ~ (comma ~ type_)* ~ comma? ~ close_p
 
 type_function = { type_function_parameters ~ right_arrow ~ type_ }
 
-type_function_parameters = { open_paren ~ (type_ ~ (comma ~ type_)* ~ comma?)?  ~ close_paren }
+type_function_parameters = { open_paren ~ close_paren | open_paren ~ type_ ~ (comma ~ type_)* ~ comma? ~ close_paren }
 
 type_annotation = { colon ~ type_ }
 
@@ -164,36 +164,41 @@ expression_1 = _
 expression_0 = _ 
   { expression_parens 
   | expression_record
+  | expression_array
+
+  // Literals
+  | expression_string
+  | expression_float
+  | expression_integer
+
   | expression_constructor 
+
+  // Keywords
   | expression_true
   | expression_false
   | expression_unit
   // It's important that keyword expressions come before `expression_variable`
   | expression_variable 
-  | expression_array
-  | expression_string
-  | expression_float
-  | expression_integer
   }
 
 // LEFT-ASSOCIATIVE
 // https://github.com/pest-parser/pest/pull/533
 
-expression_right_pipe = { expression_2 ~ right_pizza ~ expression_2 ~ (right_pizza ~ expression_2)* }
+expression_right_pipe = { expression_2 ~ (right_pizza ~ expression_2)+ }
 
 expression_record_access = { expression_1 ~ expression_record_access_accessor+ }
 
 expression_record_access_accessor = { dot ~ name ~ expression_call_arguments? }
 
-expression_call = { expression_0 ~ expression_call_arguments+   }
+expression_call = { expression_0 ~ expression_call_arguments+ }
 
-expression_call_arguments = { open_paren ~ (expression ~ (comma ~ expression)* ~ comma?)?  ~ close_paren }
+expression_call_arguments = { open_paren ~ close_paren | open_paren ~ expression ~ (comma ~ expression)* ~ comma? ~ close_paren }
 
 // END LEFT-ASSOCIATIVE THINGS
 
 expression_parens = { open_paren ~ expression ~ close_paren }
 
-expression_record = { open_brace ~ (expression_record_field ~ (comma ~ expression_record_field)* ~ comma?)?  ~ close_brace }
+expression_record = { open_brace ~ close_brace | open_brace ~ expression_record_field ~ (comma ~ expression_record_field)* ~ comma? ~ close_brace }
 
 expression_record_field = { name ~ equals ~ expression }
 
@@ -219,7 +224,7 @@ expression_constructor = { qualified_proper_name }
 
 expression_function = { expression_function_parameters ~ return_type_annotation? ~ right_arrow ~ expression }
 
-expression_function_parameters = { open_paren ~ (expression_function_parameter ~ (comma ~ expression_function_parameter)* ~ comma?)?  ~ close_paren }
+expression_function_parameters = { open_paren ~ close_paren | open_paren ~ expression_function_parameter ~ (comma ~ expression_function_parameter)* ~ comma? ~ close_paren }
 
 expression_function_parameter = { (name | unused_name) ~ type_annotation? }
 
@@ -227,7 +232,7 @@ expression_if = { if_keyword ~ expression ~ then_keyword ~ expression ~ else_key
 
 expression_variable = { qualified_name }
 
-expression_array = { open_bracket ~ (expression ~ (comma ~ expression)* ~ comma?)?  ~ close_bracket }
+expression_array = { open_bracket ~ close_bracket | open_bracket ~ expression ~ (comma ~ expression)* ~ comma? ~ close_bracket }
 
 expression_string = { string_literal }
 
@@ -251,7 +256,7 @@ pattern_constructor = { pattern_constructor_proper_name ~ pattern_constructor_ar
 
 pattern_constructor_proper_name = { qualified_proper_name }
 
-pattern_constructor_arguments = { open_paren ~ (pattern ~ (comma ~ pattern)* ~ comma?)?  ~ close_paren }
+pattern_constructor_arguments = { open_paren ~ pattern ~ (comma ~ pattern)* ~ comma? ~ close_paren }
 
 pattern_variable = { name }
 
@@ -269,85 +274,85 @@ qualifier = { proper_name ~ dot }
 // -----------------------------------------------------------------------------
 // Token rules
 
-name = ${ (WHITESPACE | LINE_COMMENT)* ~ NAME ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+name = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ NAME ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-unused_name = ${ (WHITESPACE | LINE_COMMENT)* ~ UNUSED_NAME ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+unused_name = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ UNUSED_NAME ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-proper_name = ${ (WHITESPACE | LINE_COMMENT)* ~ PROPER_NAME ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+proper_name = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ PROPER_NAME ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-package_name = ${ (WHITESPACE | LINE_COMMENT)* ~ PACKAGE_NAME ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+package_name = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ PACKAGE_NAME ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-integer_literal = ${ (WHITESPACE | LINE_COMMENT)* ~ INTEGER ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+integer_literal = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ INTEGER ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-float_literal = ${ (WHITESPACE | LINE_COMMENT)* ~ FLOAT ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+float_literal = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ FLOAT ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-string_literal = ${ (WHITESPACE | LINE_COMMENT)* ~ STRING ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+string_literal = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ STRING ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-true_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ TRUE_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+true_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ TRUE_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-false_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ FALSE_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+false_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ FALSE_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-unit_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ UNIT_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+unit_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ UNIT_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-if_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ IF_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+if_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ IF_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-then_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ THEN_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+then_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ THEN_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-else_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ ELSE_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+else_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ ELSE_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-module_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ MODULE_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+module_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ MODULE_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-exports_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ EXPORTS_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+exports_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ EXPORTS_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-import_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ IMPORT_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+import_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ IMPORT_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-as_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ AS_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+as_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ AS_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-type_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ TYPE_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+type_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ TYPE_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-foreign_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ FOREIGN_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+foreign_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ FOREIGN_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-match_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ MATCH_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+match_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ MATCH_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-do_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ DO_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+do_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ DO_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-return_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ RETURN_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+return_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ RETURN_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-let_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ LET_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+let_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ LET_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-with_keyword = ${ (WHITESPACE | LINE_COMMENT)* ~ WITH_KEYWORD ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+with_keyword = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ WITH_KEYWORD ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-dot = ${ (WHITESPACE | LINE_COMMENT)* ~ DOT ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+dot = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ DOT ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-pipe = ${ (WHITESPACE | LINE_COMMENT)* ~ PIPE ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+pipe = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ PIPE ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-right_pizza = ${ (WHITESPACE | LINE_COMMENT)* ~ RIGHT_PIZZA ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+right_pizza = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ RIGHT_PIZZA ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-double_dot = ${ (WHITESPACE | LINE_COMMENT)* ~ DOUBLE_DOT ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+double_dot = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ DOUBLE_DOT ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-comma = ${ (WHITESPACE | LINE_COMMENT)* ~ COMMA ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+comma = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ COMMA ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-colon = ${ (WHITESPACE | LINE_COMMENT)* ~ COLON ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+colon = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ COLON ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-semicolon = ${ (WHITESPACE | LINE_COMMENT)* ~ SEMICOLON ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+semicolon = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ SEMICOLON ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-equals = ${ (WHITESPACE | LINE_COMMENT)* ~ EQUALS ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+equals = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ EQUALS ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-right_arrow = ${ (WHITESPACE | LINE_COMMENT)* ~ RIGHT_ARROW ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+right_arrow = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ RIGHT_ARROW ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-left_arrow = ${ (WHITESPACE | LINE_COMMENT)* ~ LEFT_ARROW ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+left_arrow = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ LEFT_ARROW ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-open_paren = ${ (WHITESPACE | LINE_COMMENT)* ~ OPEN_PAREN ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+open_paren = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ OPEN_PAREN ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-close_paren = ${ (WHITESPACE | LINE_COMMENT)* ~ CLOSE_PAREN ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+close_paren = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ CLOSE_PAREN ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-open_bracket = ${ (WHITESPACE | LINE_COMMENT)* ~ OPEN_BRACKET ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+open_bracket = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ OPEN_BRACKET ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-close_bracket = ${ (WHITESPACE | LINE_COMMENT)* ~ CLOSE_BRACKET ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+close_bracket = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ CLOSE_BRACKET ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-open_brace = ${ (WHITESPACE | LINE_COMMENT)* ~ OPEN_BRACE ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+open_brace = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ OPEN_BRACE ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
-close_brace = ${ (WHITESPACE | LINE_COMMENT)* ~ CLOSE_BRACE ~ HORIZONTAL_WHITESPACE? ~ LINE_COMMENT? }
+close_brace = ${ (LINE_COMMENT ~ WHITESPACE*)* ~ CLOSE_BRACE ~ HORIZONTAL_WHITESPACE* ~ LINE_COMMENT? }
 
 // -----------------------------------------------------------------------------
 // Atom rules (uppercase by convention)
@@ -435,13 +440,17 @@ CLOSE_BRACE = { "}" }
 
 DOUBLE_QUOTE = { "\"" }
 
+// -----------------------------------------------------------------------------
+// "Skipped" rules
+
 // NOTE: we don't call this `COMMENT` because we don't want pest to automatically
 // consume (and drop!) comments
-LINE_COMMENT = @{ "--" ~ (!NEWLINE ~ ANY)* } // TODO unicode?
+LINE_COMMENT = @{ "--" ~ (!NEWLINE ~ ANY)* }
 
-// -----------------------------------------------------------------------------
-// Special rules names (see https://docs.rs/pest_derive/2.1.0/pest_derive/#whitespace-and-comment)
+WHITESPACE = _{ SPACE | TAB | NEWLINE }
 
-WHITESPACE = _{ (" " | "\t" | NEWLINE)+ } // TODO unicode?
+HORIZONTAL_WHITESPACE = _{ SPACE | TAB }
 
-HORIZONTAL_WHITESPACE = _{ (" " | "\t")+ } // TODO unicode?
+SPACE = _{ " " } // TODO unicode?
+
+TAB = _{ "\t" } // TODO unicode?

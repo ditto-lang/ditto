@@ -21,6 +21,19 @@ let
   };
   inherit (fenixPackages) rust-analyzer;
 
+  cargo-benchcmp = pkgs.rustPlatform.buildRustPackage rec {
+    pname = "cargo-benchcmp";
+    version = "0.4.3";
+    src = pkgs.fetchFromGitHub {
+      owner = "BurntSushi";
+      repo = pname;
+      rev = version;
+      sha256 = "sha256-nD/qFqq1DOmNZGW4g9Xjpwob/T7d6egFdFMNFG+N+f0=";
+    };
+    cargoSha256 = "sha256-frNoGzeOPo/gUksaquiFdRhUd486BABcoznW29FzIK8=";
+    doCheck = false;
+  };
+
   # Should match .nvmrc
   # Also see: https://nixos.wiki/wiki/Node.js#Example_nix_shell_for_Node.js_development
   # (but note building Node from source takes aaages)
@@ -34,6 +47,7 @@ in pkgs.mkShell {
     pkgs.cargo-audit
     pkgs.cargo-outdated
     pkgs.cargo-tarpaulin
+    cargo-benchcmp
     nodejs
     pkgs.ninja
     pkgs.openssl
