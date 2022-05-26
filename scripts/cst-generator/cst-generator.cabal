@@ -1,0 +1,10 @@
+cabal-version: >= 1.10
+
+name: cst-generator
+version: 1.0.0
+build-type: Simple
+
+executable cst-generator
+  main-is: Main.hs
+  build-depends: base, transformers, random
+  default-language: Haskell2010

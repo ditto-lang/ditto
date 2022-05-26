@@ -1,12 +1,7 @@
 let
-  nixpkgsRev = "c1da6fc4ce95fe59f2c0c8e7cee580a37e0bb94b";
-  nixpkgs = builtins.fetchTarball {
-    name = "nixpkgs-${nixpkgsRev}";
-    url = "https://github.com/nixos/nixpkgs/archive/${nixpkgsRev}.tar.gz";
-    sha256 = "15s8cg7n6b7l8721s912733y7qybjvj73n5gsjx31707b3qn38gn";
-  };
-  pkgs = import nixpkgs { };
-  lib = pkgs.lib;
+  pkgs = import ./shell-nixpkgs.nix { };
+
+  inherit (pkgs) lib;
 
   fenixRev = "9e3384c61656487b10226a3366a12c37393b21d9";
   fenixPackages = import (builtins.fetchTarball {
@@ -34,6 +29,15 @@ let
     doCheck = false;
   };
 
+  stack = pkgs.symlinkJoin {
+    name = "stack-with-system-ghc";
+    paths = [ pkgs.stack ];
+    buildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/stack --add-flags "--system-ghc"
+    '';
+  };
+
   # Should match .nvmrc
   # Also see: https://nixos.wiki/wiki/Node.js#Example_nix_shell_for_Node.js_development
   # (but note building Node from source takes aaages)
@@ -48,6 +52,13 @@ in pkgs.mkShell {
     pkgs.cargo-outdated
     pkgs.cargo-tarpaulin
     cargo-benchcmp
+
+    # Haskell stuff
+    stack
+    pkgs.ghc
+    pkgs.ormolu
+    pkgs.ghcid
+
     nodejs
     pkgs.ninja
     pkgs.openssl
