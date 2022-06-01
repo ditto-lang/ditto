@@ -111,8 +111,10 @@ impl TokensBuilder {
               "as"
               "type"
               "foreign"
+              "fn"
               "match"
               "with"
+              "end"
               "do"
               "return"
             ] @keyword
