@@ -6,46 +6,54 @@ type Maybe(a) = Just(a) | Nothing;
 
 type ManyFields(a, b, c, d) = ManyFields(a, b, c, d);
 
-with_default = (maybe: Maybe(a), default: a): a ->
+with_default = fn (maybe: Maybe(a), default: a): a ->
     match maybe with
     | Just(a) -> a
-    | Nothing -> default;
+    | Nothing -> default
+    end;
 
-mk_five = (five) ->
+mk_five = fn (five) ->
     match five with
-    | Five -> 5;
+    | Five -> 5
+    end;
 
-many_fields_to_array = (mf : ManyFields(a, a, a, a)): Array(a) -> 
+many_fields_to_array = fn (mf : ManyFields(a, a, a, a)): Array(a) -> 
     match mf with
-    | ManyFields(a, b, c, d) -> [a, b, c, d];
+    | ManyFields(a, b, c, d) -> [a, b, c, d]
+    end;
 
-is_just = (maybe): Bool ->
+is_just = fn (maybe): Bool ->
     match maybe with
     | Just(_) -> true
-    | Nothing -> false;
+    | Nothing -> false
+    end;
 
-function_arms = (maybe: Maybe(Int)) ->
+function_arms = fn (maybe: Maybe(Int)) ->
     match maybe with
-    | Just(a) -> (b, c) -> [a, b, c]
-    | Nothing -> (b, c) -> [1, b, c];
+    | Just(a) -> fn (b, c) -> [a, b, c]
+    | Nothing -> fn (b, c) -> [1, b, c]
+    end;
 
-very_function_arms = (maybe: Maybe(Int)) ->
+very_function_arms = fn (maybe: Maybe(Int)) ->
     match maybe with
-    | Just(a) -> (b) -> (c) -> (d) -> [a, b, c]
-    | Nothing -> (b) -> (c) -> (d) -> [1, b, c];
+    | Just(a) -> fn (b) -> fn (c) -> fn (d) -> [a, b, c]
+    | Nothing -> fn (b) -> fn (c) -> fn (d) -> [1, b, c]
+    end;
 
-effect_arms = (maybe) ->
+effect_arms = fn (maybe) ->
     match maybe with
     | Just(a) -> do { return a }
-    | Nothing -> do { return 5 };
+    | Nothing -> do { return 5 }
+    end;
 
 type ABC =
     | A
     | B
     | C;
 
-to_string = (abc) ->
+to_string = fn (abc) ->
     match abc with
     | A -> "A"
     | B -> "C"
-    | C -> "C";
+    | C -> "C"
+    end;

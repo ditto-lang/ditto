@@ -2,16 +2,15 @@ module Test exports (..);
 
 empty_object : {} = {};
 
-just_object_things = { yep = true, huh = unit, why = () -> {} };
+just_object_things = { yep = true, huh = unit, why = fn () -> {} };
 
--- FIXME: parsing this is hilariously slow
 very_nested = { a = { b = { c = { d = [] }}}};
 
 d = very_nested.a.b.c.d;
 
-get_foo = (x : { r | foo: a }) -> x.foo;
-mk_has_foo = (a) -> { foo = a };
+get_foo = fn (x : { r | foo: a }) -> x.foo;
+mk_has_foo = fn (a) -> { foo = a };
 foo = mk_has_foo(true).foo;
 
-pure_object = () -> {};
+pure_object = fn () -> {};
 do_object = do { return {} };

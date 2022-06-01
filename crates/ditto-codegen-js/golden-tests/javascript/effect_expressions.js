@@ -7,10 +7,10 @@ function Ok($0) {
 function always(_a, b) {
   return b;
 }
-function effect_map(effect_a, fn) {
+function effect_map(effect_a, f) {
   return () => {
     const a = effect_a();
-    return fn(a);
+    return f(a);
   };
 }
 function get_name() {
