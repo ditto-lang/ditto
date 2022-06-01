@@ -346,8 +346,8 @@ async fn run_once(
 }
 
 fn run_execs(matches: &ArgMatches) {
-    if let Some(execs) = matches.values_of("execs") {
-        for exec in execs {
+    if let Some(mut execs) = matches.values_of("execs") {
+        while let Some(exec) = execs.next() {
             if let Some(shell_words) = shlex::split(exec) {
                 if let Some((program, args)) = shell_words.split_first() {
                     print_feedback(format!("running {:?}", exec));
@@ -356,18 +356,24 @@ fn run_execs(matches: &ArgMatches) {
                         Ok(exit_status) => {
                             if !exit_status.success() {
                                 print_error(format!(
-                                    "non-zero exit from {:?} {}, stopping there",
+                                    "non-zero exit from {:?}, {}",
                                     exec, exit_status
                                 ));
                                 // Stop there, multiple `--exec` flags are effectively
                                 // `&&` together
+                                if execs.next().is_some() {
+                                    print_error("stopping there".to_string());
+                                }
                                 return;
                             }
                         }
                         Err(err) => {
-                            print_error(format!("ERROR {}", err));
+                            print_error(format!("EXEC ERROR {}", err));
                             // Stop there, multiple `--exec` flags are effectively
                             // `&&` together
+                            if execs.next().is_some() {
+                                print_error("stopping there".to_string());
+                            }
                             return;
                         }
                     }
