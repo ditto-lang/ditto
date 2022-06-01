@@ -73,7 +73,7 @@ mod tests {
             five : Int = 5;
             five_string = "five" ;
 
-            id = (a) -> a;
+            id = fn (a) -> a;
         "#;
         let cst_module = cst::Module::parse(source).unwrap();
         let (ast_module, _warnings) =

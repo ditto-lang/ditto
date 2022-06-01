@@ -1,6 +1,6 @@
 module Test exports (..);
 
-result = (c0, c1, c2, c3, c4) ->
+result = fn (c0, c1, c2, c3, c4) ->
   if
     if c0 then
       c1

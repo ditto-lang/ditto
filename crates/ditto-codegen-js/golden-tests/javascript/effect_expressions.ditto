@@ -10,22 +10,23 @@ get_names = do {
     return [name, another_name]
 };
 
-effect_map = (effect_a: Effect(a), fn: (a) -> b): Effect(b) -> do {
+effect_map = fn (effect_a: Effect(a), f: (a) -> b): Effect(b) -> do {
     a <- effect_a;
-    return fn(a)
+    return f(a)
 };
 
 type Result(a, e) = Ok(a) | Err(e);
 
-always = (_a, b) -> b;
+always = fn (_a, b) -> b;
 
-get_names_from_result = (res) -> do {
+get_names_from_result = fn (res) -> do {
     get_name;
     match res with
     | Ok(a) -> always(a, get_names)
     | Err(e) -> always(e, get_names)
+    end
 };
 
 main : Effect(Unit) = do {
-    effect_map(get_name, (name) -> unit)
+    effect_map(get_name, fn (name) -> unit)
 };

@@ -7,11 +7,11 @@ function select(c, x, y) {
 function always(a) {
   return _b => a;
 }
-function uncurry(fn) {
-  return (a, b) => fn(a)(b);
+function uncurry(f) {
+  return (a, b) => f(a)(b);
 }
-function curry(fn) {
-  return a => b => fn(a, b);
+function curry(f) {
+  return a => b => f(a, b);
 }
 function identity(a) {
   return a;

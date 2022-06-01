@@ -614,20 +614,20 @@ mod test {
 
     #[test]
     fn roundtrippin() {
-        assert_optimized!("(x, _y) -> x", "(x,_y) => x", &[]);
-        assert_optimized!("(x, _y) -> if x then 5 else 10", "(x,_y) => x?5:10", &[]);
+        assert_optimized!("fn (x, _y) -> x", "(x,_y) => x", &[]);
+        assert_optimized!("fn (x, _y) -> if x then 5 else 10", "(x,_y) => x?5:10", &[]);
         assert_optimized!(
-            "(x, y) -> if x then 5 else if y then 10 else 15",
+            "fn (x, y) -> if x then 5 else if y then 10 else 15",
             "(x,y) => x?5:y?10:15",
             &[]
         );
         assert_optimized!(
-            "(a) -> match a with | A -> 5",
+            "fn (a) -> match a with | A -> 5 end",
             "(a) => (a[0] === \"A\")?5:(() => {throw new Error(\"Pattern match error\");})()",
             &[]
         );
         assert_optimized!(
-            "(bc) -> match bc with | B -> 1 | C -> 2",
+            "fn (bc) -> match bc with | B -> 1 | C -> 2 end",
             "(bc) => (bc[0] === \"B\")?1:(bc[0] === \"C\")?2:(() => {throw new Error(\"Pattern match error\");})()",
             &[]
         );

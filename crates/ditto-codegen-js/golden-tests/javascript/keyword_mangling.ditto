@@ -1,3 +1,3 @@
 module Test exports (..);
 
-const = (a) -> (b) -> a;
+const = fn (a) -> fn (b) -> a;

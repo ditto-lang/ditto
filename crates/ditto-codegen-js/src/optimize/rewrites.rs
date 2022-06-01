@@ -424,21 +424,21 @@ mod tests {
         assert_optimized!("if true then (if false then 1 else 2) else 3", "2");
         assert_optimized!("[if true then 1 else 2, if false then 3 else 2]", "[1,2]");
         assert_optimized!("if true then true else false", "true");
-        assert_optimized!("(x: Bool) -> if x then true else false", "(x) => x");
+        assert_optimized!("fn (x: Bool) -> if x then true else false", "(x) => x");
         assert_optimized!(
-            "(cond, fn) -> (if cond then fn else fn)()",
-            "(cond,fn) => (cond?fn:fn)()"
+            "fn (cond, f) -> (if cond then f else f)()",
+            "(cond,f) => (cond?f:f)()"
         );
     }
 
     #[test]
     fn it_rewrites_matches() {
         assert_optimized!(
-            "(x) -> match x with | y -> y",
+            "fn (x) -> match x with | y -> y end",
             "(x) => {const y = x;return y;}"
         );
         assert_optimized!(
-            "(bc) -> match bc with | B -> 1 | C -> 2",
+            "fn (bc) -> match bc with | B -> 1 | C -> 2 end",
             "(bc) => {if ((bc[0] === \"B\")){return 1;}if ((bc[0] === \"C\")){return 2;}throw new Error(\"Pattern match error\");}"
         );
     }
@@ -451,17 +451,17 @@ mod tests {
 
     #[test]
     fn it_removes_redundant_return_unit() {
-        assert_optimized!("(x) -> do { return unit }", "(x) => () => {return;}");
+        assert_optimized!("fn (x) -> do { return unit }", "(x) => () => {return;}");
     }
 
     #[test]
     fn it_removes_redundant_iifes() {
-        assert_optimized!("(() -> 5)()", "5");
+        assert_optimized!("(fn () -> 5)()", "5");
     }
 
     #[test]
     fn it_inlines_identity_calls() {
-        assert_optimized!("((x) -> x)(5)", "5");
-        assert_optimized!("((x) -> x)((a) -> a)", "(a) => a");
+        assert_optimized!("(fn (x) -> x)(5)", "5");
+        assert_optimized!("(fn (x) -> x)(fn (a) -> a)", "(a) => a");
     }
 }

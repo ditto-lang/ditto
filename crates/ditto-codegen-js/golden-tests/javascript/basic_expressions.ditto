@@ -10,16 +10,16 @@ not_quite_five: Float = 5_____.0_____1_____;
 
 fifth_string = "A";
 
-identity = (a: a) -> a;
+identity = fn (a: a) -> a;
 
-curry = (fn) -> (a) -> (b) -> fn(a, b);
-uncurry = (fn) -> (a, b) -> fn(a)(b);
+curry = fn (f) -> fn (a) -> fn (b) -> f(a, b);
+uncurry = fn (f) -> fn (a, b) -> f(a)(b);
 
-always = (a) -> (_b) -> a;
-select = (c, x, y) -> if c then x else y;
+always = fn (a) -> fn (_b) -> a;
+select = fn (c, x, y) -> if c then x else y;
  
 -- REVIEW `return undefined` is redundant
-denied = (a) -> unit;
+denied = fn (a) -> unit;
 
 fives = [
   5,
@@ -27,7 +27,7 @@ fives = [
   select(true, 5, 50),
   always(five)(floaty_five), 
   uncurry(always)(five, true),
-  ((a, _b) -> a)(5, unit),
+  (fn (a, _b) -> a)(5, unit),
   uncurry(always)(five, fifth_string),
   always(identity)(false)(five),
 ];
