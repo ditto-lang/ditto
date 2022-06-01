@@ -39,6 +39,8 @@ gen_empty_token_like!(gen_as_keyword, cst::AsKeyword, "as");
 gen_empty_token_like!(gen_type_keyword, cst::TypeKeyword, "type");
 gen_empty_token_like!(gen_import_keyword, cst::ImportKeyword, "import");
 gen_empty_token_like!(gen_foreign_keyword, cst::ForeignKeyword, "foreign");
+gen_empty_token_like!(gen_fn_keyword, cst::FnKeyword, "fn");
+gen_empty_token_like!(gen_end_keyword, cst::EndKeyword, "end");
 gen_empty_token_like!(gen_open_bracket, cst::OpenBracket, "[");
 gen_empty_token_like!(gen_open_brace, cst::OpenBrace, "{");
 gen_empty_token_like!(gen_pipe, cst::Pipe, "|");

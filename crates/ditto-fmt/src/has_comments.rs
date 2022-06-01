@@ -43,12 +43,14 @@ impl HasComments for Expression {
                     || false_clause.has_comments()
             }
             Self::Function {
+                fn_keyword,
                 parameters,
                 return_type_annotation,
                 right_arrow,
                 body,
             } => {
-                parameters.has_comments()
+                fn_keyword.0.has_comments()
+                    || parameters.has_comments()
                     || return_type_annotation.has_comments()
                     || right_arrow.0.has_comments()
                     || body.has_comments()
@@ -63,12 +65,14 @@ impl HasComments for Expression {
                 with_keyword,
                 head_arm,
                 tail_arms,
+                end_keyword,
             } => {
                 match_keyword.0.has_comments()
                     || expression.has_comments()
                     || with_keyword.0.has_comments()
                     || head_arm.has_comments()
                     || tail_arms.iter().any(|arm| arm.has_comments())
+                    || end_keyword.0.has_comments()
             }
             Self::Effect {
                 do_keyword,
