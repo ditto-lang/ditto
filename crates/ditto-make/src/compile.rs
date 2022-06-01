@@ -206,7 +206,7 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
                 cst::Module::parse(&ditto_input_source)
                     .map_err(|err| err.into_report(&ditto_input_name, ditto_input_source.clone()))
             },
-            format!("{} checked in", ditto_input_name),
+            format!("{} parsed in", ditto_input_name),
         )
     } else {
         cst::Module::parse(&ditto_input_source)
