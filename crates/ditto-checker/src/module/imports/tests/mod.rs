@@ -14,7 +14,7 @@ fn it_handles_value_imports() {
         [r#" 
         module Foo exports (five, id);
         five = 5;
-        id = (a) -> a;
+        id = fn (a) -> a;
         "#],
     );
 }
@@ -47,7 +47,7 @@ fn it_warns_as_expected() {
         [r#"
         module Foo exports (five, id);
         five = 5;
-        id = (a) -> a;
+        id = fn (a) -> a;
         "#],
     );
 
@@ -164,7 +164,7 @@ fn it_errors_as_expected() {
         [r#" 
         module Foo exports (five, id);
         five = 5;
-        id = (a) -> a;
+        id = fn (a) -> a;
         "#],
     );
 

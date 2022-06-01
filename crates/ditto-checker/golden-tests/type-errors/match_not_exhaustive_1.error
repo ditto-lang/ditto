@@ -3,9 +3,10 @@
    ╭─[golden:3:1]
  3 │     type ABC = A | B | C;
  4 │     
- 5 │     y_tho = (abc: ABC) ->
+ 5 │     y_tho = fn (abc: ABC) ->
  6 │ ╭─▶   match abc with
- 7 │ ├─▶   | A -> 0;
+ 7 │ │     | A -> 0
+ 8 │ ├─▶   end;
    · ╰──── this match expression
    ╰────
   help: patterns not covered:

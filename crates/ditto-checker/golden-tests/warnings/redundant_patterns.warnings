@@ -1,22 +1,24 @@
 
   ⚠ redundant match pattern
-   ╭─[golden:5:1]
- 5 │ redundant = (o: Option(a)): Float -> 
- 6 │   match o with
- 7 │   | _x -> 5.0
- 8 │   | Some(_x) -> 5.0
-   ·     ────┬───
-   ·         ╰── unreachable
- 9 │   | None -> 5.0;
-   ╰────
+    ╭─[golden:5:1]
+  5 │ redundant = fn (o: Option(a)): Float -> 
+  6 │   match o with
+  7 │   | _x -> 5.0
+  8 │   | Some(_x) -> 5.0
+    ·     ────┬───
+    ·         ╰── unreachable
+  9 │   | None -> 5.0
+ 10 │   end;
+    ╰────
 
 
   ⚠ redundant match pattern
-   ╭─[golden:6:1]
- 6 │   match o with
- 7 │   | _x -> 5.0
- 8 │   | Some(_x) -> 5.0
- 9 │   | None -> 5.0;
-   ·     ──┬─
-   ·       ╰── unreachable
-   ╰────
+    ╭─[golden:6:1]
+  6 │   match o with
+  7 │   | _x -> 5.0
+  8 │   | Some(_x) -> 5.0
+  9 │   | None -> 5.0
+    ·     ──┬─
+    ·       ╰── unreachable
+ 10 │   end;
+    ╰────

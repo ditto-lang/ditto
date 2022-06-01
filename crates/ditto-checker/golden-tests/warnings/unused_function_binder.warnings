@@ -3,7 +3,7 @@
    ╭─[golden:1:1]
  1 │ module Test exports (..);
  2 │ 
- 3 │ always_five = (ignore) -> 5;
-   ·                ───┬──
-   ·                   ╰── this isn't used
+ 3 │ always_five = fn (ignore) -> 5;
+   ·                   ───┬──
+   ·                      ╰── this isn't used
    ╰────

@@ -2,6 +2,7 @@ module Test exports (..);
 
 type Maybe(a) = Just(a) | Nothing;
 
-unwrap = (maybe: Maybe(Int)): Int -> 
+unwrap = fn (maybe: Maybe(Int)): Int ->
   match maybe with
-  | Just(n) -> n;
+  | Just(n) -> n
+  end;

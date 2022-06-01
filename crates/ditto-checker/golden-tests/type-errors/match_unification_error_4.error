@@ -1,10 +1,11 @@
 
   × wrong number of arguments
    ╭─[golden:5:1]
- 5 │ nah = (maybe_foo : Maybe(Int)) -> 
+ 5 │ nah = fn (maybe_foo : Maybe(Int)) -> 
  6 │   match maybe_foo with
  7 │   | Just(n) -> unit
- 8 │   | Nothing(a) -> unit;
+ 8 │   | Nothing(a) -> unit
    ·     ─────┬────
    ·          ╰── this expects no arguments
+ 9 │   end;
    ╰────

@@ -8,35 +8,41 @@ fn it_typechecks_as_expected() {
     assert_type!("{ foo = true }", "{ foo: Bool }");
     assert_type!("{ foo = {}, bar = [] }", "{ foo: {}, bar: Array($0) }");
 
-    assert_type!("(x) -> x.foo", "({ $1 | foo: $2 }) -> $2");
+    assert_type!("fn (x) -> x.foo", "({ $1 | foo: $2 }) -> $2");
     assert_type!(
-        "(x: { r | foo: Int }) -> x.foo",
+        "fn (x: { r | foo: Int }) -> x.foo",
         "({ r | foo: Int }) -> Int"
     );
 
-    assert_type!("(x) -> x.foo.bar", "({ $3 | foo: { $1 | bar: $2 } }) -> $2");
     assert_type!(
-        "(x) -> [x.foo, x.bar, x.baz]",
+        "fn (x) -> x.foo.bar",
+        "({ $3 | foo: { $1 | bar: $2 } }) -> $2"
+    );
+    assert_type!(
+        "fn (x) -> [x.foo, x.bar, x.baz]",
         "({ $8 | foo: $7, bar: $7, baz: $7 }) -> Array($7)"
     );
     assert_type!(
-        "(x : { r | foo: Int, bar: Int, baz: Int }) -> [x.foo, x.bar, x.baz]",
+        "fn (x : { r | foo: Int, bar: Int, baz: Int }) -> [x.foo, x.bar, x.baz]",
         "({ r | foo: Int, bar: Int, baz: Int }) -> Array(Int)"
     );
     assert_type!(
-        "(x : { foo: Int, bar: Int, baz: Int }) -> [x.foo, x.bar, x.baz]",
+        "fn (x : { foo: Int, bar: Int, baz: Int }) -> [x.foo, x.bar, x.baz]",
         "({ foo: Int, bar: Int, baz: Int }) -> Array(Int)"
     );
-    assert_type!("((r) -> r.foo)({ foo = 5 })", "Int");
-    assert_type!("((r : { r | foo: Bool }) -> r.foo)({ foo = true })", "Bool");
+    assert_type!("(fn (r) -> r.foo)({ foo = 5 })", "Int");
+    assert_type!(
+        "(fn (r : { r | foo: Bool }) -> r.foo)({ foo = true })",
+        "Bool"
+    );
 }
 
 #[test]
 fn it_errors_as_expected() {
-    assert_type_error!("(x: { r | foo: Int }) -> x.bar", TypesNotEqual { .. });
+    assert_type_error!("fn (x: { r | foo: Int }) -> x.bar", TypesNotEqual { .. });
 
     assert_type_error!(
-        "(x: { r | foo: Int }): r -> unit",
+        "fn (x: { r | foo: Int }): r -> unit",
         KindsNotEqual {
             expected: ast::Kind::Type,
             actual: ast::Kind::Row,
@@ -44,7 +50,7 @@ fn it_errors_as_expected() {
         }
     );
     assert_type_error!(
-        "(): { foo: Int} -> { bar = 5 }",
+        "fn (): { foo: Int} -> { bar = 5 }",
         TypesNotEqual {
             expected: ast::Type::RecordClosed { .. },
             actual: ast::Type::RecordClosed { .. },
@@ -52,7 +58,7 @@ fn it_errors_as_expected() {
         }
     );
     assert_type_error!(
-        "(): { r | foo: Int } -> { foo = 5 }",
+        "fn (): { r | foo: Int } -> { foo = 5 }",
         TypesNotEqual {
             expected: ast::Type::RecordOpen { .. },
             actual: ast::Type::RecordClosed { .. },
@@ -60,11 +66,11 @@ fn it_errors_as_expected() {
         }
     );
     assert_type_error!(
-        "(r : { r | foo: Bool }) : { x | foo: Bool } -> r",
+        "fn (r : { r | foo: Bool }) : { x | foo: Bool } -> r",
         TypesNotEqual { .. }
     );
     assert_type_error!(
-        "(x : { foo: Int, bar: Int, baz: Float }) -> [x.foo, x.bar, x.baz]",
+        "fn (x : { foo: Int, bar: Int, baz: Float }) -> [x.foo, x.bar, x.baz]",
         TypesNotEqual { .. }
     );
 }
@@ -86,9 +92,9 @@ fn it_typechecks_a_complex_module() {
         extended2 : ExtendMe({ bar : Int, baz: Int }) = ExtendMe({ foo = 2, bar = 3, baz = 5 });
         -- extended3 = ExtendMe({ bar = 2 });   ERROR
 
-        unwrap_extend_me0 = (e): { r | foo : Int } -> match e with | ExtendMe(r) -> r;
-        unwrap_extend_me1 = (e): { foo : Int } -> match e with | ExtendMe(r) -> r;
-        get_foo = (e): Int -> unwrap_extend_me0(e).foo;
+        unwrap_extend_me0 = fn (e): { r | foo : Int } -> match e with | ExtendMe(r) -> r end;
+        unwrap_extend_me1 = fn (e): { foo : Int } -> match e with | ExtendMe(r) -> r end;
+        get_foo = fn (e): Int -> unwrap_extend_me0(e).foo;
 
         type ExtendedOpen(r) = Open(ExtendMe({ r | bar: Int }));
 

@@ -3,7 +3,7 @@
    ╭─[golden:1:1]
  1 │ module Test exports (..);
  2 │ 
- 3 │ nah = (x : { foo: Int, bar: Int, baz: Float }) ->
+ 3 │ nah = fn (x : { foo: Int, bar: Int, baz: Float }) ->
  4 │     [x.foo, x.bar, x.baz];
    ·                    ──┬──
    ·                      ╰── here

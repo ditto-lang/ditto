@@ -2,6 +2,7 @@ module Test exports (..);
 
 type Pair(a, b) = Pair(a, b);
 
-nope = (pair: Pair(a, a)): Array(a) -> 
+nope = fn (pair: Pair(a, a)): Array(a) ->
   match pair with
-  | Pair(a, a) -> [a, a];
+  | Pair(a, a) -> [a, a]
+  end;

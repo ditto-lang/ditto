@@ -3,9 +3,9 @@
    ╭─[golden:1:1]
  1 │ module Test exports (..);
  2 │ 
- 3 │ foo = (r : { r | foo: Unit}): r -> unit;
-   ·                               ┬
-   ·                               ╰── here
+ 3 │ foo = fn (r : { r | foo: Unit}): r -> unit;
+   ·                                  ┬
+   ·                                  ╰── here
    ╰────
   help: expected Type
         got Row

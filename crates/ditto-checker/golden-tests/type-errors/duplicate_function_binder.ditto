@@ -1,3 +1,3 @@
 module Test exports (..);
 
-too_many_ys = (x, y, y, z) -> z;
+too_many_ys = fn (x, y, y, z) -> z;

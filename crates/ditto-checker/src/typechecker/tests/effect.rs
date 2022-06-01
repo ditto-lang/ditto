@@ -11,7 +11,7 @@ fn it_typechecks_as_expected() {
     );
 
     assert_type!(
-        r#" (get_bool: Effect(Bool)) -> do { b <- get_bool; return b } "#,
+        r#" fn (get_bool: Effect(Bool)) -> do { b <- get_bool; return b } "#,
         "(Effect(Bool)) -> Effect(Bool)"
     );
 }

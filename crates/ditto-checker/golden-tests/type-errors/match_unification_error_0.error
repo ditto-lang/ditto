@@ -4,9 +4,10 @@
  5 │ 
  6 │ nah = 
  7 │   match Foo with
- 8 │   | Bar -> unit;
+ 8 │   | Bar -> unit
    ·     ─┬─
    ·      ╰── here
+ 9 │   end;
    ╰────
   help: expected Foo
         got Bar
