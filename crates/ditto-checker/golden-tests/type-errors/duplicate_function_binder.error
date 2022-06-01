@@ -3,8 +3,8 @@
    ╭─[golden:1:1]
  1 │ module Test exports (..);
  2 │ 
- 3 │ too_many_ys = (x, y, y, z) -> z;
-   ·                   ┬  ┬
-   ·                   │  ╰── name can't be reused here
-   ·                   ╰── previous parameter
+ 3 │ too_many_ys = fn (x, y, y, z) -> z;
+   ·                      ┬  ┬
+   ·                      │  ╰── name can't be reused here
+   ·                      ╰── previous parameter
    ╰────

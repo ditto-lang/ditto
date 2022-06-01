@@ -36,7 +36,7 @@ fn it_warns_for_unused() {
         module Test exports (a, c);
         a : Bool = true;
         b : Int = 5;
-        c = (b) -> b; -- not referencing `b` above, that is still unused
+        c = fn (b) -> b; -- not referencing `b` above, that is still unused
     "#,
         [Warning::UnusedValueDeclaration { .. }]
     );

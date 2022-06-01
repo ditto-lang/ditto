@@ -10,7 +10,7 @@ fn it_toposorts_as_expected() {
     assert_toposort!(["a = b", "b = a"], [Cyclic(vec!["a", "b"])]);
     assert_toposort!(["a = a"], [Cyclic(vec!["a"])]);
     assert_toposort!(
-        ["a = b(a)", "b = (x) -> x"],
+        ["a = b(a)", "b = fn (x) -> x"],
         [Acyclic("b"), Cyclic(vec!["a"])]
     );
 }

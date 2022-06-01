@@ -67,7 +67,7 @@ mod tests {
             five : Int = 5;
             five_string = "five";
             five_ctor = Five;
-            id = (a) -> a;
+            id = fn (a) -> a;
         "#;
             let cst_module = ditto_cst::Module::parse(source).unwrap();
             let (ast_module, _warnings) =

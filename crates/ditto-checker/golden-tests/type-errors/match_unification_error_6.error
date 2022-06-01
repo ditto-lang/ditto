@@ -2,12 +2,13 @@
   × types don't unify
    ╭─[golden:4:1]
  4 │ 
- 5 │ nah = (dunno : a): Int -> 
+ 5 │ nah = fn (dunno : a): Int -> 
  6 │   match dunno with
  7 │   | Just(n) -> unit
    ·     ───┬───
    ·        ╰── here
- 8 │   | Nothing -> unit;
+ 8 │   | Nothing -> unit
+ 9 │   end;
    ╰────
   help: expected a
         got Maybe($2)

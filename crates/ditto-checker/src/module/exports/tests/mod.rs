@@ -11,7 +11,7 @@ fn it_handles_value_exports() {
         b = 1;
         a = 1.0;
         c = true;
-        id = (a) -> a;
+        id = fn (a) -> a;
         "#,
         types = [],
         constructors = [],
@@ -32,7 +32,7 @@ fn it_handles_value_exports() {
         c = true;
         -- it's a 
         -- classic
-        id = (a) -> a;
+        id = fn (a) -> a;
         "#,
         types = [],
         constructors = [],

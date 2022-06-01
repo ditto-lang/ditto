@@ -6,7 +6,7 @@ fn it_handles_foreign_values() {
         r#"
         module Test exports (..);
         foreign ffi_int : Int;
-        id_int = (n: Int) -> n;
+        id_int = fn (n: Int) -> n;
         foo = id_int(ffi_int);
     "#
     );
@@ -17,7 +17,7 @@ fn it_handles_foreign_values() {
         type Html(msg);
         type Attr = Attr(String, String);
         foreign h : (String, Array(Attr)) -> Html(msg);
-        span = (attrs: Array(Attr)): Html(msg) -> h("span", attrs);
+        span = fn (attrs: Array(Attr)): Html(msg) -> h("span", attrs);
     "#
     );
 }

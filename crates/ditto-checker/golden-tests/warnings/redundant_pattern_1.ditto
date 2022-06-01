@@ -5,4 +5,5 @@ type Five = Five;
 redundant: Float = 
   match Five with
   | Five -> 5.0
-  | Five -> 5.0;
+  | Five -> 5.0
+  end;

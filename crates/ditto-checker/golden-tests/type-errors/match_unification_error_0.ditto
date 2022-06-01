@@ -5,4 +5,5 @@ type Bar = Bar;
 
 nah = 
   match Foo with
-  | Bar -> unit;
+  | Bar -> unit
+  end;

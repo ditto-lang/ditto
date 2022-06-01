@@ -8,9 +8,10 @@ fn it_doesnt_error_for_exhaustive_patterns() {
         module Test exports (..);
         type Never = JustOneMore(Never);
 
-        never = (nah: Never): a ->
+        never = fn (nah: Never): a ->
             match nah with
-            | JustOneMore(naah) -> never(naah);
+            | JustOneMore(naah) -> never(naah)
+            end;
         "#
     );
     assert_module_ok!(
@@ -18,9 +19,10 @@ fn it_doesnt_error_for_exhaustive_patterns() {
         module Test exports (..);
         type Five = Five;
 
-        five_to_int = (five: Five) -> 
+        five_to_int = fn (five: Five) -> 
           match five with
-          | Five -> 5;
+          | Five -> 5
+          end;
         "#
     );
 }
@@ -32,9 +34,10 @@ fn it_doesnt_error_for_exhaustive_imported_patterns() {
         module Test exports (..);
         import Data.Stuff;
 
-        five_to_int = (five: Stuff.Five) ->
+        five_to_int = fn (five: Stuff.Five) ->
           match five with
-          | Stuff.Five -> 5;
+          | Stuff.Five -> 5
+          end;
         "#,
         _,
         &mk_everything()
@@ -44,9 +47,10 @@ fn it_doesnt_error_for_exhaustive_imported_patterns() {
         module Test exports (..);
         import Data.Stuff (Five(..));
 
-        five_to_int = (five: Five) ->
+        five_to_int = fn (five: Five) ->
           match five with
-          | Five -> 5;
+          | Five -> 5
+          end;
         "#,
         _,
         &mk_everything()
@@ -59,7 +63,7 @@ fn it_errors_for_non_exhaustive_patterns() {
         r#"
         module Test exports (..);
         type Foo = A | B;
-        test = (x: Foo) -> match x with | A -> 5;
+        test = fn (x: Foo) -> match x with | A -> 5 end;
         "#,
         &["B"]
     );
@@ -67,7 +71,7 @@ fn it_errors_for_non_exhaustive_patterns() {
         r#"
         module Test exports (..);
         type Maybe(a) = Just(a) | None;
-        test = (x: Maybe(a)) -> match x with | Just(a) -> a;
+        test = fn (x: Maybe(a)) -> match x with | Just(a) -> a end;
         "#,
         &["None"]
     );
@@ -75,7 +79,7 @@ fn it_errors_for_non_exhaustive_patterns() {
         r#"
         module Test exports (..);
         type Maybe(a) = Just(a) | None;
-        test = (x: Maybe(Int)) -> match x with | None -> 2;
+        test = fn (x: Maybe(Int)) -> match x with | None -> 2 end;
         "#,
         &["Just(_)"]
     );
@@ -83,7 +87,7 @@ fn it_errors_for_non_exhaustive_patterns() {
         r#"
         module Test exports (..);
         type Maybe(a) = Just(a) | None;
-        test = (x) -> match x with | Just(None) -> 2;
+        test = fn (x) -> match x with | Just(None) -> 2 end;
         "#,
         &["None", "Just(Just(_))"]
     );
@@ -91,7 +95,7 @@ fn it_errors_for_non_exhaustive_patterns() {
         r#"
         module Test exports (..);
         type Maybe(a) = Just(a) | None;
-        test = (x) -> match x with | Just(Just(Just(None))) -> 2;
+        test = fn (x) -> match x with | Just(Just(Just(None))) -> 2 end;
         "#,
         &[
             "None",
@@ -105,7 +109,7 @@ fn it_errors_for_non_exhaustive_patterns() {
         module Test exports (..);
         type Maybe(a) = Just(a) | None;
         type Result(a, e) = Ok(a) | Err(e);
-        test = (x: Result(Maybe(Maybe(Int)), String)) -> match x with | Err(str) -> str;
+        test = fn (x: Result(Maybe(Maybe(Int)), String)) -> match x with | Err(str) -> str end;
         "#,
         &["Ok(_)"]
     );
@@ -114,7 +118,7 @@ fn it_errors_for_non_exhaustive_patterns() {
         module Test exports (..);
         type Maybe(a) = Just(a) | None;
         type Result(a, e) = Ok(a) | Err(e);
-        test = (x: Result(Maybe(Maybe(Int)), String)) -> match x with | Ok(Just(None)) -> "noice";
+        test = fn (x: Result(Maybe(Maybe(Int)), String)) -> match x with | Ok(Just(None)) -> "noice" end;
         "#,
         &["Err(_)", "Ok(None)", "Ok(Just(Just(_)))"]
     );
@@ -123,7 +127,7 @@ fn it_errors_for_non_exhaustive_patterns() {
         module Test exports (..);
         type Maybe(a) = Just(a) | None;
         type A = A(Maybe(Maybe(Int)));
-        test = (a: A) -> match a with | A(Just(Just(n))) -> "yeh?";
+        test = fn (a: A) -> match a with | A(Just(Just(n))) -> "yeh?" end;
         "#,
         &["A(None)", "A(Just(None))"]
     );
@@ -139,9 +143,10 @@ fn it_errors_for_non_exhaustive_patterns() {
         import (test-stuff) Data.Stuff as A;
         import Data.Stuff as B;
 
-        option_of_option = (oo) ->
+        option_of_option = fn (oo) ->
           match oo with
-          | A.Some(B.None) -> unit;
+          | A.Some(B.None) -> unit
+          end;
         "#,
         &["None", "Some(Some(_))"],
         &mk_everything()

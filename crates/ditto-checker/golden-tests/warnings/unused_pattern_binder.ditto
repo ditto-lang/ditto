@@ -2,7 +2,8 @@ module Test exports (..);
 
 type Option(a) = Some(a) | None;
 
-not_used = (o: Option(a)): Float -> 
+not_used = fn (o: Option(a)): Float -> 
   match o with
   | Some(a) -> 5.0
-  | None -> 5.0;
+  | None -> 5.0
+  end;

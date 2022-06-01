@@ -6,7 +6,7 @@ fn dunno_where_to_put_these() {
         r#"
         module Test exports (..);
 
-        always = (a) -> (b) -> a;
+        always = fn (a) -> fn (b) -> a;
         five: Int = always(5)(true);
 
         always_five: (a) -> Int = always(5);

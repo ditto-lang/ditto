@@ -1,10 +1,11 @@
 
   ⚠ redundant match pattern
    ╭─[golden:5:1]
- 5 │ redundant = (o: Option(a)): Float -> 
+ 5 │ redundant = fn (o: Option(a)): Float -> 
  6 │   match o with
  7 │   | _x -> 5.0
- 8 │   | None -> 5.0;
+ 8 │   | None -> 5.0
    ·     ──┬─
    ·       ╰── unreachable
+ 9 │   end;
    ╰────
