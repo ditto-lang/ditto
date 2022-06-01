@@ -5,10 +5,11 @@ use super::{
     r#type::gen_type,
     syntax::{gen_braces_list, gen_brackets_list, gen_parens, gen_parens_list, gen_parens_list1},
     token::{
-        gen_close_brace, gen_colon, gen_do_keyword, gen_dot, gen_else_keyword, gen_equals,
-        gen_false_keyword, gen_if_keyword, gen_left_arrow, gen_match_keyword, gen_open_brace,
-        gen_pipe, gen_return_keyword, gen_right_arrow, gen_right_pizza_operator, gen_semicolon,
-        gen_string_token, gen_then_keyword, gen_true_keyword, gen_unit_keyword, gen_with_keyword,
+        gen_close_brace, gen_colon, gen_do_keyword, gen_dot, gen_else_keyword, gen_end_keyword,
+        gen_equals, gen_false_keyword, gen_fn_keyword, gen_if_keyword, gen_left_arrow,
+        gen_match_keyword, gen_open_brace, gen_pipe, gen_return_keyword, gen_right_arrow,
+        gen_right_pizza_operator, gen_semicolon, gen_string_token, gen_then_keyword,
+        gen_true_keyword, gen_unit_keyword, gen_with_keyword,
     },
 };
 use ditto_cst::{
@@ -154,12 +155,14 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
             items
         }
         Expression::Function {
+            fn_keyword,
             box parameters,
             box return_type_annotation,
             right_arrow,
             box body,
         } => {
-            let mut items = PrintItems::new();
+            let mut items = gen_fn_keyword(fn_keyword);
+            items.extend(space());
             items.extend(gen_parens_list(parameters, |(param, type_annotation)| {
                 let mut items = PrintItems::new();
                 match param {
@@ -202,11 +205,12 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
             with_keyword,
             box head_arm,
             tail_arms,
+            end_keyword,
         } => {
             let mut items = PrintItems::new();
             // REVIEW: do we want to support an inline format for single-arm matches?
             //
-            // e.g. `match x with | foo -> bar`
+            // e.g. `match x with | foo -> bar end`
             //
             // If so, we should probably make that leading `|` optional in the parser
             // like we do for type declarations.
@@ -219,6 +223,8 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
             for match_arm in tail_arms {
                 items.extend(gen_match_arm(match_arm));
             }
+            items.push_signal(Signal::ExpectNewLine);
+            items.extend(gen_end_keyword(end_keyword));
             items
         }
         Expression::BinOp {
@@ -493,35 +499,35 @@ mod tests {
 
     #[test]
     fn it_formats_functions() {
-        assert_fmt!("() -> foo");
+        assert_fmt!("fn () -> foo");
         assert_fmt!(
-            "(really_long_argument) -> foo",
-            "(really_long_argument) ->\n\tfoo",
+            "fn (really_long_argument) -> foo",
+            "fn (really_long_argument) ->\n\tfoo",
             20
         );
 
-        assert_fmt!("() ->\n\t-- comment\n\tfoo");
+        assert_fmt!("fn () ->\n\t-- comment\n\tfoo");
         assert_fmt!(
-            "(foo, -- comment\n) -> foo",
-            "(\n\tfoo,  -- comment\n) -> foo"
+            "fn (foo, -- comment\n) -> foo",
+            "fn (\n\tfoo,  -- comment\n) -> foo"
         );
 
-        assert_fmt!("(): Int \n-> foo", "(): Int -> foo");
-        assert_fmt!("(): Int  -- comment\n -> foo");
+        assert_fmt!("fn (): Int \n-> foo", "fn (): Int -> foo");
+        assert_fmt!("fn (): Int  -- comment\n -> foo");
 
-        assert_fmt!("(a: Int): Int -> foo");
-        assert_fmt!("(a: Int, b: Bool): Float -> unit");
+        assert_fmt!("fn (a: Int): Int -> foo");
+        assert_fmt!("fn (a: Int, b: Bool): Float -> unit");
         assert_fmt!(
-            "(\n -- comment\na: Int): Int -> foo",
-            "(\n\t-- comment\n\ta: Int,\n): Int -> foo"
+            "fn (\n -- comment\na: Int): Int -> foo",
+            "fn (\n\t-- comment\n\ta: Int,\n): Int -> foo"
         );
-        assert_fmt!("() -> [\n\t-- comment\n]");
-        assert_fmt!("() ->\n\t-- comment\n\t[5]");
+        assert_fmt!("fn () -> [\n\t-- comment\n]");
+        assert_fmt!("fn () ->\n\t-- comment\n\t[5]");
 
-        assert_fmt!("() -> if true then yeh else nah");
+        assert_fmt!("fn () -> if true then yeh else nah");
         assert_fmt!(
-            "() -> if loooooooooong then x else y",
-            "() ->\n\tif loooooooooong then\n\t\tx\n\telse\n\t\ty",
+            "fn () -> if loooooooooong then x else y",
+            "fn () ->\n\tif loooooooooong then\n\t\tx\n\telse\n\t\ty",
             20
         );
     }
@@ -542,13 +548,13 @@ mod tests {
 
     #[test]
     fn it_formats_matches() {
-        assert_fmt!("match foo with\n| var -> 5");
-        assert_fmt!("-- comment\nmatch foo with\n| var -> 5");
-        assert_fmt!("match foo with\n-- comment\n| var -> 5");
-        assert_fmt!("match foo with\n| a -> 5\n| b -> 5\n| c -> 5");
-        assert_fmt!("match foo with\n| Foo.Bar ->  -- comment\n\t5");
-        assert_fmt!("match Foo with\n| Foo(a, b, c) -> a");
-        assert_fmt!("match Foo with\n| Foo(\n\t--comment\n\ta,\n\tb,\n\tc,\n) -> a");
+        assert_fmt!("match foo with\n| var -> 5\nend");
+        assert_fmt!("-- comment\nmatch foo with\n| var -> 5\nend");
+        assert_fmt!("match foo with\n-- comment\n| var -> 5\nend");
+        assert_fmt!("match foo with\n| a -> 5\n| b -> 5\n| c -> 5\nend");
+        assert_fmt!("match foo with\n| Foo.Bar ->  -- comment\n\t5\nend");
+        assert_fmt!("match Foo with\n| Foo(a, b, c) -> a\nend");
+        assert_fmt!("match Foo with\n| Foo(\n\t--comment\n\ta,\n\tb,\n\tc,\n) -> a\nend");
     }
 
     #[test]
@@ -573,7 +579,7 @@ mod tests {
         assert_fmt!("{\n\t-- comment\n}");
         assert_fmt!("{  -- comment\n}");
         assert_fmt!("{ foo = true }");
-        assert_fmt!("{ foo = true, bar = false, baz = () -> true }");
+        assert_fmt!("{ foo = true, bar = false, baz = fn () -> true }");
         assert_fmt!("{\n\t-- comment\n\tfoo = Foo,\n\tbar = Bar,\n\tbaz = {},\n}");
         assert_fmt!("{\n\t-- comment\n\tfoo =\n\t\t-- comment\n\t\tFoo,\n}");
     }

@@ -212,7 +212,7 @@ mod tests {
                 "x =\n\txxxxxxxxxxxxxxxxxxxxxxxxxx;",
                 10
             );
-            assert_fmt!("to_string = (dunno: Unknown): Maybe(String) -> to_string_impl(\n\tdunno,\n\tJust,\n\tNothing,\n);");
+            assert_fmt!("to_string = fn (dunno: Unknown): Maybe(String) -> to_string_impl(\n\tdunno,\n\tJust,\n\tNothing,\n);");
             assert_fmt!("xs: Array(Int) = [\n\t-- comment\n\t1,\n];");
             assert_fmt!("xs: Array(Int) =  -- comment\n\t-- comment\n\t[5];");
             assert_fmt!(

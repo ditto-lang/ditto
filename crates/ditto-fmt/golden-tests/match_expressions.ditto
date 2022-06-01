@@ -23,16 +23,18 @@ octopus =
             -- still octopus
             "octopus"
         else
-            "octopus";
+            "octopus"
+    end;
 
 -- it's a classic
-map_maybe = (fn, maybe) ->
+map_maybe = fn (f, maybe) ->
     -- it really is
     match maybe with
-    | Just(a) -> fn(a)
-    | Nothing -> Nothing;
+    | Just(a) -> f(a)
+    | Nothing -> Nothing
+    end;
 
-all_the_args = () ->
+all_the_args = fn () ->
     match not_sure with
     | Foo(a, b, _c, d) -> unit
     | Bar(Foo(a, b), b, Baz.Barrr, _) -> unit
@@ -46,15 +48,15 @@ all_the_args = () ->
             -- comment
             d,
         ),
-    ) -> unit;
+    ) -> unit
+    end;
 
--- Because ditto isn't whitespace sensitive, nested match expressions need to be
--- wrapped in parens :disappointed:
-nested = () ->
+nested = fn () ->
     match x with
-    | Outer0 -> (
+    | Outer0 ->
         match y with
         | Inner0 -> unit
         | Inner1 -> unit
-    )
-    | Outer1 -> unit;
+        end
+    | Outer1 -> unit
+    end;

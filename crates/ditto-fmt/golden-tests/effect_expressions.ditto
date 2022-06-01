@@ -11,13 +11,13 @@ get_names = do {
     return [name, another_name]
 };
 
-effect_map = (effect_a: Effect(a), fn: (a) -> b): Effect(b) -> do {
+effect_map = fn (effect_a: Effect(a), f: (a) -> b): Effect(b) -> do {
     a <- effect_a;
-    return fn(a)
+    return f(a)
 };
 
 main: Effect(Unit) = do {
-    effect_map(get_name, (name) -> unit)
+    effect_map(get_name, fn (name) -> unit)
 };
 
 bind_comments = do {
