@@ -137,12 +137,19 @@ impl Substitution {
                     .map(|(label, t)| (label, self.apply_rec(t, depth)))
                     .collect(),
             },
-            Type::Constructor {
-                constructor_kind: _,
-                canonical_value: _,
-                source_value: _,
-            }
-            | Type::PrimConstructor(_) => ast_type,
+            Type::Alias {
+                alias_constructor,
+                alias_arguments,
+                box aliased_type,
+            } => Type::Alias {
+                alias_constructor,
+                alias_arguments: alias_arguments
+                    .into_iter()
+                    .map(|arg| self.apply_rec(arg, depth))
+                    .collect(),
+                aliased_type: Box::new(self.apply_rec(aliased_type, depth)),
+            },
+            Type::Constructor(_) | Type::PrimConstructor(_) => ast_type,
         }
     }
 

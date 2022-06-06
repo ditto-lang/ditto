@@ -49,6 +49,7 @@ pub fn check_module(
                 kindchecker::EnvType::Constructor {
                     canonical_value: imported_type.canonical_type_name,
                     constructor_kind: imported_type.kind,
+                    aliased_type: None, // TODO
                 },
             )
         });
@@ -89,7 +90,10 @@ pub fn check_module(
     for declaration in cst_module.declarations {
         match declaration {
             cst::Declaration::Type(box type_declaration) => {
-                type_declarations.push(type_declaration)
+                type_declarations.push(TypeDeclarationLike::TypeDeclaration(type_declaration))
+            }
+            cst::Declaration::TypeAlias(box type_alias) => {
+                type_declarations.push(TypeDeclarationLike::TypeAliasDeclaration(type_alias))
             }
             cst::Declaration::Value(box value_declaration) => {
                 value_declarations.push(value_declaration)
@@ -122,6 +126,7 @@ pub fn check_module(
                         value: proper_name.clone(),
                     },
                     constructor_kind: module_type.kind.clone(),
+                    aliased_type: module_type.aliased_type.clone(),
                 },
             )
         }));

@@ -22,7 +22,7 @@ use crate::{
 };
 use ditto_ast::{
     unqualified, Argument, Effect, Expression, FunctionBinder, Kind, Name, Pattern, PrimType,
-    QualifiedName, Row, Span, Type,
+    QualifiedName, Row, Span, Type, TypeConstructor,
 };
 use ditto_cst as cst;
 use indexmap::IndexMap;
@@ -980,22 +980,123 @@ impl Substitution {
 }
 
 fn unify(state: &mut State, span: Span, constraint: Constraint) -> Result<()> {
-    unify_else(state, span, constraint, None)
-}
-
-fn unify_else(
-    state: &mut State,
-    span: Span,
-    constraint: Constraint,
-    err: Option<&TypeError>,
-) -> Result<()> {
-    let constraint = state.substitution.apply_constraint(constraint);
-    let err = err.cloned().unwrap_or(TypeError::TypesNotEqual {
+    let err = TypeError::TypesNotEqual {
         span,
         expected: constraint.expected.clone(),
         actual: constraint.actual.clone(),
-    });
+    };
+    unify_rec(state, span, constraint, &err).map_err(|err| {
+        if let TypeError::TypesNotEqual {
+            span,
+            expected,
+            actual,
+        } = err
+        {
+            TypeError::TypesNotEqual {
+                span,
+                expected: state.substitution.apply(expected),
+                actual: state.substitution.apply(actual),
+            }
+        } else {
+            err
+        }
+    })
+}
+
+fn unify_rec(state: &mut State, span: Span, constraint: Constraint, err: &TypeError) -> Result<()> {
+    // NOTE: we need to substitute on every recursive call because important
+    // substitutions can be generated as we drill through.
+    let constraint = state.substitution.apply_constraint(constraint);
+
+    // 4 DEBUGGIN
+    //println!(
+    //    "{} ~ {}",
+    //    constraint.expected.debug_render(),
+    //    constraint.actual.debug_render()
+    //);
+
     match constraint {
+        // Recurse on type aliases
+        Constraint {
+            expected:
+                Type::Alias {
+                    alias_constructor,
+                    alias_arguments,
+                    box aliased_type,
+                },
+            actual,
+        } => {
+            let alias_type = Type::Constructor(alias_constructor);
+            let alias_type =
+                if let Ok(arguments) = non_empty_vec::NonEmpty::try_from(alias_arguments) {
+                    Type::Call {
+                        function: Box::new(alias_type),
+                        arguments,
+                    }
+                } else {
+                    alias_type
+                };
+            unify_rec(
+                state,
+                span,
+                Constraint {
+                    expected: alias_type,
+                    actual: actual.clone(),
+                },
+                err,
+            )
+            .or_else(|_| {
+                unify_rec(
+                    state,
+                    span,
+                    Constraint {
+                        expected: aliased_type,
+                        actual,
+                    },
+                    err,
+                )
+            })
+        }
+        Constraint {
+            expected,
+            actual:
+                Type::Alias {
+                    alias_constructor,
+                    alias_arguments,
+                    box aliased_type,
+                },
+        } => {
+            let alias_type = Type::Constructor(alias_constructor);
+            let alias_type =
+                if let Ok(arguments) = non_empty_vec::NonEmpty::try_from(alias_arguments) {
+                    Type::Call {
+                        function: Box::new(alias_type),
+                        arguments,
+                    }
+                } else {
+                    alias_type
+                };
+            unify_rec(
+                state,
+                span,
+                Constraint {
+                    expected: expected.clone(),
+                    actual: alias_type,
+                },
+                err,
+            )
+            .or_else(|_| {
+                unify_rec(
+                    state,
+                    span,
+                    Constraint {
+                        expected,
+                        actual: aliased_type,
+                    },
+                    err,
+                )
+            })
+        }
         // An explicitly named type variable (named in the source) will only unify
         // with another type variable with the same name, or an anonymous type
         // variable.
@@ -1038,15 +1139,15 @@ fn unify_else(
 
         Constraint {
             expected:
-                Type::Constructor {
+                Type::Constructor(TypeConstructor {
                     canonical_value: expected,
                     ..
-                },
+                }),
             actual:
-                Type::Constructor {
+                Type::Constructor(TypeConstructor {
                     canonical_value: actual,
                     ..
-                },
+                }),
         } if expected == actual => Ok(()),
 
         Constraint {
@@ -1066,20 +1167,20 @@ fn unify_else(
                     arguments: actual_arguments,
                 },
         } => {
-            unify_else(
+            unify_rec(
                 state,
                 span,
                 Constraint {
                     expected: expected_function,
                     actual: actual_function,
                 },
-                Some(&err),
+                err,
             )?;
 
             let expected_arguments_len = expected_arguments.len();
             let actual_arguments_len = actual_arguments.len();
             if expected_arguments_len != actual_arguments_len {
-                return Err(err);
+                return Err(err.clone());
             }
 
             let arguments = expected_arguments
@@ -1087,14 +1188,14 @@ fn unify_else(
                 .zip(actual_arguments.into_iter());
 
             for (expected_arg, actual_arg) in arguments {
-                unify_else(
+                unify_rec(
                     state,
                     span,
                     Constraint {
                         expected: expected_arg.clone(),
                         actual: actual_arg.clone(),
                     },
-                    Some(&err),
+                    err,
                 )?;
             }
 
@@ -1115,7 +1216,7 @@ fn unify_else(
             let expected_parameters_len = expected_parameters.len();
             let actual_parameters_len = actual_parameters.len();
             if expected_parameters_len != actual_parameters_len {
-                return Err(err);
+                return Err(err.clone());
             }
 
             let parameters = expected_parameters
@@ -1123,24 +1224,24 @@ fn unify_else(
                 .zip(actual_parameters.into_iter());
 
             for (expected_param, actual_param) in parameters {
-                unify_else(
+                unify_rec(
                     state,
                     span,
                     Constraint {
                         expected: expected_param.clone(),
                         actual: actual_param.clone(),
                     },
-                    Some(&err),
+                    err,
                 )?;
             }
-            unify_else(
+            unify_rec(
                 state,
                 span,
                 Constraint {
                     expected: expected_return_type,
                     actual: actual_return_type,
                 },
-                Some(&err),
+                err,
             )?;
 
             Ok(())
@@ -1165,7 +1266,7 @@ fn unify_else(
                         expected: expected_type,
                         actual: actual_type,
                     };
-                    unify_else(state, span, constraint, Some(&err))?;
+                    unify_rec(state, span, constraint, err)?;
                 } else {
                     // expected label isn't in actual, so fail
                     return Err(err);
@@ -1174,7 +1275,7 @@ fn unify_else(
             if !actual_row.is_empty() {
                 // If `actual_row` still has entries then these entries
                 // aren't in both record types, so fail.
-                return Err(err);
+                return Err(err.clone());
             }
             Ok(())
         }
@@ -1198,13 +1299,13 @@ fn unify_else(
                         expected: expected_type.clone(),
                         actual: actual_type,
                     };
-                    unify_else(state, span, constraint, Some(&err))?;
+                    unify_rec(state, span, constraint, err)?;
                 }
             }
             if !open_row.is_empty() {
                 // If `open_row` still has entries then these entries
                 // aren't in both record types, so fail.
-                return Err(err);
+                return Err(err.clone());
             }
             let bound_type = Type::RecordClosed {
                 kind: Kind::Type,
@@ -1235,13 +1336,13 @@ fn unify_else(
                         expected: expected_type,
                         actual: actual_type.clone(),
                     };
-                    unify_else(state, span, constraint, Some(&err))?;
+                    unify_rec(state, span, constraint, err)?;
                 }
             }
             if !open_row.is_empty() {
                 // If `open_row` still has entries then these entries
                 // aren't in both record types, so fail.
-                return Err(err);
+                return Err(err.clone());
             }
             let bound_type = Type::RecordClosed {
                 kind: Kind::Type,
@@ -1272,13 +1373,13 @@ fn unify_else(
                         expected: expected_type.clone(),
                         actual: actual_type,
                     };
-                    unify_else(state, span, constraint, Some(&err))?;
+                    unify_rec(state, span, constraint, err)?;
                 }
             }
             if !actual_row.is_empty() {
                 // If `actual_row` still has entries then these entries
                 // aren't in both record types, so fail.
-                return Err(err);
+                return Err(err.clone());
             }
             Ok(())
         }
@@ -1304,11 +1405,11 @@ fn unify_else(
                         expected: expected_type.clone(),
                         actual: actual_type,
                     };
-                    unify_else(state, span, constraint, Some(&err))?;
+                    unify_rec(state, span, constraint, err)?;
                 }
             }
             if !unnamed_row.is_empty() {
-                return Err(err);
+                return Err(err.clone());
             }
             let var = state.supply.fresh();
             let bound_type = Type::RecordOpen {
@@ -1343,11 +1444,11 @@ fn unify_else(
                         expected: expected_type,
                         actual: actual_type.clone(),
                     };
-                    unify_else(state, span, constraint, Some(&err))?;
+                    unify_rec(state, span, constraint, err)?;
                 }
             }
             if !unnamed_row.is_empty() {
-                return Err(err);
+                return Err(err.clone());
             }
             let var = state.supply.fresh();
             let bound_type = Type::RecordOpen {
@@ -1383,7 +1484,7 @@ fn unify_else(
                         expected: expected_type.clone(),
                         actual: actual_type.clone(),
                     };
-                    unify_else(state, span, constraint, Some(&err))?;
+                    unify_rec(state, span, constraint, err)?;
                 }
                 row.insert(expected_label.clone(), expected_type.clone());
             }
@@ -1400,7 +1501,7 @@ fn unify_else(
         }
 
         // BANG
-        _ => Err(err),
+        _ => Err(err.clone()),
     }
 }
 

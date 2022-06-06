@@ -1,5 +1,6 @@
 use ditto_ast::{
     unqualified, FullyQualifiedProperName, Kind, Name, PrimType, QualifiedProperName, Type,
+    TypeConstructor,
 };
 use lazy_static::lazy_static;
 use std::{collections::HashMap, default::Default};
@@ -66,6 +67,8 @@ pub enum EnvType {
         ///
         /// Note we're not supporting polymorphic kinds here, hence this isn't a scheme.
         constructor_kind: Kind,
+        /// If this type constructor is a type alias, this is the type it's aliasing.
+        aliased_type: Option<Type>,
     },
 }
 
@@ -79,11 +82,23 @@ impl EnvType {
             Self::Constructor {
                 canonical_value,
                 constructor_kind,
-            } => Type::Constructor {
-                constructor_kind: constructor_kind.clone(),
-                canonical_value: canonical_value.clone(),
-                source_value: Some(source_value),
-            },
+                aliased_type,
+            } => {
+                let type_constructor = TypeConstructor {
+                    constructor_kind: constructor_kind.clone(),
+                    canonical_value: canonical_value.clone(),
+                    source_value: Some(source_value),
+                };
+                if let Some(aliased_type) = aliased_type {
+                    Type::Alias {
+                        alias_constructor: type_constructor,
+                        alias_arguments: vec![],
+                        aliased_type: Box::new(aliased_type.clone()),
+                    }
+                } else {
+                    Type::Constructor(type_constructor)
+                }
+            }
         }
     }
 }

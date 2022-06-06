@@ -11,6 +11,17 @@ macro_rules! assert_module_ok {
     }};
     ($source:expr, $warnings:pat_param, $everything:expr) => {{
         let result = $crate::module::tests::macros::parse_and_check_module!($source, $everything);
+        if let Err($crate::result::TypeError::TypesNotEqual {
+            expected, actual, ..
+        }) = result
+        {
+            // Render unification errors nicely
+            panic!(
+                "\nexpected: {}\nactual: {}\n",
+                expected.debug_render(),
+                actual.debug_render()
+            );
+        }
         assert!(matches!(result, Ok(_)), "{:#?}", result.unwrap_err());
         let (module, warnings) = result.unwrap();
         assert!(matches!(warnings.as_slice(), $warnings), "{:#?}", warnings);

@@ -7,6 +7,7 @@ mod tests;
 use crate::{supply::Supply, typechecker::env::EnvConstructors};
 use ditto_ast::{
     self as ast, FullyQualifiedProperName, ProperName, QualifiedProperName, Span, Type,
+    TypeConstructor,
 };
 use std::collections::{HashMap, HashSet};
 
@@ -236,10 +237,10 @@ fn constructors_for_type(pattern_type: &Type, env_constructors: &EnvConstructors
     match pattern_type {
         Type::Call {
             function:
-                box Type::Constructor {
+                box Type::Constructor(TypeConstructor {
                     canonical_value: want_canonical_value,
                     ..
-                },
+                }),
             arguments: specific_arguments,
         } => {
             return env_constructors
@@ -287,10 +288,10 @@ fn constructors_for_type(pattern_type: &Type, env_constructors: &EnvConstructors
                 .collect();
         }
 
-        Type::Constructor {
+        Type::Constructor(TypeConstructor {
             canonical_value: want_canonical_value,
             ..
-        } => {
+        }) => {
             return env_constructors
                 .iter()
                 .filter_map(|(name, ctor)| {
@@ -314,9 +315,9 @@ fn constructors_for_type(pattern_type: &Type, env_constructors: &EnvConstructors
 
     fn get_canonical_value(constructor_type: &Type) -> &FullyQualifiedProperName {
         match constructor_type {
-            Type::Constructor {
+            Type::Constructor(TypeConstructor {
                 canonical_value, ..
-            } => canonical_value,
+            }) => canonical_value,
             Type::Call { function, .. } => get_canonical_value(function),
             Type::Function { return_type, .. } => get_canonical_value(return_type),
             other => unreachable!("{:?}", other),
