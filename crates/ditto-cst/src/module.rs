@@ -1,7 +1,7 @@
 use crate::{
-    AsKeyword, Comment, DoubleDot, Equals, ExportsKeyword, Expression, ForeignKeyword,
-    ImportKeyword, ModuleKeyword, ModuleName, Name, PackageName, Parens, ParensList1, Pipe,
-    ProperName, Semicolon, Type, TypeAnnotation, TypeKeyword,
+    AliasKeyword, AsKeyword, Comment, DoubleDot, Equals, ExportsKeyword, Expression,
+    ForeignKeyword, ImportKeyword, ModuleKeyword, ModuleName, Name, PackageName, Parens,
+    ParensList1, Pipe, ProperName, Semicolon, Type, TypeAnnotation, TypeKeyword,
 };
 use std::iter;
 
@@ -93,6 +93,8 @@ pub enum Declaration {
     Value(Box<ValueDeclaration>),
     /// Introducing a new type.
     Type(Box<TypeDeclaration>),
+    /// Aliasing a type.
+    TypeAlias(Box<TypeAliasDeclaration>),
     /// An FFI value.
     ForeignValue(Box<ForeignValueDeclaration>),
 }
@@ -216,6 +218,29 @@ pub struct Constructor<P = Pipe> {
     pub constructor_name: ProperName,
     /// Optional type fields for this constructor.
     pub fields: Option<ParensList1<Type>>,
+}
+
+/// An alias for a type.
+///
+/// ```ditto
+/// type alias Ints = Array(Int);
+/// ```
+#[derive(Debug, Clone)]
+pub struct TypeAliasDeclaration {
+    /// `type`
+    pub type_keyword: TypeKeyword,
+    /// `alias`
+    pub alias_keyword: AliasKeyword,
+    /// The name of this type, e.g. `Maybe`.
+    pub type_name: ProperName,
+    /// Optional parameters for this type.
+    pub type_variables: Option<ParensList1<Name>>,
+    /// `=`
+    pub equals: Equals,
+    /// The type being aliased.
+    pub aliased_type: Type,
+    /// `;`
+    pub semicolon: Semicolon,
 }
 
 /// A foreign value import.

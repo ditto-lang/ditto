@@ -216,6 +216,10 @@ pub struct FnKeyword(pub EmptyToken);
 #[derive(Debug, Clone)]
 pub struct EndKeyword(pub EmptyToken);
 
+/// `alias`
+#[derive(Debug, Clone)]
+pub struct AliasKeyword(pub EmptyToken);
+
 /// `|>`
 #[derive(Debug, Clone)]
 pub struct RightPizzaOperator(pub EmptyToken);
