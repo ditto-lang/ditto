@@ -6,7 +6,7 @@
   },
   "optionalDependencies": {
     "husky": "8.0.1",
-    "lint-staged": "12.5.0"
+    "lint-staged": "13.0.0"
   },
   "scripts": {
     "postinstall": "husky install",
