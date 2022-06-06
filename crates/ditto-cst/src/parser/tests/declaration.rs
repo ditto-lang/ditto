@@ -1,4 +1,6 @@
-use crate::{Constructor, ForeignValueDeclaration, TypeDeclaration, ValueDeclaration};
+use crate::{
+    Constructor, ForeignValueDeclaration, TypeAliasDeclaration, TypeDeclaration, ValueDeclaration,
+};
 
 macro_rules! assert_type_declaration {
     ($expr:expr, $want:pat_param) => {{
@@ -6,6 +8,18 @@ macro_rules! assert_type_declaration {
     }};
     ($expr:expr, $want:pat_param if $cond:expr) => {{
         let result = crate::TypeDeclaration::parse($expr);
+        assert!(matches!(result, Ok(_)), "{:#?}", result.unwrap_err());
+        let declaration = result.unwrap();
+        assert!(matches!(declaration, $want if $cond), "{:#?}", declaration);
+    }};
+}
+
+macro_rules! assert_type_alias_declaration {
+    ($expr:expr, $want:pat_param) => {{
+        assert_type_alias_declaration!($expr, $want if true);
+    }};
+    ($expr:expr, $want:pat_param if $cond:expr) => {{
+        let result = crate::TypeAliasDeclaration::parse($expr);
         assert!(matches!(result, Ok(_)), "{:#?}", result.unwrap_err());
         let declaration = result.unwrap();
         assert!(matches!(declaration, $want if $cond), "{:#?}", declaration);
@@ -88,6 +102,24 @@ fn it_parses_type_declarations() {
     assert_type_declaration!(
         "type Foo(a, b);",
         TypeDeclaration::WithoutConstructors { .. }
+    );
+}
+
+#[test]
+fn it_parses_type_alias_declarations() {
+    assert_type_alias_declaration!(
+        "type alias Ints = Array(Int);",
+        TypeAliasDeclaration {
+            type_variables: None,
+            ..
+        }
+    );
+    assert_type_alias_declaration!(
+        "type alias A(a) = Array(a);",
+        TypeAliasDeclaration {
+            type_variables: Some(_),
+            ..
+        }
     );
 }
 

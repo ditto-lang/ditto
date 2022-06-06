@@ -44,6 +44,7 @@ Everything: cst::Everything = { Parens<DoubleDot> }
 
 Declaration: cst::Declaration = {
   Box<TypeDeclaration> => cst::Declaration::Type(<>),
+  Box<TypeAliasDeclaration> => cst::Declaration::TypeAlias(<>),
   Box<ValueDeclaration> => cst::Declaration::Value(<>),
   Box<ForeignValueDeclaration> => cst::Declaration::ForeignValue(<>),
 }
@@ -51,6 +52,10 @@ Declaration: cst::Declaration = {
 pub TypeDeclaration: cst::TypeDeclaration = {
   <type_keyword: TypeKeyword> <type_name: ProperName> <type_variables: ParensList1<Name>?> <equals: Equals> <head_constructor: HeadConstructor> <tail_constructors: TailConstructor*> <semicolon: Semicolon> => cst::TypeDeclaration::WithConstructors { type_keyword, type_name, type_variables, equals, head_constructor, tail_constructors, semicolon },
   <type_keyword: TypeKeyword> <type_name: ProperName> <type_variables: ParensList1<Name>?> <semicolon: Semicolon> => cst::TypeDeclaration::WithoutConstructors { type_keyword, type_name, type_variables, semicolon },
+}
+
+pub TypeAliasDeclaration: cst::TypeAliasDeclaration = {
+  <type_keyword: TypeKeyword> <alias_keyword: AliasKeyword> <type_name: ProperName> <type_variables: ParensList1<Name>?> <equals: Equals> <aliased_type: Type> <semicolon: Semicolon> => cst::TypeAliasDeclaration { type_keyword, alias_keyword, type_name, type_variables, equals, aliased_type, semicolon },
 }
 
 HeadConstructor: cst::Constructor<Option<cst::Pipe>> = {
@@ -300,6 +305,7 @@ DoKeyword: cst::DoKeyword = { <start_offset: @L> <token: "do"> <end_offset: @R> 
 ReturnKeyword: cst::ReturnKeyword = { <start_offset: @L> <token: "return"> <end_offset: @R> => cst::ReturnKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
 FnKeyword: cst::FnKeyword = { <start_offset: @L> <token: "fn"> <end_offset: @R> => cst::FnKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
 EndKeyword: cst::EndKeyword = { <start_offset: @L> <token: "end"> <end_offset: @R> => cst::EndKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+AliasKeyword: cst::AliasKeyword = { <start_offset: @L> <token: "alias"> <end_offset: @R> => cst::AliasKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
 RightPizzaOperator: cst::RightPizzaOperator = { <start_offset: @L> <token: "|>"> <end_offset: @R> => cst::RightPizzaOperator(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
 
 extern {
@@ -341,6 +347,7 @@ extern {
     "return" => Token::ReturnKeyword(<Comments>),
     "fn" => Token::FnKeyword(<Comments>),
     "end" => Token::EndKeyword(<Comments>),
+    "alias" => Token::AliasKeyword(<Comments>),
     "|>" => Token::RightPizzaOperator(<Comments>),
     "name" => Token::Name(<(Comments, String)>),
     "ProperName" => Token::ProperName(<(Comments, String)>),

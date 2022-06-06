@@ -3,7 +3,7 @@ mod tests;
 
 use crate::{
     lexer, Expression, ForeignValueDeclaration, Header, ImportLine, Module, ModuleName, Span, Type,
-    TypeDeclaration, ValueDeclaration,
+    TypeAliasDeclaration, TypeDeclaration, ValueDeclaration,
 };
 use miette::{Diagnostic, NamedSource, SourceSpan};
 use thiserror::Error;
@@ -217,6 +217,16 @@ impl TypeDeclaration {
         let parser = ditto::TypeDeclarationParser::new();
         let type_decl = parser.parse(lexer)?;
         Ok(type_decl)
+    }
+}
+
+impl TypeAliasDeclaration {
+    /// Parse a [TypeAliasDeclaration].
+    pub fn parse(input: &str) -> Result<Self> {
+        let lexer = lexer::Lexer::new(input);
+        let parser = ditto::TypeAliasDeclarationParser::new();
+        let type_alias = parser.parse(lexer)?;
+        Ok(type_alias)
     }
 }
 

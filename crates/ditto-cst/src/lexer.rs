@@ -106,6 +106,7 @@ impl<'input> Iterator for Lexer<'input> {
             RawToken::ReturnKeyword => Token::ReturnKeyword(self.collect_comments()),
             RawToken::FnKeyword => Token::FnKeyword(self.collect_comments()),
             RawToken::EndKeyword => Token::EndKeyword(self.collect_comments()),
+            RawToken::AliasKeyword => Token::AliasKeyword(self.collect_comments()),
             RawToken::RightPizzaOperator => Token::RightPizzaOperator(self.collect_comments()),
             RawToken::Name(string) => Token::Name((self.collect_comments(), string)),
             RawToken::ProperName(string) => Token::ProperName((self.collect_comments(), string)),
@@ -164,6 +165,7 @@ pub enum Token {
     ReturnKeyword(Comments),
     FnKeyword(Comments),
     EndKeyword(Comments),
+    AliasKeyword(Comments),
     RightPizzaOperator(Comments),
     Name((Comments, String)),
     ProperName((Comments, String)),
@@ -250,6 +252,8 @@ enum RawToken {
     FnKeyword,
     #[token("end")]
     EndKeyword,
+    #[token("alias")]
+    AliasKeyword,
 
     #[token("|>")]
     RightPizzaOperator,
