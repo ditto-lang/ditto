@@ -276,9 +276,11 @@ enum RawToken {
     #[regex(r#""[^"]*""#, callback = |lex| lex.slice().parse())]
     String(String),
 
-    #[regex(r"\n")]
+    #[regex(r"\r?\n")]
     Newline,
 
+    // NOTE: this doesn't cover all non-newline whitespace,
+    // but I'm not stressing that rn
     #[regex(r"[ \t]+", logos::skip)]
     #[error]
     Error,
