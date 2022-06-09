@@ -46,19 +46,19 @@ pub struct Config {
     #[serde(rename = "test-dependencies", default)]
     pub test_dependencies: Dependencies,
 
-    /// Location of ditto source (`*.ditto`) files.
+    /// Location of source files.
     ///
-    /// This is effectively hardcoded to `"src"` for the time being,
+    /// This is effectively hardcoded to `ditto-src` for the time being,
     /// but might become configurable in the future.
     #[serde(skip, rename = "src-dir", default = "default_src_dir")]
     pub src_dir: PathBuf,
 
-    /// Location of ditto test (`*.ditto`) files.
+    /// Location of test files.
     ///
-    /// This is effectively hardcoded to `"tests"` for the time being,
+    /// This is effectively hardcoded to `ditto-test` for the time being,
     /// but might become configurable in the future.
-    #[serde(skip, rename = "tests-dir", default = "default_tests_dir")]
-    pub tests_dir: PathBuf,
+    #[serde(skip, rename = "test-dir", default = "default_test_dir")]
+    pub test_dir: PathBuf,
 
     /// Location for compiler artifacts.
     ///
@@ -97,7 +97,7 @@ impl Config {
             test_dependencies: Default::default(),
             targets: Default::default(), // empty
             src_dir: default_src_dir(),
-            tests_dir: default_tests_dir(),
+            test_dir: default_test_dir(),
             codegen_js_config: Default::default(), // nada
             ditto_dir: default_ditto_dir(),
             package_set: Default::default(), //empty
@@ -135,11 +135,11 @@ impl Config {
 }
 
 fn default_src_dir() -> PathBuf {
-    PathBuf::from("src")
+    PathBuf::from("ditto-src")
 }
 
-fn default_tests_dir() -> PathBuf {
-    PathBuf::from("tests")
+fn default_test_dir() -> PathBuf {
+    PathBuf::from("ditto-test")
 }
 
 fn default_ditto_dir() -> PathBuf {

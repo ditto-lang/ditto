@@ -24,7 +24,7 @@ pub fn find_ditto_files<P: AsRef<Path>>(root: P) -> io::Result<Vec<PathBuf>> {
 mod tests {
     #[test]
     fn it_walks_as_expected() {
-        let mut paths = super::find_ditto_files("fixtures/all-good/src")
+        let mut paths = super::find_ditto_files("fixtures/all-good/ditto-src")
             .unwrap()
             .into_iter()
             .map(|path| path_slash::PathBufExt::to_slash_lossy(&path))
@@ -33,11 +33,11 @@ mod tests {
         assert_eq!(
             paths,
             vec![
-                "fixtures/all-good/src/A.ditto",
-                "fixtures/all-good/src/B.ditto",
-                "fixtures/all-good/src/C.ditto",
-                "fixtures/all-good/src/D.ditto",
-                "fixtures/all-good/src/D/E.ditto",
+                "fixtures/all-good/ditto-src/A.ditto",
+                "fixtures/all-good/ditto-src/B.ditto",
+                "fixtures/all-good/ditto-src/C.ditto",
+                "fixtures/all-good/ditto-src/D.ditto",
+                "fixtures/all-good/ditto-src/D/E.ditto",
             ]
         );
     }
