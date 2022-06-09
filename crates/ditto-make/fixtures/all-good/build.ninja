@@ -9,25 +9,25 @@ rule js
 rule package_json
   command = ditto compile package_json -i ${in} -o ${out}
 
-build builddir/A.ast builddir/A.ast-exports builddir/A.checker-warnings: ast ./src/A.ditto
+build builddir/A.ast builddir/A.ast-exports builddir/A.checker-warnings: ast ./ditto-src/A.ditto
   description = Checking A
 
-build builddir/B.ast builddir/B.ast-exports builddir/B.checker-warnings: ast ./src/B.ditto
+build builddir/B.ast builddir/B.ast-exports builddir/B.checker-warnings: ast ./ditto-src/B.ditto
   description = Checking B
 
-build builddir/C.ast builddir/C.ast-exports builddir/C.checker-warnings: ast ./src/C.ditto builddir/A.ast-exports builddir/B.ast-exports
+build builddir/C.ast builddir/C.ast-exports builddir/C.checker-warnings: ast ./ditto-src/C.ditto builddir/A.ast-exports builddir/B.ast-exports
   description = Checking C
 
-build builddir/D.ast builddir/D.ast-exports builddir/D.checker-warnings: ast ./src/D.ditto builddir/C.ast-exports builddir/dep/Dep.ast-exports
+build builddir/D.ast builddir/D.ast-exports builddir/D.checker-warnings: ast ./ditto-src/D.ditto builddir/C.ast-exports builddir/dep/Dep.ast-exports
   description = Checking D
 
-build builddir/D_E.ast builddir/D_E.ast-exports builddir/D_E.checker-warnings: ast ./src/D/E.ditto
+build builddir/D_E.ast builddir/D_E.ast-exports builddir/D_E.checker-warnings: ast ./ditto-src/D/E.ditto
   description = Checking D.E
 
-build builddir/dep/Dep.ast builddir/dep/Dep.ast-exports: ast ./dep/src/Dep.ditto builddir/dep/Util.ast-exports
+build builddir/dep/Dep.ast builddir/dep/Dep.ast-exports: ast ./dep/ditto-src/Dep.ditto builddir/dep/Util.ast-exports
   description = Checking dep:Dep
 
-build builddir/dep/Util.ast builddir/dep/Util.ast-exports: ast ./dep/src/Util.ditto
+build builddir/dep/Util.ast builddir/dep/Util.ast-exports: ast ./dep/ditto-src/Util.ditto
   description = Checking dep:Util
 
 build dist/A.js: js builddir/A.ast

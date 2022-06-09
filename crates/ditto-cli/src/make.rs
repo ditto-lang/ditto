@@ -91,9 +91,9 @@ pub async fn run_watch(
         .into_diagnostic()?;
 
     // watch `./tests` (if it's present)
-    if config.tests_dir.exists() {
+    if config.test_dir.exists() {
         watcher
-            .watch(&config.tests_dir, notify::RecursiveMode::Recursive)
+            .watch(&config.test_dir, notify::RecursiveMode::Recursive)
             .into_diagnostic()?;
     }
 
@@ -585,9 +585,9 @@ fn generate_build_ninja(
         .into_diagnostic()
         .wrap_err("error getting current executable")?;
 
-    let mut ditto_files = find_ditto_files(&config.src_dir)?; // src
-    if include_test_sources && config.tests_dir.exists() {
-        ditto_files.extend(find_ditto_files(&config.tests_dir)?); // tests
+    let mut ditto_files = find_ditto_files(&config.src_dir)?; // ditto-src
+    if include_test_sources && config.test_dir.exists() {
+        ditto_files.extend(find_ditto_files(&config.test_dir)?); // ditto-test
     }
 
     let sources = Sources {

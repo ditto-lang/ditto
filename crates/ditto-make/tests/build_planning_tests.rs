@@ -28,14 +28,14 @@ macro_rules! test_with_current_dir {
 macro_rules! assert_build_ninja {
     ($dir:expr, $name:ident) => {
         test_with_current_dir!($dir, $name, {
-            let ditto_sources = ditto_make::find_ditto_files("./src")?;
+            let ditto_sources = ditto_make::find_ditto_files("./ditto-src")?;
             let sources = ditto_make::Sources {
                 config: std::path::PathBuf::from(ditto_config::CONFIG_FILE_NAME),
                 ditto: ditto_sources,
             };
             let mut package_sources = ditto_make::PackageSources::new();
             if std::path::PathBuf::from("dep").exists() {
-                let dep_ditto_sources = ditto_make::find_ditto_files("./dep/src")?;
+                let dep_ditto_sources = ditto_make::find_ditto_files("./dep/ditto-src")?;
                 let dep_sources = ditto_make::Sources {
                     config: ["dep", "ditto.toml"].iter().collect(),
                     ditto: dep_ditto_sources,
@@ -57,14 +57,14 @@ macro_rules! assert_build_ninja {
 macro_rules! assert_build_ninja_error {
     ($dir:expr, $name:ident, $error_string:expr) => {
         test_with_current_dir!($dir, $name, {
-            let ditto_sources = ditto_make::find_ditto_files("./src")?;
+            let ditto_sources = ditto_make::find_ditto_files("./ditto-src")?;
             let sources = ditto_make::Sources {
                 config: std::path::PathBuf::from(ditto_config::CONFIG_FILE_NAME),
                 ditto: ditto_sources,
             };
             let mut package_sources = ditto_make::PackageSources::new();
             if std::path::PathBuf::from("dep").exists() {
-                let dep_ditto_sources = ditto_make::find_ditto_files("./dep/src")?;
+                let dep_ditto_sources = ditto_make::find_ditto_files("./dep/ditto-src")?;
                 let dep_sources = ditto_make::Sources {
                     config: ["dep", "ditto.toml"].iter().collect(),
                     ditto: dep_ditto_sources,
