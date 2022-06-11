@@ -1,0 +1,40 @@
+module KitchenSink exports (
+    five,
+    six,
+    eleven, 
+    -- ## mafs
+    add,
+    -- ## some types
+    ABC(..),
+    Abstract,
+);
+
+-- **Ladies and gentlemen, this is Mambo Number Five**
+--
+-- One, _two_, three, four, five
+-- Everybody in the car, so come on, let's ride
+-- To the liquor store around the corner
+-- The boys say they want some gin and juice
+-- But I really don't wanna
+-- Beer bust like I had last week
+-- I must stay deep because talk is cheap
+five = 5;
+
+
+--     This
+--     should be unindented
+six : Int = private_6;
+
+private_6 = 6;
+
+
+-- > These go to 11.
+eleven = add(5, 6);
+
+add = add_impl;
+
+foreign add_impl : (Int, Int) -> Bool;
+
+type ABC = A | B | C;
+
+type Abstract = Abstract;

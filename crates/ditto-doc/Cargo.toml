@@ -9,3 +9,13 @@ doctest = false
 
 [dependencies]
 ditto-ast = { path = "../ditto-ast" }
+pulldown-cmark = "0.9"
+unindent = "0.1"
+html-escape = "0.2" # possibly not needed cos of the below
+html-builder = "0.3"
+
+[dev-dependencies]
+ditto-cst = { path = "../ditto-cst" }
+ditto-checker = { path = "../ditto-checker" }
+snapshot-test = { path = "../snapshot-test" }
+similar-asserts = "1.2"

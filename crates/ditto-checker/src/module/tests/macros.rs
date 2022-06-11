@@ -31,7 +31,7 @@ macro_rules! parse_and_check_module {
     ($source:expr) => {{
         $crate::module::tests::macros::parse_and_check_module!(
             $source,
-            &crate::module::Everything::default()
+            &crate::Everything::default()
         )
     }};
     ($source:expr, $everything:expr) => {{

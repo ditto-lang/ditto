@@ -2,7 +2,8 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "prettier": "2.6.0"
+    "prettier": "2.6.0",
+    "ditto.css": "file:../ditto.css"
   },
   "optionalDependencies": {
     "husky": "8.0.1",
