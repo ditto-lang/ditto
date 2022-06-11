@@ -1,0 +1,35 @@
+builddir = builddir
+
+rule ast
+  command = ditto compile ast --build-dir builddir -i ${in} -o ${out}
+
+rule doc_html_index
+  command = ditto compile doc_html_index -i ${in} -o ${out}
+
+rule doc_html_module
+  command = ditto compile doc_html_module -i ${in} -o ${out}
+
+build builddir/A_B_C.ast builddir/A_B_C.ast-exports builddir/A_B_C.checker-warnings: ast ditto-src/A/B/C.ditto
+  description = Checking A.B.C
+
+build builddir/Test.ast builddir/Test.ast-exports builddir/Test.checker-warnings: ast ditto-test/Main.ditto
+  description = Checking Test
+
+build builddir/dep/Dep.ast builddir/dep/Dep.ast-exports: ast builddir/dep/Util.ast-exports dep/ditto-src/Dep.ditto
+  description = Checking dep:Dep
+
+build builddir/dep/Util.ast builddir/dep/Util.ast-exports: ast dep/ditto-src/Util.ditto
+  description = Checking dep:Util
+
+build docs/A.B.html: doc_html_module builddir/A_B_C.ast-exports
+  description = Generating documentation for A.B.C
+
+build docs/dep:Dep.html: doc_html_module builddir/dep/Dep.ast-exports
+  description = Generating documentation for dep:Dep
+
+build docs/dep:Util.html: doc_html_module builddir/dep/Util.ast-exports
+  description = Generating documentation for dep:Util
+
+build docs/index.html: doc_html_index builddir/A_B_C.ast-exports builddir/dep/Dep.ast-exports builddir/dep/Util.ast-exports
+  description = Generating documentation index.html
+

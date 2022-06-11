@@ -3,6 +3,6 @@ builddir = builddir
 rule ast
   command = ditto compile ast --build-dir builddir -i ${in} -o ${out}
 
-build builddir/A.ast builddir/A.ast-exports builddir/A.checker-warnings: ast ./ditto-src/A.ditto
+build builddir/A.ast builddir/A.ast-exports builddir/A.checker-warnings: ast ditto-src/A.ditto
   description = Checking A
 

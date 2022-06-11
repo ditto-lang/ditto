@@ -18,6 +18,8 @@ use crate::common;
 pub static SUBCOMMAND_AST: &str = "ast";
 pub static SUBCOMMAND_JS: &str = "js";
 pub static SUBCOMMAND_PACKAGE_JSON: &str = "package_json";
+pub static SUBCOMMAND_DOC_HTML_MODULE: &str = "doc_html_module";
+pub static SUBCOMMAND_DOC_HTML_INDEX: &str = "doc_html_index";
 
 pub static ARG_BUILD_DIR: &str = "build-dir";
 pub static ARG_INPUTS: char = 'i';
@@ -75,6 +77,16 @@ pub fn command(name: &str) -> Command<'_> {
                 .arg(arg_input())
                 .arg(arg_output()),
         )
+        .subcommand(
+            Command::new(SUBCOMMAND_DOC_HTML_MODULE)
+                .arg(arg_input())
+                .arg(arg_output()),
+        )
+        .subcommand(
+            Command::new(SUBCOMMAND_DOC_HTML_INDEX)
+                .arg(arg_inputs())
+                .arg(arg_output()),
+        )
 }
 
 /// Run the program given matches from [compile].
@@ -113,6 +125,20 @@ pub fn run(matches: &ArgMatches) -> Result<()> {
         let input = matches.value_of("input").unwrap();
         let output = matches.value_of("output").unwrap();
         run_package_json(input, output)
+    } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_DOC_HTML_MODULE) {
+        let input = matches.value_of("input").unwrap();
+        let output = matches.value_of("output").unwrap();
+        run_doc_html_module(input, output)
+    } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_DOC_HTML_INDEX) {
+        let inputs = matches.values_of("inputs").unwrap();
+        let input_strings = inputs
+            .into_iter()
+            .map(|input| input.to_owned())
+            .collect::<Vec<_>>();
+
+        let output = matches.value_of("output").unwrap();
+
+        run_doc_html_index(input_strings, output)
     } else {
         unreachable!()
     }
@@ -427,6 +453,18 @@ fn run_package_json(input: &str, output: &str) -> Result<()> {
             (_, rhs) => rhs, // rhs takes priority
         }
     }
+}
+
+/// Generate documentation for a single module.
+fn run_doc_html_module(input: &str, output: &str) -> Result<()> {
+    let (module_name, module_exports) = common::deserialize(Path::new(input))?;
+    let html = ditto_doc::generate_html_docs(module_name, module_exports);
+    std::fs::write(output, html).into_diagnostic()
+}
+
+/// Generate an `index.html` for a load of docs.
+fn run_doc_html_index(_inputs: Vec<String>, output: &str) -> Result<()> {
+    std::fs::write(output, "<h1>TODO</h1>").into_diagnostic()
 }
 
 /// Returns everything after the first dot in a path.

@@ -1,0 +1,7 @@
+module Dep exports (..);
+
+import Util (identity);
+
+type Dep = Dep;
+
+dep : Dep = identity(Dep);
