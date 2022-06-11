@@ -586,6 +586,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "ditto-doc"
+version = "0.0.1"
+dependencies = [
+ "ditto-ast",
+]
+
+[[package]]
 name = "ditto-fmt"
 version = "0.0.1"
 dependencies = [
@@ -624,6 +631,7 @@ dependencies = [
  "ditto-codegen-js",
  "ditto-config",
  "ditto-cst",
+ "ditto-doc",
  "lazy_static",
  "log",
  "miette",

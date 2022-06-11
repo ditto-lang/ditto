@@ -1,6 +1,6 @@
 use crate::{common, compile};
 use ditto_ast as ast;
-use ditto_config::{read_config, Config, PackageName};
+use ditto_config::{read_config, PackageName};
 use ditto_cst as cst;
 use miette::{bail, Diagnostic, IntoDiagnostic, NamedSource, Result, SourceSpan};
 use std::{
@@ -10,12 +10,40 @@ use std::{
 };
 use thiserror::Error;
 
+/// A `.ditto` file.
+pub struct SourceFile {
+    /// Path to the `.ditto` file.
+    path: PathBuf,
+    /// Whether this module should have documentation generated for it.
+    document: bool,
+}
+
+impl SourceFile {
+    /// Create a [SourceFile].
+    ///
+    /// The module will be included in generated documentation
+    pub fn new(path: PathBuf) -> Self {
+        Self {
+            path,
+            document: true,
+        }
+    }
+
+    /// Create a [SourceFile], but ignore it in any generated documentation.
+    pub fn without_docs(path: PathBuf) -> Self {
+        Self {
+            path,
+            document: false,
+        }
+    }
+}
+
 /// A config file and a load of `*.ditto` files.
 pub struct Sources {
     /// Path to the ditto config file.
     pub config: PathBuf,
     /// `*.ditto` files.
-    pub ditto: Vec<PathBuf>,
+    pub source_files: Vec<SourceFile>,
 }
 
 /// [Sources] mapped to a package name.
@@ -29,17 +57,43 @@ pub type GetWarnings = impl FnOnce() -> Result<Vec<miette::Report>>;
 /// file and also returns a function for retrieving compiler warnings once `ninja` has run.
 pub fn generate_build_ninja(
     build_dir: PathBuf,
-    ditto_bin: PathBuf,
+    ditto_bin: &Path,
     ditto_version: &semver::Version,
     compile_subcommand: &'static str,
     sources: Sources,
     package_sources: PackageSources,
+    docs_dir: Option<&Path>, // directory to generate docs to. If `None` then no docs will be generated.
 ) -> Result<(BuildNinja, GetWarnings)> {
     // TODO make this more concurrent!
+
     let config = read_config(&sources.config)?;
 
     // Initial build.ninja file, extended later
-    let mut build_ninja = BuildNinja::new(&build_dir, &ditto_bin, compile_subcommand, &config);
+    let mut build_ninja = BuildNinja::new(&build_dir, ditto_bin, compile_subcommand);
+
+    // Push extra build rules as needed
+    if config.targets_js() {
+        build_ninja
+            .rules
+            .push(Rule::new_js(ditto_bin, compile_subcommand));
+
+        // We only generate package.json files for dependencies,
+        // so if there are none then no need for the rule.
+        if !package_sources.is_empty() {
+            build_ninja
+                .rules
+                .push(Rule::new_package_json(ditto_bin, compile_subcommand));
+        }
+    }
+
+    if docs_dir.is_some() {
+        build_ninja
+            .rules
+            .push(Rule::new_doc_html_module(ditto_bin, compile_subcommand));
+        build_ninja
+            .rules
+            .push(Rule::new_doc_html_index(ditto_bin, compile_subcommand));
+    }
 
     let js_dirs = if config.targets_js() {
         let dist_dir = config.codegen_js_config.dist_dir;
@@ -61,6 +115,9 @@ pub fn generate_build_ninja(
 
     // Paths to serialized warnings, so the caller can replay them
     let mut checker_warnings_paths: Vec<PathBuf> = Vec::new();
+
+    // All the .ast-exports files which will be used as input to docs/index.html
+    let mut doc_ast_exports_paths: Vec<PathBuf> = Vec::new();
 
     for (node_index, node) in graph_nodes.clone() {
         let node_string = node.to_string();
@@ -117,11 +174,28 @@ pub fn generate_build_ninja(
                 js_path.set_extension(common::EXTENSION_JS);
                 js_path
             };
+            //
             build_ninja.builds.push(Build::new_js(
                 node_string.clone(),
                 js_path,
                 ast_path.clone(),
             ));
+        }
+
+        // docs/Some.Module.html
+        if let Some(docs_dir) = docs_dir {
+            if node.document {
+                let mut html_path = docs_dir.to_path_buf();
+                html_path.push(&node_string);
+                html_path.set_extension(common::EXTENSION_HTML);
+                build_ninja.builds.push(Build::new_doc_html_module(
+                    node_string.clone(),
+                    html_path.to_path_buf(),
+                    ast_exports_path.clone(),
+                ));
+
+                doc_ast_exports_paths.push(ast_exports_path.clone());
+            }
         }
 
         build_ninja.builds.push(Build::new_ast(
@@ -134,7 +208,19 @@ pub fn generate_build_ninja(
         ));
     }
 
+    // docs/index.html
+    if let Some(docs_dir) = docs_dir {
+        let mut index_html_path = docs_dir.to_path_buf();
+        index_html_path.push("index");
+        index_html_path.set_extension(common::EXTENSION_HTML);
+        build_ninja.builds.push(Build::new_doc_html_index(
+            index_html_path,
+            doc_ast_exports_paths,
+        ));
+    }
+
     // Callback to get all warnings for the current package
+    //               : GetWarnings
     let get_warnings = move || {
         let mut warnings = Vec::new();
         for warnings_path in checker_warnings_paths {
@@ -184,6 +270,7 @@ struct BuildGraphNode {
     module_name: ast::ModuleName,
     source_path: PathBuf,
     imports: Vec<cst::ImportLine>,
+    document: bool,
 }
 
 impl fmt::Display for BuildGraphNode {
@@ -267,16 +354,16 @@ fn prepare_build_graph(
         let mut module_names_seen: HashMap<ast::ModuleName, PathBuf> = HashMap::new();
 
         // TODO make this more async?
-        for source_path in sources.ditto.iter() {
-            let (header, imports) = read_module_header_and_imports(source_path)?;
+        for source_file in sources.source_files.iter() {
+            let (header, imports) = read_module_header_and_imports(&source_file.path)?;
             let module_name_span = header.module_name.get_span();
             let module_name = ast::ModuleName::from(header.module_name);
 
             // Make sure we haven't seen a file with this module name before,
             // otherwise ninja will throw a wobbly
             if let Some(other_file) = module_names_seen.remove(&module_name) {
-                let source = std::fs::read_to_string(source_path).into_diagnostic()?;
-                let input = NamedSource::new(source_path.to_string_lossy(), source);
+                let source = std::fs::read_to_string(&source_file.path).into_diagnostic()?;
+                let input = NamedSource::new(&source_file.path.to_string_lossy(), source);
                 return Err(DuplicateModuleError {
                     input,
                     module_name: module_name.to_string(),
@@ -289,13 +376,14 @@ fn prepare_build_graph(
                 }
                 .into());
             }
-            module_names_seen.insert(module_name.clone(), source_path.clone());
+            module_names_seen.insert(module_name.clone(), source_file.path.clone());
 
             let node = BuildGraphNode {
                 package_name: package_name.clone(),
                 module_name,
-                source_path: source_path.to_path_buf(),
+                source_path: source_file.path.to_path_buf(),
                 imports,
+                document: source_file.document,
             };
             let node_index = build_graph.add_node(node.clone());
             build_graph_nodes.insert(node_index, node);
@@ -387,23 +475,17 @@ pub struct BuildNinja {
 }
 
 impl BuildNinja {
-    fn new(
-        build_dir: &Path,
-        ditto_bin: &Path,
-        compile_subcommand: &'static str,
-        config: &Config,
-    ) -> Self {
+    fn new(build_dir: &Path, ditto_bin: &Path, compile_subcommand: &'static str) -> Self {
         let build_dir_variable = (
             String::from("builddir"),
             build_dir.to_string_lossy().into_owned(),
         );
-        let variables = HashMap::from_iter(vec![(build_dir_variable)]);
-        let mut rules = vec![Rule::new_ast(build_dir, ditto_bin, compile_subcommand)];
 
-        if config.targets_js() {
-            rules.push(Rule::new_js(ditto_bin, compile_subcommand));
-            rules.push(Rule::new_package_json(ditto_bin, compile_subcommand));
-        }
+        // builddir = $build_dir
+        let variables = HashMap::from_iter(vec![(build_dir_variable)]);
+
+        // There will always be at least an `ast` rule rule
+        let rules = vec![Rule::new_ast(build_dir, ditto_bin, compile_subcommand)];
 
         Self {
             variables,
@@ -471,6 +553,8 @@ impl BuildNinja {
 static RULE_NAME_AST: &str = "ast";
 static RULE_NAME_JS: &str = "js";
 static RULE_NAME_PACKAGE_JSON: &str = "package_json";
+static RULE_NAME_DOC_HTML_MODULE: &str = "doc_html_module";
+static RULE_NAME_DOC_HTML_INDEX: &str = "doc_html_index";
 
 #[derive(Debug)]
 struct Rule {
@@ -506,6 +590,28 @@ impl Rule {
         Self {
             name: RULE_NAME_PACKAGE_JSON.to_string(),
             command: format!("{ditto} {compile} {package_json} -{i} ${{in}} -{o} ${{out}}"),
+        }
+    }
+
+    fn new_doc_html_module(ditto_bin: &Path, compile: &str) -> Self {
+        use compile::{
+            ARG_INPUTS as i, ARG_OUTPUTS as o, SUBCOMMAND_DOC_HTML_MODULE as doc_html_module,
+        };
+        let ditto = ditto_bin.to_string_lossy();
+        Self {
+            name: RULE_NAME_DOC_HTML_MODULE.to_string(),
+            command: format!("{ditto} {compile} {doc_html_module} -{i} ${{in}} -{o} ${{out}}"),
+        }
+    }
+
+    fn new_doc_html_index(ditto_bin: &Path, compile: &str) -> Self {
+        use compile::{
+            ARG_INPUTS as i, ARG_OUTPUTS as o, SUBCOMMAND_DOC_HTML_INDEX as doc_html_index,
+        };
+        let ditto = ditto_bin.to_string_lossy();
+        Self {
+            name: RULE_NAME_DOC_HTML_INDEX.to_string(),
+            command: format!("{ditto} {compile} {doc_html_index} -{i} ${{in}} -{o} ${{out}}"),
         }
     }
 
@@ -588,6 +694,42 @@ impl Build {
             variables: HashMap::from_iter(vec![(
                 String::from("description"),
                 format!("Generating package.json for {}", package_name.as_str()),
+            )]),
+        }
+    }
+
+    fn new_doc_html_module(
+        module_descriptor: String,
+        html_path: PathBuf,
+        ast_exports_path: PathBuf,
+    ) -> Self {
+        let outputs = vec![html_path];
+
+        let inputs = vec![ast_exports_path];
+
+        Self {
+            outputs,
+            rule_name: String::from(RULE_NAME_DOC_HTML_MODULE),
+            inputs,
+            variables: HashMap::from_iter(vec![(
+                String::from("description"),
+                format!("Generating documentation for {}", module_descriptor),
+            )]),
+        }
+    }
+
+    fn new_doc_html_index(index_html_path: PathBuf, ast_exports_paths: Vec<PathBuf>) -> Self {
+        let outputs = vec![index_html_path];
+
+        let inputs = ast_exports_paths;
+
+        Self {
+            outputs,
+            rule_name: String::from(RULE_NAME_DOC_HTML_INDEX),
+            inputs,
+            variables: HashMap::from_iter(vec![(
+                String::from("description"),
+                String::from("Generating documentation index.html"),
             )]),
         }
     }

@@ -60,6 +60,13 @@ pub struct Config {
     #[serde(skip, rename = "test-dir", default = "default_test_dir")]
     pub test_dir: PathBuf,
 
+    /// Where to generate documentation to
+    ///
+    /// This is effectively hardcoded to `docs` for the time being,
+    /// but might become configurable in the future.
+    #[serde(skip, rename = "docs-dir", default = "default_docs_dir")]
+    pub docs_dir: PathBuf,
+
     /// Location for compiler artifacts.
     ///
     /// This is effectively hardcoded to `".ditto"` for the time being,
@@ -98,6 +105,7 @@ impl Config {
             targets: Default::default(), // empty
             src_dir: default_src_dir(),
             test_dir: default_test_dir(),
+            docs_dir: default_docs_dir(),
             codegen_js_config: Default::default(), // nada
             ditto_dir: default_ditto_dir(),
             package_set: Default::default(), //empty
@@ -140,6 +148,10 @@ fn default_src_dir() -> PathBuf {
 
 fn default_test_dir() -> PathBuf {
     PathBuf::from("ditto-test")
+}
+
+fn default_docs_dir() -> PathBuf {
+    PathBuf::from("docs")
 }
 
 fn default_ditto_dir() -> PathBuf {

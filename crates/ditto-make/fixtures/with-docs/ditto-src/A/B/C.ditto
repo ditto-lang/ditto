@@ -1,0 +1,3 @@
+module A.B.C exports (..);
+
+type A = A;

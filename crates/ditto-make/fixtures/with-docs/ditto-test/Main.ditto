@@ -1,0 +1,5 @@
+module Test exports (main);
+
+main = do {
+    return unit
+};

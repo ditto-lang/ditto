@@ -40,6 +40,11 @@ pub fn command<'a>(name: &str) -> Command<'a> {
                 .takes_value(true)
                 .multiple_occurrences(true),
         )
+        .arg(
+            Arg::new("docs")
+                .long("docs")
+                .help("Generate HTML documentation"),
+        )
         // Useful for debugging why watches are/aren't triggering.
         // Should remove it eventually.
         .arg(Arg::new("debug-watcher").long("debug-watcher").hide(true))
@@ -332,10 +337,19 @@ async fn run_once(
             .wrap_err("error checking packages are up to date")?;
     }
 
+    let generate_docs = matches.is_present("docs");
+
     let now = Instant::now(); // for timing
 
     // Do the thing
-    let result = make(config_path, config, ditto_version, include_test_stuff).await;
+    let result = make(
+        config_path,
+        config,
+        ditto_version,
+        include_test_stuff,
+        generate_docs,
+    )
+    .await;
 
     lock.unlock()
         // Crash if we fail to release the lock otherwise things are likely to misbehave...
@@ -410,21 +424,26 @@ async fn make(
     config: &Config,
     ditto_version: &Version,
     include_test_sources: bool,
+    generate_docs: bool,
 ) -> Result<WhatHappened> {
-    let (build_ninja, get_warnings) =
-        generate_build_ninja(config_path, config, ditto_version, include_test_sources).map_err(
-            |err| {
-                // This is a bit brittle, but we want parse errors encountered during
-                // build planning to be indistinguishable from parse errors encountered
-                // during the actual build
-                if err.root_cause().to_string() == "syntax error" {
-                    //                                  ^^ BEWARE relying on this string is brittle!
-                    err
-                } else {
-                    err.wrap_err("error generating build.ninja")
-                }
-            },
-        )?;
+    let (build_ninja, get_warnings) = generate_build_ninja(
+        config_path,
+        config,
+        ditto_version,
+        include_test_sources,
+        generate_docs,
+    )
+    .map_err(|err| {
+        // This is a bit brittle, but we want parse errors encountered during
+        // build planning to be indistinguishable from parse errors encountered
+        // during the actual build
+        if err.root_cause().to_string() == "syntax error" {
+            //                                  ^^ BEWARE relying on this string is brittle!
+            err
+        } else {
+            err.wrap_err("error generating build.ninja")
+        }
+    })?;
 
     trace!("build.ninja generated");
 
@@ -577,6 +596,7 @@ fn generate_build_ninja(
     config: &Config,
     ditto_version: &Version,
     include_test_sources: bool,
+    generate_docs: bool,
 ) -> Result<(BuildNinja, GetWarnings)> {
     let mut build_dir = config.ditto_dir.to_path_buf();
     build_dir.push("build");
@@ -590,26 +610,40 @@ fn generate_build_ninja(
             .wrap_err("error getting current executable")?
     };
 
-    let mut ditto_files = find_ditto_files(&config.src_dir)?; // ditto-src
+    let mut source_files = find_ditto_source_files(
+        &config.src_dir, // ditto-src
+        true,            // do generate docs for these files
+    )?;
+
     if include_test_sources && config.test_dir.exists() {
-        ditto_files.extend(find_ditto_files(&config.test_dir)?); // ditto-test
+        source_files.extend(find_ditto_source_files(
+            &config.test_dir, // ditto-test
+            false,            // don't generate docs for these files
+        )?);
     }
 
     let sources = Sources {
         config: config_path.to_path_buf(),
-        ditto: ditto_files,
+        source_files,
     };
 
     let package_sources =
         get_package_sources(config).wrap_err("error finding ditto files in packages")?;
 
+    let docs_dir = if generate_docs {
+        Some(config.docs_dir.as_path())
+    } else {
+        None
+    };
+
     make::generate_build_ninja(
         build_dir,
-        ditto_bin,
+        &ditto_bin,
         &ditto_version.semversion,
         COMPILE_SUBCOMMAND,
         sources,
         package_sources,
+        docs_dir,
     )
 }
 
@@ -632,15 +666,18 @@ fn get_sources_for_dir(dir: &Path) -> Result<Sources> {
     let mut src_dir = dir.to_path_buf();
     src_dir.push(config.src_dir);
 
-    let ditto_sources = find_ditto_files(src_dir)?;
+    let source_files = find_ditto_source_files(src_dir, true)?;
     Ok(Sources {
         config: config_path,
-        ditto: ditto_sources,
+        source_files,
     })
 }
 
-fn find_ditto_files<P: AsRef<Path>>(root: P) -> Result<Vec<PathBuf>> {
-    make::find_ditto_files(root.as_ref())
+fn find_ditto_source_files<P: AsRef<Path>>(
+    root: P,
+    document: bool,
+) -> Result<Vec<make::SourceFile>> {
+    make::find_ditto_source_files(root.as_ref(), document)
         .into_diagnostic()
         .wrap_err(format!(
             "error finding ditto files in {}",

@@ -1,0 +1,11 @@
+[package]
+name = "ditto-doc"
+version = "0.0.1"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[lib]
+doctest = false
+
+[dependencies]
+ditto-ast = { path = "../ditto-ast" }

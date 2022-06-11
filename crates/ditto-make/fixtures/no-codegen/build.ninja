@@ -3,18 +3,18 @@ builddir = builddir
 rule ast
   command = ditto compile ast --build-dir builddir -i ${in} -o ${out}
 
-build builddir/A.ast builddir/A.ast-exports builddir/A.checker-warnings: ast ./ditto-src/A.ditto
+build builddir/A.ast builddir/A.ast-exports builddir/A.checker-warnings: ast ditto-src/A.ditto
   description = Checking A
 
-build builddir/B.ast builddir/B.ast-exports builddir/B.checker-warnings: ast ./ditto-src/B.ditto
+build builddir/B.ast builddir/B.ast-exports builddir/B.checker-warnings: ast ditto-src/B.ditto
   description = Checking B
 
-build builddir/C.ast builddir/C.ast-exports builddir/C.checker-warnings: ast ./ditto-src/C.ditto builddir/A.ast-exports builddir/B.ast-exports
+build builddir/C.ast builddir/C.ast-exports builddir/C.checker-warnings: ast builddir/A.ast-exports builddir/B.ast-exports ditto-src/C.ditto
   description = Checking C
 
-build builddir/D.ast builddir/D.ast-exports builddir/D.checker-warnings: ast ./ditto-src/D.ditto builddir/C.ast-exports builddir/dep/Dep.ast-exports
+build builddir/D.ast builddir/D.ast-exports builddir/D.checker-warnings: ast builddir/C.ast-exports builddir/dep/Dep.ast-exports ditto-src/D.ditto
   description = Checking D
 
-build builddir/dep/Dep.ast builddir/dep/Dep.ast-exports: ast ./dep/ditto-src/Dep.ditto
+build builddir/dep/Dep.ast builddir/dep/Dep.ast-exports: ast dep/ditto-src/Dep.ditto
   description = Checking dep:Dep
 

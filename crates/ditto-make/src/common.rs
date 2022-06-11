@@ -12,6 +12,7 @@ pub const EXTENSION_AST_EXPORTS: &str = "ast-exports";
 pub const EXTENSION_DITTO: &str = "ditto";
 pub const EXTENSION_JS: &str = "js";
 pub const EXTENSION_CHECKER_WARNINGS: &str = "checker-warnings";
+pub const EXTENSION_HTML: &str = "html";
 
 pub fn module_name_to_file_stem(module_name: ModuleName) -> PathBuf {
     // NOTE: don't join with "." because it can interact badly with

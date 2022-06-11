@@ -5,6 +5,7 @@ members = [
   "crates/ditto-checker",
   "crates/ditto-config",
   "crates/ditto-codegen-js",
+  "crates/ditto-doc",
   "crates/ditto-fmt",
   "crates/ditto-cli",
   "crates/ditto-lsp",
