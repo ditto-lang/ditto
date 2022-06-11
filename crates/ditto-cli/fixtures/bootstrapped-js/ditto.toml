@@ -1,0 +1,8 @@
+# Welcome to your new ditto project!
+#
+# Options for this file can be found at:
+# https://github.com/ditto-lang/ditto/tree/c12f80c95fa0abb7ecdfd33f4f56f68da663c5a8/crates/ditto-config#readme
+name = "bootstrapped-js"
+targets = ["web", "nodejs"]
+dependencies = []
+test-dependencies = []

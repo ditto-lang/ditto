@@ -195,10 +195,22 @@ fn write_new_gitignore(
     let mut path = project_dir.to_path_buf();
     path.push(".gitignore");
 
-    let mut ignore_lines = vec![config.ditto_dir.to_string_lossy().into_owned()];
+    let mut ignore_lines = vec![
+        // .ditto
+        config.ditto_dir.to_string_lossy().into_owned(),
+    ];
     match flavour {
         Flavour::Bland => {}
         Flavour::JavaScript => {
+            // dist
+            ignore_lines.push(
+                config
+                    .codegen_js_config
+                    .dist_dir
+                    .to_string_lossy()
+                    .into_owned(),
+            );
+            // node_modules
             ignore_lines.push(String::from("node_modules"));
         }
     }
