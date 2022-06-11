@@ -262,10 +262,14 @@ fn write_ditto_module<P: AsRef<Path>>(path: P, contents: String) -> Result<()> {
 }
 
 fn log_path_written<P: AsRef<Path>>(path: P) {
-    let message = format!(
-        "  {} {}",
-        Emoji("✨", "Wrote"),
-        path.as_ref().to_string_lossy()
-    );
-    println!("{}", Style::new().cyan().apply_to(message));
+    if crate::common::is_plain() {
+        println!("Wrote {}", path.as_ref().to_string_lossy());
+    } else {
+        let message = format!(
+            "  {} {}",
+            Emoji("✨", "Wrote"),
+            path.as_ref().to_string_lossy()
+        );
+        println!("{}", Style::new().cyan().apply_to(message));
+    }
 }
