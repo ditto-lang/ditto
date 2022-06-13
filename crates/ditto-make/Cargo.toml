@@ -8,7 +8,7 @@ license = "BSD-3-Clause"
 doctest = false
 
 [dependencies]
-clap = "3.1"
+clap = "3.2"
 miette = { version = "4.7", features = ["fancy"] }
 ditto-cst = { path = "../ditto-cst" }
 ditto-ast = { path = "../ditto-ast" }
