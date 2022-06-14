@@ -1,0 +1,26 @@
+name: Setup Haskell λ
+runs:
+  using: "composite"
+  steps:
+    - uses: haskell/actions/setup@v2
+      with:
+        # keep these in sync with shell.nix !
+        ghc-version: "9.0.2"
+        enable-stack: true
+        stack-version: "2.7.5"
+
+    # https://github.com/actions/cache/blob/main/examples.md#haskell---stack
+    - uses: actions/cache@v3
+      name: Cache ~/.stack
+      with:
+        path: ~/.stack
+        key: ${{ runner.os }}-stack-global-${{ hashFiles('stack.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-stack-global-
+    - uses: actions/cache@v3
+      name: Cache .stack-work
+      with:
+        path: .stack-work
+        key: ${{ runner.os }}-stack-work-${{ hashFiles('stack.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-stack-work-

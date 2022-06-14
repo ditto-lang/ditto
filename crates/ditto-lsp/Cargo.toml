@@ -20,3 +20,6 @@ url = "2.2"
 ditto-cst = { path = "../ditto-cst" }
 ditto-fmt = { path = "../ditto-fmt" }
 #salsa = "xx"
+
+[dev-dependencies]
+log = { version = "0.4", features = ["std"] }

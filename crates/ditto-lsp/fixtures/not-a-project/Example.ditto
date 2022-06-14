@@ -1,0 +1,5 @@
+module Example exports (..);
+
+-- y tho
+example : String = 
+    "example";

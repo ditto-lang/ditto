@@ -53,6 +53,10 @@ jobs:
           node-version-file: .nvmrc
           cache: "npm"
 
+      # Some tests depend on a Haskell toolchain
+      - name: Setup Haskell λ
+        uses: ./.github/actions/setup-haskell
+
       - name: Install required NPM packages
         run: npm install --omit optional --ignore-scripts
         shell: bash

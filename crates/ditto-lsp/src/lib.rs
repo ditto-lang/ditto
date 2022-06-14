@@ -1,5 +1,6 @@
 #![doc = include_str!("../README.md")]
 #![warn(missing_docs)]
+#![feature(explicit_generic_args_with_impl_trait)]
 
 mod semantic_tokens;
 
@@ -18,207 +19,108 @@ pub fn main() -> miette::Result<()> {
     // also be implemented to use sockets or HTTP.
     let (connection, io_threads) = lsp_server::Connection::stdio();
 
-    let capabilities = lsp_types::ServerCapabilities {
-        text_document_sync: Some(lsp_types::TextDocumentSyncCapability::Kind(
-            lsp_types::TextDocumentSyncKind::FULL, // TODO INCREMENTAL
-        )),
-        semantic_tokens_provider: Some(
-            lsp_types::SemanticTokensServerCapabilities::SemanticTokensOptions(
-                lsp_types::SemanticTokensOptions {
-                    full: Some(lsp_types::SemanticTokensFullOptions::Bool(true)),
-                    legend: semantic_tokens::legend(),
-                    range: Some(false),
-                    work_done_progress_options: lsp_types::WorkDoneProgressOptions {
-                        work_done_progress: Some(false),
-                    },
-                },
-            ),
-        ),
-        document_formatting_provider: Some(lsp_types::OneOf::Left(true)),
-        //definition_provider: Some(lsp_types::OneOf::Left(true)),
-        ..Default::default()
-    };
+    let capabilities = init_capabilities();
 
     // Run the server and wait for the two threads to end (typically by trigger LSP Exit event).
     let server_capabilities = json::to_value(&capabilities).unwrap();
 
-    let initialization_params = connection
+    let _initialization_params = connection
         .initialize(server_capabilities)
         .into_diagnostic()?;
 
-    main_loop(connection, initialization_params)?;
+    // REVIEW: do we need to `cd` into the rootDir that comes with the initialization_params?
+
+    main_loop(connection)?;
 
     io_threads.join().into_diagnostic()?;
 
-    // Shut down gracefully.
-    debug!("shutting down ditto-lsp");
     Ok(())
 }
 
-fn main_loop(connection: lsp_server::Connection, params: json::Value) -> miette::Result<()> {
+fn init_capabilities() -> lsp_types::ServerCapabilities {
+    use lsp_types::*;
+
+    ServerCapabilities {
+        text_document_sync: Some(TextDocumentSyncCapability::Kind(
+            TextDocumentSyncKind::FULL, // TODO INCREMENTAL?
+        )),
+        semantic_tokens_provider: Some(SemanticTokensServerCapabilities::SemanticTokensOptions(
+            SemanticTokensOptions {
+                full: Some(SemanticTokensFullOptions::Bool(true)),
+                legend: semantic_tokens::legend(),
+                range: Some(false),
+                work_done_progress_options: WorkDoneProgressOptions {
+                    work_done_progress: Some(false),
+                },
+            },
+        )),
+        document_formatting_provider: Some(OneOf::Left(true)),
+        ..Default::default()
+    }
+}
+
+fn main_loop(connection: lsp_server::Connection) -> miette::Result<()> {
     debug!("starting ditto-lsp main loop");
 
-    let _params: lsp_types::InitializeParams = json::from_value(params).unwrap();
+    let mut trees = Trees::new(); // TODO: use salsa for this
 
-    let mut trees = Trees::new();
-
-    'msg_loop: for msg in &connection.receiver {
+    for msg in &connection.receiver {
+        use lsp_server::Message::*;
         match msg {
-            lsp_server::Message::Request(req) => {
+            Request(req) => {
                 if connection.handle_shutdown(&req).into_diagnostic()? {
                     return Ok(());
                 }
-                use lsp_types::request::{Formatting, SemanticTokensFullRequest};
 
-                // TODO break out some `handle` function to enforce that requests
-                // are always responded to (correctly).
+                use lsp_types::request::{Formatting, SemanticTokensFullRequest};
                 match cast_request::<SemanticTokensFullRequest>(req) {
-                    Ok((request_id, params)) => {
-                        if let Some((tree, source)) = trees.get(&params.text_document.uri) {
-                            let tokens = semantic_tokens::get_tokens(tree, source);
-                            respond::<SemanticTokensFullRequest>(
-                                Ok(Some(lsp_types::SemanticTokensResult::Tokens(tokens))),
-                                request_id,
-                                &connection,
-                            )?;
-                        } else {
-                            respond::<SemanticTokensFullRequest>(
-                                Err(lsp_server::ResponseError {
-                                    code: lsp_server::ErrorCode::InternalError as i32,
-                                    message: format!("no tree for {}", params.text_document.uri),
+                    Ok(request) => handle_semantic_tokens_request(&trees, &connection, request)?,
+                    Err(req) => match cast_request::<Formatting>(req) {
+                        Ok(request) => handle_formatting_request(&trees, &connection, request)?,
+
+                        // Unsupported method
+                        Err(request) => connection
+                            .sender
+                            .send(lsp_server::Message::Response(lsp_server::Response {
+                                id: request.id,
+                                result: None,
+                                error: Some(lsp_server::ResponseError {
+                                    message: format!("{} not supported", request.method),
+                                    code: lsp_server::ErrorCode::MethodNotFound as i32,
                                     data: None,
                                 }),
-                                request_id,
-                                &connection,
-                            )?;
-                        }
-                        continue 'msg_loop;
-                    }
-                    // TODO can we fix this matching pattern to avoid the code
-                    // marching off the screen?
-                    Err(req) => match cast_request::<Formatting>(req) {
-                        Ok((request_id, params)) => {
-                            if let Some((_, contents)) = trees.get(&params.text_document.uri) {
-                                match ditto_cst::Module::parse(contents) {
-                                    Ok(module) => {
-                                        let formatted = ditto_fmt::format_module(module);
-                                        let edit = lsp_types::TextEdit {
-                                            range: lsp_types::Range {
-                                                start: lsp_types::Position {
-                                                    line: 0,
-                                                    character: 0,
-                                                },
-                                                end: lsp_types::Position {
-                                                    line: contents.lines().count() as u32,
-                                                    character: contents
-                                                        .lines()
-                                                        .last()
-                                                        .map_or(0, |line| line.len() as u32),
-                                                },
-                                            },
-                                            new_text: formatted,
-                                        };
-                                        respond::<Formatting>(
-                                            Ok(Some(vec![edit])),
-                                            request_id,
-                                            &connection,
-                                        )?;
-                                    }
-                                    Err(_parse_error) => {
-                                        respond::<SemanticTokensFullRequest>(
-                                            // NOTE: responding with the error like this is
-                                            // actually just annoying...(at least in vscode)
-                                            //
-                                            //Err(lsp_server::ResponseError {
-                                            //    code: lsp_server::ErrorCode::ParseError as i32,
-                                            //    message: format!("{:?}", parse_error),
-                                            //    data: None,
-                                            //}),
-                                            Ok(None),
-                                            request_id,
-                                            &connection,
-                                        )?;
-                                    }
-                                }
-                            } else {
-                                respond::<SemanticTokensFullRequest>(
-                                    Err(lsp_server::ResponseError {
-                                        code: lsp_server::ErrorCode::InternalError as i32,
-                                        message: format!(
-                                            "no tree for {}",
-                                            params.text_document.uri
-                                        ),
-                                        data: None,
-                                    }),
-                                    request_id,
-                                    &connection,
-                                )?;
-                            }
-                            continue 'msg_loop;
-                        }
-                        Err(_req) => (),
+                            }))
+                            .into_diagnostic()?,
                     },
                 };
             }
-            lsp_server::Message::Response(_response) => {
-                //debug!("response: {:?}", resp);
+            Response(_response) => {
+                // ignored
             }
-            lsp_server::Message::Notification(not) => {
-                match cast_notification::<lsp_types::notification::DidOpenTextDocument>(not) {
+            Notification(notification) => {
+                use lsp_types::notification::{DidChangeTextDocument, DidOpenTextDocument};
+                match cast_notification::<DidOpenTextDocument>(notification) {
                     Ok(params) => {
                         trees.insert(params.text_document.uri, params.text_document.text);
                     }
-                    Err(not) => match cast_notification::<
-                        lsp_types::notification::DidChangeTextDocument,
-                    >(not)
-                    {
-                        Ok(params) => {
-                            for change in params.content_changes {
-                                let source = change.text; // because TextDocumentSyncKind::FULL
-                                trees.update(&params.text_document.uri, source);
+                    Err(notification) => {
+                        match cast_notification::<DidChangeTextDocument>(notification) {
+                            Ok(params) => {
+                                for change in params.content_changes {
+                                    let source = change.text; // because TextDocumentSyncKind::FULL
+                                    trees.update(&params.text_document.uri, source);
+                                }
+                            }
+                            Err(_notification) => {
+                                // ignored
                             }
                         }
-                        Err(_not) => (),
-                    },
+                    }
                 }
             }
         }
     }
     Ok(())
-}
-
-/// Parsed trees, updated on text document change notifications.
-struct Trees(HashMap<Url, (tree_sitter::Tree, String)>);
-
-impl Trees {
-    fn new() -> Self {
-        Self(HashMap::new())
-    }
-
-    fn insert(&mut self, url: Url, source: String) {
-        let mut parser = init_parser();
-        if let Some(tree) = parser.parse(&source, None) {
-            log::debug!("tree inserted for {}", url);
-            self.0.insert(url, (tree, source));
-        } else {
-            log::error!("parse result was None for {}", url)
-        }
-    }
-
-    // TODO: make this INCREMENTAL
-    fn update(&mut self, url: &Url, source: String) {
-        let mut parser = init_parser();
-        if let Some(tree) = parser.parse(&source, None) {
-            log::debug!("tree updated for {}", url);
-            self.0.insert(url.clone(), (tree, source));
-        } else {
-            log::warn!("parse result was None for {}", url)
-        }
-    }
-
-    fn get(&self, url: &Url) -> Option<&(tree_sitter::Tree, String)> {
-        self.0.get(url)
-    }
 }
 
 // Panic if the parser fails to initialise, as this really shouldn't happen.
@@ -235,6 +137,87 @@ fn try_init_parser() -> Result<tree_sitter::Parser, tree_sitter::LanguageError> 
     let mut parser = tree_sitter::Parser::new();
     parser.set_language(tree_sitter_ditto::language())?;
     Ok(parser)
+}
+
+fn handle_formatting_request(
+    trees: &Trees,
+    connection: &lsp_server::Connection,
+    request: (lsp_server::RequestId, lsp_types::DocumentFormattingParams),
+) -> miette::Result<()> {
+    handle_request::<lsp_types::request::Formatting>(connection, request, |params| {
+        if let Some((_, contents)) = trees.get(&params.text_document.uri) {
+            match ditto_cst::Module::parse(contents) {
+                Ok(module) => {
+                    let formatted = ditto_fmt::format_module(module);
+                    let edit = lsp_types::TextEdit {
+                        range: lsp_types::Range {
+                            start: lsp_types::Position {
+                                line: 0,
+                                character: 0,
+                            },
+                            end: lsp_types::Position {
+                                line: contents.lines().count() as u32,
+                                character: contents
+                                    .lines()
+                                    .last()
+                                    .map_or(0, |line| line.len() as u32),
+                            },
+                        },
+                        new_text: formatted,
+                    };
+                    Ok(Some(vec![edit]))
+                }
+                Err(_parse_error) => {
+                    // NOTE: responding with the error like this is
+                    // actually just annoying...(at least in vscode)
+                    //
+                    //Err(lsp_server::ResponseError {
+                    //    code: lsp_server::ErrorCode::ParseError as i32,
+                    //    message: format!("{:?}", parse_error),
+                    //    data: None,
+                    //}),
+                    Ok(None)
+                }
+            }
+        } else {
+            Err(lsp_server::ResponseError {
+                code: lsp_server::ErrorCode::InternalError as i32,
+                message: format!("no tree for {}", params.text_document.uri),
+                data: None,
+            })
+        }
+    })
+}
+
+fn handle_semantic_tokens_request(
+    trees: &Trees,
+    connection: &lsp_server::Connection,
+    request: (lsp_server::RequestId, lsp_types::SemanticTokensParams),
+) -> miette::Result<()> {
+    handle_request::<lsp_types::request::SemanticTokensFullRequest>(connection, request, |params| {
+        if let Some((tree, source)) = trees.get(&params.text_document.uri) {
+            let tokens = semantic_tokens::get_tokens(tree, source);
+            Ok(Some(lsp_types::SemanticTokensResult::Tokens(tokens)))
+        } else {
+            Err(lsp_server::ResponseError {
+                code: lsp_server::ErrorCode::InternalError as i32,
+                message: format!("no tree for {}", params.text_document.uri),
+                data: None,
+            })
+        }
+    })
+}
+
+fn handle_request<R>(
+    connection: &lsp_server::Connection,
+    (request_id, params): (lsp_server::RequestId, R::Params),
+    handler: impl FnOnce(R::Params) -> Result<R::Result, lsp_server::ResponseError>,
+) -> miette::Result<()>
+where
+    R: lsp_types::request::Request,
+{
+    let response = handler(params);
+    respond::<R>(response, request_id, connection)
 }
 
 fn respond<R>(
@@ -283,4 +266,65 @@ where
     R::Params: serde::de::DeserializeOwned,
 {
     req.extract(R::METHOD)
+}
+
+#[allow(dead_code)]
+fn lsp_log_info(message: String, connection: &lsp_server::Connection) {
+    notify::<lsp_types::notification::LogMessage>(
+        lsp_types::LogMessageParams {
+            typ: lsp_types::MessageType::INFO,
+            message,
+        },
+        connection,
+    )
+    .unwrap();
+}
+
+#[allow(dead_code)]
+fn notify<N>(params: N::Params, connection: &lsp_server::Connection) -> miette::Result<()>
+where
+    N: lsp_types::notification::Notification,
+{
+    connection
+        .sender
+        .send(lsp_server::Message::Notification(
+            lsp_server::Notification {
+                method: N::METHOD.to_string(),
+                params: serde_json::to_value(params).unwrap(),
+            },
+        ))
+        .into_diagnostic()
+}
+
+// FIXME: use salsa for this
+struct Trees(HashMap<Url, (tree_sitter::Tree, String)>);
+
+impl Trees {
+    fn new() -> Self {
+        Self(HashMap::new())
+    }
+
+    fn insert(&mut self, url: Url, source: String) {
+        let mut parser = init_parser();
+        if let Some(tree) = parser.parse(&source, None) {
+            //log::debug!("tree inserted for {}", url);
+            self.0.insert(url, (tree, source));
+        } else {
+            //log::error!("parse result was None for {}", url)
+        }
+    }
+
+    fn update(&mut self, url: &Url, source: String) {
+        let mut parser = init_parser();
+        if let Some(tree) = parser.parse(&source, None) {
+            //log::debug!("tree updated for {}", url);
+            self.0.insert(url.clone(), (tree, source));
+        } else {
+            //log::warn!("parse result was None for {}", url)
+        }
+    }
+
+    fn get(&self, url: &Url) -> Option<&(tree_sitter::Tree, String)> {
+        self.0.get(url)
+    }
 }

@@ -29,6 +29,7 @@ let
     doCheck = false;
   };
 
+  # Don't forget to update .github/actions/setup-haskell
   stack = pkgs.symlinkJoin {
     name = "stack-with-system-ghc";
     paths = [ pkgs.stack ];
