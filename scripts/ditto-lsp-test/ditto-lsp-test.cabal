@@ -1,0 +1,10 @@
+cabal-version: >= 1.10
+
+name: ditto-lsp-test
+version: 1.0.0
+build-type: Simple
+
+executable ditto-lsp-test
+  main-is: Main.hs
+  build-depends: base, process, lsp-test, lsp-types
+  default-language: Haskell2010
