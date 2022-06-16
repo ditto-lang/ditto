@@ -54,6 +54,10 @@ impl log::Log for ConsoleLogger {
 
                 // unreachable?
             }
+            // capture salsa log messages
+            else if target.starts_with("salsa") {
+                writeln!(file, "{target}\n{message}\n").unwrap();
+            }
             // capture our (ditto-lsp) log messages
             else if target.starts_with("ditto_lsp") {
                 let level = record.level().to_string();

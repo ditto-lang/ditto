@@ -33,14 +33,14 @@ test lspExe = do
 testNotAProject :: String -> IO ()
 testNotAProject lspExe =
   runSession lspExe "crates/ditto-lsp/fixtures/not-a-project" do
-    example <- Lsp.openDoc "Example.ditto" "ditto"
-
-    -- semantic tokens
-    Just LspTypes.SemanticTokens {} <- Lsp.getSemanticTokens example
-
-    -- formatting
+    moduleA <- Lsp.openDoc "A.ditto" "ditto"
+    Just LspTypes.SemanticTokens {} <- Lsp.getSemanticTokens moduleA
+    Just LspTypes.SemanticTokens {} <- Lsp.getSemanticTokens moduleA -- cache hit
+    moduleB <- Lsp.openDoc "B.ditto" "ditto"
+    Just LspTypes.SemanticTokens {} <- Lsp.getSemanticTokens moduleB
+    Just LspTypes.SemanticTokens {} <- Lsp.getSemanticTokens moduleA -- cache hit
     Lsp.formatDoc
-      example
+      moduleA
       LspTypes.FormattingOptions
         { -- FIXME: these options are currently ignored
           LspTypes._tabSize = 4,
