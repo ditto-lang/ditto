@@ -59,7 +59,11 @@ jobs:
 
       - name: Install required NPM packages
         run: npm install --omit optional --ignore-scripts
-        shell: bash
+
+      # Build the Haskell lsp-test in its own step rather than as part of
+      # the integration test because tarpaulin will timeout
+      - name: Build ditto-lsp-test λ
+        run: stack build ditto-lsp-test
 
       - name: Run tests (without coverage)
         if: matrix.os != 'ubuntu-latest'
