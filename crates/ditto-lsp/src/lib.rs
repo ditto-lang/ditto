@@ -131,7 +131,7 @@ fn handle_formatting_request(
     request: (lsp_server::RequestId, lsp_types::DocumentFormattingParams),
 ) -> miette::Result<()> {
     handle_request::<lsp_types::request::Formatting>(connection, request, |params| {
-        let source = db.source(params.text_document.uri);
+        let source = db.get_source(params.text_document.uri);
         match ditto_cst::Module::parse(&source) {
             Ok(module) => {
                 let formatted = ditto_fmt::format_module(module);
@@ -171,7 +171,7 @@ fn handle_semantic_tokens_request(
     request: (lsp_server::RequestId, lsp_types::SemanticTokensParams),
 ) -> miette::Result<()> {
     handle_request::<lsp_types::request::SemanticTokensFullRequest>(connection, request, |params| {
-        let source = db.source(params.text_document.uri);
+        let source = db.get_source(params.text_document.uri);
 
         // NOTE: we can't cache trees in the salsa db
         // as tree_sitter::Tree doesn't implement Eq :(
