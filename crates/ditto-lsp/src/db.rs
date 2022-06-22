@@ -53,6 +53,7 @@ impl Database {
         let mut sources = self.sources();
         sources.insert(url.clone());
 
+        // TODO: Durability is higher for package sources!
         self.set_sources_with_durability(sources, salsa::Durability::LOW);
         self.set_source_with_durability(url, source, salsa::Durability::LOW);
     }

@@ -3,6 +3,7 @@
 #![feature(explicit_generic_args_with_impl_trait)]
 
 mod db;
+mod hover;
 mod semantic_tokens;
 
 use db::*;
@@ -55,6 +56,9 @@ fn init_capabilities() -> lsp_types::ServerCapabilities {
             },
         )),
         document_formatting_provider: Some(OneOf::Left(true)),
+
+        // TODO: this should be conditional on being in a ditto project
+        hover_provider: Some(HoverProviderCapability::Simple(true)),
         ..Default::default()
     }
 }
@@ -72,25 +76,29 @@ fn main_loop(connection: lsp_server::Connection) -> miette::Result<()> {
                     return Ok(());
                 }
 
-                use lsp_types::request::{Formatting, SemanticTokensFullRequest};
-                match cast_request::<SemanticTokensFullRequest>(req) {
-                    Ok(request) => handle_semantic_tokens_request(&db, &connection, request)?,
-                    Err(req) => match cast_request::<Formatting>(req) {
-                        Ok(request) => handle_formatting_request(&db, &connection, request)?,
+                use lsp_types::request::{Formatting, HoverRequest, SemanticTokensFullRequest};
 
-                        // Unsupported method
-                        Err(request) => connection
-                            .sender
-                            .send(lsp_server::Message::Response(lsp_server::Response {
-                                id: request.id,
-                                result: None,
-                                error: Some(lsp_server::ResponseError {
-                                    message: format!("{} not supported", request.method),
-                                    code: lsp_server::ErrorCode::MethodNotFound as i32,
-                                    data: None,
-                                }),
-                            }))
-                            .into_diagnostic()?,
+                match cast_request::<SemanticTokensFullRequest>(req) {
+                    Ok(req) => handle_semantic_tokens_request(&db, &connection, req)?,
+                    Err(req) => match cast_request::<Formatting>(req) {
+                        Ok(req) => handle_formatting_request(&db, &connection, req)?,
+
+                        Err(req) => match cast_request::<HoverRequest>(req) {
+                            Ok(req) => handle_hover_request(&db, &connection, req)?,
+                            // Unsupported method
+                            Err(req) => connection
+                                .sender
+                                .send(lsp_server::Message::Response(lsp_server::Response {
+                                    id: req.id,
+                                    result: None,
+                                    error: Some(lsp_server::ResponseError {
+                                        message: format!("{} not supported", req.method),
+                                        code: lsp_server::ErrorCode::MethodNotFound as i32,
+                                        data: None,
+                                    }),
+                                }))
+                                .into_diagnostic()?,
+                        },
                     },
                 };
             }
@@ -123,6 +131,21 @@ fn main_loop(connection: lsp_server::Connection) -> miette::Result<()> {
         }
     }
     Ok(())
+}
+
+fn handle_hover_request(
+    db: &Database,
+    connection: &lsp_server::Connection,
+    request: (lsp_server::RequestId, lsp_types::HoverParams),
+) -> miette::Result<()> {
+    handle_request::<lsp_types::request::HoverRequest>(connection, request, |params| {
+        let hover = hover::hover(
+            db,
+            params.text_document_position_params.text_document.uri,
+            params.text_document_position_params.position,
+        );
+        Ok(hover)
+    })
 }
 
 fn handle_formatting_request(
