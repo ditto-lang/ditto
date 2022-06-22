@@ -488,6 +488,8 @@ dependencies = [
 name = "ditto-lsp"
 version = "0.0.1"
 dependencies = [
+ "ditto-ast",
+ "ditto-checker",
  "ditto-cst",
  "ditto-fmt",
  "log",

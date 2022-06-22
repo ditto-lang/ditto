@@ -18,6 +18,8 @@ tree-sitter-ditto = { git = "https://github.com/ditto-lang/tree-sitter-ditto", r
 tree-sitter = "0.20"
 url = "2.2"
 ditto-cst = { path = "../ditto-cst" }
+ditto-ast = { path = "../ditto-ast" }
+ditto-checker = { path = "../ditto-checker" }
 ditto-fmt = { path = "../ditto-fmt" }
 salsa = "0.16"
 

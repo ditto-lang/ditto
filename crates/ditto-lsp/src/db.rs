@@ -14,7 +14,22 @@ trait SourceDatabase: salsa::Database {
     fn sources(&self) -> HashSet<Url>;
 }
 
-#[salsa::database(SourceDatabaseStorage)]
+type Module = serde_json::Value;
+
+#[salsa::query_group(ModuleDatabaseStorage)]
+trait ModuleDatabase: SourceDatabase {
+    fn module(&self, url: Url) -> Module;
+}
+
+fn module(db: &dyn ModuleDatabase, url: Url) -> Module {
+    let source = db.source(url);
+    let cst_module = ditto_cst::Module::parse(&source).unwrap();
+    let everything = ditto_checker::Everything::default();
+    let (ast_module, _warnings) = ditto_checker::check_module(&everything, cst_module).unwrap();
+    serde_json::to_value(ast_module).unwrap()
+}
+
+#[salsa::database(SourceDatabaseStorage, ModuleDatabaseStorage)]
 pub struct Database {
     storage: salsa::Storage<Self>,
 }
@@ -40,5 +55,9 @@ impl Database {
 
         self.set_sources_with_durability(sources, salsa::Durability::LOW);
         self.set_source_with_durability(url, source, salsa::Durability::LOW);
+    }
+
+    pub fn get_module(&self, url: Url) -> ditto_ast::Module {
+        serde_json::from_value(self.module(url)).unwrap()
     }
 }
