@@ -9,7 +9,7 @@ proc-macro = true
 doctest = false
 
 [dependencies]
-regex = "1.5"
+regex = "1.6"
 quote = "1.0"
 syn = { version = "1.0", features = ["full"] }
 proc-macro2 = "1.0"
