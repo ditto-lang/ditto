@@ -30,7 +30,7 @@ impl Span {
 /// -- leading comment
 /// token -- trailing comment
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Token<Value> {
     /// The source location of this token.
     pub span: Span,
@@ -67,7 +67,7 @@ impl<Value> Token<Value> {
 }
 
 /// A string token prefixed with `"--"`.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Comment(pub String);
 
 /// A [String] syntax node.
@@ -81,141 +81,141 @@ pub type StringToken = Token<String>;
 pub type EmptyToken = Token<()>;
 
 /// `.`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Dot(pub EmptyToken);
 
 /// `..`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DoubleDot(pub EmptyToken);
 
 /// `,`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Comma(pub EmptyToken);
 
 /// `:`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Colon(pub EmptyToken);
 
 /// `;`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Semicolon(pub EmptyToken);
 
 /// `=`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Equals(pub EmptyToken);
 
 /// `(`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OpenParen(pub EmptyToken);
 
 /// `)`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CloseParen(pub EmptyToken);
 
 /// `[`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OpenBracket(pub EmptyToken);
 
 /// `]`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CloseBracket(pub EmptyToken);
 
 /// `{`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OpenBrace(pub EmptyToken);
 
 /// `}`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CloseBrace(pub EmptyToken);
 
 /// `<-`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LeftArrow(pub EmptyToken);
 
 /// `->`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RightArrow(pub EmptyToken);
 
 /// `|`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Pipe(pub EmptyToken);
 
 /// `module`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModuleKeyword(pub EmptyToken);
 
 /// `exports`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ExportsKeyword(pub EmptyToken);
 
 /// `import`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ImportKeyword(pub EmptyToken);
 
 /// `as`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AsKeyword(pub EmptyToken);
 
 /// `true`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TrueKeyword(pub EmptyToken);
 
 /// `false`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FalseKeyword(pub EmptyToken);
 
 /// `unit`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UnitKeyword(pub EmptyToken);
 
 /// `if`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct IfKeyword(pub EmptyToken);
 
 /// `then`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ThenKeyword(pub EmptyToken);
 
 /// `else`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ElseKeyword(pub EmptyToken);
 
 /// `type`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TypeKeyword(pub EmptyToken);
 
 /// `foreign`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ForeignKeyword(pub EmptyToken);
 
 /// `match`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MatchKeyword(pub EmptyToken);
 
 /// `with`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WithKeyword(pub EmptyToken);
 
 /// `let`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LetKeyword(pub EmptyToken);
 
 /// `do`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DoKeyword(pub EmptyToken);
 
 /// `return`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ReturnKeyword(pub EmptyToken);
 
 /// `fn`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FnKeyword(pub EmptyToken);
 
 /// `end`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EndKeyword(pub EmptyToken);
 
 /// `|>`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RightPizzaOperator(pub EmptyToken);

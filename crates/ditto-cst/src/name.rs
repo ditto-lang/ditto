@@ -1,23 +1,24 @@
 use crate::{Dot, StringToken};
+use serde::{Deserialize, Serialize};
 
 /// A "proper name" begins with an upper case letter.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProperName(pub StringToken);
 
 /// A "name" begins with a lower case letter.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Name(pub StringToken);
 
 /// An "unused name" begins with a single underscore.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UnusedName(pub StringToken);
 
 /// A package name consists of lower case letters, numbers and hyphens. It must start with a letter.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PackageName(pub StringToken);
 
 /// Something is "qualified" if it can have an initial module name.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Qualified<Value> {
     /// The optional module name qualification.
     pub module_name: Option<(ProperName, Dot)>,
@@ -33,7 +34,7 @@ pub type QualifiedProperName = Qualified<ProperName>;
 pub type QualifiedName = Qualified<Name>;
 
 /// A [ModuleName] is a non-empty collection of [ProperName]s, joined by dots.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModuleName {
     /// Any leading [ProperName]s and the dots that follow them.
     pub init: Vec<(ProperName, Dot)>,

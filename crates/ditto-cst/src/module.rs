@@ -3,10 +3,11 @@ use crate::{
     ImportKeyword, ModuleKeyword, ModuleName, Name, PackageName, Parens, ParensList1, Pipe,
     ProperName, Semicolon, Type, TypeAnnotation, TypeKeyword,
 };
+use serde::{Deserialize, Serialize};
 use std::iter;
 
 /// A ditto (source) module.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Module {
     /// The module header declares the module's name and exports.
     pub header: Header,
@@ -19,7 +20,7 @@ pub struct Module {
 }
 
 /// `module Some.Module exports (..);`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Header {
     /// `module`
     pub module_keyword: ModuleKeyword,
@@ -37,7 +38,7 @@ pub struct Header {
 pub type Everything = Parens<DoubleDot>;
 
 /// A list of things to be exported.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Exports {
     /// `(..)`
     Everything(Everything),
@@ -46,7 +47,7 @@ pub enum Exports {
 }
 
 /// An item in an [Exports] list.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Export {
     /// `foo`
     Value(Name),
@@ -55,7 +56,7 @@ pub enum Export {
 }
 
 /// `import (some_package) Some.Module as Alias (..);`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ImportLine {
     /// `import`
     pub import_keyword: ImportKeyword,
@@ -74,11 +75,11 @@ pub struct ImportLine {
 /// A list of things to be imported.
 ///
 /// `(Foo, Bar(..), baz)`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ImportList(pub ParensList1<Import>);
 
 /// An item in an [Import] list.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Import {
     /// `foo`
     Value(Name),
@@ -87,7 +88,7 @@ pub enum Import {
 }
 
 /// Declarations are the body of a module.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Declaration {
     /// Binding an expression to a top-level name.
     Value(Box<ValueDeclaration>),
@@ -102,7 +103,7 @@ pub enum Declaration {
 /// ```ditto
 /// name : type = expression;
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ValueDeclaration {
     /// Name of this value.
     pub name: Name,
@@ -118,7 +119,7 @@ pub struct ValueDeclaration {
 
 /// Introducing a new type.
 #[allow(clippy::large_enum_variant)]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TypeDeclaration {
     /// ```ditto
     /// type Maybe(a) =
@@ -208,7 +209,7 @@ impl TypeDeclaration {
 }
 
 /// A type constructor, like `Just` or `Nothing`.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Constructor<P = Pipe> {
     /// `|`
     pub pipe: P,
@@ -223,7 +224,7 @@ pub struct Constructor<P = Pipe> {
 /// ```ditto
 /// foreign foo : Int;
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ForeignValueDeclaration {
     /// `foreign`
     pub foreign_keyword: ForeignKeyword,

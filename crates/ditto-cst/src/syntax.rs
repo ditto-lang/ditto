@@ -1,8 +1,9 @@
 use crate::{CloseBrace, CloseBracket, CloseParen, Comma, OpenBrace, OpenBracket, OpenParen};
+use serde::{Deserialize, Serialize};
 use std::iter;
 
 /// A value surrounded by parentheses.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Parens<T> {
     /// `(`
     pub open_paren: OpenParen,
@@ -13,7 +14,7 @@ pub struct Parens<T> {
 }
 
 /// A value surrounded by brackets.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Brackets<T> {
     /// `[`
     pub open_bracket: OpenBracket,
@@ -24,7 +25,7 @@ pub struct Brackets<T> {
 }
 
 /// A value surrounded by braces.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Braces<T> {
     /// `{`
     pub open_brace: OpenBrace,
@@ -89,7 +90,7 @@ pub type BracesList<T> = Braces<Option<CommaSep1<T>>>;
 /// foo, bar
 /// foo, bar, baz,
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CommaSep1<T> {
     /// The first item.
     pub head: T,

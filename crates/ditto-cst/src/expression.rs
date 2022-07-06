@@ -5,9 +5,10 @@ use crate::{
     RightPizzaOperator, Semicolon, StringToken, ThenKeyword, TrueKeyword, Type, UnitKeyword,
     UnusedName, WithKeyword,
 };
+use serde::{Deserialize, Serialize};
 
 /// A value expression.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Expression {
     /// An expression wrapped in parentheses.
     Parens(Parens<Box<Self>>),
@@ -154,7 +155,7 @@ pub enum Expression {
 }
 
 /// A labelled expression within a record.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RecordField {
     /// The field label.
     pub label: Name,
@@ -165,7 +166,7 @@ pub struct RecordField {
 }
 
 /// A function expression parameter.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum FunctionParameter {
     /// A name to be bound in the body of the function.
     Name(Name),
@@ -174,14 +175,14 @@ pub enum FunctionParameter {
 }
 
 /// A binary operator.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum BinOp {
     /// `|>`
     RightPizza(RightPizzaOperator),
 }
 
 /// A chain of Effect statements.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Effect {
     /// `do { return expression }`
     Return {
@@ -217,7 +218,7 @@ pub enum Effect {
 /// ```ditto
 /// | Pattern -> expression
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MatchArm {
     /// `|`
     pub pipe: Pipe,
@@ -230,7 +231,7 @@ pub struct MatchArm {
 }
 
 /// A pattern to be matched.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[allow(clippy::large_enum_variant)]
 pub enum Pattern {
     /// A constructor pattern without arguments.
@@ -258,5 +259,5 @@ pub enum Pattern {
 }
 
 /// `: String`
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TypeAnnotation(pub Colon, pub Type);

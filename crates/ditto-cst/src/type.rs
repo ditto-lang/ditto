@@ -2,9 +2,10 @@ use crate::{
     Braces, BracesList, Colon, CommaSep1, Name, Parens, ParensList, ParensList1, Pipe,
     QualifiedProperName, RightArrow,
 };
+use serde::{Deserialize, Serialize};
 
 /// Syntax representation of expression types.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Type {
     /// A type wrapped in parentheses.
     Parens(Parens<Box<Self>>),
@@ -50,7 +51,7 @@ pub enum Type {
 }
 
 /// A labelled type within a record.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RecordTypeField {
     /// The field label.
     pub label: Name,
@@ -61,7 +62,7 @@ pub struct RecordTypeField {
 }
 
 /// Valid targets for a type call.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TypeCallFunction {
     /// A type constructor.
     ///
