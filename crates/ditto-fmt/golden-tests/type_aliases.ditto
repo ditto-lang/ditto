@@ -1,0 +1,14 @@
+module Type.Aliases exports (..);
+
+
+-- Documentation lorem ipsum whatever
+type alias Five = Int;
+
+type alias Six =
+    -- comment
+    Float;
+
+type alias WithVariables(a, b, c) = Maybe(a);
+
+type alias WrapTest =
+    Loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong;

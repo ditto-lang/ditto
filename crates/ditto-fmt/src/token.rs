@@ -37,6 +37,7 @@ gen_empty_token_like!(gen_with_keyword, cst::WithKeyword, "with");
 gen_empty_token_like!(gen_exports_keyword, cst::ExportsKeyword, "exports");
 gen_empty_token_like!(gen_as_keyword, cst::AsKeyword, "as");
 gen_empty_token_like!(gen_type_keyword, cst::TypeKeyword, "type");
+gen_empty_token_like!(gen_alias_keyword, cst::AliasKeyword, "alias");
 gen_empty_token_like!(gen_import_keyword, cst::ImportKeyword, "import");
 gen_empty_token_like!(gen_foreign_keyword, cst::ForeignKeyword, "foreign");
 gen_empty_token_like!(gen_fn_keyword, cst::FnKeyword, "fn");
