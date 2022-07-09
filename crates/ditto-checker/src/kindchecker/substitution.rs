@@ -1,4 +1,4 @@
-use ditto_ast::{Kind, ModuleConstructor, Type, TypeConstructor};
+use ditto_ast::{Kind, ModuleConstructor, Type};
 use non_empty_vec::NonEmpty;
 use std::collections::HashMap;
 
@@ -77,15 +77,15 @@ impl Substitution {
                     .collect(),
                 return_type: Box::new(self.apply_type(return_type)),
             },
-            Type::Constructor(TypeConstructor {
+            Type::Constructor {
                 constructor_kind,
                 canonical_value,
                 source_value,
-            }) => Type::Constructor(TypeConstructor {
+            } => Type::Constructor {
                 constructor_kind: self.apply(constructor_kind),
                 canonical_value,
                 source_value,
-            }),
+            },
             Type::PrimConstructor(prim_type) => Type::PrimConstructor(prim_type),
             Type::RecordClosed { kind, row } => Type::RecordClosed {
                 kind: self.apply(kind),
@@ -107,18 +107,6 @@ impl Substitution {
                     .into_iter()
                     .map(|(label, t)| (label, self.apply_type(t)))
                     .collect(),
-            },
-            Type::Alias {
-                alias_constructor,
-                alias_arguments,
-                box aliased_type,
-            } => Type::Alias {
-                alias_constructor,
-                alias_arguments: alias_arguments
-                    .into_iter()
-                    .map(|arg| self.apply_type(arg))
-                    .collect(),
-                aliased_type: Box::new(self.apply_type(aliased_type)),
             },
         }
     }

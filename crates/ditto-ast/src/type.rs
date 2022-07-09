@@ -36,7 +36,14 @@ pub enum Type {
         return_type: Box<Self>,
     },
     /// A type constructor, such as `Maybe` or `Result`.
-    Constructor(TypeConstructor),
+    Constructor {
+        /// The kind of this constructor.
+        constructor_kind: Kind,
+        /// The canonical name for this type.
+        canonical_value: FullyQualifiedProperName,
+        /// The type name as it appeared in the source. Or as it _would_ have appeared in the source.
+        source_value: Option<QualifiedProperName>,
+    },
     /// A primitive type constructor.
     PrimConstructor(PrimType),
     /// A type variable, which may or may not be named in the source.
@@ -74,36 +81,6 @@ pub enum Type {
         /// The labelled types.
         row: Row,
     },
-    /// `type alias constructor(arguments) = aliased_type`
-    Alias {
-        /// The type alias name.
-        alias_constructor: TypeConstructor,
-        /// Any type arguments to the constructor.
-        alias_arguments: Vec<Self>,
-        /// The type that was aliased.
-        aliased_type: Box<Type>,
-    },
-}
-
-/// A type constructor, such as `Maybe` or `Result`.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub struct TypeConstructor {
-    /// The kind of this constructor.
-    pub constructor_kind: Kind,
-    /// The canonical name for this type.
-    pub canonical_value: FullyQualifiedProperName,
-    /// The type name as it appeared in the source. Or as it _would_ have appeared in the source.
-    pub source_value: Option<QualifiedProperName>,
-}
-
-impl fmt::Display for TypeConstructor {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        if let Some(ref source_value) = self.source_value {
-            write!(f, "{}", source_value)
-        } else {
-            write!(f, "{}", self.canonical_value)
-        }
-    }
 }
 
 /// Labelled types.
@@ -167,28 +144,17 @@ impl PrimType {
 
 impl Type {
     /// Return the kind of this `Type`.
+    /// REVIEW this is wrong I think!
     pub fn get_kind(&self) -> Kind {
         match self {
             Self::Variable { variable_kind, .. } => variable_kind.clone(),
-            Self::Constructor(type_constructor) => type_constructor.constructor_kind.clone(),
+            Self::Constructor {
+                constructor_kind, ..
+            } => constructor_kind.clone(),
             Self::PrimConstructor(prim) => prim.get_kind(),
             Self::Call { .. } => Kind::Type, // NOTE: we don't have curried types!
             Self::RecordClosed { kind, .. } | Self::RecordOpen { kind, .. } => kind.clone(),
             Self::Function { .. } => Kind::Type,
-            Self::Alias {
-                alias_constructor,
-                alias_arguments,
-                ..
-            } => {
-                // This is kind of nasty, I'd like it to be less nasty...
-                if alias_arguments.is_empty() {
-                    // If there _are no_ type arguments then use the constructor's kind
-                    alias_constructor.constructor_kind.clone()
-                } else {
-                    // If there _are_ type arguments then treat the type as fully applied
-                    Kind::Type
-                }
-            }
         }
     }
 
@@ -240,15 +206,6 @@ impl Type {
             } => Self::Function {
                 parameters: parameters.iter().map(|param| param.anonymize()).collect(),
                 return_type: Box::new(return_type.anonymize()),
-            },
-            Self::Alias {
-                alias_constructor,
-                alias_arguments,
-                aliased_type,
-            } => Self::Alias {
-                alias_constructor: alias_constructor.clone(),
-                alias_arguments: alias_arguments.iter().map(|arg| arg.anonymize()).collect(),
-                aliased_type: Box::new(aliased_type.anonymize()),
             },
             Self::PrimConstructor { .. } | Self::Constructor { .. } => self.clone(),
         }
@@ -302,8 +259,16 @@ impl Type {
                 output.push_str(&render_var(*var, source_name.clone()));
             }
 
-            Self::Constructor(type_constructor) => {
-                output.push_str(&type_constructor.to_string());
+            Self::Constructor {
+                constructor_kind: _,
+                canonical_value,
+                source_value,
+            } => {
+                if let Some(source_value) = source_value {
+                    output.push_str(&source_value.to_string());
+                } else {
+                    output.push_str(&canonical_value.to_string());
+                }
             }
             Self::PrimConstructor(prim) => {
                 output.push_str(&prim.to_string());
@@ -382,24 +347,6 @@ impl Type {
                 });
                 output.push_str(" }");
             }
-            Self::Alias {
-                alias_constructor,
-                alias_arguments,
-                ..
-            } => {
-                output.push_str(&alias_constructor.to_string());
-                if !alias_arguments.is_empty() {
-                    output.push('(');
-                    let arguments_len = alias_arguments.len();
-                    alias_arguments.iter().enumerate().for_each(|(i, arg)| {
-                        arg.debug_render_rec(render_var, output);
-                        if i + 1 != arguments_len {
-                            output.push_str(", ");
-                        }
-                    });
-                    output.push(')');
-                }
-            }
         };
     }
 }
@@ -408,7 +355,7 @@ impl Type {
 mod tests {
     use crate::{
         module_name, name, package_name, proper_name, FullyQualifiedProperName, Kind, PrimType,
-        Qualified, Type, TypeConstructor,
+        Qualified, Type,
     };
     use non_empty_vec::ne_vec;
 
@@ -420,7 +367,7 @@ mod tests {
                 parameters: vec![
                     Type::PrimConstructor(PrimType::String),
                     Type::PrimConstructor(PrimType::Bool),
-                    Type::Constructor(TypeConstructor {
+                    Type::Constructor {
                         constructor_kind: Kind::Type,
                         canonical_value: FullyQualifiedProperName {
                             module_name: (Some(package_name!("dunno")), module_name!("Foo", "Bar")),
@@ -430,7 +377,7 @@ mod tests {
                             module_name: Some(proper_name!("Bar")),
                             value: proper_name!("Baz"),
                         }),
-                    }),
+                    },
                 ],
                 return_type: Box::new(Type::Function {
                     parameters: vec![Type::Function {
@@ -446,7 +393,7 @@ mod tests {
                         }),
                     }],
                     return_type: Box::new(Type::Call {
-                        function: Box::new(Type::Constructor(TypeConstructor {
+                        function: Box::new(Type::Constructor {
                             constructor_kind: Kind::Function {
                                 parameters: ne_vec![Kind::Type],
                             },
@@ -458,9 +405,9 @@ mod tests {
                                 module_name: None,
                                 value: proper_name!("Maybe"),
                             }),
-                        })),
+                        }),
                         arguments: ne_vec![Type::Call {
-                            function: Box::new(Type::Constructor(TypeConstructor {
+                            function: Box::new(Type::Constructor {
                                 constructor_kind: Kind::Function {
                                     parameters: ne_vec![Kind::Type, Kind::Type],
                                 },
@@ -475,7 +422,7 @@ mod tests {
                                     module_name: None,
                                     value: proper_name!("Result"),
                                 }),
-                            })),
+                            }),
                             arguments: ne_vec![
                                 Type::Variable {
                                     variable_kind: Kind::Type,

@@ -49,12 +49,6 @@ pub struct ModuleType {
     pub type_name_span: Span,
     /// The kind of this [Type].
     pub kind: Kind,
-    /// If this is a type alias, this is the type being aliased.
-    pub aliased_type: Option<Type>,
-    //
-    // NOTE: it might be worth splitting this type into an enum (`ModuleType::Type` and `ModuleType::TypeAlias`)
-    // but the two members would only (currently) differ by the `aliased_type` field.
-    // I decided to just add the Option field to the struct for now because it's more convenient.
 }
 
 /// The type of `module.constructors`, for convenience.

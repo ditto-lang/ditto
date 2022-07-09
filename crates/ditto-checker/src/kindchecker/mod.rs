@@ -126,7 +126,6 @@ pub fn infer(env: &Env, state: &mut State, cst_type: cst::Type) -> Result<Type> 
             function,
             arguments,
         } => {
-            // TODO: handle type aliases here
             let function_span = function.get_span();
             let function = infer(env, state, function.into())?;
             let function_kind = state.substitution.apply(function.get_kind());
@@ -150,24 +149,11 @@ pub fn infer(env: &Env, state: &mut State, cst_type: cst::Type) -> Result<Type> 
                         .map(|(argument, expected)| check(env, state, expected, *argument))
                         .collect::<Result<Vec<_>>>()?;
 
-                    if let Type::Alias {
-                        alias_constructor,
-                        alias_arguments: _,
-                        aliased_type,
-                    } = function
-                    {
-                        Ok(Type::Alias {
-                            alias_constructor,
-                            alias_arguments: arguments,
-                            aliased_type,
-                        })
-                    } else {
-                        Ok(Type::Call {
-                            function: Box::new(function),
-                            // This is safe due to the length comparison above
-                            arguments: unsafe { NonEmpty::new_unchecked(arguments) },
-                        })
-                    }
+                    Ok(Type::Call {
+                        function: Box::new(function),
+                        // This is safe due to the length comparison above
+                        arguments: unsafe { NonEmpty::new_unchecked(arguments) },
+                    })
                 }
                 kind_variable @ Kind::Variable { .. } => {
                     let cst::CommaSep1 {
@@ -191,23 +177,10 @@ pub fn infer(env: &Env, state: &mut State, cst_type: cst::Type) -> Result<Type> 
                     };
                     unify(state, function_span, constraint)?;
 
-                    if let Type::Alias {
-                        alias_constructor,
-                        alias_arguments: _,
-                        aliased_type,
-                    } = function
-                    {
-                        Ok(Type::Alias {
-                            alias_constructor,
-                            alias_arguments: arguments.to_vec(),
-                            aliased_type,
-                        })
-                    } else {
-                        Ok(Type::Call {
-                            function: Box::new(function),
-                            arguments,
-                        })
-                    }
+                    Ok(Type::Call {
+                        function: Box::new(function),
+                        arguments,
+                    })
                 }
 
                 _ => Err(TypeError::TypeNotAFunction {

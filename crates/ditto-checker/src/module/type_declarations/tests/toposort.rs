@@ -10,15 +10,6 @@ fn it_toposorts_as_expected() {
     assert_toposort!(["type A = B(B)", "type B = A(A)"], [Cyclic(vec!["A", "B"])]);
     assert_toposort!(["type A = A(A)"], [Cyclic(vec!["A"])]);
     assert_toposort!(["type A = A(B)"], [Acyclic("A")]);
-
-    assert_toposort!(
-        ["type alias A = B", "type alias B = A"],
-        [Cyclic(vec!["A", "B"])]
-    );
-    assert_toposort!(
-        ["type alias A = B", "type B = B(Int, A)"],
-        [Cyclic(vec!["A", "B"])]
-    );
 }
 
 #[test]

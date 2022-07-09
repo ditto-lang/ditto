@@ -9,7 +9,7 @@ use crate::{
 use ditto_ast::{
     unqualified, FullyQualifiedName, FullyQualifiedProperName, Kind, ModuleExports,
     ModuleExportsConstructors, ModuleExportsTypes, ModuleExportsValues, ModuleName, Name,
-    PackageName, ProperName, QualifiedName, QualifiedProperName, Span, Type, TypeConstructor,
+    PackageName, ProperName, QualifiedName, QualifiedProperName, Span, Type,
 };
 use ditto_cst as cst;
 use non_empty_vec::NonEmpty;
@@ -492,9 +492,25 @@ fn import_unqualified_list(
 
 fn requalify_type(ast_type: Type, package_name: &PackageName) -> Type {
     match ast_type {
-        Type::Constructor(type_constructor) => {
-            Type::Constructor(requalify_type_constructor(type_constructor, package_name))
-        }
+        Type::Constructor {
+            canonical_value:
+                FullyQualifiedProperName {
+                    module_name: (current_package_name, module_name),
+                    value,
+                },
+            constructor_kind,
+            source_value: _,
+        } => Type::Constructor {
+            canonical_value: FullyQualifiedProperName {
+                module_name: (
+                    current_package_name.or_else(|| Some(package_name.clone())),
+                    module_name,
+                ),
+                value,
+            },
+            constructor_kind,
+            source_value: None, //  ?
+        },
         Type::Variable {
             variable_kind,
             var,
@@ -551,43 +567,5 @@ fn requalify_type(ast_type: Type, package_name: &PackageName) -> Type {
                 .map(|(label, t)| (label, requalify_type(t, package_name)))
                 .collect(),
         },
-        Type::Alias {
-            alias_constructor,
-            alias_arguments,
-            box aliased_type,
-        } => Type::Alias {
-            alias_constructor: requalify_type_constructor(alias_constructor, package_name),
-            alias_arguments: alias_arguments
-                .into_iter()
-                .map(|arg| requalify_type(arg, package_name))
-                .collect(),
-            aliased_type: Box::new(requalify_type(aliased_type, package_name)),
-        },
-    }
-}
-
-fn requalify_type_constructor(
-    type_constructor: TypeConstructor,
-    package_name: &PackageName,
-) -> TypeConstructor {
-    let TypeConstructor {
-        canonical_value:
-            FullyQualifiedProperName {
-                module_name: (current_package_name, module_name),
-                value,
-            },
-        constructor_kind,
-        source_value: _,
-    } = type_constructor;
-    TypeConstructor {
-        canonical_value: FullyQualifiedProperName {
-            module_name: (
-                current_package_name.or_else(|| Some(package_name.clone())),
-                module_name,
-            ),
-            value,
-        },
-        constructor_kind,
-        source_value: None, //  ?
     }
 }
