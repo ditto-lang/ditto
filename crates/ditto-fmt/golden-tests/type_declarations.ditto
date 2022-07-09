@@ -1,4 +1,4 @@
-module Value.Declarations exports (..);
+module Type.Declarations exports (..);
 
 
 -- Documentation lorem ipsum whatever
