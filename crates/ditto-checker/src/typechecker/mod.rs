@@ -1166,6 +1166,9 @@ fn unify_else(
                         actual: actual_type,
                     };
                     unify_else(state, span, constraint, Some(&err))?;
+                } else {
+                    // expected label isn't in actual, so fail
+                    return Err(err);
                 }
             }
             if !actual_row.is_empty() {

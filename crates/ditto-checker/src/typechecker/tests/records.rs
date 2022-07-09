@@ -73,6 +73,8 @@ fn it_errors_as_expected() {
         "fn (x : { foo: Int, bar: Int, baz: Float }) -> [x.foo, x.bar, x.baz]",
         TypesNotEqual { .. }
     );
+
+    assert_type_error!("(fn (r : { foo: Int }) -> r.foo)({})", TypesNotEqual { .. });
 }
 
 #[test]
