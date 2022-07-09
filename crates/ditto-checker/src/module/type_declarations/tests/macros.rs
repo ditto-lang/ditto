@@ -3,7 +3,7 @@ macro_rules! assert_type_declaration {
         let cst_type_declaration =
             $crate::module::type_declarations::tests::macros::parse_type_declaration!($decl);
 
-        let kindcheck_result = crate::module::type_declarations::kindcheck_type_declaration(
+        let kindcheck_result = $crate::module::type_declarations::kindcheck_type_declaration(
             &$crate::kindchecker::Env::default().types,
             $crate::supply::Supply::default(),
             (None, ditto_ast::module_name!("Test")),
@@ -14,8 +14,7 @@ macro_rules! assert_type_declaration {
             "{:#?}",
             kindcheck_result.unwrap_err()
         );
-        let (type_name, module_type, module_constructors, _supply, _warnings) =
-            kindcheck_result.unwrap();
+        let (type_name, module_type, module_constructors, _, _) = kindcheck_result.unwrap();
         assert_eq!(
             type_name.0.as_str(),
             $want_type.0,
@@ -23,10 +22,10 @@ macro_rules! assert_type_declaration {
             type_name.0
         );
         assert_eq!(
-            module_type.kind.debug_render().as_str(),
+            module_type.kind().debug_render().as_str(),
             $want_type.1,
             "unexpected type kind: {}",
-            module_type.kind.debug_render(),
+            module_type.kind().debug_render(),
         );
         let want_constructors: Vec<(&str, &str)> = $want_constructors.to_vec();
         assert_eq!(
@@ -84,13 +83,40 @@ macro_rules! parse_type_declaration {
     }};
 }
 
+macro_rules! parse_type_alias_declaration {
+    ($decl:expr) => {{
+        let parse_result = ditto_cst::TypeAliasDeclaration::parse(&format!("{};", $decl));
+        assert!(
+            matches!(parse_result, Ok(_)),
+            "{:#?}",
+            parse_result.unwrap_err()
+        );
+        parse_result.unwrap()
+    }};
+}
+
 macro_rules! assert_toposort {
     ($decls:expr, $want:expr) => {{
         let mut cst_type_declarations = Vec::new();
         for decl in $decls {
-            cst_type_declarations.push(
-                $crate::module::type_declarations::tests::macros::parse_type_declaration!(decl),
-            );
+            if decl.contains("alias") {
+                //   ^^ A bit hacky but fine for testing purposes.
+                cst_type_declarations.push(
+                    $crate::module::type_declarations::TypeDeclaration::TypeAlias(
+                        $crate::module::type_declarations::tests::macros::parse_type_alias_declaration!(
+                            decl
+                        ),
+                    ),
+                );
+            } else {
+                cst_type_declarations.push(
+                    $crate::module::type_declarations::TypeDeclaration::Type(
+                        $crate::module::type_declarations::tests::macros::parse_type_declaration!(
+                            decl
+                        ),
+                    ),
+                );
+            }
         }
         let toposorted =
             crate::module::type_declarations::toposort_type_declarations(cst_type_declarations);
@@ -110,4 +136,5 @@ macro_rules! assert_toposort {
 pub(super) use assert_toposort;
 pub(super) use assert_type_declaration;
 pub(super) use assert_type_declaration_error;
+pub(super) use parse_type_alias_declaration;
 pub(super) use parse_type_declaration;

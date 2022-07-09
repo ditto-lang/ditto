@@ -22,7 +22,7 @@ use crate::{
 };
 use ditto_ast::{
     graph::Scc, unqualified, FullyQualifiedProperName, Module, ModuleExports, ModuleName,
-    ModuleValues, Span,
+    ModuleType, ModuleValues, Span,
 };
 use ditto_cst as cst;
 use std::collections::HashMap;
@@ -89,13 +89,16 @@ pub fn check_module(
     for declaration in cst_module.declarations {
         match declaration {
             cst::Declaration::Type(box type_declaration) => {
-                type_declarations.push(type_declaration)
+                type_declarations.push(TypeDeclaration::Type(type_declaration));
+            }
+            cst::Declaration::TypeAlias(box type_alias_declaration) => {
+                type_declarations.push(TypeDeclaration::TypeAlias(type_alias_declaration));
             }
             cst::Declaration::Value(box value_declaration) => {
-                value_declarations.push(value_declaration)
+                value_declarations.push(value_declaration);
             }
             cst::Declaration::ForeignValue(box foreign_value_declaration) => {
-                foreign_value_declarations.push(foreign_value_declaration)
+                foreign_value_declarations.push(foreign_value_declaration);
             }
         }
     }
@@ -111,20 +114,37 @@ pub fn check_module(
         type_declarations,
     )?;
 
-    kindchecker_env
-        .types
-        .extend(types.iter().map(|(proper_name, module_type)| {
-            (
+    kindchecker_env.types.extend(types.iter().map(
+        |(proper_name, module_type)| match module_type {
+            ModuleType::Type { kind, .. } => (
                 unqualified(proper_name.clone()),
                 kindchecker::EnvType::Constructor {
                     canonical_value: FullyQualifiedProperName {
                         module_name: fully_qualified_module_name.clone(),
                         value: proper_name.clone(),
                     },
-                    constructor_kind: module_type.kind.clone(),
+                    constructor_kind: kind.clone(),
                 },
-            )
-        }));
+            ),
+            ModuleType::Alias {
+                kind,
+                aliased_type,
+                alias_variables,
+                ..
+            } => (
+                unqualified(proper_name.clone()),
+                kindchecker::EnvType::ConstructorAlias {
+                    canonical_value: FullyQualifiedProperName {
+                        module_name: fully_qualified_module_name.clone(),
+                        value: proper_name.clone(),
+                    },
+                    constructor_kind: kind.clone(),
+                    alias_variables: alias_variables.to_vec(),
+                    aliased_type: Box::new(aliased_type.clone()),
+                },
+            ),
+        },
+    ));
 
     warnings.extend(more_warnings);
 
@@ -248,7 +268,7 @@ pub fn check_module(
             });
             if all_constructors_unused {
                 warnings.push(Warning::UnusedTypeConstructors {
-                    span: module_type.type_name_span,
+                    span: module_type.type_name_span(),
                 })
             }
         } else {
@@ -258,7 +278,7 @@ pub fn check_module(
             });
             if all_constructors_unused {
                 warnings.push(Warning::UnusedTypeDeclaration {
-                    span: module_type.type_name_span,
+                    span: module_type.type_name_span(),
                 })
             }
         }

@@ -27,8 +27,8 @@ fn export_everything(mut module: Module) -> Result<(Module, Warnings)> {
     let mut module_types = module.types.iter().collect::<Vec<_>>();
     module_types.sort_by(|a, b| a.0 .0.cmp(&b.0 .0)); // sort alphabetically.
     for (doc_position, (proper_name, module_type)) in module_types.into_iter().enumerate() {
-        let doc_comments = module_type.doc_comments.clone();
-        let kind = module_type.kind.clone();
+        let doc_comments = module_type.doc_comments().clone();
+        let kind = module_type.kind().clone();
         module.exports.types.insert(
             proper_name.clone(),
             ModuleExportsType {
@@ -127,21 +127,22 @@ fn export_list(mut module: Module, expose_list: Vec<cst::Export>) -> Result<(Mod
                 } else {
                     types_seen.insert(type_name.clone(), span);
                 }
-
-                if let Some(ModuleType {
-                    kind, doc_comments, ..
-                }) = module.types.get(&type_name)
-                {
-                    module.exports.types.insert(
-                        type_name.clone(),
-                        ModuleExportsType {
-                            doc_comments: doc_comments.to_vec(),
-                            doc_position,
-                            kind: kind.clone(),
-                        },
-                    );
-                } else {
-                    return Err(TypeError::UnknownTypeExport { span, type_name });
+                match module.types.get(&type_name) {
+                    Some(ModuleType::Type {
+                        kind, doc_comments, ..
+                    }) => {
+                        module.exports.types.insert(
+                            type_name.clone(),
+                            ModuleExportsType {
+                                doc_comments: doc_comments.to_vec(),
+                                doc_position,
+                                kind: kind.clone(),
+                            },
+                        );
+                    }
+                    _ => {
+                        return Err(TypeError::UnknownTypeExport { span, type_name });
+                    }
                 }
 
                 if include_constructors.is_some() {

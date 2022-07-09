@@ -511,6 +511,30 @@ fn requalify_type(ast_type: Type, package_name: &PackageName) -> Type {
             constructor_kind,
             source_value: None, //  ?
         },
+
+        Type::ConstructorAlias {
+            canonical_value:
+                FullyQualifiedProperName {
+                    module_name: (current_package_name, module_name),
+                    value,
+                },
+            constructor_kind,
+            source_value: _,
+            alias_variables,
+            box aliased_type,
+        } => Type::ConstructorAlias {
+            canonical_value: FullyQualifiedProperName {
+                module_name: (
+                    current_package_name.or_else(|| Some(package_name.clone())),
+                    module_name,
+                ),
+                value,
+            },
+            constructor_kind,
+            source_value: None, //  ?
+            alias_variables,
+            aliased_type: Box::new(requalify_type(aliased_type, package_name)),
+        },
         Type::Variable {
             variable_kind,
             var,

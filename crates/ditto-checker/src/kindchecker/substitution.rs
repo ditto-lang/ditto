@@ -86,6 +86,19 @@ impl Substitution {
                 canonical_value,
                 source_value,
             },
+            Type::ConstructorAlias {
+                constructor_kind,
+                canonical_value,
+                source_value,
+                alias_variables,
+                box aliased_type,
+            } => Type::ConstructorAlias {
+                constructor_kind: self.apply(constructor_kind),
+                canonical_value,
+                source_value,
+                alias_variables,
+                aliased_type: Box::new(self.apply_type(aliased_type)),
+            },
             Type::PrimConstructor(prim_type) => Type::PrimConstructor(prim_type),
             Type::RecordClosed { kind, row } => Type::RecordClosed {
                 kind: self.apply(kind),

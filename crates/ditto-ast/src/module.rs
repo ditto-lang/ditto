@@ -42,13 +42,80 @@ pub type ModuleTypes = HashMap<ProperName, ModuleType>;
 
 /// A type defined by a module.
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ModuleType {
-    /// Documentation comments (if any).
-    pub doc_comments: Vec<String>,
-    /// The source location of the [ProperName].
-    pub type_name_span: Span,
-    /// The kind of this [Type].
-    pub kind: Kind,
+pub enum ModuleType {
+    /// A type introduced by an ordinary type declaration.
+    Type {
+        /// Documentation comments (if any).
+        doc_comments: Vec<String>,
+        /// The source location of the [ProperName].
+        type_name_span: Span,
+        /// The kind of this [Type].
+        kind: Kind,
+    },
+    /// A type alias.
+    Alias {
+        /// Documentation comments (if any).
+        doc_comments: Vec<String>,
+        /// The source location of the [ProperName].
+        type_name_span: Span,
+        /// The kind of this [Type] alias.
+        kind: Kind,
+        /// The type that this aliases.
+        aliased_type: Type,
+        /// The type variables (if any) associated with the alias.
+        alias_variables: Vec<usize>,
+    },
+}
+
+impl ModuleType {
+    /// Get any documentation comments associated with this module type.
+    pub fn doc_comments(&self) -> &Vec<String> {
+        match self {
+            Self::Type { doc_comments, .. } => doc_comments,
+            Self::Alias { doc_comments, .. } => doc_comments,
+        }
+    }
+    /// Get the [Span] of the type name.
+    pub fn type_name_span(&self) -> Span {
+        match self {
+            Self::Type { type_name_span, .. } => *type_name_span,
+            Self::Alias { type_name_span, .. } => *type_name_span,
+        }
+    }
+    /// Get the [Kind] of this type.
+    pub fn kind(&self) -> &Kind {
+        match self {
+            Self::Type { kind, .. } => kind,
+            Self::Alias { kind, .. } => kind,
+        }
+    }
+    /// Set the [Kind] of this type.
+    pub fn set_kind(self, kind: Kind) -> Self {
+        match self {
+            Self::Type {
+                doc_comments,
+                type_name_span,
+                ..
+            } => Self::Type {
+                doc_comments,
+                type_name_span,
+                kind,
+            },
+            Self::Alias {
+                doc_comments,
+                type_name_span,
+                aliased_type,
+                alias_variables,
+                ..
+            } => Self::Alias {
+                doc_comments,
+                type_name_span,
+                kind,
+                aliased_type,
+                alias_variables,
+            },
+        }
+    }
 }
 
 /// The type of `module.constructors`, for convenience.

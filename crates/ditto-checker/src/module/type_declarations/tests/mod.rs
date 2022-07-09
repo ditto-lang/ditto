@@ -1,4 +1,5 @@
 mod acyclic;
+mod aliases;
 mod cyclic;
 pub(self) mod macros;
 mod toposort;

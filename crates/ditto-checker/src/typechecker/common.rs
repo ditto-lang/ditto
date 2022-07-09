@@ -43,6 +43,11 @@ fn type_variables_rec(ast_type: &Type, accum: &mut HashSet<usize>) {
                 type_variables_rec(t, accum);
             }
         }
+        ConstructorAlias {
+            alias_variables, ..
+        } => {
+            accum.extend(alias_variables);
+        }
         Constructor { .. } | PrimConstructor { .. } => {}
     }
 }

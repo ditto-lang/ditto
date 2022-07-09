@@ -22,8 +22,8 @@ impl Substitution {
         if depth > 100 {
             // Panicking like this is nicer than a stackoverflow
             panic!(
-                "Substitution exceeded max depth: ast_type = {:#?}",
-                ast_type
+                "Substitution exceeded max depth:\nsubst = {:#?}\nast_type = {:#?}",
+                self, ast_type
             );
         }
         match ast_type {
@@ -136,6 +136,19 @@ impl Substitution {
                     .into_iter()
                     .map(|(label, t)| (label, self.apply_rec(t, depth)))
                     .collect(),
+            },
+            Type::ConstructorAlias {
+                constructor_kind,
+                canonical_value,
+                source_value,
+                alias_variables,
+                box aliased_type,
+            } => Type::ConstructorAlias {
+                constructor_kind,
+                canonical_value,
+                source_value,
+                alias_variables,
+                aliased_type: Box::new(self.apply_rec(aliased_type, depth)),
             },
             Type::Constructor {
                 constructor_kind: _,

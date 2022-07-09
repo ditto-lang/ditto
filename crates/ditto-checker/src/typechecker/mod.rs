@@ -996,6 +996,173 @@ fn unify_else(
         actual: constraint.actual.clone(),
     });
     match constraint {
+        // Recurse on type aliases
+        Constraint {
+            expected:
+                Type::ConstructorAlias {
+                    constructor_kind,
+                    canonical_value,
+                    source_value,
+                    alias_variables: _,
+                    box aliased_type,
+                },
+            actual,
+        } => unify_else(
+            state,
+            span,
+            Constraint {
+                expected: Type::Constructor {
+                    constructor_kind,
+                    canonical_value,
+                    source_value,
+                },
+                actual: actual.clone(),
+            },
+            Some(&err),
+        )
+        .or_else(|_| {
+            unify_else(
+                state,
+                span,
+                Constraint {
+                    expected: aliased_type,
+                    actual,
+                },
+                Some(&err),
+            )
+        }),
+        Constraint {
+            expected:
+                Type::Call {
+                    function:
+                        box Type::ConstructorAlias {
+                            constructor_kind,
+                            canonical_value,
+                            source_value,
+                            alias_variables,
+                            box aliased_type,
+                        },
+                    arguments,
+                },
+            actual,
+        } => unify_else(
+            state,
+            span,
+            Constraint {
+                expected: Type::Call {
+                    function: Box::new(Type::Constructor {
+                        constructor_kind,
+                        canonical_value,
+                        source_value,
+                    }),
+                    arguments: arguments.clone(),
+                },
+                actual: actual.clone(),
+            },
+            Some(&err),
+        )
+        .or_else(|_| {
+            let substitution = Substitution(HashMap::from_iter(
+                alias_variables
+                    .into_iter()
+                    .zip(arguments)
+                    // hmmmmmm...feels hacky doing an occurs check like this...
+                    .filter(|(var, t)| !type_variables(t).contains(var)),
+            ));
+            let aliased_type = substitution.apply(aliased_type);
+            unify_else(
+                state,
+                span,
+                Constraint {
+                    expected: aliased_type,
+                    actual,
+                },
+                Some(&err),
+            )
+        }),
+        Constraint {
+            expected,
+            actual:
+                Type::ConstructorAlias {
+                    constructor_kind,
+                    canonical_value,
+                    source_value,
+                    alias_variables: _,
+                    box aliased_type,
+                },
+        } => unify_else(
+            state,
+            span,
+            Constraint {
+                expected: expected.clone(),
+                actual: Type::Constructor {
+                    constructor_kind,
+                    canonical_value,
+                    source_value,
+                },
+            },
+            Some(&err),
+        )
+        .or_else(|_| {
+            unify_else(
+                state,
+                span,
+                Constraint {
+                    expected,
+                    actual: aliased_type,
+                },
+                Some(&err),
+            )
+        }),
+        Constraint {
+            expected,
+            actual:
+                Type::Call {
+                    function:
+                        box Type::ConstructorAlias {
+                            constructor_kind,
+                            canonical_value,
+                            source_value,
+                            alias_variables,
+                            box aliased_type,
+                        },
+                    arguments,
+                },
+        } => unify_else(
+            state,
+            span,
+            Constraint {
+                expected: expected.clone(),
+                actual: Type::Call {
+                    function: Box::new(Type::Constructor {
+                        constructor_kind,
+                        canonical_value,
+                        source_value,
+                    }),
+                    arguments: arguments.clone(),
+                },
+            },
+            Some(&err),
+        )
+        .or_else(|_| {
+            let substitution = Substitution(HashMap::from_iter(
+                alias_variables
+                    .into_iter()
+                    .zip(arguments)
+                    // hmmmmmm...feels hacky doing an occurs check like this...
+                    .filter(|(var, t)| !type_variables(t).contains(var)),
+            ));
+            let aliased_type = substitution.apply(aliased_type);
+            unify_else(
+                state,
+                span,
+                Constraint {
+                    expected,
+                    actual: aliased_type,
+                },
+                Some(&err),
+            )
+        }),
         // An explicitly named type variable (named in the source) will only unify
         // with another type variable with the same name, or an anonymous type
         // variable.
