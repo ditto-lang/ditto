@@ -18,5 +18,5 @@ ditto-checker = { path = "../ditto-checker" }
 ditto-cst = { path = "../ditto-cst" }
 non-empty-vec = { version = "0.2" }
 snapshot-test = { path = "../snapshot-test" }
-similar-asserts = "1.2"
+similar-asserts = "1.4"
 quickcheck = "1.0"
