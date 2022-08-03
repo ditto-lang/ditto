@@ -29,5 +29,5 @@ log = "0.4"
 # rayon = "xx"   <-- more concurrency?
 
 [dev-dependencies]
-similar-asserts = "1.2"
+similar-asserts = "1.4"
 lazy_static = "1.4"

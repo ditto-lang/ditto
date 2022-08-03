@@ -13,4 +13,4 @@ dprint-core = "0.54"
 
 [dev-dependencies]
 snapshot-test = { path = "../snapshot-test" }
-similar-asserts = "1.2"
+similar-asserts = "1.4"

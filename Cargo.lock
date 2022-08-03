@@ -1881,9 +1881,9 @@ dependencies = [
 
 [[package]]
 name = "similar"
-version = "2.1.0"
+version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e24979f63a11545f5f2c60141afe249d4f19f84581ea2138065e400941d83d3"
+checksum = "62ac7f900db32bf3fd12e0117dd3dc4da74bc52ebaac97f39668446d89694803"
 dependencies = [
  "bstr",
  "unicode-segmentation",
@@ -1891,9 +1891,9 @@ dependencies = [
 
 [[package]]
 name = "similar-asserts"
-version = "1.2.0"
+version = "1.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64c9f531a2375031d51c23c415ca12d0f0271b976211e2f727b7a0eac06a099d"
+checksum = "e03b87bf824efd7fc7301bc05b979fe2328b5486c5861493779ededfc2661888"
 dependencies = [
  "console",
  "similar",

@@ -21,7 +21,7 @@ logos = "0.12"
 
 [dev-dependencies]
 snapshot-test = { path = "../snapshot-test" }
-similar-asserts = "1.2"
+similar-asserts = "1.4"
 
 [build-dependencies]
 lalrpop = "0.19.8"
