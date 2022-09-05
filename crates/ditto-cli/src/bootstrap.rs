@@ -159,7 +159,9 @@ fn write_new_config(
         Flavour::Bland => {}
         Flavour::JavaScript => {
             config.targets =
-                std::collections::HashSet::from([config::Target::Web, config::Target::Nodejs]);
+                //std::collections::HashSet::from([config::Target::Web, config::Target::Nodejs]);
+                // TODO: uncomment the above when we can sort it for the tests
+                std::collections::HashSet::from([config::Target::Nodejs]);
         }
     }
     let mut config_path = project_dir.to_path_buf();

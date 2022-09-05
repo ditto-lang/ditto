@@ -18,6 +18,11 @@ pub struct Version {
 
 impl Version {
     pub fn from_env() -> Self {
+        // we set DITTO_TEST_VERSION for integration snapshot tests
+        // (where version outputs need to be deterministic)
+        if let Ok(_test) = std::env::var("DITTO_TEST_VERSION") {
+            return Self::new_test();
+        }
         Self {
             semversion: semver::Version::parse(GIT_DESCRIBE)
                 .unwrap_or_else(|_| panic!("invalid GIT_DESCRIBE: \"{GIT_DESCRIBE}\"")),
@@ -46,5 +51,14 @@ impl Version {
                 .format(&Rfc3339)
                 .unwrap_or_else(|_| panic!("Error formatting build_time: {:?}", self.build_time))
         )
+    }
+    fn new_test() -> Self {
+        Self {
+            semversion: semver::Version::new(0, 0, 0),
+            git_rev: String::from("test"),
+            git_is_dirty: false,
+            build_time: OffsetDateTime::UNIX_EPOCH,
+            build_profile: String::from("test"),
+        }
     }
 }
