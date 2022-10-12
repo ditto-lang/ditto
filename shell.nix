@@ -4,11 +4,13 @@ let
   inherit (pkgs) lib;
 
   fenixRev = "9e3384c61656487b10226a3366a12c37393b21d9";
-  fenixPackages = import (builtins.fetchTarball {
-    name = "fenix-${fenixRev}";
-    url = "https://github.com/nix-community/fenix/archive/${fenixRev}.tar.gz";
-    sha256 = "10kjfa00fs98cvs137x5kr5dmfblmkz8ya5ribb5l0dnfnpgvf5s";
-  }) { };
+  fenixPackages = import
+    (builtins.fetchTarball {
+      name = "fenix-${fenixRev}";
+      url = "https://github.com/nix-community/fenix/archive/${fenixRev}.tar.gz";
+      sha256 = "10kjfa00fs98cvs137x5kr5dmfblmkz8ya5ribb5l0dnfnpgvf5s";
+    })
+    { };
 
   rustToolchain = fenixPackages.fromToolchainFile {
     file = ./rust-toolchain.toml;
@@ -43,7 +45,8 @@ let
   # Also see: https://nixos.wiki/wiki/Node.js#Example_nix_shell_for_Node.js_development
   # (but note building Node from source takes aaages)
   nodejs = pkgs.nodejs-16_x;
-in pkgs.mkShell {
+in
+pkgs.mkShell {
   buildInputs = [
     rustToolchain
     rust-analyzer
