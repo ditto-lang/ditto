@@ -95,8 +95,8 @@ jobs:
         with:
           token: ${{secrets.CODECOV_TOKEN}}
 
-  rustfmt-check:
-    name: rustfmt 💅
+  treefmt:
+    name: treefmt 💅
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -107,19 +107,6 @@ jobs:
         with:
           components: rustfmt
 
-      - name: Run cargo fmt --check --all
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --check --all
-
-  prettier-check:
-    name: prettier 💅
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
       - name: Setup Nodejs
         uses: actions/setup-node@v3
         with:
@@ -129,7 +116,11 @@ jobs:
       - name: Install required NPM packages
         run: npm install --omit optional --ignore-scripts
 
-      - run: npm run format:check
+      - name: Setup Nix
+        uses: cachix/install-nix-action@v18
+
+      - name: treefmt --fail-on-change
+        run: nix-shell --arg ci-treefmt true --run 'treefmt --clear-cache --fail-on-change'
 
   clippy:
     name: clippy 📎

@@ -9,13 +9,13 @@
     "lint-staged": "13.0.0"
   },
   "scripts": {
-    "postinstall": "husky install",
-    "prettier": "prettier",
-    "format": "prettier --write '**/*.{yaml,yml,md,js,ts,json}'",
-    "format:check": "prettier --check '**/*.{yaml,yml,md,js,ts,json}'"
+    "postinstall": "husky install"
   },
   "prettier": {
     "arrowParens": "avoid",
     "trailingComma": "all"
+  },
+  "lint-staged": {
+    "*": "treefmt"
   }
 }
