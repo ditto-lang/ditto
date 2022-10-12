@@ -50,7 +50,7 @@ pkgs.mkShell {
   buildInputs = [
     rustToolchain
     rust-analyzer
-    pkgs.cargo-watch
+    #pkgs.cargo-watch <-- currently broken on MacOS https://github.com/NixOS/nixpkgs/issues/189687
     pkgs.cargo-udeps
     pkgs.cargo-audit
     pkgs.cargo-outdated
