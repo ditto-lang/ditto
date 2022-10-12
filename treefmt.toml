@@ -1,0 +1,41 @@
+# One CLI to format the code tree - https://github.com/numtide/treefmt
+
+[formatter.rust]
+command = "rustfmt"
+options = ["--edition", "2021"]
+includes = ["*.rs"]
+
+[formatter.nix]
+command = "sh"
+options = [
+  "-eucx",
+  """
+deadnix --edit "$@"
+nixpkgs-fmt "$@"
+    """,
+  "--", # bash swallows the second argument when using -c
+]
+includes = ["*.nix"]
+
+[formatter.haskell]
+command = "ormolu"
+options = ["--mode", "inplace", "--check-idempotence"]
+includes = ["*.hs"]
+
+[formatter.shell]
+command = "sh"
+options = [
+  "-eucx",
+  """
+shellcheck --external-sources --source-path=SCRIPTDIR "$@"
+shfmt -i 2 -s -w "$@"
+    """,
+  "--", # bash swallows the second argument when using -c
+]
+includes = ["*.sh"]
+excludes = ["*/husky.sh"]
+
+[formatter.prettier]
+command = "npx"
+options = ["prettier", "--write"]
+includes = ["*.css", "*.html", "*.js", "*.json", "*.md", "*.ts"]

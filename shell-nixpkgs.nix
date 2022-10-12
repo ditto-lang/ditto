@@ -1,4 +1,3 @@
-# nix repl ./shell-nixpkgs.nix
 let
   nixpkgsRev = "c1da6fc4ce95fe59f2c0c8e7cee580a37e0bb94b";
   nixpkgs = builtins.fetchTarball {

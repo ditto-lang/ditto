@@ -2,4 +2,8 @@
 # shellcheck source=/dev/null
 . "$(dirname "$0")/_/husky.sh"
 
+# If this fails, try running
+#    cargo clippy --workspace --fix --allow-dirty --allow-staged
+cargo clippy --workspace -- -D warnings
+
 cargo test

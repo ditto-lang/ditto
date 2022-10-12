@@ -1,3 +1,5 @@
+{ ci-treefmt ? false
+}:
 let
   pkgs = import ./shell-nixpkgs.nix { };
 
@@ -48,6 +50,17 @@ let
 in
 pkgs.mkShell {
   buildInputs = [
+    # if `--arg ci-treefmt true` then we only want to include these tools
+    # (used for running formatting checks in CI)
+    pkgs.treefmt
+    pkgs.deadnix
+    pkgs.nixpkgs-fmt
+    pkgs.ormolu
+    pkgs.shellcheck
+    pkgs.shfmt
+
+  ] ++ lib.optionals (!ci-treefmt) ([
+    # The rest of the development shell stuff
     rustToolchain
     rust-analyzer
     #pkgs.cargo-watch <-- currently broken on MacOS https://github.com/NixOS/nixpkgs/issues/189687
@@ -60,10 +73,10 @@ pkgs.mkShell {
     # Haskell stuff
     stack
     pkgs.ghc
-    pkgs.ormolu
     pkgs.ghcid
 
     nodejs
+
     pkgs.ninja
     pkgs.openssl
     pkgs.pkg-config
@@ -72,5 +85,5 @@ pkgs.mkShell {
     # https://github.com/NixOS/nixpkgs/issues/120688
     pkgs.libiconv
     pkgs.darwin.apple_sdk.frameworks.CoreServices
-  ]);
+  ]));
 }
