@@ -7,7 +7,7 @@ runs:
         # keep these in sync with shell.nix !
         ghc-version: "9.0.2"
         enable-stack: true
-        stack-version: "2.7.5"
+        stack-version: "2.9.1"
 
     # https://github.com/actions/cache/blob/main/examples.md#haskell---stack
     - uses: actions/cache@v3

@@ -1,9 +1,9 @@
 let
-  nixpkgsRev = "c1da6fc4ce95fe59f2c0c8e7cee580a37e0bb94b";
+  nixpkgsRev = "4a66f421319b72adf90c79d5b9ac8b909b29a771";
   nixpkgs = builtins.fetchTarball {
     name = "nixpkgs-${nixpkgsRev}";
     url = "https://github.com/nixos/nixpkgs/archive/${nixpkgsRev}.tar.gz";
-    sha256 = "15s8cg7n6b7l8721s912733y7qybjvj73n5gsjx31707b3qn38gn";
+    sha256 = "1cyc16zjjc2pw8jhs4fsf763xckn63zimd07z3h45k7kz9dq79k3";
   };
 in
 import nixpkgs

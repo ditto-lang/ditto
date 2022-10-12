@@ -1,9 +1,9 @@
 { ci-treefmt ? false
 }:
 let
-  pkgs = import ./shell-nixpkgs.nix { };
+  pkgs = import ./nixpkgs.nix { };
 
-  inherit (pkgs) lib;
+  inherit (pkgs) stdenv lib;
 
   fenixRev = "9e3384c61656487b10226a3366a12c37393b21d9";
   fenixPackages = import
@@ -46,14 +46,14 @@ let
   # Should match .nvmrc
   # Also see: https://nixos.wiki/wiki/Node.js#Example_nix_shell_for_Node.js_development
   # (but note building Node from source takes aaages)
-  nodejs = pkgs.nodejs-16_x;
+  nodejs = pkgs.nodejs-18_x;
 in
 pkgs.mkShell {
   buildInputs = [
     # if `--arg ci-treefmt true` then we only want to include these tools
     # (used for running formatting checks in CI)
     pkgs.treefmt
-    # pkgs.deadnix
+    #pkgs.deadnix <-- might be nice to use in the future?
     pkgs.nixpkgs-fmt
     pkgs.ormolu
     pkgs.shellcheck
@@ -67,7 +67,6 @@ pkgs.mkShell {
     pkgs.cargo-udeps
     pkgs.cargo-audit
     pkgs.cargo-outdated
-    pkgs.cargo-tarpaulin
     cargo-benchcmp
 
     # Haskell stuff
@@ -80,7 +79,11 @@ pkgs.mkShell {
     pkgs.ninja
     pkgs.openssl
     pkgs.pkg-config
-  ] ++ (lib.optionals pkgs.stdenv.isDarwin [
+  ]
+  # Linux specific stuff
+  ++ (lib.optional (stdenv.isx86_64 && stdenv.isLinux) pkgs.cargo-tarpaulin)
+  # MacOS specific stuff
+  ++ (lib.optionals pkgs.stdenv.isDarwin [
     # Fixes for MacOS Catalina
     # https://github.com/NixOS/nixpkgs/issues/120688
     pkgs.libiconv
