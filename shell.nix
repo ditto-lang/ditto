@@ -16,7 +16,7 @@ let
 
   rustToolchain = fenixPackages.fromToolchainFile {
     file = ./rust-toolchain.toml;
-    sha256 = "5LJRZfmLYjC5UZBmZoLomMz9P5OTjP+te5TI9RX8gZI=";
+    sha256 = "sha256-lFKtXaRZQFPdQHIymMDEpQpWhbfUJpRj1+VHSzzVjn4=";
   };
   inherit (fenixPackages) rust-analyzer;
 

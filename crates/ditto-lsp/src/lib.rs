@@ -1,6 +1,5 @@
 #![doc = include_str!("../README.md")]
 #![warn(missing_docs)]
-#![feature(explicit_generic_args_with_impl_trait)]
 
 mod semantic_tokens;
 

@@ -1,6 +1,7 @@
 # https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file
+# https://rust-lang.github.io/rustup-components-history/
 [toolchain]
-channel = "nightly-2022-02-23"
+channel = "nightly-2022-10-13"
 profile = "minimal"
 components = ["rustfmt", "clippy", "rust-src"]
 targets = []

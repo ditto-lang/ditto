@@ -8,6 +8,6 @@ runs:
         # At least until toml toolchains are supported:
         # https://github.com/actions-rs/toolchain/issues/126
         # https://github.com/actions-rs/toolchain/pull/166
-        toolchain: nightly-2022-02-23
+        toolchain: nightly-2022-10-13
         profile: minimal
         override: true
