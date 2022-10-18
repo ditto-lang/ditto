@@ -1,9 +1,0 @@
-name = "javascript-project"
-targets = ["web"]
-dependencies = ["foo", "bar"]
-test-dependencies = ["spec"]
-
-[package-set.packages]
-foo = { path = "./ditto-stuff/foo" }
-bar = { path = "./ditto-stuff/bar" }
-spec = { path = "./ditto-stuff/spec" }

@@ -33,6 +33,7 @@ pub fn command<'a>(name: &str) -> Command<'a> {
                 .required(true)
                 .help("Directory for the project"),
         )
+        .arg(Arg::new("no-make").long("no-make").hide(true))
 }
 
 pub fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
@@ -74,6 +75,10 @@ pub fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
     write_files(package_name, &project_dir, ditto_version, &flavour)?;
 
     // Run an initial `ditto make` in the new directory to kick things off
+    // unless `--no-make` is passed
+    if matches.is_present("no-make") {
+        return Ok(());
+    }
     if let Ok(ditto) = current_exe() {
         println!("\nRunning `ditto make`...");
         process::Command::new(ditto)

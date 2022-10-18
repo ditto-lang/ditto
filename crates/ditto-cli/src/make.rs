@@ -581,9 +581,13 @@ fn generate_build_ninja(
     build_dir.push("build");
     build_dir.push(&ditto_version.semversion.to_string());
 
-    let ditto_bin = current_exe()
-        .into_diagnostic()
-        .wrap_err("error getting current executable")?;
+    let ditto_bin = if let Ok(ditto_bin) = std::env::var("DITTO_TEST_BIN") {
+        PathBuf::from(ditto_bin)
+    } else {
+        current_exe()
+            .into_diagnostic()
+            .wrap_err("error getting current executable")?
+    };
 
     let mut ditto_files = find_ditto_files(&config.src_dir)?; // ditto-src
     if include_test_sources && config.test_dir.exists() {

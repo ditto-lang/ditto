@@ -1,7 +1,0 @@
-module Foo exports (..);
-
-type Foo = Foo;
-
-foo_to_bool = foo_to_bool_impl;
-
-foreign foo_to_bool_impl : (Foo) -> Bool;
