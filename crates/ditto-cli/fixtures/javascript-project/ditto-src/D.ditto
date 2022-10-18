@@ -1,9 +1,0 @@
-module D exports (..);
-
-import C (C, example_c);
-import (foo) Foo;
-import (bar) Bar;
-
-type D = D(Foo.Foo, C);
-
-example_d = D(Bar.foo, example_c);

@@ -1,12 +1,8 @@
 # The ditto command-line interface
 
-```
- ____  __  ____  ____  __
-(    \(  )(_  _)(_  _)/  \
- ) D ( )(   )(    )( (  O )
-(____/(__) (__)  (__) \__/
-
-ditto
+```console
+$ ditto --help
+ditto 0.0.0
 putting the fun in functional
 
 USAGE:
@@ -21,4 +17,5 @@ SUBCOMMANDS:
     make         Build a project
     fmt          Format ditto code
     lsp          Start up the language server
+
 ```

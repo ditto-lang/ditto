@@ -12,20 +12,11 @@ use clap::{ArgMatches, Command};
 use miette::{IntoDiagnostic, Result};
 use version::Version;
 
-// Credit:
-// http://patorjk.com/software/taag/#p=display&f=Graceful&t=Ditto
-static BANNER: &str = r#" ____  __  ____  ____  __  
-(    \(  )(_  _)(_  _)/  \ 
- ) D ( )(   )(    )( (  O )
-(____/(__) (__)  (__) \__/ 
-"#;
-
 fn command<'a>(version_short: &'a str, version_long: &'a str) -> Command<'a> {
     Command::new("ditto")
         .bin_name("ditto")
         .version(version_short)
         .long_version(version_long)
-        .before_help(BANNER)
         .disable_help_subcommand(true)
         .subcommand_required(true)
         .about("putting the fun in functional")

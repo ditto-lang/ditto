@@ -1,8 +1,0 @@
-module C exports (..);
-
-import A;
-import B;
-
-type C = C(B.B, A.A);
-
-example_c = C(B.B, A.A);

@@ -1,6 +1,0 @@
-name = "bar"
-targets = ["web"]
-dependencies = ["foo"]
-
-# The test dependencies of dependencies should be ignored.
-test-dependencies = ["does-not-exist-in-package-set-but-shouldnt-matter"]

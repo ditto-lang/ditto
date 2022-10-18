@@ -1,7 +1,0 @@
-module E exports (..);
-
-type E;
-
-e_from_int = e_from_int_impl;
-
-foreign e_from_int_impl : (Int) -> E;
