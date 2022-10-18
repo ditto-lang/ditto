@@ -24,7 +24,7 @@ fn main() {
 
     let git_dirty = env::var("DITTO_BUILD_GIT_DIRTY").unwrap_or_else(|_| {
         let output = Command::new("git")
-            .args(&["diff-index", "--quiet", "HEAD"])
+            .args(["diff-index", "--quiet", "HEAD"])
             .output()
             .unwrap();
         if output.status.success() {

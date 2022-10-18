@@ -150,7 +150,7 @@ pub async fn run_watch(
                 // If the config file was touched,
                 // then update the `config` value..
                 if config_file_changed {
-                    match read_config(&config_path) {
+                    match read_config(config_path) {
                         Ok(latest_config) => {
                             config = latest_config;
                         }

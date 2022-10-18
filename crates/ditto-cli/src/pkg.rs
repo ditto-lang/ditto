@@ -109,7 +109,7 @@ fn hash_packages_inputs(dependencies: &Dependencies, packages: &Packages) -> u64
 
 // TODO make this async
 fn update_dependencies(
-    multi_progress: &mut MultiProgress,
+    _multi_progress: &mut MultiProgress,
     packages_dir: &Path,
     dependencies: &Dependencies,
     updated_dependencies: &mut Dependencies,
@@ -138,7 +138,7 @@ fn update_dependencies(
                 updated_dependencies.insert(dependency.clone());
                 let config = read_package_config(packages_dir, dependency)?;
                 update_dependencies(
-                    multi_progress,
+                    _multi_progress,
                     packages_dir,
                     &config.dependencies,
                     updated_dependencies,
@@ -156,7 +156,7 @@ fn update_dependencies(
                 updated_dependencies.insert(dependency.clone());
                 let config = read_package_config(packages_dir, dependency)?;
                 update_dependencies(
-                    multi_progress,
+                    _multi_progress,
                     packages_dir,
                     &config.dependencies,
                     updated_dependencies,
@@ -292,7 +292,7 @@ pub fn list_installed_packages(packages_dir: &Path) -> Result<Vec<PathBuf>> {
     if !packages_dir.exists() {
         return Ok(vec![]);
     }
-    let package_entries = fs::read_dir(&packages_dir)
+    let package_entries = fs::read_dir(packages_dir)
         .into_diagnostic()
         .wrap_err(format!(
             "error reading packages directory {}",

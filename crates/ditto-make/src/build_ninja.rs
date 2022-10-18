@@ -225,7 +225,7 @@ fn prepare_build_graph(
                     "ditto version requirement not met for {}: current version = {}, wanted = {}",
                     package_name.map_or("current_package".into(), |package_name| format!(
                         "{:?}",
-                        package_name.to_string()
+                        package_name
                     )),
                     ditto_version,
                     required_ditto_version
