@@ -1,0 +1,3 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["mini_vdom.ditto"]
+fs.sandbox = true

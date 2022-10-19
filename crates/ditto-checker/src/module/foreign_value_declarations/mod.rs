@@ -1,6 +1,3 @@
-#[cfg(test)]
-mod tests;
-
 use crate::{
     kindchecker::{self, merge_references, EnvTypes, TypeReferences},
     result::{Result, Warnings},

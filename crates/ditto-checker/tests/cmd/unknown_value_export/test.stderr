@@ -1,0 +1,8 @@
+
+  × unknown value export
+   ╭─[unknown_value_export.ditto:1:1]
+ 1 │ module Test exports (wut);
+   ·                      ─┬─
+   ·                       ╰── this value isn't defined?
+   ╰────
+

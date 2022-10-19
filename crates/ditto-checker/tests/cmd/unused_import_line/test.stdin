@@ -1,0 +1,5 @@
+module Test exports (..);
+
+import Dep;
+
+five = 5;

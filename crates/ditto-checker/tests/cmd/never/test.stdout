@@ -1,0 +1,333 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "Never": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "kind": "Type"
+      }
+    },
+    "constructors": {},
+    "values": {
+      "never": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": "Type",
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "Never"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "Never"
+                  }
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 0,
+                "source_name": "a"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Never": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 42,
+        "end_offset": 47
+      },
+      "kind": "Type"
+    }
+  },
+  "constructors": {
+    "JustOneMore": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 50,
+        "end_offset": 61
+      },
+      "fields": [
+        {
+          "type": "Constructor",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Test"
+                ]
+              ],
+              "value": "Never"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "Never"
+            }
+          }
+        }
+      ],
+      "return_type": {
+        "type": "Constructor",
+        "data": {
+          "constructor_kind": "Type",
+          "canonical_value": {
+            "module_name": [
+              null,
+              [
+                "Test"
+              ]
+            ],
+            "value": "Never"
+          },
+          "source_value": {
+            "module_name": null,
+            "value": "Never"
+          }
+        }
+      },
+      "return_type_name": "Never"
+    }
+  },
+  "values": {
+    "never": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 71,
+        "end_offset": 76
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 79,
+            "end_offset": 166
+          },
+          "binders": [
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 83,
+                  "end_offset": 86
+                },
+                "binder_type": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": "Type",
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Test"
+                        ]
+                      ],
+                      "value": "Never"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Never"
+                    }
+                  }
+                },
+                "value": "nah"
+              }
+            }
+          ],
+          "body": {
+            "expression": "Match",
+            "data": {
+              "span": {
+                "start_offset": 105,
+                "end_offset": 166
+              },
+              "match_type": {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": "a"
+                }
+              },
+              "expression": {
+                "expression": "LocalVariable",
+                "data": {
+                  "span": {
+                    "start_offset": 111,
+                    "end_offset": 114
+                  },
+                  "variable_type": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": "Type",
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "Never"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Never"
+                      }
+                    }
+                  },
+                  "variable": "nah"
+                }
+              },
+              "arms": [
+                [
+                  {
+                    "LocalConstructor": {
+                      "span": {
+                        "start_offset": 126,
+                        "end_offset": 143
+                      },
+                      "constructor": "JustOneMore",
+                      "arguments": [
+                        {
+                          "Variable": {
+                            "span": {
+                              "start_offset": 138,
+                              "end_offset": 142
+                            },
+                            "name": "naah"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "expression": "Call",
+                    "data": {
+                      "span": {
+                        "start_offset": 147,
+                        "end_offset": 158
+                      },
+                      "call_type": {
+                        "type": "Variable",
+                        "data": {
+                          "variable_kind": "Type",
+                          "var": 0,
+                          "source_name": "a"
+                        }
+                      },
+                      "function": {
+                        "expression": "LocalVariable",
+                        "data": {
+                          "span": {
+                            "start_offset": 147,
+                            "end_offset": 152
+                          },
+                          "variable_type": {
+                            "type": "Function",
+                            "data": {
+                              "parameters": [
+                                {
+                                  "type": "Constructor",
+                                  "data": {
+                                    "constructor_kind": "Type",
+                                    "canonical_value": {
+                                      "module_name": [
+                                        null,
+                                        [
+                                          "Test"
+                                        ]
+                                      ],
+                                      "value": "Never"
+                                    },
+                                    "source_value": {
+                                      "module_name": null,
+                                      "value": "Never"
+                                    }
+                                  }
+                                }
+                              ],
+                              "return_type": {
+                                "type": "Variable",
+                                "data": {
+                                  "variable_kind": "Type",
+                                  "var": 0,
+                                  "source_name": "a"
+                                }
+                              }
+                            }
+                          },
+                          "variable": "never"
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "Expression": {
+                            "expression": "LocalVariable",
+                            "data": {
+                              "span": {
+                                "start_offset": 153,
+                                "end_offset": 157
+                              },
+                              "variable_type": {
+                                "type": "Constructor",
+                                "data": {
+                                  "constructor_kind": "Type",
+                                  "canonical_value": {
+                                    "module_name": [
+                                      null,
+                                      [
+                                        "Test"
+                                      ]
+                                    ],
+                                    "value": "Never"
+                                  },
+                                  "source_value": {
+                                    "module_name": null,
+                                    "value": "Never"
+                                  }
+                                }
+                              },
+                              "variable": "naah"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    [
+      "never"
+    ]
+  ]
+}

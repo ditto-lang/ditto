@@ -1,0 +1,4 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["cyclic_values_error.ditto"]
+fs.sandbox = true
+status = "failed"

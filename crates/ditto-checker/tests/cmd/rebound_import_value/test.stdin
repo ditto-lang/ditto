@@ -1,0 +1,4 @@
+module Test exports (..);
+
+import Foo (yes);
+import Bar (yes);

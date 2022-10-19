@@ -1,0 +1,7 @@
+module Test exports (five);
+
+five : Float = 5.0;
+
+unused = unused_impl;
+
+foreign unused_impl: (Int) -> Bool;

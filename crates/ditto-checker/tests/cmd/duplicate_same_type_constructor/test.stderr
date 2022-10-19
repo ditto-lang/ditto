@@ -1,0 +1,12 @@
+
+  × duplicate constructor
+   ╭─[duplicate_same_type_constructor.ditto:3:1]
+ 3 │ type A = 
+ 4 │     | A 
+   ·       ┬
+   ·       ╰── previously defined here
+ 5 │     | A;
+   ·       ┬
+   ·       ╰── can't be redefined here
+   ╰────
+

@@ -1,0 +1,117 @@
+{
+  "module_name": [
+    "Five"
+  ],
+  "exports": {
+    "types": {
+      "Five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "kind": "Type"
+      }
+    },
+    "constructors": {
+      "Five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "constructor_type": {
+          "type": "Constructor",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Five"
+                ]
+              ],
+              "value": "Five"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "Five"
+            }
+          }
+        },
+        "return_type_name": "Five"
+      }
+    },
+    "values": {
+      "five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Int"
+        }
+      }
+    }
+  },
+  "types": {
+    "Five": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 32,
+        "end_offset": 36
+      },
+      "kind": "Type"
+    }
+  },
+  "constructors": {
+    "Five": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 39,
+        "end_offset": 43
+      },
+      "fields": [],
+      "return_type": {
+        "type": "Constructor",
+        "data": {
+          "constructor_kind": "Type",
+          "canonical_value": {
+            "module_name": [
+              null,
+              [
+                "Five"
+              ]
+            ],
+            "value": "Five"
+          },
+          "source_value": {
+            "module_name": null,
+            "value": "Five"
+          }
+        }
+      },
+      "return_type_name": "Five"
+    }
+  },
+  "values": {
+    "five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 46,
+        "end_offset": 50
+      },
+      "expression": {
+        "expression": "Int",
+        "data": {
+          "span": {
+            "start_offset": 53,
+            "end_offset": 54
+          },
+          "value": "5",
+          "value_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "five"
+  ]
+}

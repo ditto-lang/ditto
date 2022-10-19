@@ -1,0 +1,10 @@
+module Test exports (..);
+
+import Maybe as M (
+    Maybe(..)
+);
+
+maybe_fives : Array(M.Maybe(Int)) = [
+    M.Just(5), 
+    Just(5),
+];

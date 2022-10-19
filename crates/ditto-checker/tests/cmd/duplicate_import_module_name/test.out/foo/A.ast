@@ -1,0 +1,46 @@
+{
+  "module_name": [
+    "A"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "yes": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Bool"
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "yes": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 24,
+        "end_offset": 27
+      },
+      "expression": {
+        "expression": "True",
+        "data": {
+          "span": {
+            "start_offset": 30,
+            "end_offset": 34
+          },
+          "value_type": {
+            "type": "PrimConstructor",
+            "data": "Bool"
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "yes"
+  ]
+}

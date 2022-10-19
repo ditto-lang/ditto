@@ -1,0 +1,105 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "another_five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Int"
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "another_five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 52,
+        "end_offset": 64
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 73,
+            "end_offset": 89
+          },
+          "call_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          },
+          "function": {
+            "expression": "ImportedVariable",
+            "data": {
+              "span": {
+                "start_offset": 73,
+                "end_offset": 83
+              },
+              "variable_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  ],
+                  "return_type": {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  }
+                }
+              },
+              "variable": {
+                "module_name": [
+                  null,
+                  [
+                    "Foo"
+                  ]
+                ],
+                "value": "identity"
+              }
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "ImportedVariable",
+                "data": {
+                  "span": {
+                    "start_offset": 84,
+                    "end_offset": 88
+                  },
+                  "variable_type": {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  },
+                  "variable": {
+                    "module_name": [
+                      null,
+                      [
+                        "Foo"
+                      ]
+                    ],
+                    "value": "five"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "another_five"
+  ]
+}

@@ -1,6 +1,6 @@
 use crate::{graph::Scc, Expression, Kind, ModuleName, Name, ProperName, Span, Type};
+use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 /// A ditto module.
 ///
@@ -36,9 +36,7 @@ pub struct Module {
 }
 
 /// The type of `module.types`, for convenience.
-pub type ModuleTypes = HashMap<ProperName, ModuleType>;
-
-// REVIEW use a `HashMap` newtype to force errors/warnings when duplicates are inserted?
+pub type ModuleTypes = IndexMap<ProperName, ModuleType>;
 
 /// A type defined by a module.
 #[derive(Debug, Serialize, Deserialize)]
@@ -52,10 +50,10 @@ pub struct ModuleType {
 }
 
 /// The type of `module.constructors`, for convenience.
-pub type ModuleConstructors = HashMap<ProperName, ModuleConstructor>;
+pub type ModuleConstructors = IndexMap<ProperName, ModuleConstructor>;
 
 /// The type of `module.values`, for convenience.
-pub type ModuleValues = HashMap<Name, ModuleValue>;
+pub type ModuleValues = IndexMap<Name, ModuleValue>;
 
 /// A value defined by a module.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -130,7 +128,7 @@ pub struct ModuleExports {
 }
 
 /// The type of `module_exports.types`, for convenience.
-pub type ModuleExportsTypes = HashMap<ProperName, ModuleExportsType>;
+pub type ModuleExportsTypes = IndexMap<ProperName, ModuleExportsType>;
 
 /// A single exposed type.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -144,7 +142,7 @@ pub struct ModuleExportsType {
 }
 
 /// The type of `module_exports.constructors`, for convenience.
-pub type ModuleExportsConstructors = HashMap<ProperName, ModuleExportsConstructor>;
+pub type ModuleExportsConstructors = IndexMap<ProperName, ModuleExportsConstructor>;
 
 /// A single exposed constructor.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -162,7 +160,7 @@ pub struct ModuleExportsConstructor {
 }
 
 /// The type of `module_exports.values`, for convenience.
-pub type ModuleExportsValues = HashMap<Name, ModuleExportsValue>;
+pub type ModuleExportsValues = IndexMap<Name, ModuleExportsValue>;
 
 /// A single exposed value.
 #[derive(Debug, Clone, Serialize, Deserialize)]

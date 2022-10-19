@@ -1,0 +1,7 @@
+module Test exports (..);
+
+always = fn (a) -> fn (_b) -> a;
+five: Int = always(5)(true);
+
+always_five: (a) -> Int = always(5);
+another_five: Int = always_five(unit);

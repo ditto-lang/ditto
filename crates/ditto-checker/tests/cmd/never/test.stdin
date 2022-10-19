@@ -1,0 +1,8 @@
+module Test exports (Never, never);
+
+type Never = JustOneMore(Never);
+
+never = fn (nah: Never): a ->
+    match nah with
+    | JustOneMore(naah) -> never(naah)
+    end;

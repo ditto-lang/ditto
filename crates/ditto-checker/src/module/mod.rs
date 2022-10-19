@@ -1,6 +1,3 @@
-#[cfg(test)]
-pub(crate) mod tests;
-
 mod common;
 mod exports;
 mod foreign_value_declarations;

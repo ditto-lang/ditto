@@ -1,0 +1,4 @@
+module Test exports (..);
+
+a : Bool = b;
+b = a(true);

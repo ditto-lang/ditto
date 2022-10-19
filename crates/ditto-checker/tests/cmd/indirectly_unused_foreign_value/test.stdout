@@ -1,0 +1,80 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Float"
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "unused": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 50,
+        "end_offset": 56
+      },
+      "expression": {
+        "expression": "ForeignVariable",
+        "data": {
+          "span": {
+            "start_offset": 59,
+            "end_offset": 70
+          },
+          "variable_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              ],
+              "return_type": {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            }
+          },
+          "variable": "unused_impl"
+        }
+      }
+    },
+    "five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 29,
+        "end_offset": 33
+      },
+      "expression": {
+        "expression": "Float",
+        "data": {
+          "span": {
+            "start_offset": 44,
+            "end_offset": 47
+          },
+          "value": "5.0",
+          "value_type": {
+            "type": "PrimConstructor",
+            "data": "Float"
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "unused",
+    "five"
+  ]
+}

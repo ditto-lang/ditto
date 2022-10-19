@@ -1,0 +1,732 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "Attr": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "kind": "Type"
+      },
+      "Html": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "kind": {
+          "Function": {
+            "parameters": [
+              {
+                "Variable": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    "constructors": {
+      "Attr": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "constructor_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              },
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": "Type",
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "Attr"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "Attr"
+                }
+              }
+            }
+          }
+        },
+        "return_type_name": "Attr"
+      }
+    },
+    "values": {
+      "div": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "PrimConstructor",
+                    "data": "Array"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Constructor",
+                      "data": {
+                        "constructor_kind": "Type",
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "Attr"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "Attr"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "PrimConstructor",
+                    "data": "Array"
+                  },
+                  "arguments": [
+                    {
+                      "type": "Call",
+                      "data": {
+                        "function": {
+                          "type": "Constructor",
+                          "data": {
+                            "constructor_kind": {
+                              "Function": {
+                                "parameters": [
+                                  {
+                                    "Variable": 1
+                                  }
+                                ]
+                              }
+                            },
+                            "canonical_value": {
+                              "module_name": [
+                                null,
+                                [
+                                  "Test"
+                                ]
+                              ],
+                              "value": "Html"
+                            },
+                            "source_value": {
+                              "module_name": null,
+                              "value": "Html"
+                            }
+                          }
+                        },
+                        "arguments": [
+                          {
+                            "type": "Variable",
+                            "data": {
+                              "variable_kind": {
+                                "Variable": 1
+                              },
+                              "var": 0,
+                              "source_name": "msg"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Test"
+                        ]
+                      ],
+                      "value": "Html"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Html"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "msg"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Attr": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 49,
+        "end_offset": 53
+      },
+      "kind": "Type"
+    },
+    "Html": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 32,
+        "end_offset": 36
+      },
+      "kind": {
+        "Function": {
+          "parameters": [
+            {
+              "Variable": 1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "constructors": {
+    "Attr": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 56,
+        "end_offset": 60
+      },
+      "fields": [
+        {
+          "type": "PrimConstructor",
+          "data": "String"
+        },
+        {
+          "type": "PrimConstructor",
+          "data": "String"
+        }
+      ],
+      "return_type": {
+        "type": "Constructor",
+        "data": {
+          "constructor_kind": "Type",
+          "canonical_value": {
+            "module_name": [
+              null,
+              [
+                "Test"
+              ]
+            ],
+            "value": "Attr"
+          },
+          "source_value": {
+            "module_name": null,
+            "value": "Attr"
+          }
+        }
+      },
+      "return_type_name": "Attr"
+    }
+  },
+  "values": {
+    "div": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 79,
+        "end_offset": 82
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 85,
+            "end_offset": 188
+          },
+          "binders": [
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 94,
+                  "end_offset": 99
+                },
+                "binder_type": {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "PrimConstructor",
+                      "data": "Array"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": "Type",
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "Attr"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "Attr"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "value": "attrs"
+              }
+            },
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 119,
+                  "end_offset": 127
+                },
+                "binder_type": {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "PrimConstructor",
+                      "data": "Array"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Call",
+                        "data": {
+                          "function": {
+                            "type": "Constructor",
+                            "data": {
+                              "constructor_kind": {
+                                "Function": {
+                                  "parameters": [
+                                    {
+                                      "Variable": 1
+                                    }
+                                  ]
+                                }
+                              },
+                              "canonical_value": {
+                                "module_name": [
+                                  null,
+                                  [
+                                    "Test"
+                                  ]
+                                ],
+                                "value": "Html"
+                              },
+                              "source_value": {
+                                "module_name": null,
+                                "value": "Html"
+                              }
+                            }
+                          },
+                          "arguments": [
+                            {
+                              "type": "Variable",
+                              "data": {
+                                "variable_kind": {
+                                  "Variable": 1
+                                },
+                                "var": 0,
+                                "source_name": "msg"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "value": "children"
+              }
+            }
+          ],
+          "body": {
+            "expression": "Call",
+            "data": {
+              "span": {
+                "start_offset": 163,
+                "end_offset": 188
+              },
+              "call_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            {
+                              "Variable": 1
+                            }
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "Html"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Html"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": {
+                          "Variable": 1
+                        },
+                        "var": 0,
+                        "source_name": "msg"
+                      }
+                    }
+                  ]
+                }
+              },
+              "function": {
+                "expression": "ForeignVariable",
+                "data": {
+                  "span": {
+                    "start_offset": 163,
+                    "end_offset": 164
+                  },
+                  "variable_type": {
+                    "type": "Function",
+                    "data": {
+                      "parameters": [
+                        {
+                          "type": "PrimConstructor",
+                          "data": "String"
+                        },
+                        {
+                          "type": "Call",
+                          "data": {
+                            "function": {
+                              "type": "PrimConstructor",
+                              "data": "Array"
+                            },
+                            "arguments": [
+                              {
+                                "type": "Constructor",
+                                "data": {
+                                  "constructor_kind": "Type",
+                                  "canonical_value": {
+                                    "module_name": [
+                                      null,
+                                      [
+                                        "Test"
+                                      ]
+                                    ],
+                                    "value": "Attr"
+                                  },
+                                  "source_value": {
+                                    "module_name": null,
+                                    "value": "Attr"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "type": "Call",
+                          "data": {
+                            "function": {
+                              "type": "PrimConstructor",
+                              "data": "Array"
+                            },
+                            "arguments": [
+                              {
+                                "type": "Call",
+                                "data": {
+                                  "function": {
+                                    "type": "Constructor",
+                                    "data": {
+                                      "constructor_kind": {
+                                        "Function": {
+                                          "parameters": [
+                                            {
+                                              "Variable": 1
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "canonical_value": {
+                                        "module_name": [
+                                          null,
+                                          [
+                                            "Test"
+                                          ]
+                                        ],
+                                        "value": "Html"
+                                      },
+                                      "source_value": {
+                                        "module_name": null,
+                                        "value": "Html"
+                                      }
+                                    }
+                                  },
+                                  "arguments": [
+                                    {
+                                      "type": "Variable",
+                                      "data": {
+                                        "variable_kind": {
+                                          "Variable": 1
+                                        },
+                                        "var": 0,
+                                        "source_name": "msg"
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "return_type": {
+                        "type": "Call",
+                        "data": {
+                          "function": {
+                            "type": "Constructor",
+                            "data": {
+                              "constructor_kind": {
+                                "Function": {
+                                  "parameters": [
+                                    {
+                                      "Variable": 1
+                                    }
+                                  ]
+                                }
+                              },
+                              "canonical_value": {
+                                "module_name": [
+                                  null,
+                                  [
+                                    "Test"
+                                  ]
+                                ],
+                                "value": "Html"
+                              },
+                              "source_value": {
+                                "module_name": null,
+                                "value": "Html"
+                              }
+                            }
+                          },
+                          "arguments": [
+                            {
+                              "type": "Variable",
+                              "data": {
+                                "variable_kind": {
+                                  "Variable": 1
+                                },
+                                "var": 0,
+                                "source_name": "msg"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "variable": "h"
+                }
+              },
+              "arguments": [
+                {
+                  "Expression": {
+                    "expression": "String",
+                    "data": {
+                      "span": {
+                        "start_offset": 165,
+                        "end_offset": 170
+                      },
+                      "value": "div",
+                      "value_type": {
+                        "type": "PrimConstructor",
+                        "data": "String"
+                      }
+                    }
+                  }
+                },
+                {
+                  "Expression": {
+                    "expression": "LocalVariable",
+                    "data": {
+                      "span": {
+                        "start_offset": 172,
+                        "end_offset": 177
+                      },
+                      "variable_type": {
+                        "type": "Call",
+                        "data": {
+                          "function": {
+                            "type": "PrimConstructor",
+                            "data": "Array"
+                          },
+                          "arguments": [
+                            {
+                              "type": "Constructor",
+                              "data": {
+                                "constructor_kind": "Type",
+                                "canonical_value": {
+                                  "module_name": [
+                                    null,
+                                    [
+                                      "Test"
+                                    ]
+                                  ],
+                                  "value": "Attr"
+                                },
+                                "source_value": {
+                                  "module_name": null,
+                                  "value": "Attr"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "variable": "attrs"
+                    }
+                  }
+                },
+                {
+                  "Expression": {
+                    "expression": "LocalVariable",
+                    "data": {
+                      "span": {
+                        "start_offset": 179,
+                        "end_offset": 187
+                      },
+                      "variable_type": {
+                        "type": "Call",
+                        "data": {
+                          "function": {
+                            "type": "PrimConstructor",
+                            "data": "Array"
+                          },
+                          "arguments": [
+                            {
+                              "type": "Call",
+                              "data": {
+                                "function": {
+                                  "type": "Constructor",
+                                  "data": {
+                                    "constructor_kind": {
+                                      "Function": {
+                                        "parameters": [
+                                          {
+                                            "Variable": 1
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "canonical_value": {
+                                      "module_name": [
+                                        null,
+                                        [
+                                          "Test"
+                                        ]
+                                      ],
+                                      "value": "Html"
+                                    },
+                                    "source_value": {
+                                      "module_name": null,
+                                      "value": "Html"
+                                    }
+                                  }
+                                },
+                                "arguments": [
+                                  {
+                                    "type": "Variable",
+                                    "data": {
+                                      "variable_kind": {
+                                        "Variable": 1
+                                      },
+                                      "var": 0,
+                                      "source_name": "msg"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "variable": "children"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "div"
+  ]
+}

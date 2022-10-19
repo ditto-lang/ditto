@@ -1,0 +1,14 @@
+{
+  "module_name": [
+    "Dep"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {}
+  },
+  "types": {},
+  "constructors": {},
+  "values": {},
+  "values_toposort": []
+}

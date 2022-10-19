@@ -1,61 +1,4 @@
-use crate::module::tests::macros::assert_module_ok;
 use macros::assert_not_covered;
-
-#[test]
-fn it_doesnt_error_for_exhaustive_patterns() {
-    assert_module_ok!(
-        r#"
-        module Test exports (..);
-        type Never = JustOneMore(Never);
-
-        never = fn (nah: Never): a ->
-            match nah with
-            | JustOneMore(naah) -> never(naah)
-            end;
-        "#
-    );
-    assert_module_ok!(
-        r#"
-        module Test exports (..);
-        type Five = Five;
-
-        five_to_int = fn (five: Five) -> 
-          match five with
-          | Five -> 5
-          end;
-        "#
-    );
-}
-
-#[test]
-fn it_doesnt_error_for_exhaustive_imported_patterns() {
-    assert_module_ok!(
-        r#"
-        module Test exports (..);
-        import Data.Stuff;
-
-        five_to_int = fn (five: Stuff.Five) ->
-          match five with
-          | Stuff.Five -> 5
-          end;
-        "#,
-        _,
-        &mk_everything()
-    );
-    assert_module_ok!(
-        r#"
-        module Test exports (..);
-        import Data.Stuff (Five(..));
-
-        five_to_int = fn (five: Five) ->
-          match five with
-          | Five -> 5
-          end;
-        "#,
-        _,
-        &mk_everything()
-    );
-}
 
 #[test]
 fn it_errors_for_non_exhaustive_patterns() {
@@ -198,8 +141,14 @@ mod macros {
         }};
 
         ($source:expr, $pattern_strings:expr, $everything:expr) => {{
-            let result =
-                $crate::module::tests::macros::parse_and_check_module!($source, $everything);
+            let parse_result = ditto_cst::Module::parse($source);
+            assert!(
+                matches!(parse_result, Ok(_)),
+                "{:#?}",
+                parse_result.unwrap_err()
+            );
+            let cst_module = parse_result.unwrap();
+            let result = crate::module::check_module($everything, cst_module);
             assert!(matches!(result, Err(_)), "Unexpected type check?");
             let err = result.unwrap_err();
             match err {

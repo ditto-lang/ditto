@@ -1,0 +1,24 @@
+module Test exports (..);
+
+type ExtendMe(r) = ExtendMe({ r | foo: Int });
+
+extended0 = ExtendMe({ foo = 2 });
+extended1 = ExtendMe({ foo = 2, bar = 3 });
+extended2 : ExtendMe({ bar : Int, baz: Int }) = ExtendMe({ foo = 2, bar = 3, baz = 5 });
+-- extended3 = ExtendMe({ bar = 2 });   ERROR
+
+unwrap_extend_me0 = fn (e): { r | foo : Int } -> match e with | ExtendMe(r) -> r end;
+unwrap_extend_me1 = fn (e): { foo : Int } -> match e with | ExtendMe(r) -> r end;
+get_foo = fn (e): Int -> unwrap_extend_me0(e).foo;
+
+type ExtendedOpen(r) = Open(ExtendMe({ r | bar: Int }));
+
+extended_open0 : ExtendedOpen({}) = Open(ExtendMe({ foo = 1, bar = 2}));
+extended_open1 : ExtendedOpen({ baz: Unit }) = Open(ExtendMe({ foo = 1, bar = 2, baz = unit }));
+
+type ExtendedClosed = Closed(ExtendedOpen({ baz: Int }));
+extended_closed : ExtendedClosed = Closed(Open(ExtendMe({
+    foo = 1,
+    bar = 2,
+    baz = 3,
+})));

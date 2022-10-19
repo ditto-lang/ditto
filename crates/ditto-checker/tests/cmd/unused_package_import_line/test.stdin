@@ -1,0 +1,5 @@
+module Test exports (..);
+
+import (pkg) Dep;
+
+five = 5;

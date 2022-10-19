@@ -1,4 +1,4 @@
-use super::macros::*;
+use super::macros::{assert_value_declaration, assert_value_declaration_error};
 use crate::TypeError::*;
 
 #[test]

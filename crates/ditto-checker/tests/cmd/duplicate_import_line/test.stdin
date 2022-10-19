@@ -1,0 +1,6 @@
+module Test exports (..);
+
+import Dep;
+import Dep;
+
+dep_five = Dep.five;

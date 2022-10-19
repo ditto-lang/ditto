@@ -1,0 +1,11 @@
+module Maybe exports (
+    Maybe(..),
+    Private, 
+    mk_private,
+);
+
+type Maybe(a) = Just(a) | Nothing;
+
+type Private = Private;
+
+mk_private = fn () -> Private;

@@ -1,6 +1,3 @@
-#[cfg(test)]
-mod tests;
-
 use crate::result::{Result, TypeError, Warning, Warnings};
 use ditto_ast::{
     Module, ModuleExportsConstructor, ModuleExportsType, ModuleExportsValue, ModuleType,

@@ -1,0 +1,190 @@
+{
+  "module_name": [
+    "Dep"
+  ],
+  "exports": {
+    "types": {
+      "ABC": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "kind": "Type"
+      }
+    },
+    "constructors": {
+      "A": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "constructor_type": {
+          "type": "Constructor",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Dep"
+                ]
+              ],
+              "value": "ABC"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "ABC"
+            }
+          }
+        },
+        "return_type_name": "ABC"
+      },
+      "B": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "constructor_type": {
+          "type": "Constructor",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Dep"
+                ]
+              ],
+              "value": "ABC"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "ABC"
+            }
+          }
+        },
+        "return_type_name": "ABC"
+      },
+      "C": {
+        "doc_comments": [],
+        "doc_position": 2,
+        "constructor_type": {
+          "type": "Constructor",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Dep"
+                ]
+              ],
+              "value": "ABC"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "ABC"
+            }
+          }
+        },
+        "return_type_name": "ABC"
+      }
+    },
+    "values": {}
+  },
+  "types": {
+    "ABC": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 31,
+        "end_offset": 34
+      },
+      "kind": "Type"
+    }
+  },
+  "constructors": {
+    "A": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 37,
+        "end_offset": 38
+      },
+      "fields": [],
+      "return_type": {
+        "type": "Constructor",
+        "data": {
+          "constructor_kind": "Type",
+          "canonical_value": {
+            "module_name": [
+              null,
+              [
+                "Dep"
+              ]
+            ],
+            "value": "ABC"
+          },
+          "source_value": {
+            "module_name": null,
+            "value": "ABC"
+          }
+        }
+      },
+      "return_type_name": "ABC"
+    },
+    "B": {
+      "doc_comments": [],
+      "doc_position": 1,
+      "constructor_name_span": {
+        "start_offset": 41,
+        "end_offset": 42
+      },
+      "fields": [],
+      "return_type": {
+        "type": "Constructor",
+        "data": {
+          "constructor_kind": "Type",
+          "canonical_value": {
+            "module_name": [
+              null,
+              [
+                "Dep"
+              ]
+            ],
+            "value": "ABC"
+          },
+          "source_value": {
+            "module_name": null,
+            "value": "ABC"
+          }
+        }
+      },
+      "return_type_name": "ABC"
+    },
+    "C": {
+      "doc_comments": [],
+      "doc_position": 2,
+      "constructor_name_span": {
+        "start_offset": 45,
+        "end_offset": 46
+      },
+      "fields": [],
+      "return_type": {
+        "type": "Constructor",
+        "data": {
+          "constructor_kind": "Type",
+          "canonical_value": {
+            "module_name": [
+              null,
+              [
+                "Dep"
+              ]
+            ],
+            "value": "ABC"
+          },
+          "source_value": {
+            "module_name": null,
+            "value": "ABC"
+          }
+        }
+      },
+      "return_type_name": "ABC"
+    }
+  },
+  "values": {},
+  "values_toposort": []
+}

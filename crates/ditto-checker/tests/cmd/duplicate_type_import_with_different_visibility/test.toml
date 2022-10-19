@@ -1,0 +1,3 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["duplicate_type_import_with_different_visibility.ditto"]
+fs.sandbox = true

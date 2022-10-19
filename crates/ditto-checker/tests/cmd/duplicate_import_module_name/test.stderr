@@ -1,0 +1,11 @@
+
+  × duplicate imports for module `A`
+   ╭─[duplicate_import_module_name.ditto:2:1]
+ 2 │ 
+ 3 │ import (foo) A; import (bar) A;
+   ·              ┬               ┬
+   ·              │               ╰── imported again here
+   ·              ╰── previous import
+   ╰────
+  help: try aliasing one of the imports?
+

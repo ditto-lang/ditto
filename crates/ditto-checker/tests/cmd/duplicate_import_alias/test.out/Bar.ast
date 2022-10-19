@@ -1,0 +1,46 @@
+{
+  "module_name": [
+    "Bar"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "yes": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Bool"
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "yes": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 26,
+        "end_offset": 29
+      },
+      "expression": {
+        "expression": "True",
+        "data": {
+          "span": {
+            "start_offset": 32,
+            "end_offset": 36
+          },
+          "value_type": {
+            "type": "PrimConstructor",
+            "data": "Bool"
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "yes"
+  ]
+}

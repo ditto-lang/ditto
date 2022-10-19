@@ -1,0 +1,16 @@
+
+  × duplicate type declaration
+   ╭─[duplicate_type_declaration.ditto:2:1]
+ 2 │ 
+ 3 │ type A = A;
+   ·      ┬
+   ·      ╰── previously defined here
+ 4 │ 
+   ╰────
+   ╭─[duplicate_type_declaration.ditto:7:1]
+ 7 │ 
+ 8 │ type A = B | C;
+   ·      ┬
+   ·      ╰── can't be redefined here
+   ╰────
+

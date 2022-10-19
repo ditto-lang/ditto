@@ -1,0 +1,4 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["unknown_value_import.ditto"]
+fs.sandbox = true
+status = "failed"

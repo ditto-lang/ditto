@@ -1,0 +1,5 @@
+module Test exports (..);
+
+import Foo (five, five);
+
+fives = [five, five, five];

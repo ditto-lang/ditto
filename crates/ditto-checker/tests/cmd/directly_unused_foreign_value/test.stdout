@@ -1,0 +1,14 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {}
+  },
+  "types": {},
+  "constructors": {},
+  "values": {},
+  "values_toposort": []
+}

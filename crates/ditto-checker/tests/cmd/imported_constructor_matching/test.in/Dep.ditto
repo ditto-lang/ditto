@@ -1,0 +1,10 @@
+module Dep exports (..);
+
+type ABC(c) = A | B(Int) | C(Bool, c);
+
+n_params = fn (abc): Int -> 
+    match abc with
+    | A -> 0
+    | B(_) -> 1
+    | C(_, _) -> 2
+    end;

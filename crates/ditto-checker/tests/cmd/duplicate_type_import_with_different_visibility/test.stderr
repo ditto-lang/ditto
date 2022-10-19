@@ -1,0 +1,13 @@
+
+  ⚠ duplicate type import
+   ╭─[duplicate_type_import_with_different_visibility.ditto:3:1]
+ 3 │ import Maybe (
+ 4 │     Maybe, 
+   ·     ──┬──
+   ·       ╰── previously imported here
+ 5 │     Maybe(..),
+   ·     ──┬──
+   ·       ╰── already imported
+ 6 │ );
+   ╰────
+

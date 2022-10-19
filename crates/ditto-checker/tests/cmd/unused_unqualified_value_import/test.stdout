@@ -1,0 +1,85 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "Constructor",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Five"
+                ]
+              ],
+              "value": "Five"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "Five"
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 48,
+        "end_offset": 52
+      },
+      "expression": {
+        "expression": "ImportedConstructor",
+        "data": {
+          "span": {
+            "start_offset": 55,
+            "end_offset": 64
+          },
+          "constructor_type": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Five"
+                  ]
+                ],
+                "value": "Five"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Five"
+              }
+            }
+          },
+          "constructor": {
+            "module_name": [
+              null,
+              [
+                "Five"
+              ]
+            ],
+            "value": "Five"
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "five"
+  ]
+}
