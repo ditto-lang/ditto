@@ -1,0 +1,11 @@
+module Test exports (..);
+
+type alias Foo = Bool;
+type alias Bar = Bool;
+type alias Baz = Bool;
+
+foo : Foo = true;
+bar : Bar = false;
+baz : Baz = true;
+
+bools : Array(Bool) = [foo, bar, baz];

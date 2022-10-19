@@ -1,0 +1,466 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "Bar": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": "Type",
+          "aliased_type": {
+            "type": "PrimConstructor",
+            "data": "Bool"
+          },
+          "alias_variables": []
+        }
+      },
+      "Baz": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 1,
+          "kind": "Type",
+          "aliased_type": {
+            "type": "PrimConstructor",
+            "data": "Bool"
+          },
+          "alias_variables": []
+        }
+      },
+      "Foo": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 2,
+          "kind": "Type",
+          "aliased_type": {
+            "type": "PrimConstructor",
+            "data": "Bool"
+          },
+          "alias_variables": []
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "bar": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "ConstructorAlias",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Test"
+                ]
+              ],
+              "value": "Bar"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "Bar"
+            },
+            "alias_variables": [],
+            "aliased_type": {
+              "type": "PrimConstructor",
+              "data": "Bool"
+            }
+          }
+        }
+      },
+      "baz": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "value_type": {
+          "type": "ConstructorAlias",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Test"
+                ]
+              ],
+              "value": "Baz"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "Baz"
+            },
+            "alias_variables": [],
+            "aliased_type": {
+              "type": "PrimConstructor",
+              "data": "Bool"
+            }
+          }
+        }
+      },
+      "bools": {
+        "doc_comments": [],
+        "doc_position": 2,
+        "value_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "PrimConstructor",
+              "data": "Array"
+            },
+            "arguments": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ]
+          }
+        }
+      },
+      "foo": {
+        "doc_comments": [],
+        "doc_position": 3,
+        "value_type": {
+          "type": "ConstructorAlias",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Test"
+                ]
+              ],
+              "value": "Foo"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "Foo"
+            },
+            "alias_variables": [],
+            "aliased_type": {
+              "type": "PrimConstructor",
+              "data": "Bool"
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Baz": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 84,
+          "end_offset": 87
+        },
+        "kind": "Type",
+        "aliased_type": {
+          "type": "PrimConstructor",
+          "data": "Bool"
+        },
+        "alias_variables": []
+      }
+    },
+    "Bar": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 61,
+          "end_offset": 64
+        },
+        "kind": "Type",
+        "aliased_type": {
+          "type": "PrimConstructor",
+          "data": "Bool"
+        },
+        "alias_variables": []
+      }
+    },
+    "Foo": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 38,
+          "end_offset": 41
+        },
+        "kind": "Type",
+        "aliased_type": {
+          "type": "PrimConstructor",
+          "data": "Bool"
+        },
+        "alias_variables": []
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "baz": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 134,
+        "end_offset": 137
+      },
+      "expression": {
+        "expression": "True",
+        "data": {
+          "span": {
+            "start_offset": 146,
+            "end_offset": 150
+          },
+          "value_type": {
+            "type": "ConstructorAlias",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Test"
+                  ]
+                ],
+                "value": "Baz"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Baz"
+              },
+              "alias_variables": [],
+              "aliased_type": {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            }
+          }
+        }
+      }
+    },
+    "bar": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 115,
+        "end_offset": 118
+      },
+      "expression": {
+        "expression": "False",
+        "data": {
+          "span": {
+            "start_offset": 127,
+            "end_offset": 132
+          },
+          "value_type": {
+            "type": "ConstructorAlias",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Test"
+                  ]
+                ],
+                "value": "Bar"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Bar"
+              },
+              "alias_variables": [],
+              "aliased_type": {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            }
+          }
+        }
+      }
+    },
+    "foo": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 97,
+        "end_offset": 100
+      },
+      "expression": {
+        "expression": "True",
+        "data": {
+          "span": {
+            "start_offset": 109,
+            "end_offset": 113
+          },
+          "value_type": {
+            "type": "ConstructorAlias",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Test"
+                  ]
+                ],
+                "value": "Foo"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Foo"
+              },
+              "alias_variables": [],
+              "aliased_type": {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            }
+          }
+        }
+      }
+    },
+    "bools": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 153,
+        "end_offset": 158
+      },
+      "expression": {
+        "expression": "Array",
+        "data": {
+          "span": {
+            "start_offset": 175,
+            "end_offset": 190
+          },
+          "element_type": {
+            "type": "PrimConstructor",
+            "data": "Bool"
+          },
+          "elements": [
+            {
+              "expression": "LocalVariable",
+              "data": {
+                "span": {
+                  "start_offset": 176,
+                  "end_offset": 179
+                },
+                "variable_type": {
+                  "type": "ConstructorAlias",
+                  "data": {
+                    "constructor_kind": "Type",
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Test"
+                        ]
+                      ],
+                      "value": "Foo"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Foo"
+                    },
+                    "alias_variables": [],
+                    "aliased_type": {
+                      "type": "PrimConstructor",
+                      "data": "Bool"
+                    }
+                  }
+                },
+                "variable": "foo"
+              }
+            },
+            {
+              "expression": "LocalVariable",
+              "data": {
+                "span": {
+                  "start_offset": 181,
+                  "end_offset": 184
+                },
+                "variable_type": {
+                  "type": "ConstructorAlias",
+                  "data": {
+                    "constructor_kind": "Type",
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Test"
+                        ]
+                      ],
+                      "value": "Bar"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Bar"
+                    },
+                    "alias_variables": [],
+                    "aliased_type": {
+                      "type": "PrimConstructor",
+                      "data": "Bool"
+                    }
+                  }
+                },
+                "variable": "bar"
+              }
+            },
+            {
+              "expression": "LocalVariable",
+              "data": {
+                "span": {
+                  "start_offset": 186,
+                  "end_offset": 189
+                },
+                "variable_type": {
+                  "type": "ConstructorAlias",
+                  "data": {
+                    "constructor_kind": "Type",
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Test"
+                        ]
+                      ],
+                      "value": "Baz"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Baz"
+                    },
+                    "alias_variables": [],
+                    "aliased_type": {
+                      "type": "PrimConstructor",
+                      "data": "Bool"
+                    }
+                  }
+                },
+                "variable": "baz"
+              }
+            }
+          ],
+          "value_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "PrimConstructor",
+                "data": "Array"
+              },
+              "arguments": [
+                {
+                  "type": "PrimConstructor",
+                  "data": "Bool"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "baz",
+    "bar",
+    "foo",
+    "bools"
+  ]
+}

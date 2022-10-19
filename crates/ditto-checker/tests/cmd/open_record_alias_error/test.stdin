@@ -1,0 +1,5 @@
+module Test exports (..);
+
+type alias HasFoo(r, a) = { r | foo: a };
+
+foo : HasFoo({ bar: Bool }, Int) = { foo = 5, bar = "nah" };

@@ -1,0 +1,4 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["open_record_alias_error.ditto"]
+status = "failed"
+fs.sandbox = true

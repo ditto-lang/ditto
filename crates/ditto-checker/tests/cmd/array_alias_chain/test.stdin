@@ -1,0 +1,7 @@
+module Test exports (..);
+
+type alias A(a) = Array(a);
+type alias B(a) = A(a);
+type alias Ints = B(Int);
+
+fives : Ints = [5, 5, 5];

@@ -1,0 +1,185 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Int"
+        }
+      },
+      "my_boolean": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "value_type": {
+          "type": "ConstructorAlias",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Boolean"
+                ]
+              ],
+              "value": "Boolean"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "Boolean"
+            },
+            "alias_variables": [],
+            "aliased_type": {
+              "type": "PrimConstructor",
+              "data": "Bool"
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 84,
+        "end_offset": 88
+      },
+      "expression": {
+        "expression": "If",
+        "data": {
+          "span": {
+            "start_offset": 91,
+            "end_offset": 123
+          },
+          "output_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          },
+          "condition": {
+            "expression": "ImportedVariable",
+            "data": {
+              "span": {
+                "start_offset": 94,
+                "end_offset": 109
+              },
+              "variable_type": {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": "Type",
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Boolean"
+                      ]
+                    ],
+                    "value": "Boolean"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "Boolean"
+                  },
+                  "alias_variables": [],
+                  "aliased_type": {
+                    "type": "PrimConstructor",
+                    "data": "Bool"
+                  }
+                }
+              },
+              "variable": {
+                "module_name": [
+                  null,
+                  [
+                    "Boolean"
+                  ]
+                ],
+                "value": "example"
+              }
+            }
+          },
+          "true_clause": {
+            "expression": "Int",
+            "data": {
+              "span": {
+                "start_offset": 115,
+                "end_offset": 116
+              },
+              "value": "5",
+              "value_type": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            }
+          },
+          "false_clause": {
+            "expression": "Int",
+            "data": {
+              "span": {
+                "start_offset": 122,
+                "end_offset": 123
+              },
+              "value": "5",
+              "value_type": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            }
+          }
+        }
+      }
+    },
+    "my_boolean": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 54,
+        "end_offset": 64
+      },
+      "expression": {
+        "expression": "True",
+        "data": {
+          "span": {
+            "start_offset": 77,
+            "end_offset": 81
+          },
+          "value_type": {
+            "type": "ConstructorAlias",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Boolean"
+                  ]
+                ],
+                "value": "Boolean"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Boolean"
+              },
+              "alias_variables": [],
+              "aliased_type": {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "five",
+    "my_boolean"
+  ]
+}

@@ -1,0 +1,15 @@
+
+  × types don't unify
+    ╭─[open_record_alias_chain_error.ditto:12:1]
+ 12 │     
+ 13 │ ╭─▶ foo_bar_baz : HasFooBarBaz({}) = { 
+ 14 │ │       foo = 5, 
+ 15 │ │       bar = 5.0, 
+ 16 │ │       baz = unit, 
+ 17 │ │       huh = [] 
+ 18 │ ├─▶ };
+    · ╰──── here
+    ╰────
+  help: expected HasFooBarBaz(#{})
+        got { foo: Int, bar: Float, baz: Unit, huh: Array($0) }
+

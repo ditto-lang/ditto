@@ -1,0 +1,277 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "Vec": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": {
+            "Function": {
+              "parameters": [
+                "Type"
+              ]
+            }
+          },
+          "aliased_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "PrimConstructor",
+                "data": "Array"
+              },
+              "arguments": [
+                {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": "Type",
+                    "var": 0,
+                    "source_name": "a"
+                  }
+                }
+              ]
+            }
+          },
+          "alias_variables": [
+            0
+          ]
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "fives": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "ConstructorAlias",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Type"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "Vec"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "Vec"
+                },
+                "alias_variables": [
+                  0
+                ],
+                "aliased_type": {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "PrimConstructor",
+                      "data": "Array"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Variable",
+                        "data": {
+                          "variable_kind": "Type",
+                          "var": 0,
+                          "source_name": "a"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Vec": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 38,
+          "end_offset": 41
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Type"
+            ]
+          }
+        },
+        "aliased_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "PrimConstructor",
+              "data": "Array"
+            },
+            "arguments": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": "a"
+                }
+              }
+            ]
+          }
+        },
+        "alias_variables": [
+          0
+        ]
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "fives": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 58,
+        "end_offset": 63
+      },
+      "expression": {
+        "expression": "Array",
+        "data": {
+          "span": {
+            "start_offset": 77,
+            "end_offset": 86
+          },
+          "element_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          },
+          "elements": [
+            {
+              "expression": "Int",
+              "data": {
+                "span": {
+                  "start_offset": 78,
+                  "end_offset": 79
+                },
+                "value": "5",
+                "value_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              }
+            },
+            {
+              "expression": "Int",
+              "data": {
+                "span": {
+                  "start_offset": 81,
+                  "end_offset": 82
+                },
+                "value": "5",
+                "value_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              }
+            },
+            {
+              "expression": "Int",
+              "data": {
+                "span": {
+                  "start_offset": 84,
+                  "end_offset": 85
+                },
+                "value": "5",
+                "value_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              }
+            }
+          ],
+          "value_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Type"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "Vec"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "Vec"
+                  },
+                  "alias_variables": [
+                    0
+                  ],
+                  "aliased_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "PrimConstructor",
+                        "data": "Array"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Variable",
+                          "data": {
+                            "variable_kind": "Type",
+                            "var": 0,
+                            "source_name": "a"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "fives"
+  ]
+}

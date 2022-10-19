@@ -1,0 +1,7 @@
+module Test exports (..);
+
+type alias A = Float;
+type alias B = A;
+type alias C = B;
+
+five : C = 5.0;

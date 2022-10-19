@@ -1,0 +1,375 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "high_five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "ConstructorAlias",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Test"
+                ]
+              ],
+              "value": "Number"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "Number"
+            },
+            "alias_variables": [],
+            "aliased_type": {
+              "type": "PrimConstructor",
+              "data": "Float"
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Number": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 45,
+          "end_offset": 51
+        },
+        "kind": "Type",
+        "aliased_type": {
+          "type": "PrimConstructor",
+          "data": "Float"
+        },
+        "alias_variables": []
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "gimme_five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 126,
+        "end_offset": 136
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 139,
+            "end_offset": 171
+          },
+          "binders": [
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 143,
+                  "end_offset": 147
+                },
+                "binder_type": {
+                  "type": "ConstructorAlias",
+                  "data": {
+                    "constructor_kind": "Type",
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Test"
+                        ]
+                      ],
+                      "value": "Number"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Number"
+                    },
+                    "alias_variables": [],
+                    "aliased_type": {
+                      "type": "PrimConstructor",
+                      "data": "Float"
+                    }
+                  }
+                },
+                "value": "five"
+              }
+            }
+          ],
+          "body": {
+            "expression": "LocalVariable",
+            "data": {
+              "span": {
+                "start_offset": 167,
+                "end_offset": 171
+              },
+              "variable_type": {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": "Type",
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "Number"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "Number"
+                  },
+                  "alias_variables": [],
+                  "aliased_type": {
+                    "type": "PrimConstructor",
+                    "data": "Float"
+                  }
+                }
+              },
+              "variable": "five"
+            }
+          }
+        }
+      }
+    },
+    "number_five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 62,
+        "end_offset": 73
+      },
+      "expression": {
+        "expression": "Float",
+        "data": {
+          "span": {
+            "start_offset": 84,
+            "end_offset": 87
+          },
+          "value": "5.0",
+          "value_type": {
+            "type": "ConstructorAlias",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Test"
+                  ]
+                ],
+                "value": "Number"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Number"
+              },
+              "alias_variables": [],
+              "aliased_type": {
+                "type": "PrimConstructor",
+                "data": "Float"
+              }
+            }
+          }
+        }
+      }
+    },
+    "floaty_five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 90,
+        "end_offset": 101
+      },
+      "expression": {
+        "expression": "LocalVariable",
+        "data": {
+          "span": {
+            "start_offset": 112,
+            "end_offset": 123
+          },
+          "variable_type": {
+            "type": "ConstructorAlias",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Test"
+                  ]
+                ],
+                "value": "Number"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Number"
+              },
+              "alias_variables": [],
+              "aliased_type": {
+                "type": "PrimConstructor",
+                "data": "Float"
+              }
+            }
+          },
+          "variable": "number_five"
+        }
+      }
+    },
+    "high_five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 174,
+        "end_offset": 183
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 186,
+            "end_offset": 209
+          },
+          "call_type": {
+            "type": "ConstructorAlias",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Test"
+                  ]
+                ],
+                "value": "Number"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Number"
+              },
+              "alias_variables": [],
+              "aliased_type": {
+                "type": "PrimConstructor",
+                "data": "Float"
+              }
+            }
+          },
+          "function": {
+            "expression": "LocalVariable",
+            "data": {
+              "span": {
+                "start_offset": 186,
+                "end_offset": 196
+              },
+              "variable_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "ConstructorAlias",
+                      "data": {
+                        "constructor_kind": "Type",
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "Number"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "Number"
+                        },
+                        "alias_variables": [],
+                        "aliased_type": {
+                          "type": "PrimConstructor",
+                          "data": "Float"
+                        }
+                      }
+                    }
+                  ],
+                  "return_type": {
+                    "type": "ConstructorAlias",
+                    "data": {
+                      "constructor_kind": "Type",
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "Number"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Number"
+                      },
+                      "alias_variables": [],
+                      "aliased_type": {
+                        "type": "PrimConstructor",
+                        "data": "Float"
+                      }
+                    }
+                  }
+                }
+              },
+              "variable": "gimme_five"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "LocalVariable",
+                "data": {
+                  "span": {
+                    "start_offset": 197,
+                    "end_offset": 208
+                  },
+                  "variable_type": {
+                    "type": "ConstructorAlias",
+                    "data": {
+                      "constructor_kind": "Type",
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "Number"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Number"
+                      },
+                      "alias_variables": [],
+                      "aliased_type": {
+                        "type": "PrimConstructor",
+                        "data": "Float"
+                      }
+                    }
+                  },
+                  "variable": "floaty_five"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "gimme_five",
+    "number_five",
+    "floaty_five",
+    "high_five"
+  ]
+}

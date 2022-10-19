@@ -1,0 +1,5 @@
+module Test exports (..);
+
+type alias Ints = Array(Int);
+
+oops : Ints = [true, false];
