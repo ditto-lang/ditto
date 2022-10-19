@@ -1,0 +1,3 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["simple_value_imports.ditto"]
+fs.sandbox = true

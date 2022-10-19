@@ -1,0 +1,3 @@
+module Test exports (..);
+
+foreign unused_impl: (Int) -> Bool;

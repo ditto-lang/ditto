@@ -1,0 +1,3 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["cyclic_values.ditto"]
+fs.sandbox = true

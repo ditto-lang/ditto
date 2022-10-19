@@ -1,0 +1,4 @@
+module Test exports (..);
+
+type A = A(B);
+type B(c) = B(A, c);

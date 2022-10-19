@@ -1,0 +1,149 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "a": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Bool"
+        }
+      },
+      "c": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": null
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 0,
+                "source_name": null
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "c": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 61,
+        "end_offset": 62
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 65,
+            "end_offset": 76
+          },
+          "binders": [
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 69,
+                  "end_offset": 70
+                },
+                "binder_type": {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": "Type",
+                    "var": 0,
+                    "source_name": null
+                  }
+                },
+                "value": "b"
+              }
+            }
+          ],
+          "body": {
+            "expression": "LocalVariable",
+            "data": {
+              "span": {
+                "start_offset": 75,
+                "end_offset": 76
+              },
+              "variable_type": {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": null
+                }
+              },
+              "variable": "b"
+            }
+          }
+        }
+      }
+    },
+    "b": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 46,
+        "end_offset": 47
+      },
+      "expression": {
+        "expression": "Int",
+        "data": {
+          "span": {
+            "start_offset": 56,
+            "end_offset": 57
+          },
+          "value": "5",
+          "value_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          }
+        }
+      }
+    },
+    "a": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 29,
+        "end_offset": 30
+      },
+      "expression": {
+        "expression": "True",
+        "data": {
+          "span": {
+            "start_offset": 40,
+            "end_offset": 44
+          },
+          "value_type": {
+            "type": "PrimConstructor",
+            "data": "Bool"
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "c",
+    "b",
+    "a"
+  ]
+}

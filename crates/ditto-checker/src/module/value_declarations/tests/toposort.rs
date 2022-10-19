@@ -1,4 +1,4 @@
-use super::macros::*;
+use super::macros::assert_toposort;
 use ditto_ast::graph::Scc::*;
 
 #[test]

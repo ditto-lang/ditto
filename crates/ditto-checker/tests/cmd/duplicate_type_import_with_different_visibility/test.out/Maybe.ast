@@ -1,0 +1,378 @@
+{
+  "module_name": [
+    "Maybe"
+  ],
+  "exports": {
+    "types": {
+      "Maybe": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Type"
+            ]
+          }
+        }
+      },
+      "Private": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "kind": "Type"
+      }
+    },
+    "constructors": {
+      "Just": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "constructor_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": "a"
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          "Type"
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Maybe"
+                        ]
+                      ],
+                      "value": "Maybe"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Maybe"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 0,
+                      "source_name": "a"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "return_type_name": "Maybe"
+      },
+      "Nothing": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "constructor_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Type"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Maybe"
+                    ]
+                  ],
+                  "value": "Maybe"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "Maybe"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": "a"
+                }
+              }
+            ]
+          }
+        },
+        "return_type_name": "Maybe"
+      }
+    },
+    "values": {
+      "mk_private": {
+        "doc_comments": [],
+        "doc_position": 2,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [],
+            "return_type": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": "Type",
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Maybe"
+                    ]
+                  ],
+                  "value": "Private"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "Private"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Private": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 113,
+        "end_offset": 120
+      },
+      "kind": "Type"
+    },
+    "Maybe": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 77,
+        "end_offset": 82
+      },
+      "kind": {
+        "Function": {
+          "parameters": [
+            "Type"
+          ]
+        }
+      }
+    }
+  },
+  "constructors": {
+    "Private": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 123,
+        "end_offset": 130
+      },
+      "fields": [],
+      "return_type": {
+        "type": "Constructor",
+        "data": {
+          "constructor_kind": "Type",
+          "canonical_value": {
+            "module_name": [
+              null,
+              [
+                "Maybe"
+              ]
+            ],
+            "value": "Private"
+          },
+          "source_value": {
+            "module_name": null,
+            "value": "Private"
+          }
+        }
+      },
+      "return_type_name": "Private"
+    },
+    "Just": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 88,
+        "end_offset": 92
+      },
+      "fields": [
+        {
+          "type": "Variable",
+          "data": {
+            "variable_kind": "Type",
+            "var": 0,
+            "source_name": "a"
+          }
+        }
+      ],
+      "return_type": {
+        "type": "Call",
+        "data": {
+          "function": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": {
+                "Function": {
+                  "parameters": [
+                    "Type"
+                  ]
+                }
+              },
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Maybe"
+                  ]
+                ],
+                "value": "Maybe"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Maybe"
+              }
+            }
+          },
+          "arguments": [
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 0,
+                "source_name": "a"
+              }
+            }
+          ]
+        }
+      },
+      "return_type_name": "Maybe"
+    },
+    "Nothing": {
+      "doc_comments": [],
+      "doc_position": 1,
+      "constructor_name_span": {
+        "start_offset": 98,
+        "end_offset": 105
+      },
+      "fields": [],
+      "return_type": {
+        "type": "Call",
+        "data": {
+          "function": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": {
+                "Function": {
+                  "parameters": [
+                    "Type"
+                  ]
+                }
+              },
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Maybe"
+                  ]
+                ],
+                "value": "Maybe"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Maybe"
+              }
+            }
+          },
+          "arguments": [
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 0,
+                "source_name": "a"
+              }
+            }
+          ]
+        }
+      },
+      "return_type_name": "Maybe"
+    }
+  },
+  "values": {
+    "mk_private": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 133,
+        "end_offset": 143
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 146,
+            "end_offset": 162
+          },
+          "binders": [],
+          "body": {
+            "expression": "LocalConstructor",
+            "data": {
+              "span": {
+                "start_offset": 155,
+                "end_offset": 162
+              },
+              "constructor_type": {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": "Type",
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Maybe"
+                      ]
+                    ],
+                    "value": "Private"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "Private"
+                  }
+                }
+              },
+              "constructor": "Private"
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "mk_private"
+  ]
+}

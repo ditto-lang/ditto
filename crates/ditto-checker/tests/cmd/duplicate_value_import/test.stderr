@@ -1,0 +1,11 @@
+
+  ⚠ duplicate value import
+   ╭─[duplicate_value_import.ditto:2:1]
+ 2 │ 
+ 3 │ import Foo (five, five);
+   ·             ──┬─  ──┬─
+   ·               │     ╰── already imported
+   ·               ╰── previously imported here
+ 4 │ 
+   ╰────
+

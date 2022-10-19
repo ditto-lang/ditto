@@ -1,0 +1,13 @@
+
+  × duplicate import
+   ╭─[duplicate_import_line.ditto:2:1]
+ 2 │ 
+ 3 │ import Dep;
+   · ─────┬────
+   ·      ╰── previous import
+ 4 │ import Dep;
+   · ─────┬────
+   ·      ╰── duplicated here
+ 5 │ 
+   ╰────
+

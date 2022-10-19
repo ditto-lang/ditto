@@ -1,0 +1,8 @@
+module Test exports (..);
+
+import Maybe (
+    Maybe, 
+    Maybe(..),
+);
+
+maybe_fives : Array(Maybe(Bool)) = [Just(true)];

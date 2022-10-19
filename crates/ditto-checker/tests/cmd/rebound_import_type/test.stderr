@@ -1,0 +1,12 @@
+
+  × type `A` imported multiple times
+   ╭─[rebound_import_type.ditto:2:1]
+ 2 │ 
+ 3 │ import Foo (A);
+   ·             ┬
+   ·             ╰── first imported here
+ 4 │ import Bar (A);
+   ·             ┬
+   ·             ╰── imported again here
+   ╰────
+

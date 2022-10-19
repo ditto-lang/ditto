@@ -1,0 +1,230 @@
+{
+  "module_name": [
+    "Dep"
+  ],
+  "exports": {
+    "types": {
+      "Abstract": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "kind": "Type"
+      }
+    },
+    "constructors": {},
+    "values": {
+      "abstract_value": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "value_type": {
+          "type": "Constructor",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Dep"
+                ]
+              ],
+              "value": "Abstract"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "Abstract"
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Abstract": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 53,
+        "end_offset": 61
+      },
+      "kind": "Type"
+    }
+  },
+  "constructors": {
+    "Abstract": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 64,
+        "end_offset": 72
+      },
+      "fields": [
+        {
+          "type": "PrimConstructor",
+          "data": "Int"
+        },
+        {
+          "type": "PrimConstructor",
+          "data": "Bool"
+        },
+        {
+          "type": "PrimConstructor",
+          "data": "Unit"
+        }
+      ],
+      "return_type": {
+        "type": "Constructor",
+        "data": {
+          "constructor_kind": "Type",
+          "canonical_value": {
+            "module_name": [
+              null,
+              [
+                "Dep"
+              ]
+            ],
+            "value": "Abstract"
+          },
+          "source_value": {
+            "module_name": null,
+            "value": "Abstract"
+          }
+        }
+      },
+      "return_type_name": "Abstract"
+    }
+  },
+  "values": {
+    "abstract_value": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 92,
+        "end_offset": 106
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 109,
+            "end_offset": 132
+          },
+          "call_type": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Dep"
+                  ]
+                ],
+                "value": "Abstract"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Abstract"
+              }
+            }
+          },
+          "function": {
+            "expression": "LocalConstructor",
+            "data": {
+              "span": {
+                "start_offset": 109,
+                "end_offset": 117
+              },
+              "constructor_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    },
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Bool"
+                    },
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Unit"
+                    }
+                  ],
+                  "return_type": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": "Type",
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Dep"
+                          ]
+                        ],
+                        "value": "Abstract"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Abstract"
+                      }
+                    }
+                  }
+                }
+              },
+              "constructor": "Abstract"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "Int",
+                "data": {
+                  "span": {
+                    "start_offset": 118,
+                    "end_offset": 119
+                  },
+                  "value": "5",
+                  "value_type": {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  }
+                }
+              }
+            },
+            {
+              "Expression": {
+                "expression": "True",
+                "data": {
+                  "span": {
+                    "start_offset": 121,
+                    "end_offset": 125
+                  },
+                  "value_type": {
+                    "type": "PrimConstructor",
+                    "data": "Bool"
+                  }
+                }
+              }
+            },
+            {
+              "Expression": {
+                "expression": "Unit",
+                "data": {
+                  "span": {
+                    "start_offset": 127,
+                    "end_offset": 131
+                  },
+                  "value_type": {
+                    "type": "PrimConstructor",
+                    "data": "Unit"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "abstract_value"
+  ]
+}

@@ -1,0 +1,3 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["foreign_value_impl.ditto"]
+fs.sandbox = true

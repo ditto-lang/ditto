@@ -1,0 +1,9 @@
+
+  ⚠ unused foreign value
+   ╭─[directly_unused_foreign_value.ditto:2:1]
+ 2 │ 
+ 3 │ foreign unused_impl: (Int) -> Bool;
+   · ─────────────────┬─────────────────
+   ·                  ╰── this isn't being used
+   ╰────
+

@@ -1,0 +1,84 @@
+{
+  "module_name": [
+    "Bar"
+  ],
+  "exports": {
+    "types": {
+      "Bar": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "kind": "Type"
+      }
+    },
+    "constructors": {
+      "A": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "constructor_type": {
+          "type": "Constructor",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Bar"
+                ]
+              ],
+              "value": "Bar"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "Bar"
+            }
+          }
+        },
+        "return_type_name": "Bar"
+      }
+    },
+    "values": {}
+  },
+  "types": {
+    "Bar": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 31,
+        "end_offset": 34
+      },
+      "kind": "Type"
+    }
+  },
+  "constructors": {
+    "A": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 37,
+        "end_offset": 38
+      },
+      "fields": [],
+      "return_type": {
+        "type": "Constructor",
+        "data": {
+          "constructor_kind": "Type",
+          "canonical_value": {
+            "module_name": [
+              null,
+              [
+                "Bar"
+              ]
+            ],
+            "value": "Bar"
+          },
+          "source_value": {
+            "module_name": null,
+            "value": "Bar"
+          }
+        }
+      },
+      "return_type_name": "Bar"
+    }
+  },
+  "values": {},
+  "values_toposort": []
+}

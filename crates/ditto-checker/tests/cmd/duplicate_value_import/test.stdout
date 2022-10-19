@@ -1,0 +1,140 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "fives": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "PrimConstructor",
+              "data": "Array"
+            },
+            "arguments": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "fives": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 53,
+        "end_offset": 58
+      },
+      "expression": {
+        "expression": "Array",
+        "data": {
+          "span": {
+            "start_offset": 61,
+            "end_offset": 79
+          },
+          "element_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          },
+          "elements": [
+            {
+              "expression": "ImportedVariable",
+              "data": {
+                "span": {
+                  "start_offset": 62,
+                  "end_offset": 66
+                },
+                "variable_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                },
+                "variable": {
+                  "module_name": [
+                    null,
+                    [
+                      "Foo"
+                    ]
+                  ],
+                  "value": "five"
+                }
+              }
+            },
+            {
+              "expression": "ImportedVariable",
+              "data": {
+                "span": {
+                  "start_offset": 68,
+                  "end_offset": 72
+                },
+                "variable_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                },
+                "variable": {
+                  "module_name": [
+                    null,
+                    [
+                      "Foo"
+                    ]
+                  ],
+                  "value": "five"
+                }
+              }
+            },
+            {
+              "expression": "ImportedVariable",
+              "data": {
+                "span": {
+                  "start_offset": 74,
+                  "end_offset": 78
+                },
+                "variable_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                },
+                "variable": {
+                  "module_name": [
+                    null,
+                    [
+                      "Foo"
+                    ]
+                  ],
+                  "value": "five"
+                }
+              }
+            }
+          ],
+          "value_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "PrimConstructor",
+                "data": "Array"
+              },
+              "arguments": [
+                {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "fives"
+  ]
+}

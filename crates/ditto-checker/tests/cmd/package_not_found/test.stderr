@@ -1,0 +1,11 @@
+
+  × package not found
+   ╭─[package_not_found.ditto:2:1]
+ 2 │ 
+ 3 │ import (wut) Huh (nah);
+   ·         ─┬─
+   ·          ╰── not installed
+ 4 │ 
+   ╰────
+  help: try adding `wut` to your dependencies?
+

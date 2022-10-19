@@ -1,0 +1,150 @@
+{
+  "module_name": [
+    "Foo"
+  ],
+  "exports": {
+    "types": {
+      "A": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "kind": {
+          "Function": {
+            "parameters": [
+              {
+                "Variable": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    "constructors": {
+      "A": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "constructor_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      {
+                        "Variable": 1
+                      }
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Foo"
+                    ]
+                  ],
+                  "value": "A"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "A"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": {
+                    "Variable": 1
+                  },
+                  "var": 0,
+                  "source_name": "a"
+                }
+              }
+            ]
+          }
+        },
+        "return_type_name": "A"
+      }
+    },
+    "values": {}
+  },
+  "types": {
+    "A": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 31,
+        "end_offset": 32
+      },
+      "kind": {
+        "Function": {
+          "parameters": [
+            {
+              "Variable": 1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "constructors": {
+    "A": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 38,
+        "end_offset": 39
+      },
+      "fields": [],
+      "return_type": {
+        "type": "Call",
+        "data": {
+          "function": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": {
+                "Function": {
+                  "parameters": [
+                    {
+                      "Variable": 1
+                    }
+                  ]
+                }
+              },
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Foo"
+                  ]
+                ],
+                "value": "A"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "A"
+              }
+            }
+          },
+          "arguments": [
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": {
+                  "Variable": 1
+                },
+                "var": 0,
+                "source_name": "a"
+              }
+            }
+          ]
+        }
+      },
+      "return_type_name": "A"
+    }
+  },
+  "values": {},
+  "values_toposort": []
+}

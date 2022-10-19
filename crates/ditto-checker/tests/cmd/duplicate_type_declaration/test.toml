@@ -1,0 +1,4 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["duplicate_type_declaration.ditto"]
+fs.sandbox = true
+status = "failed"

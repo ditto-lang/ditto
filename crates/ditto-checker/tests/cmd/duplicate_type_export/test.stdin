@@ -1,0 +1,9 @@
+module Test exports (
+    A, 
+    A, 
+    a,
+);
+
+type A = A;
+
+a = A;

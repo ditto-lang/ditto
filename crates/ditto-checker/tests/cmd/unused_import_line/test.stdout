@@ -1,0 +1,47 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Int"
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 40,
+        "end_offset": 44
+      },
+      "expression": {
+        "expression": "Int",
+        "data": {
+          "span": {
+            "start_offset": 47,
+            "end_offset": 48
+          },
+          "value": "5",
+          "value_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "five"
+  ]
+}

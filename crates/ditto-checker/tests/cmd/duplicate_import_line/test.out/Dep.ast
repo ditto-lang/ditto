@@ -1,0 +1,47 @@
+{
+  "module_name": [
+    "Dep"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Int"
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 26,
+        "end_offset": 30
+      },
+      "expression": {
+        "expression": "Int",
+        "data": {
+          "span": {
+            "start_offset": 33,
+            "end_offset": 34
+          },
+          "value": "5",
+          "value_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "five"
+  ]
+}

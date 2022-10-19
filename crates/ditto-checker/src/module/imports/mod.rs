@@ -1,6 +1,3 @@
-#[cfg(test)]
-mod tests;
-
 use crate::{
     collections::PristineMap,
     result::{Result, TypeError, Warning, Warnings},
@@ -16,7 +13,7 @@ use non_empty_vec::NonEmpty;
 use std::collections::HashMap;
 
 /// The available module scope. Maybe `Includes` would be a better name...
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct Everything {
     /// Available packages.
     pub packages: HashMap<PackageName, Modules>,

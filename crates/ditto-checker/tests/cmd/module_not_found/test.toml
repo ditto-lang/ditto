@@ -1,0 +1,4 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["module_not_found.ditto"]
+fs.sandbox = true
+status = "failed"

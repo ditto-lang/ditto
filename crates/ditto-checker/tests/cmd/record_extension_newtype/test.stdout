@@ -1,0 +1,3419 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "ExtendMe": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Row"
+            ]
+          }
+        }
+      },
+      "ExtendedClosed": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "kind": "Type"
+      },
+      "ExtendedOpen": {
+        "doc_comments": [],
+        "doc_position": 2,
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Row"
+            ]
+          }
+        }
+      }
+    },
+    "constructors": {
+      "Closed": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "constructor_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Row"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "ExtendedOpen"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "ExtendedOpen"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "RecordClosed",
+                      "data": {
+                        "kind": "Row",
+                        "row": {
+                          "baz": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": "Type",
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "ExtendedClosed"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "ExtendedClosed"
+                }
+              }
+            }
+          }
+        },
+        "return_type_name": "ExtendedClosed"
+      },
+      "ExtendMe": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "constructor_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "RecordOpen",
+                "data": {
+                  "kind": "Type",
+                  "var": 0,
+                  "source_name": "r",
+                  "row": {
+                    "foo": {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  }
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          "Row"
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Test"
+                        ]
+                      ],
+                      "value": "ExtendMe"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "ExtendMe"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Row",
+                      "var": 0,
+                      "source_name": "r"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "return_type_name": "ExtendMe"
+      },
+      "Open": {
+        "doc_comments": [],
+        "doc_position": 2,
+        "constructor_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Row"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "ExtendMe"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "ExtendMe"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "RecordOpen",
+                      "data": {
+                        "kind": "Row",
+                        "var": 0,
+                        "source_name": "r",
+                        "row": {
+                          "bar": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          "Row"
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Test"
+                        ]
+                      ],
+                      "value": "ExtendedOpen"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "ExtendedOpen"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Row",
+                      "var": 0,
+                      "source_name": "r"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "return_type_name": "ExtendedOpen"
+      }
+    },
+    "values": {
+      "extended0": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Row"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "ExtendMe"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "ExtendMe"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "RecordClosed",
+                "data": {
+                  "kind": "Type",
+                  "row": {
+                    "foo": {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "extended1": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "value_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Row"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "ExtendMe"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "ExtendMe"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "RecordClosed",
+                "data": {
+                  "kind": "Type",
+                  "row": {
+                    "foo": {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    },
+                    "bar": {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "extended2": {
+        "doc_comments": [],
+        "doc_position": 2,
+        "value_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Row"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "ExtendMe"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "ExtendMe"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "RecordClosed",
+                "data": {
+                  "kind": "Row",
+                  "row": {
+                    "bar": {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    },
+                    "baz": {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "extended_closed": {
+        "doc_comments": [],
+        "doc_position": 3,
+        "value_type": {
+          "type": "Constructor",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Test"
+                ]
+              ],
+              "value": "ExtendedClosed"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "ExtendedClosed"
+            }
+          }
+        }
+      },
+      "extended_open0": {
+        "doc_comments": [],
+        "doc_position": 4,
+        "value_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Row"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "ExtendedOpen"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "ExtendedOpen"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "RecordClosed",
+                "data": {
+                  "kind": "Row",
+                  "row": {}
+                }
+              }
+            ]
+          }
+        }
+      },
+      "extended_open1": {
+        "doc_comments": [],
+        "doc_position": 5,
+        "value_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Row"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "ExtendedOpen"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "ExtendedOpen"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "RecordClosed",
+                "data": {
+                  "kind": "Row",
+                  "row": {
+                    "baz": {
+                      "type": "PrimConstructor",
+                      "data": "Unit"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "get_foo": {
+        "doc_comments": [],
+        "doc_position": 6,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Row"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "ExtendMe"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "ExtendMe"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "RecordOpen",
+                      "data": {
+                        "kind": "Type",
+                        "var": 6,
+                        "source_name": null,
+                        "row": {
+                          "foo": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "return_type": {
+              "type": "PrimConstructor",
+              "data": "Int"
+            }
+          }
+        }
+      },
+      "unwrap_extend_me0": {
+        "doc_comments": [
+          "extended3 = ExtendMe({ bar = 2 });   ERROR"
+        ],
+        "doc_position": 7,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Row"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "ExtendMe"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "ExtendMe"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "RecordOpen",
+                      "data": {
+                        "kind": "Type",
+                        "var": 4,
+                        "source_name": "r",
+                        "row": {
+                          "foo": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "return_type": {
+              "type": "RecordOpen",
+              "data": {
+                "kind": "Type",
+                "var": 4,
+                "source_name": "r",
+                "row": {
+                  "foo": {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "unwrap_extend_me1": {
+        "doc_comments": [],
+        "doc_position": 8,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Row"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "ExtendMe"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "ExtendMe"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "RecordClosed",
+                      "data": {
+                        "kind": "Type",
+                        "row": {
+                          "foo": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "return_type": {
+              "type": "RecordClosed",
+              "data": {
+                "kind": "Type",
+                "row": {
+                  "foo": {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "ExtendMe": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 32,
+        "end_offset": 40
+      },
+      "kind": {
+        "Function": {
+          "parameters": [
+            "Row"
+          ]
+        }
+      }
+    },
+    "ExtendedOpen": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 515,
+        "end_offset": 527
+      },
+      "kind": {
+        "Function": {
+          "parameters": [
+            "Row"
+          ]
+        }
+      }
+    },
+    "ExtendedClosed": {
+      "doc_comments": [],
+      "type_name_span": {
+        "start_offset": 744,
+        "end_offset": 758
+      },
+      "kind": "Type"
+    }
+  },
+  "constructors": {
+    "ExtendMe": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 46,
+        "end_offset": 54
+      },
+      "fields": [
+        {
+          "type": "RecordOpen",
+          "data": {
+            "kind": "Type",
+            "var": 0,
+            "source_name": "r",
+            "row": {
+              "foo": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            }
+          }
+        }
+      ],
+      "return_type": {
+        "type": "Call",
+        "data": {
+          "function": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": {
+                "Function": {
+                  "parameters": [
+                    "Row"
+                  ]
+                }
+              },
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Test"
+                  ]
+                ],
+                "value": "ExtendMe"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "ExtendMe"
+              }
+            }
+          },
+          "arguments": [
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Row",
+                "var": 0,
+                "source_name": "r"
+              }
+            }
+          ]
+        }
+      },
+      "return_type_name": "ExtendMe"
+    },
+    "Open": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 533,
+        "end_offset": 537
+      },
+      "fields": [
+        {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Row"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "ExtendMe"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "ExtendMe"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "RecordOpen",
+                "data": {
+                  "kind": "Row",
+                  "var": 0,
+                  "source_name": "r",
+                  "row": {
+                    "bar": {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "return_type": {
+        "type": "Call",
+        "data": {
+          "function": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": {
+                "Function": {
+                  "parameters": [
+                    "Row"
+                  ]
+                }
+              },
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Test"
+                  ]
+                ],
+                "value": "ExtendedOpen"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "ExtendedOpen"
+              }
+            }
+          },
+          "arguments": [
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Row",
+                "var": 0,
+                "source_name": "r"
+              }
+            }
+          ]
+        }
+      },
+      "return_type_name": "ExtendedOpen"
+    },
+    "Closed": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 761,
+        "end_offset": 767
+      },
+      "fields": [
+        {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Row"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "ExtendedOpen"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "ExtendedOpen"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "RecordClosed",
+                "data": {
+                  "kind": "Row",
+                  "row": {
+                    "baz": {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "return_type": {
+        "type": "Constructor",
+        "data": {
+          "constructor_kind": "Type",
+          "canonical_value": {
+            "module_name": [
+              null,
+              [
+                "Test"
+              ]
+            ],
+            "value": "ExtendedClosed"
+          },
+          "source_value": {
+            "module_name": null,
+            "value": "ExtendedClosed"
+          }
+        }
+      },
+      "return_type_name": "ExtendedClosed"
+    }
+  },
+  "values": {
+    "extended_closed": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 797,
+        "end_offset": 812
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 832,
+            "end_offset": 898
+          },
+          "call_type": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Test"
+                  ]
+                ],
+                "value": "ExtendedClosed"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "ExtendedClosed"
+              }
+            }
+          },
+          "function": {
+            "expression": "LocalConstructor",
+            "data": {
+              "span": {
+                "start_offset": 832,
+                "end_offset": 838
+              },
+              "constructor_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "Call",
+                      "data": {
+                        "function": {
+                          "type": "Constructor",
+                          "data": {
+                            "constructor_kind": {
+                              "Function": {
+                                "parameters": [
+                                  "Row"
+                                ]
+                              }
+                            },
+                            "canonical_value": {
+                              "module_name": [
+                                null,
+                                [
+                                  "Test"
+                                ]
+                              ],
+                              "value": "ExtendedOpen"
+                            },
+                            "source_value": {
+                              "module_name": null,
+                              "value": "ExtendedOpen"
+                            }
+                          }
+                        },
+                        "arguments": [
+                          {
+                            "type": "RecordClosed",
+                            "data": {
+                              "kind": "Row",
+                              "row": {
+                                "baz": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "return_type": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": "Type",
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "ExtendedClosed"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "ExtendedClosed"
+                      }
+                    }
+                  }
+                }
+              },
+              "constructor": "Closed"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "Call",
+                "data": {
+                  "span": {
+                    "start_offset": 839,
+                    "end_offset": 897
+                  },
+                  "call_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Row"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "ExtendedOpen"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "ExtendedOpen"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "RecordClosed",
+                          "data": {
+                            "kind": "Row",
+                            "row": {
+                              "baz": {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "function": {
+                    "expression": "LocalConstructor",
+                    "data": {
+                      "span": {
+                        "start_offset": 839,
+                        "end_offset": 843
+                      },
+                      "constructor_type": {
+                        "type": "Function",
+                        "data": {
+                          "parameters": [
+                            {
+                              "type": "Call",
+                              "data": {
+                                "function": {
+                                  "type": "Constructor",
+                                  "data": {
+                                    "constructor_kind": {
+                                      "Function": {
+                                        "parameters": [
+                                          "Row"
+                                        ]
+                                      }
+                                    },
+                                    "canonical_value": {
+                                      "module_name": [
+                                        null,
+                                        [
+                                          "Test"
+                                        ]
+                                      ],
+                                      "value": "ExtendMe"
+                                    },
+                                    "source_value": {
+                                      "module_name": null,
+                                      "value": "ExtendMe"
+                                    }
+                                  }
+                                },
+                                "arguments": [
+                                  {
+                                    "type": "RecordClosed",
+                                    "data": {
+                                      "kind": "Type",
+                                      "row": {
+                                        "bar": {
+                                          "type": "PrimConstructor",
+                                          "data": "Int"
+                                        },
+                                        "baz": {
+                                          "type": "PrimConstructor",
+                                          "data": "Int"
+                                        }
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ],
+                          "return_type": {
+                            "type": "Call",
+                            "data": {
+                              "function": {
+                                "type": "Constructor",
+                                "data": {
+                                  "constructor_kind": {
+                                    "Function": {
+                                      "parameters": [
+                                        "Row"
+                                      ]
+                                    }
+                                  },
+                                  "canonical_value": {
+                                    "module_name": [
+                                      null,
+                                      [
+                                        "Test"
+                                      ]
+                                    ],
+                                    "value": "ExtendedOpen"
+                                  },
+                                  "source_value": {
+                                    "module_name": null,
+                                    "value": "ExtendedOpen"
+                                  }
+                                }
+                              },
+                              "arguments": [
+                                {
+                                  "type": "RecordClosed",
+                                  "data": {
+                                    "kind": "Row",
+                                    "row": {
+                                      "baz": {
+                                        "type": "PrimConstructor",
+                                        "data": "Int"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "constructor": "Open"
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "Expression": {
+                        "expression": "Call",
+                        "data": {
+                          "span": {
+                            "start_offset": 844,
+                            "end_offset": 896
+                          },
+                          "call_type": {
+                            "type": "Call",
+                            "data": {
+                              "function": {
+                                "type": "Constructor",
+                                "data": {
+                                  "constructor_kind": {
+                                    "Function": {
+                                      "parameters": [
+                                        "Row"
+                                      ]
+                                    }
+                                  },
+                                  "canonical_value": {
+                                    "module_name": [
+                                      null,
+                                      [
+                                        "Test"
+                                      ]
+                                    ],
+                                    "value": "ExtendMe"
+                                  },
+                                  "source_value": {
+                                    "module_name": null,
+                                    "value": "ExtendMe"
+                                  }
+                                }
+                              },
+                              "arguments": [
+                                {
+                                  "type": "RecordClosed",
+                                  "data": {
+                                    "kind": "Type",
+                                    "row": {
+                                      "bar": {
+                                        "type": "PrimConstructor",
+                                        "data": "Int"
+                                      },
+                                      "baz": {
+                                        "type": "PrimConstructor",
+                                        "data": "Int"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "function": {
+                            "expression": "LocalConstructor",
+                            "data": {
+                              "span": {
+                                "start_offset": 844,
+                                "end_offset": 852
+                              },
+                              "constructor_type": {
+                                "type": "Function",
+                                "data": {
+                                  "parameters": [
+                                    {
+                                      "type": "RecordClosed",
+                                      "data": {
+                                        "kind": "Type",
+                                        "row": {
+                                          "foo": {
+                                            "type": "PrimConstructor",
+                                            "data": "Int"
+                                          },
+                                          "bar": {
+                                            "type": "PrimConstructor",
+                                            "data": "Int"
+                                          },
+                                          "baz": {
+                                            "type": "PrimConstructor",
+                                            "data": "Int"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ],
+                                  "return_type": {
+                                    "type": "Call",
+                                    "data": {
+                                      "function": {
+                                        "type": "Constructor",
+                                        "data": {
+                                          "constructor_kind": {
+                                            "Function": {
+                                              "parameters": [
+                                                "Row"
+                                              ]
+                                            }
+                                          },
+                                          "canonical_value": {
+                                            "module_name": [
+                                              null,
+                                              [
+                                                "Test"
+                                              ]
+                                            ],
+                                            "value": "ExtendMe"
+                                          },
+                                          "source_value": {
+                                            "module_name": null,
+                                            "value": "ExtendMe"
+                                          }
+                                        }
+                                      },
+                                      "arguments": [
+                                        {
+                                          "type": "RecordClosed",
+                                          "data": {
+                                            "kind": "Type",
+                                            "row": {
+                                              "bar": {
+                                                "type": "PrimConstructor",
+                                                "data": "Int"
+                                              },
+                                              "baz": {
+                                                "type": "PrimConstructor",
+                                                "data": "Int"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              },
+                              "constructor": "ExtendMe"
+                            }
+                          },
+                          "arguments": [
+                            {
+                              "Expression": {
+                                "expression": "Record",
+                                "data": {
+                                  "span": {
+                                    "start_offset": 853,
+                                    "end_offset": 895
+                                  },
+                                  "fields": {
+                                    "foo": {
+                                      "expression": "Int",
+                                      "data": {
+                                        "span": {
+                                          "start_offset": 865,
+                                          "end_offset": 866
+                                        },
+                                        "value": "1",
+                                        "value_type": {
+                                          "type": "PrimConstructor",
+                                          "data": "Int"
+                                        }
+                                      }
+                                    },
+                                    "bar": {
+                                      "expression": "Int",
+                                      "data": {
+                                        "span": {
+                                          "start_offset": 878,
+                                          "end_offset": 879
+                                        },
+                                        "value": "2",
+                                        "value_type": {
+                                          "type": "PrimConstructor",
+                                          "data": "Int"
+                                        }
+                                      }
+                                    },
+                                    "baz": {
+                                      "expression": "Int",
+                                      "data": {
+                                        "span": {
+                                          "start_offset": 891,
+                                          "end_offset": 892
+                                        },
+                                        "value": "3",
+                                        "value_type": {
+                                          "type": "PrimConstructor",
+                                          "data": "Int"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "extended_open1": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 641,
+        "end_offset": 655
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 688,
+            "end_offset": 736
+          },
+          "call_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Row"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "ExtendedOpen"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "ExtendedOpen"
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "RecordClosed",
+                  "data": {
+                    "kind": "Row",
+                    "row": {
+                      "baz": {
+                        "type": "PrimConstructor",
+                        "data": "Unit"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "function": {
+            "expression": "LocalConstructor",
+            "data": {
+              "span": {
+                "start_offset": 688,
+                "end_offset": 692
+              },
+              "constructor_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "Call",
+                      "data": {
+                        "function": {
+                          "type": "Constructor",
+                          "data": {
+                            "constructor_kind": {
+                              "Function": {
+                                "parameters": [
+                                  "Row"
+                                ]
+                              }
+                            },
+                            "canonical_value": {
+                              "module_name": [
+                                null,
+                                [
+                                  "Test"
+                                ]
+                              ],
+                              "value": "ExtendMe"
+                            },
+                            "source_value": {
+                              "module_name": null,
+                              "value": "ExtendMe"
+                            }
+                          }
+                        },
+                        "arguments": [
+                          {
+                            "type": "RecordClosed",
+                            "data": {
+                              "kind": "Type",
+                              "row": {
+                                "bar": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                },
+                                "baz": {
+                                  "type": "PrimConstructor",
+                                  "data": "Unit"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "return_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Row"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "ExtendedOpen"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "ExtendedOpen"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "RecordClosed",
+                          "data": {
+                            "kind": "Row",
+                            "row": {
+                              "baz": {
+                                "type": "PrimConstructor",
+                                "data": "Unit"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "constructor": "Open"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "Call",
+                "data": {
+                  "span": {
+                    "start_offset": 693,
+                    "end_offset": 735
+                  },
+                  "call_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Row"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "ExtendMe"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "ExtendMe"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "RecordClosed",
+                          "data": {
+                            "kind": "Type",
+                            "row": {
+                              "bar": {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              },
+                              "baz": {
+                                "type": "PrimConstructor",
+                                "data": "Unit"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "function": {
+                    "expression": "LocalConstructor",
+                    "data": {
+                      "span": {
+                        "start_offset": 693,
+                        "end_offset": 701
+                      },
+                      "constructor_type": {
+                        "type": "Function",
+                        "data": {
+                          "parameters": [
+                            {
+                              "type": "RecordClosed",
+                              "data": {
+                                "kind": "Type",
+                                "row": {
+                                  "foo": {
+                                    "type": "PrimConstructor",
+                                    "data": "Int"
+                                  },
+                                  "bar": {
+                                    "type": "PrimConstructor",
+                                    "data": "Int"
+                                  },
+                                  "baz": {
+                                    "type": "PrimConstructor",
+                                    "data": "Unit"
+                                  }
+                                }
+                              }
+                            }
+                          ],
+                          "return_type": {
+                            "type": "Call",
+                            "data": {
+                              "function": {
+                                "type": "Constructor",
+                                "data": {
+                                  "constructor_kind": {
+                                    "Function": {
+                                      "parameters": [
+                                        "Row"
+                                      ]
+                                    }
+                                  },
+                                  "canonical_value": {
+                                    "module_name": [
+                                      null,
+                                      [
+                                        "Test"
+                                      ]
+                                    ],
+                                    "value": "ExtendMe"
+                                  },
+                                  "source_value": {
+                                    "module_name": null,
+                                    "value": "ExtendMe"
+                                  }
+                                }
+                              },
+                              "arguments": [
+                                {
+                                  "type": "RecordClosed",
+                                  "data": {
+                                    "kind": "Type",
+                                    "row": {
+                                      "bar": {
+                                        "type": "PrimConstructor",
+                                        "data": "Int"
+                                      },
+                                      "baz": {
+                                        "type": "PrimConstructor",
+                                        "data": "Unit"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "constructor": "ExtendMe"
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "Expression": {
+                        "expression": "Record",
+                        "data": {
+                          "span": {
+                            "start_offset": 702,
+                            "end_offset": 734
+                          },
+                          "fields": {
+                            "foo": {
+                              "expression": "Int",
+                              "data": {
+                                "span": {
+                                  "start_offset": 710,
+                                  "end_offset": 711
+                                },
+                                "value": "1",
+                                "value_type": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                }
+                              }
+                            },
+                            "bar": {
+                              "expression": "Int",
+                              "data": {
+                                "span": {
+                                  "start_offset": 719,
+                                  "end_offset": 720
+                                },
+                                "value": "2",
+                                "value_type": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                }
+                              }
+                            },
+                            "baz": {
+                              "expression": "Unit",
+                              "data": {
+                                "span": {
+                                  "start_offset": 728,
+                                  "end_offset": 732
+                                },
+                                "value_type": {
+                                  "type": "PrimConstructor",
+                                  "data": "Unit"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "extended_open0": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 568,
+        "end_offset": 582
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 604,
+            "end_offset": 639
+          },
+          "call_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Row"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "ExtendedOpen"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "ExtendedOpen"
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "RecordClosed",
+                  "data": {
+                    "kind": "Row",
+                    "row": {}
+                  }
+                }
+              ]
+            }
+          },
+          "function": {
+            "expression": "LocalConstructor",
+            "data": {
+              "span": {
+                "start_offset": 604,
+                "end_offset": 608
+              },
+              "constructor_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "Call",
+                      "data": {
+                        "function": {
+                          "type": "Constructor",
+                          "data": {
+                            "constructor_kind": {
+                              "Function": {
+                                "parameters": [
+                                  "Row"
+                                ]
+                              }
+                            },
+                            "canonical_value": {
+                              "module_name": [
+                                null,
+                                [
+                                  "Test"
+                                ]
+                              ],
+                              "value": "ExtendMe"
+                            },
+                            "source_value": {
+                              "module_name": null,
+                              "value": "ExtendMe"
+                            }
+                          }
+                        },
+                        "arguments": [
+                          {
+                            "type": "RecordClosed",
+                            "data": {
+                              "kind": "Type",
+                              "row": {
+                                "bar": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "return_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Row"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "ExtendedOpen"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "ExtendedOpen"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "RecordClosed",
+                          "data": {
+                            "kind": "Row",
+                            "row": {}
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "constructor": "Open"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "Call",
+                "data": {
+                  "span": {
+                    "start_offset": 609,
+                    "end_offset": 638
+                  },
+                  "call_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Row"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "ExtendMe"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "ExtendMe"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "RecordClosed",
+                          "data": {
+                            "kind": "Type",
+                            "row": {
+                              "bar": {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "function": {
+                    "expression": "LocalConstructor",
+                    "data": {
+                      "span": {
+                        "start_offset": 609,
+                        "end_offset": 617
+                      },
+                      "constructor_type": {
+                        "type": "Function",
+                        "data": {
+                          "parameters": [
+                            {
+                              "type": "RecordClosed",
+                              "data": {
+                                "kind": "Type",
+                                "row": {
+                                  "foo": {
+                                    "type": "PrimConstructor",
+                                    "data": "Int"
+                                  },
+                                  "bar": {
+                                    "type": "PrimConstructor",
+                                    "data": "Int"
+                                  }
+                                }
+                              }
+                            }
+                          ],
+                          "return_type": {
+                            "type": "Call",
+                            "data": {
+                              "function": {
+                                "type": "Constructor",
+                                "data": {
+                                  "constructor_kind": {
+                                    "Function": {
+                                      "parameters": [
+                                        "Row"
+                                      ]
+                                    }
+                                  },
+                                  "canonical_value": {
+                                    "module_name": [
+                                      null,
+                                      [
+                                        "Test"
+                                      ]
+                                    ],
+                                    "value": "ExtendMe"
+                                  },
+                                  "source_value": {
+                                    "module_name": null,
+                                    "value": "ExtendMe"
+                                  }
+                                }
+                              },
+                              "arguments": [
+                                {
+                                  "type": "RecordClosed",
+                                  "data": {
+                                    "kind": "Type",
+                                    "row": {
+                                      "bar": {
+                                        "type": "PrimConstructor",
+                                        "data": "Int"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "constructor": "ExtendMe"
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "Expression": {
+                        "expression": "Record",
+                        "data": {
+                          "span": {
+                            "start_offset": 618,
+                            "end_offset": 637
+                          },
+                          "fields": {
+                            "foo": {
+                              "expression": "Int",
+                              "data": {
+                                "span": {
+                                  "start_offset": 626,
+                                  "end_offset": 627
+                                },
+                                "value": "1",
+                                "value_type": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                }
+                              }
+                            },
+                            "bar": {
+                              "expression": "Int",
+                              "data": {
+                                "span": {
+                                  "start_offset": 635,
+                                  "end_offset": 636
+                                },
+                                "value": "2",
+                                "value_type": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "unwrap_extend_me1": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 376,
+        "end_offset": 393
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 396,
+            "end_offset": 456
+          },
+          "binders": [
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 400,
+                  "end_offset": 401
+                },
+                "binder_type": {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "Constructor",
+                      "data": {
+                        "constructor_kind": {
+                          "Function": {
+                            "parameters": [
+                              "Row"
+                            ]
+                          }
+                        },
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "ExtendMe"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "ExtendMe"
+                        }
+                      }
+                    },
+                    "arguments": [
+                      {
+                        "type": "RecordClosed",
+                        "data": {
+                          "kind": "Type",
+                          "row": {
+                            "foo": {
+                              "type": "PrimConstructor",
+                              "data": "Int"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "value": "e"
+              }
+            }
+          ],
+          "body": {
+            "expression": "Match",
+            "data": {
+              "span": {
+                "start_offset": 421,
+                "end_offset": 456
+              },
+              "match_type": {
+                "type": "RecordClosed",
+                "data": {
+                  "kind": "Type",
+                  "row": {
+                    "foo": {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "expression": "LocalVariable",
+                "data": {
+                  "span": {
+                    "start_offset": 427,
+                    "end_offset": 428
+                  },
+                  "variable_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Row"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "ExtendMe"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "ExtendMe"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "RecordClosed",
+                          "data": {
+                            "kind": "Type",
+                            "row": {
+                              "foo": {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "variable": "e"
+                }
+              },
+              "arms": [
+                [
+                  {
+                    "LocalConstructor": {
+                      "span": {
+                        "start_offset": 436,
+                        "end_offset": 447
+                      },
+                      "constructor": "ExtendMe",
+                      "arguments": [
+                        {
+                          "Variable": {
+                            "span": {
+                              "start_offset": 445,
+                              "end_offset": 446
+                            },
+                            "name": "r"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "expression": "LocalVariable",
+                    "data": {
+                      "span": {
+                        "start_offset": 451,
+                        "end_offset": 452
+                      },
+                      "variable_type": {
+                        "type": "RecordClosed",
+                        "data": {
+                          "kind": "Type",
+                          "row": {
+                            "foo": {
+                              "type": "PrimConstructor",
+                              "data": "Int"
+                            }
+                          }
+                        }
+                      },
+                      "variable": "r"
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    "unwrap_extend_me0": {
+      "doc_comments": [
+        "extended3 = ExtendMe({ bar = 2 });   ERROR"
+      ],
+      "name_span": {
+        "start_offset": 290,
+        "end_offset": 307
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 310,
+            "end_offset": 374
+          },
+          "binders": [
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 314,
+                  "end_offset": 315
+                },
+                "binder_type": {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "Constructor",
+                      "data": {
+                        "constructor_kind": {
+                          "Function": {
+                            "parameters": [
+                              "Row"
+                            ]
+                          }
+                        },
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "ExtendMe"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "ExtendMe"
+                        }
+                      }
+                    },
+                    "arguments": [
+                      {
+                        "type": "RecordOpen",
+                        "data": {
+                          "kind": "Type",
+                          "var": 4,
+                          "source_name": "r",
+                          "row": {
+                            "foo": {
+                              "type": "PrimConstructor",
+                              "data": "Int"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "value": "e"
+              }
+            }
+          ],
+          "body": {
+            "expression": "Match",
+            "data": {
+              "span": {
+                "start_offset": 339,
+                "end_offset": 374
+              },
+              "match_type": {
+                "type": "RecordOpen",
+                "data": {
+                  "kind": "Type",
+                  "var": 4,
+                  "source_name": "r",
+                  "row": {
+                    "foo": {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "expression": "LocalVariable",
+                "data": {
+                  "span": {
+                    "start_offset": 345,
+                    "end_offset": 346
+                  },
+                  "variable_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Row"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "ExtendMe"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "ExtendMe"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "RecordOpen",
+                          "data": {
+                            "kind": "Type",
+                            "var": 4,
+                            "source_name": "r",
+                            "row": {
+                              "foo": {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "variable": "e"
+                }
+              },
+              "arms": [
+                [
+                  {
+                    "LocalConstructor": {
+                      "span": {
+                        "start_offset": 354,
+                        "end_offset": 365
+                      },
+                      "constructor": "ExtendMe",
+                      "arguments": [
+                        {
+                          "Variable": {
+                            "span": {
+                              "start_offset": 363,
+                              "end_offset": 364
+                            },
+                            "name": "r"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "expression": "LocalVariable",
+                    "data": {
+                      "span": {
+                        "start_offset": 369,
+                        "end_offset": 370
+                      },
+                      "variable_type": {
+                        "type": "RecordOpen",
+                        "data": {
+                          "kind": "Type",
+                          "var": 4,
+                          "source_name": "r",
+                          "row": {
+                            "foo": {
+                              "type": "PrimConstructor",
+                              "data": "Int"
+                            }
+                          }
+                        }
+                      },
+                      "variable": "r"
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    "get_foo": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 458,
+        "end_offset": 465
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 468,
+            "end_offset": 507
+          },
+          "binders": [
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 472,
+                  "end_offset": 473
+                },
+                "binder_type": {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "Constructor",
+                      "data": {
+                        "constructor_kind": {
+                          "Function": {
+                            "parameters": [
+                              "Row"
+                            ]
+                          }
+                        },
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "ExtendMe"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "ExtendMe"
+                        }
+                      }
+                    },
+                    "arguments": [
+                      {
+                        "type": "RecordOpen",
+                        "data": {
+                          "kind": "Type",
+                          "var": 6,
+                          "source_name": null,
+                          "row": {
+                            "foo": {
+                              "type": "PrimConstructor",
+                              "data": "Int"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "value": "e"
+              }
+            }
+          ],
+          "body": {
+            "expression": "RecordAccess",
+            "data": {
+              "span": {
+                "start_offset": 483,
+                "end_offset": 507
+              },
+              "field_type": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              },
+              "target": {
+                "expression": "Call",
+                "data": {
+                  "span": {
+                    "start_offset": 483,
+                    "end_offset": 503
+                  },
+                  "call_type": {
+                    "type": "RecordOpen",
+                    "data": {
+                      "kind": "Type",
+                      "var": 6,
+                      "source_name": null,
+                      "row": {
+                        "foo": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      }
+                    }
+                  },
+                  "function": {
+                    "expression": "LocalVariable",
+                    "data": {
+                      "span": {
+                        "start_offset": 483,
+                        "end_offset": 500
+                      },
+                      "variable_type": {
+                        "type": "Function",
+                        "data": {
+                          "parameters": [
+                            {
+                              "type": "Call",
+                              "data": {
+                                "function": {
+                                  "type": "Constructor",
+                                  "data": {
+                                    "constructor_kind": {
+                                      "Function": {
+                                        "parameters": [
+                                          "Row"
+                                        ]
+                                      }
+                                    },
+                                    "canonical_value": {
+                                      "module_name": [
+                                        null,
+                                        [
+                                          "Test"
+                                        ]
+                                      ],
+                                      "value": "ExtendMe"
+                                    },
+                                    "source_value": {
+                                      "module_name": null,
+                                      "value": "ExtendMe"
+                                    }
+                                  }
+                                },
+                                "arguments": [
+                                  {
+                                    "type": "RecordOpen",
+                                    "data": {
+                                      "kind": "Type",
+                                      "var": 6,
+                                      "source_name": null,
+                                      "row": {
+                                        "foo": {
+                                          "type": "PrimConstructor",
+                                          "data": "Int"
+                                        }
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ],
+                          "return_type": {
+                            "type": "RecordOpen",
+                            "data": {
+                              "kind": "Type",
+                              "var": 6,
+                              "source_name": null,
+                              "row": {
+                                "foo": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "variable": "unwrap_extend_me0"
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "Expression": {
+                        "expression": "LocalVariable",
+                        "data": {
+                          "span": {
+                            "start_offset": 501,
+                            "end_offset": 502
+                          },
+                          "variable_type": {
+                            "type": "Call",
+                            "data": {
+                              "function": {
+                                "type": "Constructor",
+                                "data": {
+                                  "constructor_kind": {
+                                    "Function": {
+                                      "parameters": [
+                                        "Row"
+                                      ]
+                                    }
+                                  },
+                                  "canonical_value": {
+                                    "module_name": [
+                                      null,
+                                      [
+                                        "Test"
+                                      ]
+                                    ],
+                                    "value": "ExtendMe"
+                                  },
+                                  "source_value": {
+                                    "module_name": null,
+                                    "value": "ExtendMe"
+                                  }
+                                }
+                              },
+                              "arguments": [
+                                {
+                                  "type": "RecordOpen",
+                                  "data": {
+                                    "kind": "Type",
+                                    "var": 6,
+                                    "source_name": null,
+                                    "row": {
+                                      "foo": {
+                                        "type": "PrimConstructor",
+                                        "data": "Int"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "variable": "e"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "label": "foo"
+            }
+          }
+        }
+      }
+    },
+    "extended2": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 154,
+        "end_offset": 163
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 202,
+            "end_offset": 241
+          },
+          "call_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Row"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "ExtendMe"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "ExtendMe"
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "RecordClosed",
+                  "data": {
+                    "kind": "Row",
+                    "row": {
+                      "bar": {
+                        "type": "PrimConstructor",
+                        "data": "Int"
+                      },
+                      "baz": {
+                        "type": "PrimConstructor",
+                        "data": "Int"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "function": {
+            "expression": "LocalConstructor",
+            "data": {
+              "span": {
+                "start_offset": 202,
+                "end_offset": 210
+              },
+              "constructor_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "RecordClosed",
+                      "data": {
+                        "kind": "Type",
+                        "row": {
+                          "foo": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          },
+                          "bar": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          },
+                          "baz": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "return_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Row"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "ExtendMe"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "ExtendMe"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "RecordClosed",
+                          "data": {
+                            "kind": "Row",
+                            "row": {
+                              "bar": {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              },
+                              "baz": {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "constructor": "ExtendMe"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "Record",
+                "data": {
+                  "span": {
+                    "start_offset": 211,
+                    "end_offset": 240
+                  },
+                  "fields": {
+                    "foo": {
+                      "expression": "Int",
+                      "data": {
+                        "span": {
+                          "start_offset": 219,
+                          "end_offset": 220
+                        },
+                        "value": "2",
+                        "value_type": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      }
+                    },
+                    "bar": {
+                      "expression": "Int",
+                      "data": {
+                        "span": {
+                          "start_offset": 228,
+                          "end_offset": 229
+                        },
+                        "value": "3",
+                        "value_type": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      }
+                    },
+                    "baz": {
+                      "expression": "Int",
+                      "data": {
+                        "span": {
+                          "start_offset": 237,
+                          "end_offset": 238
+                        },
+                        "value": "5",
+                        "value_type": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "extended1": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 110,
+        "end_offset": 119
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 122,
+            "end_offset": 152
+          },
+          "call_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Row"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "ExtendMe"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "ExtendMe"
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "RecordClosed",
+                  "data": {
+                    "kind": "Type",
+                    "row": {
+                      "foo": {
+                        "type": "PrimConstructor",
+                        "data": "Int"
+                      },
+                      "bar": {
+                        "type": "PrimConstructor",
+                        "data": "Int"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "function": {
+            "expression": "LocalConstructor",
+            "data": {
+              "span": {
+                "start_offset": 122,
+                "end_offset": 130
+              },
+              "constructor_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "RecordClosed",
+                      "data": {
+                        "kind": "Type",
+                        "row": {
+                          "foo": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          },
+                          "bar": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "return_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Row"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "ExtendMe"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "ExtendMe"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "RecordClosed",
+                          "data": {
+                            "kind": "Type",
+                            "row": {
+                              "foo": {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              },
+                              "bar": {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "constructor": "ExtendMe"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "Record",
+                "data": {
+                  "span": {
+                    "start_offset": 131,
+                    "end_offset": 151
+                  },
+                  "fields": {
+                    "foo": {
+                      "expression": "Int",
+                      "data": {
+                        "span": {
+                          "start_offset": 139,
+                          "end_offset": 140
+                        },
+                        "value": "2",
+                        "value_type": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      }
+                    },
+                    "bar": {
+                      "expression": "Int",
+                      "data": {
+                        "span": {
+                          "start_offset": 148,
+                          "end_offset": 149
+                        },
+                        "value": "3",
+                        "value_type": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "extended0": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 75,
+        "end_offset": 84
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 87,
+            "end_offset": 108
+          },
+          "call_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Row"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "ExtendMe"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "ExtendMe"
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "RecordClosed",
+                  "data": {
+                    "kind": "Type",
+                    "row": {
+                      "foo": {
+                        "type": "PrimConstructor",
+                        "data": "Int"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "function": {
+            "expression": "LocalConstructor",
+            "data": {
+              "span": {
+                "start_offset": 87,
+                "end_offset": 95
+              },
+              "constructor_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "RecordClosed",
+                      "data": {
+                        "kind": "Type",
+                        "row": {
+                          "foo": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "return_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Row"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "ExtendMe"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "ExtendMe"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "RecordClosed",
+                          "data": {
+                            "kind": "Type",
+                            "row": {
+                              "foo": {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "constructor": "ExtendMe"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "Record",
+                "data": {
+                  "span": {
+                    "start_offset": 96,
+                    "end_offset": 107
+                  },
+                  "fields": {
+                    "foo": {
+                      "expression": "Int",
+                      "data": {
+                        "span": {
+                          "start_offset": 104,
+                          "end_offset": 105
+                        },
+                        "value": "2",
+                        "value_type": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "extended_closed",
+    "extended_open1",
+    "extended_open0",
+    "unwrap_extend_me1",
+    "unwrap_extend_me0",
+    "get_foo",
+    "extended2",
+    "extended1",
+    "extended0"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Int"
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 48,
+        "end_offset": 52
+      },
+      "expression": {
+        "expression": "ImportedVariable",
+        "data": {
+          "span": {
+            "start_offset": 55,
+            "end_offset": 64
+          },
+          "variable_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          },
+          "variable": {
+            "module_name": [
+              null,
+              [
+                "Five"
+              ]
+            ],
+            "value": "five"
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "five"
+  ]
+}

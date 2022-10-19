@@ -1,0 +1,5 @@
+module Five exports (..);
+
+type Five = Five;
+
+five = 5;

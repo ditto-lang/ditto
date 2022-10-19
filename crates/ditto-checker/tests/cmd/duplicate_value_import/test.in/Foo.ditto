@@ -1,0 +1,8 @@
+module Foo exports (
+    five,
+    identity,
+);
+
+identity = fn (a) -> a;
+
+five = 5;

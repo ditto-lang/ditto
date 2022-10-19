@@ -1,0 +1,10 @@
+
+  ⚠ unused import
+   ╭─[unused_package_import_line.ditto:2:1]
+ 2 │ 
+ 3 │ import (pkg) Dep;
+   · ────────┬───────
+   ·         ╰── not needed
+ 4 │ 
+   ╰────
+

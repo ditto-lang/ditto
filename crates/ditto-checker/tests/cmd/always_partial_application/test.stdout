@@ -1,0 +1,459 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "always": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": null
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Function",
+              "data": {
+                "parameters": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 1,
+                      "source_name": null
+                    }
+                  }
+                ],
+                "return_type": {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": "Type",
+                    "var": 0,
+                    "source_name": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "always_five": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": {
+                    "Variable": 1
+                  },
+                  "var": 0,
+                  "source_name": "a"
+                }
+              }
+            ],
+            "return_type": {
+              "type": "PrimConstructor",
+              "data": "Int"
+            }
+          }
+        }
+      },
+      "another_five": {
+        "doc_comments": [],
+        "doc_position": 2,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Int"
+        }
+      },
+      "five": {
+        "doc_comments": [],
+        "doc_position": 3,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Int"
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "always": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 27,
+        "end_offset": 33
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 36,
+            "end_offset": 58
+          },
+          "binders": [
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 40,
+                  "end_offset": 41
+                },
+                "binder_type": {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": "Type",
+                    "var": 0,
+                    "source_name": null
+                  }
+                },
+                "value": "a"
+              }
+            }
+          ],
+          "body": {
+            "expression": "Function",
+            "data": {
+              "span": {
+                "start_offset": 46,
+                "end_offset": 58
+              },
+              "binders": [
+                {
+                  "Unused": {
+                    "span": {
+                      "start_offset": 50,
+                      "end_offset": 52
+                    },
+                    "binder_type": {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 1,
+                        "source_name": null
+                      }
+                    },
+                    "value": "_b"
+                  }
+                }
+              ],
+              "body": {
+                "expression": "LocalVariable",
+                "data": {
+                  "span": {
+                    "start_offset": 57,
+                    "end_offset": 58
+                  },
+                  "variable_type": {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 0,
+                      "source_name": null
+                    }
+                  },
+                  "variable": "a"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "always_five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 90,
+        "end_offset": 101
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 116,
+            "end_offset": 125
+          },
+          "call_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": {
+                      "Variable": 1
+                    },
+                    "var": 0,
+                    "source_name": "a"
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            }
+          },
+          "function": {
+            "expression": "LocalVariable",
+            "data": {
+              "span": {
+                "start_offset": 116,
+                "end_offset": 122
+              },
+              "variable_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  ],
+                  "return_type": {
+                    "type": "Function",
+                    "data": {
+                      "parameters": [
+                        {
+                          "type": "Variable",
+                          "data": {
+                            "variable_kind": {
+                              "Variable": 1
+                            },
+                            "var": 0,
+                            "source_name": "a"
+                          }
+                        }
+                      ],
+                      "return_type": {
+                        "type": "PrimConstructor",
+                        "data": "Int"
+                      }
+                    }
+                  }
+                }
+              },
+              "variable": "always"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "Int",
+                "data": {
+                  "span": {
+                    "start_offset": 123,
+                    "end_offset": 124
+                  },
+                  "value": "5",
+                  "value_type": {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "another_five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 127,
+        "end_offset": 139
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 147,
+            "end_offset": 164
+          },
+          "call_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          },
+          "function": {
+            "expression": "LocalVariable",
+            "data": {
+              "span": {
+                "start_offset": 147,
+                "end_offset": 158
+              },
+              "variable_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Unit"
+                    }
+                  ],
+                  "return_type": {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  }
+                }
+              },
+              "variable": "always_five"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "Unit",
+                "data": {
+                  "span": {
+                    "start_offset": 159,
+                    "end_offset": 163
+                  },
+                  "value_type": {
+                    "type": "PrimConstructor",
+                    "data": "Unit"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 60,
+        "end_offset": 64
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 72,
+            "end_offset": 87
+          },
+          "call_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          },
+          "function": {
+            "expression": "Call",
+            "data": {
+              "span": {
+                "start_offset": 72,
+                "end_offset": 81
+              },
+              "call_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Bool"
+                    }
+                  ],
+                  "return_type": {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  }
+                }
+              },
+              "function": {
+                "expression": "LocalVariable",
+                "data": {
+                  "span": {
+                    "start_offset": 72,
+                    "end_offset": 78
+                  },
+                  "variable_type": {
+                    "type": "Function",
+                    "data": {
+                      "parameters": [
+                        {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      ],
+                      "return_type": {
+                        "type": "Function",
+                        "data": {
+                          "parameters": [
+                            {
+                              "type": "PrimConstructor",
+                              "data": "Bool"
+                            }
+                          ],
+                          "return_type": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "variable": "always"
+                }
+              },
+              "arguments": [
+                {
+                  "Expression": {
+                    "expression": "Int",
+                    "data": {
+                      "span": {
+                        "start_offset": 79,
+                        "end_offset": 80
+                      },
+                      "value": "5",
+                      "value_type": {
+                        "type": "PrimConstructor",
+                        "data": "Int"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "True",
+                "data": {
+                  "span": {
+                    "start_offset": 82,
+                    "end_offset": 86
+                  },
+                  "value_type": {
+                    "type": "PrimConstructor",
+                    "data": "Bool"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "always",
+    "always_five",
+    "another_five",
+    "five"
+  ]
+}

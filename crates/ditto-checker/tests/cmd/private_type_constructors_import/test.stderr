@@ -1,0 +1,9 @@
+
+  × no visible constructors
+   ╭─[private_type_constructors_import.ditto:2:1]
+ 2 │ 
+ 3 │ import Dep (Abstract(..));
+   ·                     ──┬─
+   ·                       ╰── `Abstract` type is private
+   ╰────
+

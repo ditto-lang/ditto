@@ -1,0 +1,4 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["private_type_constructors_import.ditto"]
+fs.sandbox = true
+status = "failed"

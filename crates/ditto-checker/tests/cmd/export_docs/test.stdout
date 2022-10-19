@@ -1,0 +1,206 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "A": {
+        "doc_comments": [
+          "Documentation for",
+          "my type `A`"
+        ],
+        "doc_position": 1,
+        "kind": "Type"
+      }
+    },
+    "constructors": {
+      "MkA": {
+        "doc_comments": [
+          "Documentation for the only constructor",
+          "of type `A`"
+        ],
+        "doc_position": 0,
+        "constructor_type": {
+          "type": "Constructor",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Test"
+                ]
+              ],
+              "value": "A"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "A"
+            }
+          }
+        },
+        "return_type_name": "A"
+      }
+    },
+    "values": {
+      "anything_to_a": {
+        "doc_comments": [
+          "This function takes anything and returns an `A`."
+        ],
+        "doc_position": 0,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": null
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": "Type",
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "A"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "A"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "A": {
+      "doc_comments": [
+        "Documentation for",
+        "my type `A`"
+      ],
+      "type_name_span": {
+        "start_offset": 97,
+        "end_offset": 98
+      },
+      "kind": "Type"
+    }
+  },
+  "constructors": {
+    "MkA": {
+      "doc_comments": [
+        "Documentation for the only constructor",
+        "of type `A`"
+      ],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 171,
+        "end_offset": 174
+      },
+      "fields": [],
+      "return_type": {
+        "type": "Constructor",
+        "data": {
+          "constructor_kind": "Type",
+          "canonical_value": {
+            "module_name": [
+              null,
+              [
+                "Test"
+              ]
+            ],
+            "value": "A"
+          },
+          "source_value": {
+            "module_name": null,
+            "value": "A"
+          }
+        }
+      },
+      "return_type_name": "A"
+    }
+  },
+  "values": {
+    "anything_to_a": {
+      "doc_comments": [
+        "This function takes anything and returns an `A`."
+      ],
+      "name_span": {
+        "start_offset": 229,
+        "end_offset": 242
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 245,
+            "end_offset": 261
+          },
+          "binders": [
+            {
+              "Unused": {
+                "span": {
+                  "start_offset": 249,
+                  "end_offset": 250
+                },
+                "binder_type": {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": "Type",
+                    "var": 0,
+                    "source_name": null
+                  }
+                },
+                "value": "_"
+              }
+            }
+          ],
+          "body": {
+            "expression": "LocalConstructor",
+            "data": {
+              "span": {
+                "start_offset": 258,
+                "end_offset": 261
+              },
+              "constructor_type": {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": "Type",
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "A"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "A"
+                  }
+                }
+              },
+              "constructor": "MkA"
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "anything_to_a"
+  ]
+}

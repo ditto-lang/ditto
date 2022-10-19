@@ -1,0 +1,135 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "probably_five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Int"
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "id_int": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 61,
+        "end_offset": 67
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 70,
+            "end_offset": 86
+          },
+          "binders": [
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 74,
+                  "end_offset": 75
+                },
+                "binder_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                },
+                "value": "n"
+              }
+            }
+          ],
+          "body": {
+            "expression": "LocalVariable",
+            "data": {
+              "span": {
+                "start_offset": 85,
+                "end_offset": 86
+              },
+              "variable_type": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              },
+              "variable": "n"
+            }
+          }
+        }
+      }
+    },
+    "probably_five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 89,
+        "end_offset": 102
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 105,
+            "end_offset": 120
+          },
+          "call_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          },
+          "function": {
+            "expression": "LocalVariable",
+            "data": {
+              "span": {
+                "start_offset": 105,
+                "end_offset": 111
+              },
+              "variable_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  ],
+                  "return_type": {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  }
+                }
+              },
+              "variable": "id_int"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "ForeignVariable",
+                "data": {
+                  "span": {
+                    "start_offset": 112,
+                    "end_offset": 119
+                  },
+                  "variable_type": {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  },
+                  "variable": "ffi_int"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "id_int",
+    "probably_five"
+  ]
+}

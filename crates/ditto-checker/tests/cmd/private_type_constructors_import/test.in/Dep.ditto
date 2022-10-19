@@ -1,0 +1,5 @@
+module Dep exports (Abstract, abstract_value);
+
+type Abstract = Abstract(Int, Bool, Unit);
+
+abstract_value = Abstract(5, true, unit);
