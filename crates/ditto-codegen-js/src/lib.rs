@@ -21,7 +21,7 @@ mod tests {
     use ditto_checker as checker;
     use ditto_cst as cst;
 
-    #[snapshot_test::snapshot_lf(
+    #[snapshot_test::snapshot(
         input = "golden-tests/javascript/(.*).ditto",
         output = "golden-tests/javascript/${1}.js"
     )]

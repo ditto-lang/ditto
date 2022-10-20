@@ -429,14 +429,14 @@ impl BuildNinja {
             variables.sort();
             for (key, value) in variables {
                 string.push_str(&format!("{} = {}", key, value));
-                string.push_str(NEWLINE);
-                string.push_str(NEWLINE);
+                string.push('\n');
+                string.push('\n');
             }
         } else {
             for (key, value) in self.variables.into_iter() {
                 string.push_str(&format!("{} = {}", key, value));
-                string.push_str(NEWLINE);
-                string.push_str(NEWLINE);
+                string.push('\n');
+                string.push('\n');
             }
         };
 
@@ -446,8 +446,8 @@ impl BuildNinja {
         }
         for rule in rules {
             string.push_str(&rule.into_syntax());
-            string.push_str(NEWLINE);
-            string.push_str(NEWLINE);
+            string.push('\n');
+            string.push('\n');
         }
 
         let mut builds = self
@@ -461,8 +461,8 @@ impl BuildNinja {
         }
         for build in builds {
             string.push_str(&build);
-            string.push_str(NEWLINE);
-            string.push_str(NEWLINE);
+            string.push('\n');
+            string.push('\n');
         }
         string
     }
@@ -511,7 +511,7 @@ impl Rule {
 
     fn into_syntax(self) -> String {
         let Self { name, command } = self;
-        format!("rule {name}{NEWLINE}  command = {command}")
+        format!("rule {name}\n  command = {command}")
     }
 }
 
@@ -619,7 +619,7 @@ impl Build {
         let mut variables = self
             .variables
             .into_iter()
-            .map(|(key, value)| format!("{NEWLINE}  {key} = {value}"))
+            .map(|(key, value)| format!("\n  {key} = {value}"))
             .collect::<Vec<_>>();
 
         if cfg!(debug_assertions) {
@@ -630,12 +630,6 @@ impl Build {
         format!("build {outputs}: {rule_name} {inputs}{variables}",)
     }
 }
-
-#[cfg(windows)]
-static NEWLINE: &str = "\r\n";
-
-#[cfg(not(windows))]
-static NEWLINE: &str = "\n";
 
 fn read_module_header_and_imports(path: &Path) -> Result<(cst::Header, Vec<cst::ImportLine>)> {
     let contents = std::fs::read_to_string(path).into_diagnostic()?;

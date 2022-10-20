@@ -5,7 +5,7 @@ Cheapskate data-driven testing for the `ditto-*` crates.
 It's not _generally_ useful, yet...
 
 ```rust
-#[snapshot_test::snapshot_lf(
+#[snapshot_test::snapshot(
     input = "golden-tests/(.*).in",
     output = "golden-tests/${1}.out"
 )]

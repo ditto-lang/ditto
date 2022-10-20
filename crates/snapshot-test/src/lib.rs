@@ -95,6 +95,7 @@ impl TestCase {
 }
 
 #[proc_macro_attribute]
+#[deprecated]
 pub fn snapshot_lf(attrs: TokenStream, func: TokenStream) -> TokenStream {
     snapshot_impl(attrs, func, true)
 }

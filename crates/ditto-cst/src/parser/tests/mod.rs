@@ -6,7 +6,7 @@ mod r#type;
 
 use crate::{parse_header_and_imports, Module};
 
-#[snapshot_test::snapshot_lf(
+#[snapshot_test::snapshot(
     input = "golden-tests/parse-errors/(.*).ditto",
     output = "golden-tests/parse-errors/${1}.error"
 )]

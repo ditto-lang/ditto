@@ -13,7 +13,7 @@ mod syntax;
 mod token;
 mod r#type;
 
-use config::{INDENT_WIDTH, MAX_WIDTH, NEWLINE};
+use config::{INDENT_WIDTH, MAX_WIDTH};
 
 /// Pretty-print a CST module.
 pub fn format_module(module: ditto_cst::Module) -> String {
@@ -26,7 +26,7 @@ pub fn format_module(module: ditto_cst::Module) -> String {
             indent_width: INDENT_WIDTH,
             max_width: MAX_WIDTH,
             use_tabs: false, // nah
-            new_line_text: NEWLINE,
+            new_line_text: "\n",
         },
     )
 }

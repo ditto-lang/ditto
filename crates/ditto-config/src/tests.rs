@@ -175,7 +175,7 @@ mod errors {
     }
 }
 
-#[snapshot_test::snapshot_lf(
+#[snapshot_test::snapshot(
     input = "golden-tests/parse-errors/(.*).toml",
     output = "golden-tests/parse-errors/${1}.error"
 )]
