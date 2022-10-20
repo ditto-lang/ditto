@@ -54,7 +54,7 @@ mod test_macros {
                     new_line_text: "\n",
                 },
             );
-            similar_asserts::assert_str_eq!(got: formatted, want: $want); //, "\n{}", items_text);
+            similar_asserts::assert_eq!(got: formatted, want: $want); //, "\n{}", items_text);
         }};
     }
     pub(crate) use assert_fmt;

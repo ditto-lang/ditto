@@ -69,7 +69,7 @@ impl TestCase {
                         if (#remove_crlf) {
                             got = got.replace("\r\n", "\n");
                         }
-                        similar_asserts::assert_str_eq!(got: got, want: want);
+                        similar_asserts::assert_eq!(got: got, want: want);
                     } else {
                         std::fs::write(got_path, want).unwrap();
                     }
@@ -87,7 +87,7 @@ impl TestCase {
                     }
                     let want = #impl_ident(&input_contents);
                     let got = input_contents;
-                    similar_asserts::assert_str_eq!(got: got, want: want);
+                    similar_asserts::assert_eq!(got: got, want: want);
                 }
             }
         }

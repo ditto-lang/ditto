@@ -844,7 +844,7 @@ mod test_macros {
                     $crate::render::Render::render(&expr, &mut rendered);
                 }
             }
-            similar_asserts::assert_str_eq!(got: rendered, want: $want);
+            similar_asserts::assert_eq!(got: rendered, want: $want);
         }};
     }
 

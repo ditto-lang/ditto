@@ -48,7 +48,7 @@ macro_rules! assert_build_ninja {
             let (build_file, _) = generate_build_ninja(sources, package_sources).unwrap();
             let want = std::fs::read_to_string("./build.ninja")?;
             let got = build_file.into_syntax_path_slash();
-            similar_asserts::assert_str_eq!(got: got, want: want);
+            similar_asserts::assert_eq!(got: got, want: want);
             Ok(())
         });
     };
@@ -77,7 +77,7 @@ macro_rules! assert_build_ninja_error {
             let err = generate_build_ninja(sources, package_sources)
                 .map(|(build_ninja, _)| build_ninja)
                 .unwrap_err();
-            similar_asserts::assert_str_eq!(got: err.to_string(), want: $error_string);
+            similar_asserts::assert_eq!(got: err.to_string(), want: $error_string);
             Ok(())
         });
     };
