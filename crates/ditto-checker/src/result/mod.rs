@@ -24,7 +24,7 @@ mod tests {
 
         // While we're here, make sure we can serde roundtrip the warnings
         let json = serde_json::to_string(&warnings).unwrap();
-        let round_tripped: Vec<crate::WarningReport> = serde_json::from_str(&*json).unwrap();
+        let round_tripped: Vec<crate::WarningReport> = serde_json::from_str(&json).unwrap();
         assert_eq!(warnings, round_tripped);
 
         warnings

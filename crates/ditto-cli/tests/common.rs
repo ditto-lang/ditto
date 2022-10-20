@@ -16,7 +16,7 @@ pub fn ditto(dir: &str, args: &[&str]) -> std::io::Result<()> {
 
 pub fn assert_dir_is_clean(dir: &str) -> std::io::Result<()> {
     let status = Command::new("git")
-        .args(&["diff", "--exit-code", "."])
+        .args(["diff", "--exit-code", "."])
         .current_dir(dir)
         .stdout(Stdio::inherit())
         .status()?;
