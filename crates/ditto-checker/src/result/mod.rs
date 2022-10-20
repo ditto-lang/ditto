@@ -9,7 +9,7 @@ pub type Result<T> = std::result::Result<T, TypeError>;
 
 #[cfg(test)]
 mod tests {
-    #[snapshot_test::snapshot_lf(
+    #[snapshot_test::snapshot(
         input = "golden-tests/warnings/(.*).ditto",
         output = "golden-tests/warnings/${1}.warnings"
     )]
@@ -40,7 +40,7 @@ mod tests {
             .join("\n")
     }
 
-    #[snapshot_test::snapshot_lf(
+    #[snapshot_test::snapshot(
         input = "golden-tests/type-errors/(.*).ditto",
         output = "golden-tests/type-errors/${1}.error"
     )]

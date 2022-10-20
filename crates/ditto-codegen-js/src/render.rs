@@ -8,12 +8,6 @@ pub fn render_module(module: Module) -> String {
     accum
 }
 
-#[cfg(windows)]
-static NEWLINE: &str = "\r\n";
-
-#[cfg(not(windows))]
-static NEWLINE: &str = "\n";
-
 pub(crate) trait Render {
     // REVIEW I doubt pushing to a String like this is the most efficient solution?
     fn render(&self, accum: &mut String);
@@ -23,11 +17,11 @@ impl Render for Module {
     fn render(&self, accum: &mut String) {
         self.imports.iter().for_each(|import| {
             import.render(accum);
-            accum.push_str(NEWLINE);
+            accum.push('\n');
         });
         self.statements.iter().for_each(|stmt| {
             stmt.render(accum);
-            accum.push_str(NEWLINE);
+            accum.push('\n');
         });
 
         accum.push_str("export {");
@@ -40,7 +34,7 @@ impl Render for Module {
                 .join(","),
         );
         accum.push_str("};");
-        accum.push_str(NEWLINE);
+        accum.push('\n');
     }
 }
 
