@@ -6,4 +6,4 @@
 #    cargo clippy --workspace --fix --allow-dirty --allow-staged
 cargo clippy --workspace -- -D warnings
 
-cargo test
+cargo nextest run --workspace --exclude snapshot-test

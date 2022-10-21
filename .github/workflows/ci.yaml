@@ -45,6 +45,10 @@ jobs:
         uses: ./.github/actions/setup-rust
         with:
           cache-key: test
+          components: llvm-tools-preview
+
+      - name: Install cargo-nextest
+        uses: taiki-e/install-action@nextest
 
       # Some tests depend on Nodejs + npm dependencies
       - name: Setup Nodejs
@@ -69,22 +73,24 @@ jobs:
         if: matrix.os != 'ubuntu-latest'
         uses: actions-rs/cargo@v1
         with:
-          command: test
+          command: nextest
+          args: run --workspace --exclude snapshot-test
         env:
           DITTO_BUILD_GIT_DESCRIBE: "0.0.0-test"
           #DITTO_NINJA  <-- would be nice to use this, along with https://github.com/marketplace/actions/setup-ninja
 
+      - name: Install cargo-llvm-cov
+        # Only run tests with coverage if running on Linux
+        if: matrix.os == 'ubuntu-latest'
+        uses: taiki-e/install-action@cargo-llvm-cov
+
       - name: Run tests (with coverage)
         # Only run tests with coverage if running on Linux
         if: matrix.os == 'ubuntu-latest'
-
-        # NOTE this action seems deprecated? https://github.com/actions-rs/tarpaulin/issues/6
-        uses: actions-rs/tarpaulin@v0.1
-
+        uses: actions-rs/cargo@v1
         with:
-          version: "0.20.0"
-          args: "--skip-clean -- --test-threads 1"
-          #        ^^ beware, this might cause issues?
+          command: llvm-cov
+          args: --lcov --output-path lcov.info nextest --workspace --exclude snapshot-test
         env:
           DITTO_BUILD_GIT_DESCRIBE: "0.0.0-test"
           #DITTO_NINJA  <-- would be nice to use this, along with https://github.com/marketplace/actions/setup-ninja
@@ -94,6 +100,8 @@ jobs:
         uses: codecov/codecov-action@v3.1.0
         with:
           token: ${{secrets.CODECOV_TOKEN}}
+          files: lcov.info
+          fail_ci_if_error: true
 
   treefmt:
     name: treefmt 💅

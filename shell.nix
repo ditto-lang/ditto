@@ -33,6 +33,22 @@ let
     doCheck = false;
   };
 
+  cargo-llvm-cov = pkgs.rustPlatform.buildRustPackage rec {
+    pname = "cargo-llvm-cov";
+    version = "0.5.0";
+    src = pkgs.fetchFromGitHub {
+      owner = "taiki-e";
+      repo = pname;
+      rev = "v${version}";
+      sha256 = "sha256-2O0MyL4SF/2AUpgWYUDWQ5dDpa84pwmnKGtAaWi5bwQ=";
+    };
+    cargoSha256 = "sha256-zQ1wgeKvc7q0pIx7ZWAQIayP/JVQGyFbLB3Iv81mbx0=";
+    cargoPatches = [
+      ./cargo-llvm-cov-cargo-lock.patch
+    ];
+    doCheck = false;
+  };
+
   # Don't forget to update .github/actions/setup-haskell
   stack = pkgs.symlinkJoin {
     name = "stack-with-system-ghc";
@@ -63,6 +79,8 @@ pkgs.mkShell {
     # The rest of the development shell stuff
     rustToolchain
     rust-analyzer
+    pkgs.cargo-nextest
+    cargo-llvm-cov
     #pkgs.cargo-watch <-- currently broken on MacOS https://github.com/NixOS/nixpkgs/issues/189687
     pkgs.cargo-udeps
     pkgs.cargo-audit
@@ -81,7 +99,7 @@ pkgs.mkShell {
     pkgs.pkg-config
   ]
   # Linux specific stuff
-  ++ (lib.optional (stdenv.isx86_64 && stdenv.isLinux) pkgs.cargo-tarpaulin)
+  ++ (lib.optionals (stdenv.isx86_64 && stdenv.isLinux) [ ])
   # MacOS specific stuff
   ++ (lib.optionals pkgs.stdenv.isDarwin [
     # Fixes for MacOS Catalina

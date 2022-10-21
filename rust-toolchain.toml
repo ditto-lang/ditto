@@ -3,5 +3,5 @@
 [toolchain]
 channel = "nightly-2022-10-13"
 profile = "minimal"
-components = ["rustfmt", "clippy", "rust-src"]
+components = ["rustfmt", "clippy", "rust-src", "llvm-tools-preview"]
 targets = []
