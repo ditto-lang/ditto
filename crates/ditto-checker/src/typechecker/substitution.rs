@@ -290,6 +290,7 @@ impl Substitution {
                 span,
                 element_type,
                 elements,
+                value_type,
             } => Array {
                 span,
                 element_type: self.apply(element_type),
@@ -297,6 +298,7 @@ impl Substitution {
                     .into_iter()
                     .map(|element| self.apply_expression(element))
                     .collect(),
+                value_type: self.apply(value_type),
             },
             Record { span, fields } => Record {
                 span,
@@ -316,14 +318,45 @@ impl Substitution {
                 target: Box::new(self.apply_expression(target)),
                 label,
             },
-
-            // noop
-            True { .. } => expression,
-            False { .. } => expression,
-            Unit { .. } => expression,
-            String { .. } => expression,
-            Int { .. } => expression,
-            Float { .. } => expression,
+            True { span, value_type } => True {
+                span,
+                value_type: self.apply(value_type),
+            },
+            False { span, value_type } => False {
+                span,
+                value_type: self.apply(value_type),
+            },
+            Unit { span, value_type } => Unit {
+                span,
+                value_type: self.apply(value_type),
+            },
+            String {
+                span,
+                value,
+                value_type,
+            } => String {
+                span,
+                value,
+                value_type: self.apply(value_type),
+            },
+            Int {
+                span,
+                value,
+                value_type,
+            } => Int {
+                span,
+                value,
+                value_type: self.apply(value_type),
+            },
+            Float {
+                span,
+                value,
+                value_type,
+            } => Float {
+                span,
+                value,
+                value_type: self.apply(value_type),
+            },
         }
     }
 
