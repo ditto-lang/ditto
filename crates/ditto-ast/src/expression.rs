@@ -151,6 +151,9 @@ pub enum Expression {
         span: Span,
         /// `"string"`
         value: String,
+        /// The type of this string literal.
+        /// Generally this will be `PrimType::String`, but it might have been aliased.
+        value_type: Type,
     },
     /// An integer literal.
     Int {
@@ -165,6 +168,9 @@ pub enum Expression {
         /// generated code.
         /// 2. Storing as a string avoids overflow issues.
         value: String,
+        /// The type of this integer literal.
+        /// Generally this will be `PrimType::Int`, but it might have been aliased.
+        value_type: Type,
     },
     /// A floating point number literal.
     Float {
@@ -179,6 +185,9 @@ pub enum Expression {
         /// generated code.
         /// 2. Storing as a string avoids float overflow and precision issues.
         value: String,
+        /// The type of this float literal.
+        /// Generally this will be `PrimType::Float`, but it might have been aliased.
+        value_type: Type,
     },
     /// `foo.bar`
     RecordAccess {
@@ -199,6 +208,9 @@ pub enum Expression {
         element_type: Type,
         /// Array elements.
         elements: Vec<Self>,
+        /// The type of this array literal.
+        /// Generally this will be `PrimType::Array(element_type)`, but it might have been aliased.
+        value_type: Type,
     },
     /// A record literal.
     Record {
@@ -211,16 +223,25 @@ pub enum Expression {
     True {
         /// The source span for this expression.
         span: Span,
+        /// The type of this `true` literal.
+        /// Generally this will be `PrimType::Bool`, but it might have been aliased.
+        value_type: Type,
     },
     /// `false`
     False {
         /// The source span for this expression.
         span: Span,
+        /// The type of this `false` literal.
+        /// Generally this will be `PrimType::Bool`, but it might have been aliased.
+        value_type: Type,
     },
     /// `unit`
     Unit {
         /// The source span for this expression.
         span: Span,
+        /// The type of this `unit` literal.
+        /// Generally this will be `PrimType::Unit`, but it might have been aliased.
+        value_type: Type,
     },
 }
 
@@ -258,13 +279,7 @@ impl Expression {
             Self::ForeignVariable { variable_type, .. } => variable_type.clone(),
             Self::ImportedVariable { variable_type, .. } => variable_type.clone(),
             Self::RecordAccess { field_type, .. } => field_type.clone(),
-            Self::String { .. } => Type::PrimConstructor(PrimType::String),
-            Self::Int { .. } => Type::PrimConstructor(PrimType::Int),
-            Self::Float { .. } => Type::PrimConstructor(PrimType::Float),
-            Self::Array { element_type, .. } => Type::Call {
-                function: Box::new(Type::PrimConstructor(PrimType::Array)),
-                arguments: NonEmpty::new(element_type.clone()),
-            },
+            Self::Array { value_type, .. } => value_type.clone(),
             Self::Record { fields, .. } => Type::RecordClosed {
                 kind: Kind::Type,
                 row: fields
@@ -272,9 +287,12 @@ impl Expression {
                     .map(|(label, element)| (label.clone(), element.get_type()))
                     .collect(),
             },
-            Self::True { .. } => Type::PrimConstructor(PrimType::Bool),
-            Self::False { .. } => Type::PrimConstructor(PrimType::Bool),
-            Self::Unit { .. } => Type::PrimConstructor(PrimType::Unit),
+            Self::String { value_type, .. } => value_type.clone(),
+            Self::Int { value_type, .. } => value_type.clone(),
+            Self::Float { value_type, .. } => value_type.clone(),
+            Self::True { value_type, .. } => value_type.clone(),
+            Self::False { value_type, .. } => value_type.clone(),
+            Self::Unit { value_type, .. } => value_type.clone(),
         }
     }
     /// Get the source span.

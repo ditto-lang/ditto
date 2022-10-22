@@ -127,12 +127,33 @@ pub fn typecheck_with(
 
 pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expression> {
     match expr {
-        pre::Expression::True { span } => Ok(Expression::True { span }),
-        pre::Expression::False { span } => Ok(Expression::False { span }),
-        pre::Expression::Unit { span } => Ok(Expression::Unit { span }),
-        pre::Expression::String { span, value } => Ok(Expression::String { span, value }),
-        pre::Expression::Int { span, value } => Ok(Expression::Int { span, value }),
-        pre::Expression::Float { span, value } => Ok(Expression::Float { span, value }),
+        pre::Expression::True { span } => Ok(Expression::True {
+            span,
+            value_type: Type::PrimConstructor(PrimType::Bool),
+        }),
+        pre::Expression::False { span } => Ok(Expression::False {
+            span,
+            value_type: Type::PrimConstructor(PrimType::Bool),
+        }),
+        pre::Expression::Unit { span } => Ok(Expression::Unit {
+            span,
+            value_type: Type::PrimConstructor(PrimType::Unit),
+        }),
+        pre::Expression::String { span, value } => Ok(Expression::String {
+            span,
+            value,
+            value_type: Type::PrimConstructor(PrimType::String),
+        }),
+        pre::Expression::Int { span, value } => Ok(Expression::Int {
+            span,
+            value,
+            value_type: Type::PrimConstructor(PrimType::Int),
+        }),
+        pre::Expression::Float { span, value } => Ok(Expression::Float {
+            span,
+            value,
+            value_type: Type::PrimConstructor(PrimType::Float),
+        }),
         pre::Expression::Array { span, elements } => {
             if let Some((head, tail)) = split_first_owned(elements) {
                 let head = infer(env, state, head)?;
@@ -142,18 +163,28 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
                     let element = check(env, state, element_type.clone(), element)?;
                     elements.push(element);
                 }
+                let value_type = Type::Call {
+                    function: Box::new(Type::PrimConstructor(PrimType::Array)),
+                    arguments: non_empty_vec::NonEmpty::new(element_type.clone()),
+                };
                 Ok(Expression::Array {
                     span,
                     element_type,
                     elements,
+                    value_type,
                 })
             } else {
                 let element_type = state.supply.fresh_type();
                 let elements = Vec::new();
+                let value_type = Type::Call {
+                    function: Box::new(Type::PrimConstructor(PrimType::Array)),
+                    arguments: non_empty_vec::NonEmpty::new(element_type.clone()),
+                };
                 Ok(Expression::Array {
                     span,
                     element_type,
                     elements,
+                    value_type,
                 })
             }
         }
@@ -376,11 +407,15 @@ pub fn check(
                 .into_iter()
                 .map(|element| check(env, state, element_type.clone(), element))
                 .collect::<Result<Vec<_>>>()?;
-
+            let value_type = Type::Call {
+                function: Box::new(Type::PrimConstructor(PrimType::Array)),
+                arguments: non_empty_vec::NonEmpty::new(element_type.clone()),
+            };
             Ok(Expression::Array {
                 span,
                 element_type,
                 elements,
+                value_type,
             })
         }
         (
@@ -459,6 +494,93 @@ pub fn check(
                 fields.insert(label, expr);
             }
             Ok(Expression::Record { span, fields })
+        }
+        (pre::Expression::True { span }, expected) => {
+            unify(
+                state,
+                span,
+                Constraint {
+                    expected: expected.clone(),
+                    actual: Type::PrimConstructor(PrimType::Bool),
+                },
+            )?;
+            Ok(Expression::True {
+                span,
+                value_type: expected,
+            })
+        }
+        (pre::Expression::False { span }, expected) => {
+            unify(
+                state,
+                span,
+                Constraint {
+                    expected: expected.clone(),
+                    actual: Type::PrimConstructor(PrimType::Bool),
+                },
+            )?;
+            Ok(Expression::False {
+                span,
+                value_type: expected,
+            })
+        }
+        (pre::Expression::Unit { span }, expected) => {
+            unify(
+                state,
+                span,
+                Constraint {
+                    expected: expected.clone(),
+                    actual: Type::PrimConstructor(PrimType::Unit),
+                },
+            )?;
+            Ok(Expression::Unit {
+                span,
+                value_type: expected,
+            })
+        }
+        (pre::Expression::String { span, value }, expected) => {
+            unify(
+                state,
+                span,
+                Constraint {
+                    expected: expected.clone(),
+                    actual: Type::PrimConstructor(PrimType::String),
+                },
+            )?;
+            Ok(Expression::String {
+                span,
+                value,
+                value_type: expected,
+            })
+        }
+        (pre::Expression::Int { span, value }, expected) => {
+            unify(
+                state,
+                span,
+                Constraint {
+                    expected: expected.clone(),
+                    actual: Type::PrimConstructor(PrimType::Int),
+                },
+            )?;
+            Ok(Expression::Int {
+                span,
+                value,
+                value_type: expected,
+            })
+        }
+        (pre::Expression::Float { span, value }, expected) => {
+            unify(
+                state,
+                span,
+                Constraint {
+                    expected: expected.clone(),
+                    actual: Type::PrimConstructor(PrimType::Float),
+                },
+            )?;
+            Ok(Expression::Float {
+                span,
+                value,
+                value_type: expected,
+            })
         }
         (expr, expected) => {
             let expression = infer(env, state, expr)?;
