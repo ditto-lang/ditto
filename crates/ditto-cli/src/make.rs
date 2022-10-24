@@ -69,7 +69,8 @@ pub async fn run_watch(
     mut config: Config,
 ) -> Result<()> {
     let (event_sender, event_receiver) = crossbeam_channel::unbounded();
-    let mut watcher = notify::RecommendedWatcher::new(event_sender).into_diagnostic()?;
+    let mut watcher = notify::RecommendedWatcher::new(event_sender, notify::Config::default())
+        .into_diagnostic()?;
 
     // Watch ditto.toml, src/** and test/**
     //
