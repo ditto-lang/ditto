@@ -19,7 +19,7 @@ use crate::{
 };
 use ditto_ast::{
     graph::Scc, unqualified, FullyQualifiedProperName, Module, ModuleExports, ModuleName,
-    ModuleValues, Span,
+    ModuleType, ModuleValues, Span,
 };
 use ditto_cst as cst;
 use std::collections::HashMap;
@@ -40,15 +40,7 @@ pub fn check_module(
         .0
         .clone()
         .into_iter()
-        .map(|(type_name, imported_type)| {
-            (
-                type_name,
-                kindchecker::EnvType::Constructor {
-                    canonical_value: imported_type.canonical_type_name,
-                    constructor_kind: imported_type.kind,
-                },
-            )
-        });
+        .map(|(type_name, imported_type)| (type_name, imported_type.to_env_type()));
 
     let env_constructors = imported_constructors.0.clone().into_iter().map(
         |(constructor_name, imported_constructor)| {
@@ -86,13 +78,16 @@ pub fn check_module(
     for declaration in cst_module.declarations {
         match declaration {
             cst::Declaration::Type(box type_declaration) => {
-                type_declarations.push(type_declaration)
+                type_declarations.push(TypeDeclaration::Type(type_declaration));
+            }
+            cst::Declaration::TypeAlias(box type_alias_declaration) => {
+                type_declarations.push(TypeDeclaration::TypeAlias(type_alias_declaration));
             }
             cst::Declaration::Value(box value_declaration) => {
-                value_declarations.push(value_declaration)
+                value_declarations.push(value_declaration);
             }
             cst::Declaration::ForeignValue(box foreign_value_declaration) => {
-                foreign_value_declarations.push(foreign_value_declaration)
+                foreign_value_declarations.push(foreign_value_declaration);
             }
         }
     }
@@ -108,20 +103,37 @@ pub fn check_module(
         type_declarations,
     )?;
 
-    kindchecker_env
-        .types
-        .extend(types.iter().map(|(proper_name, module_type)| {
-            (
+    kindchecker_env.types.extend(types.iter().map(
+        |(proper_name, module_type)| match module_type {
+            ModuleType::Type { kind, .. } => (
                 unqualified(proper_name.clone()),
                 kindchecker::EnvType::Constructor {
                     canonical_value: FullyQualifiedProperName {
                         module_name: fully_qualified_module_name.clone(),
                         value: proper_name.clone(),
                     },
-                    constructor_kind: module_type.kind.clone(),
+                    constructor_kind: kind.clone(),
                 },
-            )
-        }));
+            ),
+            ModuleType::Alias {
+                kind,
+                aliased_type,
+                alias_variables,
+                ..
+            } => (
+                unqualified(proper_name.clone()),
+                kindchecker::EnvType::ConstructorAlias {
+                    canonical_value: FullyQualifiedProperName {
+                        module_name: fully_qualified_module_name.clone(),
+                        value: proper_name.clone(),
+                    },
+                    constructor_kind: kind.clone(),
+                    alias_variables: alias_variables.to_vec(),
+                    aliased_type: Box::new(aliased_type.clone()),
+                },
+            ),
+        },
+    ));
 
     warnings.extend(more_warnings);
 
@@ -224,13 +236,34 @@ pub fn check_module(
 
     // Check for unused types
     for (type_name, module_type) in module.types.iter() {
-        // REVIEW add this as a `Module` method?
-        let type_constructors = module
+        let type_is_exported = module.exports.types.contains_key(type_name);
+
+        // Warn if type aliases aren't exported and not referenced
+        if let ModuleType::Alias { type_name_span, .. } = module_type {
+            if !type_is_exported && !type_references.contains_key(&unqualified(type_name.clone())) {
+                warnings.push(Warning::UnusedTypeDeclaration {
+                    span: *type_name_span,
+                })
+            }
+            continue;
+        }
+
+        let mut type_constructors = module
             .constructors
             .iter()
-            .filter(|(_ctor_name, ctor)| ctor.return_type_name == *type_name);
+            .filter(|(_ctor_name, ctor)| ctor.return_type_name == *type_name)
+            .peekable();
 
-        let type_is_exported = module.exports.types.contains_key(type_name);
+        // Warn if types without constructors aren't exported and not referenced
+        let has_no_constructors = type_constructors.peek().is_none();
+        if has_no_constructors {
+            if !type_is_exported && !type_references.contains_key(&unqualified(type_name.clone())) {
+                warnings.push(Warning::UnusedTypeDeclaration {
+                    span: module_type.type_name_span(),
+                })
+            }
+            continue;
+        }
 
         let constructors_are_exported = type_constructors
             .clone()
@@ -245,7 +278,7 @@ pub fn check_module(
             });
             if all_constructors_unused {
                 warnings.push(Warning::UnusedTypeConstructors {
-                    span: module_type.type_name_span,
+                    span: module_type.type_name_span(),
                 })
             }
         } else {
@@ -255,7 +288,7 @@ pub fn check_module(
             });
             if all_constructors_unused {
                 warnings.push(Warning::UnusedTypeDeclaration {
-                    span: module_type.type_name_span,
+                    span: module_type.type_name_span(),
                 })
             }
         }
@@ -265,7 +298,7 @@ pub fn check_module(
     // TODO check for any unused _unqualified_ imports specifically.
     let mut import_usages: HashMap<Span, bool> = HashMap::new();
     for (type_name, imported_type) in imported_types.0 {
-        let span = imported_type.import_line_span;
+        let span = imported_type.import_line_span();
         let used = type_references.contains_key(&type_name);
         let current = import_usages.remove(&span);
         import_usages.insert(span, current.unwrap_or(false) || used);

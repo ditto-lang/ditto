@@ -409,6 +409,12 @@ fn toposort_value_declarations(
             }) => {
                 if module_name.is_some() {
                     // If it's imported then it's not interesting here
+                    //
+                    // REVIEW: what if it's imported unqualified? e.g.
+                    //
+                    //    import Foo (foo);
+                    //    foo = foo;
+                    //          ^^^ is this refering to to imported `foo` or is it a cyclic reference?
                     return;
                 }
                 let node = &value.0.value;

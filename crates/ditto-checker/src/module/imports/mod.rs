@@ -1,12 +1,13 @@
 use crate::{
     collections::PristineMap,
+    kindchecker::EnvType,
     result::{Result, TypeError, Warning, Warnings},
     typechecker::Scheme,
 };
 use ditto_ast::{
     unqualified, FullyQualifiedName, FullyQualifiedProperName, Kind, ModuleExports,
-    ModuleExportsConstructors, ModuleExportsTypes, ModuleExportsValues, ModuleName, Name,
-    PackageName, ProperName, QualifiedName, QualifiedProperName, Span, Type,
+    ModuleExportsConstructors, ModuleExportsType, ModuleExportsTypes, ModuleExportsValues,
+    ModuleName, Name, PackageName, ProperName, QualifiedName, QualifiedProperName, Span, Type,
 };
 use ditto_cst as cst;
 use non_empty_vec::NonEmpty;
@@ -31,11 +32,64 @@ type ImportedConstructors = PristineMap<QualifiedProperName, ImportedConstructor
 type ImportedValues = PristineMap<QualifiedName, ImportedValue>;
 
 #[derive(Clone)]
-pub struct ImportedType {
-    pub import_line_span: Span,
-    pub type_span: Span,
-    pub kind: Kind,
-    pub canonical_type_name: FullyQualifiedProperName,
+pub enum ImportedType {
+    Type {
+        import_line_span: Span,
+        type_span: Span,
+        kind: Kind,
+        canonical_type_name: FullyQualifiedProperName,
+    },
+    Alias {
+        import_line_span: Span,
+        type_span: Span,
+        kind: Kind,
+        canonical_type_name: FullyQualifiedProperName,
+        alias_variables: Vec<usize>,
+        aliased_type: Box<Type>,
+    },
+}
+
+impl ImportedType {
+    pub fn to_env_type(&self) -> EnvType {
+        match self {
+            Self::Type {
+                kind,
+                canonical_type_name,
+                ..
+            } => EnvType::Constructor {
+                canonical_value: canonical_type_name.clone(),
+                constructor_kind: kind.clone(),
+            },
+            Self::Alias {
+                kind,
+                canonical_type_name,
+                alias_variables,
+                aliased_type,
+                ..
+            } => EnvType::ConstructorAlias {
+                canonical_value: canonical_type_name.clone(),
+                constructor_kind: kind.clone(),
+                alias_variables: alias_variables.clone(),
+                aliased_type: aliased_type.clone(),
+            },
+        }
+    }
+    pub fn type_span(&self) -> Span {
+        match self {
+            Self::Type { type_span, .. } => *type_span,
+            Self::Alias { type_span, .. } => *type_span,
+        }
+    }
+    pub fn import_line_span(&self) -> Span {
+        match self {
+            Self::Type {
+                import_line_span, ..
+            } => *import_line_span,
+            Self::Alias {
+                import_line_span, ..
+            } => *import_line_span,
+        }
+    }
 }
 
 #[derive(Clone)]
@@ -167,8 +221,8 @@ pub fn extract_imports(
             )?
             .0,
             |collision| TypeError::ReboundImportType {
-                previous_binding: collision.existing_value.type_span,
-                new_binding: collision.new_value.type_span,
+                previous_binding: collision.existing_value.type_span(),
+                new_binding: collision.new_value.type_span(),
                 type_name: collision.key,
             },
         )?;
@@ -220,8 +274,8 @@ pub fn extract_imports(
 
             imported_types.extend_else(unqualified_types.0, |collision| {
                 TypeError::ReboundImportType {
-                    previous_binding: collision.existing_value.type_span,
-                    new_binding: collision.new_value.type_span,
+                    previous_binding: collision.existing_value.type_span(),
+                    new_binding: collision.new_value.type_span(),
                     type_name: collision.key,
                 }
             })?;
@@ -303,17 +357,32 @@ fn import_all_types_qualified(
             module_name: (package_name.clone(), module_name.clone()),
             value: type_name.clone(),
         };
-        let imported_type = ImportedType {
-            import_line_span,
-            type_span: module_name_span,
-            kind: exported_type.kind.clone(),
-            canonical_type_name: fully_qualified_type_name,
+        let imported_type = match exported_type {
+            ModuleExportsType::Type { kind, .. } => ImportedType::Type {
+                import_line_span,
+                type_span: module_name_span,
+                kind: kind.clone(),
+                canonical_type_name: fully_qualified_type_name,
+            },
+            ModuleExportsType::Alias {
+                kind,
+                alias_variables,
+                aliased_type,
+                ..
+            } => ImportedType::Alias {
+                import_line_span,
+                type_span: module_name_span,
+                kind: kind.clone(),
+                canonical_type_name: fully_qualified_type_name,
+                alias_variables: alias_variables.clone(),
+                aliased_type: Box::new(aliased_type.clone()),
+            },
         };
         // Unchecked because exported_types are unique.
         imported_types.insert_else(qualified_type_name, imported_type, |collision| {
             TypeError::ReboundImportType {
-                previous_binding: collision.existing_value.type_span,
-                new_binding: collision.new_value.type_span,
+                previous_binding: collision.existing_value.type_span(),
+                new_binding: collision.new_value.type_span(),
                 type_name: collision.key,
             }
         })?;
@@ -417,19 +486,35 @@ fn import_unqualified_list(
                         module_name: (package_name.clone(), module_name.clone()),
                         value: type_name.clone(),
                     };
-                    imported_types.insert_with_warning(
-                        unqualified(type_name.clone()),
-                        ImportedType {
+                    let imported_type = match exported_type {
+                        ModuleExportsType::Type { kind, .. } => ImportedType::Type {
                             import_line_span,
                             type_span: type_name_span,
-                            kind: exported_type.kind.clone(),
+                            kind: kind.clone(),
                             canonical_type_name: fully_qualified_type_name,
                         },
+                        ModuleExportsType::Alias {
+                            kind,
+                            alias_variables,
+                            aliased_type,
+                            ..
+                        } => ImportedType::Alias {
+                            import_line_span,
+                            type_span: type_name_span,
+                            kind: kind.clone(),
+                            canonical_type_name: fully_qualified_type_name,
+                            alias_variables: alias_variables.clone(),
+                            aliased_type: Box::new(aliased_type.clone()),
+                        },
+                    };
+                    imported_types.insert_with_warning(
+                        unqualified(type_name.clone()),
+                        imported_type,
                         // Warn in the case of `import Foo (Bar, Bar, Bar(..))`
                         |collision| {
                             warnings.push(Warning::DuplicateTypeImport {
-                                previous_import: collision.existing_value.type_span,
-                                duplicate_import: collision.new_value.type_span,
+                                previous_import: collision.existing_value.type_span(),
+                                duplicate_import: collision.new_value.type_span(),
                             });
                         },
                     );
@@ -507,6 +592,30 @@ fn requalify_type(ast_type: Type, package_name: &PackageName) -> Type {
             },
             constructor_kind,
             source_value: None, //  ?
+        },
+
+        Type::ConstructorAlias {
+            canonical_value:
+                FullyQualifiedProperName {
+                    module_name: (current_package_name, module_name),
+                    value,
+                },
+            constructor_kind,
+            source_value: _,
+            alias_variables,
+            box aliased_type,
+        } => Type::ConstructorAlias {
+            canonical_value: FullyQualifiedProperName {
+                module_name: (
+                    current_package_name.or_else(|| Some(package_name.clone())),
+                    module_name,
+                ),
+                value,
+            },
+            constructor_kind,
+            source_value: None, //  ?
+            alias_variables,
+            aliased_type: Box::new(requalify_type(aliased_type, package_name)),
         },
         Type::Variable {
             variable_kind,

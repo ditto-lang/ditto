@@ -18,14 +18,48 @@ use ditto_cst as cst;
 use non_empty_vec::NonEmpty;
 use std::collections::{HashMap, HashSet};
 
+#[derive(Clone)]
+pub enum TypeDeclaration {
+    Type(cst::TypeDeclaration),
+    TypeAlias(cst::TypeAliasDeclaration),
+}
+
+impl TypeDeclaration {
+    pub fn type_keyword(&self) -> &cst::TypeKeyword {
+        match self {
+            Self::Type(decl) => decl.type_keyword(),
+            Self::TypeAlias(alias) => &alias.type_keyword,
+        }
+    }
+    pub fn type_name(&self) -> &cst::ProperName {
+        match self {
+            Self::Type(decl) => decl.type_name(),
+            Self::TypeAlias(alias) => &alias.type_name,
+        }
+    }
+    pub fn type_variables(&self) -> &Option<cst::ParensList1<cst::Name>> {
+        match self {
+            Self::Type(decl) => decl.type_variables(),
+            Self::TypeAlias(alias) => &alias.type_variables,
+        }
+    }
+    pub fn iter_constructors(
+        self,
+    ) -> Box<dyn std::iter::Iterator<Item = cst::Constructor<Option<cst::Pipe>>>> {
+        match self {
+            Self::Type(decl) => decl.iter_constructors(),
+            Self::TypeAlias(_) => Box::new(std::iter::empty()),
+        }
+    }
+}
 pub fn kindcheck_type_declarations(
     env_types: &EnvTypes,
     fully_qualified_module_name: FullyQualifiedModuleName,
-    cst_type_declarations: Vec<cst::TypeDeclaration>,
+    type_declarations: Vec<TypeDeclaration>,
 ) -> Result<(ModuleTypes, ModuleConstructors, TypeReferences, Warnings)> {
     // Need to check there aren't duplicate type names before we toposort
     let mut declarations_seen: HashMap<_, Span> = HashMap::new();
-    for type_declaration in cst_type_declarations.iter() {
+    for type_declaration in type_declarations.iter() {
         let type_name = type_declaration.type_name();
         let span = type_name.get_span();
         let type_name_string = type_name.0.value.clone();
@@ -51,9 +85,44 @@ pub fn kindcheck_type_declarations(
     let mut type_references = TypeReferences::new();
     let mut warnings = Warnings::new();
 
-    for scc in toposort_type_declarations(cst_type_declarations) {
+    for scc in toposort_type_declarations(type_declarations) {
         match scc {
-            Scc::Acyclic(cst_type_declaration) => {
+            Scc::Acyclic(TypeDeclaration::TypeAlias(cst_type_alias_declaration)) => {
+                let (type_name, module_type, new_type_references, more_warnings) =
+                    kindcheck_type_alias_declaration(
+                        &env_types,
+                        Supply::default(),
+                        cst_type_alias_declaration,
+                    )?;
+                if let ModuleType::Alias {
+                    aliased_type,
+                    alias_variables,
+                    ..
+                } = &module_type
+                {
+                    env_types.insert(
+                        unqualified(type_name.clone()),
+                        EnvType::ConstructorAlias {
+                            // REVIEW extract this `FullyQualifiedProperName`
+                            // logic into a function?
+                            canonical_value: FullyQualifiedProperName {
+                                module_name: fully_qualified_module_name.clone(),
+                                value: type_name.clone(),
+                            },
+                            constructor_kind: module_type.kind().clone(),
+                            alias_variables: alias_variables.to_vec(),
+                            aliased_type: Box::new(aliased_type.clone()),
+                        },
+                    );
+                } else {
+                    unreachable!()
+                }
+
+                module_types.insert(type_name, module_type);
+                type_references = merge_references(type_references, new_type_references);
+                warnings.extend(more_warnings);
+            }
+            Scc::Acyclic(TypeDeclaration::Type(cst_type_declaration)) => {
                 let (type_name, module_type, more_constructors, new_type_references, more_warnings) =
                     kindcheck_type_declaration(
                         &env_types,
@@ -70,7 +139,7 @@ pub fn kindcheck_type_declarations(
                             module_name: fully_qualified_module_name.clone(),
                             value: type_name.clone(),
                         },
-                        constructor_kind: module_type.kind.clone(),
+                        constructor_kind: module_type.kind().clone(),
                     },
                 );
                 module_types.insert(type_name, module_type);
@@ -101,25 +170,39 @@ pub fn kindcheck_type_declarations(
                 type_references = merge_references(type_references, new_type_references);
                 warnings.extend(more_warnings);
             }
-            Scc::Cyclic(cst_type_declarations) => {
+            Scc::Cyclic(type_declarations) => {
                 let (types_and_constructors, new_type_references, more_warnings) =
                     kindcheck_cyclic_type_declarations(
                         &env_types,
                         Supply::default(),
                         fully_qualified_module_name.clone(),
-                        cst_type_declarations,
+                        type_declarations,
                     )?;
                 for (type_name, module_type, more_constructors) in types_and_constructors {
                     env_types.insert(
                         unqualified(type_name.clone()),
-                        EnvType::Constructor {
-                            // REVIEW extract this `FullyQualifiedProperName`
-                            // logic into a function?
-                            canonical_value: FullyQualifiedProperName {
-                                module_name: fully_qualified_module_name.clone(),
-                                value: type_name.clone(),
+                        match &module_type {
+                            ModuleType::Type { kind, .. } => EnvType::Constructor {
+                                canonical_value: FullyQualifiedProperName {
+                                    module_name: fully_qualified_module_name.clone(),
+                                    value: type_name.clone(),
+                                },
+                                constructor_kind: kind.clone(),
                             },
-                            constructor_kind: module_type.kind.clone(),
+                            ModuleType::Alias {
+                                kind,
+                                alias_variables,
+                                aliased_type,
+                                ..
+                            } => EnvType::ConstructorAlias {
+                                canonical_value: FullyQualifiedProperName {
+                                    module_name: fully_qualified_module_name.clone(),
+                                    value: type_name.clone(),
+                                },
+                                constructor_kind: kind.clone(),
+                                alias_variables: alias_variables.to_vec(),
+                                aliased_type: Box::new(aliased_type.clone()),
+                            },
                         },
                     );
                     module_types.insert(type_name, module_type);
@@ -161,7 +244,7 @@ fn kindcheck_cyclic_type_declarations(
     env_types: &EnvTypes,
     supply: Supply,
     fully_qualified_module_name: FullyQualifiedModuleName,
-    cst_type_declarations: Vec<cst::TypeDeclaration>,
+    type_declarations: Vec<TypeDeclaration>,
 ) -> Result<(
     Vec<(ProperName, ModuleType, ModuleConstructors)>,
     TypeReferences,
@@ -175,7 +258,7 @@ fn kindcheck_cyclic_type_declarations(
         env_types,
         &mut state,
         fully_qualified_module_name,
-        cst_type_declarations,
+        type_declarations,
     )?;
 
     let State {
@@ -187,8 +270,9 @@ fn kindcheck_cyclic_type_declarations(
 
     let types_and_constructors = types_and_constructors
         .into_iter()
-        .map(|(type_name, mut module_type, module_constructors)| {
-            module_type.kind = substitution.apply(module_type.kind);
+        .map(|(type_name, module_type, module_constructors)| {
+            let module_type_kind = substitution.apply(module_type.kind().clone());
+            let module_type = module_type.set_kind(module_type_kind);
             let module_constructors = module_constructors
                 .into_iter()
                 .map(|(proper_name, constructor)| {
@@ -206,21 +290,21 @@ fn check_cyclic_type_declarations(
     env_types: &EnvTypes,
     state: &mut State,
     fully_qualified_module_name: FullyQualifiedModuleName,
-    cst_type_declarations: Vec<cst::TypeDeclaration>,
+    type_declarations: Vec<TypeDeclaration>,
 ) -> Result<Vec<(ProperName, ModuleType, ModuleConstructors)>> {
     let mut pre_prepared = Vec::new();
 
     let mut env_types = env_types.clone();
-    for cst_type_declaration in cst_type_declarations {
+    for type_declaration in type_declarations {
         let type_variables =
-            get_type_declaration_variables(&mut state.supply, &cst_type_declaration)?;
+            get_type_variables(&mut state.supply, type_declaration.type_variables())?;
 
-        let type_kind = get_type_declaration_kind(&type_variables);
+        let type_kind = get_declaration_kind(&type_variables);
 
-        let type_name_span = cst_type_declaration.type_name().get_span();
+        let type_name_span = type_declaration.type_name().get_span();
         let type_name = ProperName::from(
             // Cloning due to `.iter_constructors()` below
-            cst_type_declaration.type_name().clone(),
+            type_declaration.type_name().clone(),
         );
 
         let fully_qualified_type_name = FullyQualifiedProperName {
@@ -229,7 +313,7 @@ fn check_cyclic_type_declarations(
         };
 
         let decl_type =
-            get_type_declaration_type(&type_variables, &type_kind, &fully_qualified_type_name);
+            get_declaration_type(&type_variables, &type_kind, &fully_qualified_type_name);
 
         env_types.insert(
             unqualified(type_name.clone()),
@@ -239,8 +323,8 @@ fn check_cyclic_type_declarations(
             },
         );
 
-        let module_type = ModuleType {
-            doc_comments: extract_doc_comments(&cst_type_declaration.type_keyword().0),
+        let module_type = ModuleType::Type {
+            doc_comments: extract_doc_comments(&type_declaration.type_keyword().0),
             type_name_span,
             kind: type_kind,
         };
@@ -250,7 +334,7 @@ fn check_cyclic_type_declarations(
             module_type,
             type_variables,
             decl_type,
-            cst_type_declaration.iter_constructors().collect::<Vec<_>>(),
+            type_declaration.iter_constructors().collect::<Vec<_>>(),
         ));
     }
 
@@ -303,6 +387,61 @@ fn check_cyclic_type_declarations(
     Ok(out)
 }
 
+fn kindcheck_type_alias_declaration(
+    env_types: &EnvTypes,
+    mut supply: Supply,
+    cst_type_alias_declaration: cst::TypeAliasDeclaration,
+) -> Result<(ProperName, ModuleType, TypeReferences, Warnings)> {
+    let cst::TypeAliasDeclaration {
+        type_keyword,
+        type_name,
+        type_variables,
+        aliased_type,
+        ..
+    } = cst_type_alias_declaration;
+
+    let type_variables = get_type_variables(&mut supply, &type_variables)?;
+    let type_kind = get_declaration_kind(&type_variables);
+    let type_name_span = type_name.get_span();
+    let type_name = ProperName::from(type_name);
+
+    let mut state = State {
+        supply,
+        ..State::default()
+    };
+
+    let env = Env {
+        types: env_types.clone(),
+        type_variables: type_variables.clone().into_iter().collect(), // convert to HashMap
+    };
+
+    let aliased_type = kindchecker::check(&env, &mut state, Kind::Type, aliased_type)?;
+
+    let State {
+        warnings,
+        substitution,
+        type_references,
+        ..
+    } = state;
+
+    let type_kind = substitution.apply(type_kind);
+    let aliased_type = substitution.apply_type(aliased_type);
+    let alias_variables = type_variables
+        .into_iter()
+        .map(|(_, env_type_variable)| env_type_variable.var)
+        .collect();
+
+    let module_type = ModuleType::Alias {
+        doc_comments: extract_doc_comments(&type_keyword.0),
+        type_name_span,
+        kind: type_kind,
+        aliased_type,
+        alias_variables,
+    };
+
+    Ok((type_name, module_type, type_references, warnings))
+}
+
 fn kindcheck_type_declaration(
     env_types: &EnvTypes,
     supply: Supply,
@@ -319,7 +458,7 @@ fn kindcheck_type_declaration(
         supply,
         ..State::default()
     };
-    let (type_name, mut module_type, module_constructors) = check_type_declaration(
+    let (type_name, module_type, module_constructors) = check_type_declaration(
         env_types,
         &mut state,
         fully_qualified_module_name,
@@ -333,7 +472,8 @@ fn kindcheck_type_declaration(
         ..
     } = state;
 
-    module_type.kind = substitution.apply(module_type.kind);
+    let module_type_kind = substitution.apply(module_type.kind().clone());
+    let module_type = module_type.set_kind(module_type_kind);
     let module_constructors = module_constructors
         .into_iter()
         .map(|(proper_name, constructor)| {
@@ -356,8 +496,9 @@ fn check_type_declaration(
     fully_qualified_module_name: FullyQualifiedModuleName,
     cst_type_declaration: cst::TypeDeclaration,
 ) -> Result<(ProperName, ModuleType, ModuleConstructors)> {
-    let type_variables = get_type_declaration_variables(&mut state.supply, &cst_type_declaration)?;
-    let type_kind = get_type_declaration_kind(&type_variables);
+    let type_variables =
+        get_type_variables(&mut state.supply, cst_type_declaration.type_variables())?;
+    let type_kind = get_declaration_kind(&type_variables);
     let type_name_span = cst_type_declaration.type_name().get_span();
     let type_name = ProperName::from(cst_type_declaration.type_name().clone());
     let fully_qualified_type_name = FullyQualifiedProperName {
@@ -366,8 +507,7 @@ fn check_type_declaration(
     };
 
     let doc_comments = extract_doc_comments(&cst_type_declaration.type_keyword().0);
-    let decl_type =
-        get_type_declaration_type(&type_variables, &type_kind, &fully_qualified_type_name);
+    let decl_type = get_declaration_type(&type_variables, &type_kind, &fully_qualified_type_name);
     let mut env_types = env_types.clone();
     env_types.insert(
         unqualified(type_name.clone()),
@@ -404,7 +544,7 @@ fn check_type_declaration(
         module_constructors.insert(constructor_name, constructor);
     }
 
-    let module_type = ModuleType {
+    let module_type = ModuleType::Type {
         doc_comments,
         type_name_span,
         kind: type_kind,
@@ -415,17 +555,19 @@ fn check_type_declaration(
 
 type TypeVariables = Vec<(Name, EnvTypeVariable)>; // NOTE Vec because we're preserving ordering
 
-fn get_type_declaration_variables(
+type CstTypeVariables = Option<cst::ParensList1<cst::Name>>;
+
+fn get_type_variables(
     supply: &mut Supply,
-    cst_type_declaration: &cst::TypeDeclaration,
+    type_variables: &CstTypeVariables,
 ) -> Result<TypeVariables> {
-    match cst_type_declaration.type_variables() {
+    match type_variables {
         None => Ok(Vec::new()),
-        Some(cst_type_variables) => {
+        Some(cst_names) => {
             let mut type_variables = TypeVariables::new();
             let mut type_variables_seen = HashMap::new();
 
-            for cst_name in cst_type_variables.value.iter().cloned() {
+            for cst_name in cst_names.value.iter().cloned() {
                 let span = cst_name.get_span();
                 let name = Name::from(cst_name);
 
@@ -446,7 +588,7 @@ fn get_type_declaration_variables(
     }
 }
 
-fn get_type_declaration_kind(type_variables: &TypeVariables) -> Kind {
+fn get_declaration_kind(type_variables: &TypeVariables) -> Kind {
     let mut parameter_kinds = type_variables
         .iter()
         .map(|(_, EnvTypeVariable { variable_kind, .. })| variable_kind.clone());
@@ -462,7 +604,7 @@ fn get_type_declaration_kind(type_variables: &TypeVariables) -> Kind {
     }
 }
 
-fn get_type_declaration_type(
+fn get_declaration_type(
     type_variables: &TypeVariables,
     type_kind: &Kind,
     fully_qualified_type_name: &FullyQualifiedProperName,
@@ -539,20 +681,20 @@ fn check_constructor(
 }
 
 fn toposort_type_declarations(
-    cst_type_declarations: Vec<cst::TypeDeclaration>,
-) -> Vec<Scc<cst::TypeDeclaration>> {
+    type_declarations: Vec<TypeDeclaration>,
+) -> Vec<Scc<TypeDeclaration>> {
     type Node = String;
     type Nodes = HashSet<String>;
 
-    let declaration_names: Nodes = cst_type_declarations.iter().map(get_key).collect();
+    let declaration_names: Nodes = type_declarations.iter().map(get_key).collect();
 
     if cfg!(debug_assertions) {
         return toposort_deterministic(
-            cst_type_declarations,
+            type_declarations,
             get_key,
-            |declaration: &cst::TypeDeclaration| -> Nodes {
+            |decl: &TypeDeclaration| -> Nodes {
                 let mut accum = Nodes::new();
-                get_connected_nodes_rec(declaration, &declaration_names, &mut accum);
+                get_connected_nodes_rec(decl, &declaration_names, &mut accum);
                 accum
             },
             // Sort by name for determinism in tests
@@ -560,35 +702,38 @@ fn toposort_type_declarations(
         );
     } else {
         return toposort(
-            cst_type_declarations,
+            type_declarations,
             get_key,
-            |declaration: &cst::TypeDeclaration| -> Nodes {
+            |decl: &TypeDeclaration| -> Nodes {
                 let mut accum = Nodes::new();
-                get_connected_nodes_rec(declaration, &declaration_names, &mut accum);
+                get_connected_nodes_rec(decl, &declaration_names, &mut accum);
                 accum
             },
         );
     }
 
-    fn get_key(declaration: &cst::TypeDeclaration) -> Node {
+    fn get_key(declaration: &TypeDeclaration) -> Node {
         declaration.type_name().0.value.clone()
     }
 
-    fn get_connected_nodes_rec(
-        declaration: &cst::TypeDeclaration,
-        nodes: &Nodes,
-        accum: &mut Nodes,
-    ) {
-        declaration
-            .clone()
-            .iter_constructors()
-            .for_each(|constructor| {
-                if let Some(fields) = constructor.fields {
-                    fields.value.iter().for_each(|field| {
-                        get_connected_nodes_type_rec(field, nodes, accum);
-                    })
-                }
-            });
+    fn get_connected_nodes_rec(decl: &TypeDeclaration, nodes: &Nodes, accum: &mut Nodes) {
+        match decl {
+            TypeDeclaration::TypeAlias(alias_decl) => {
+                get_connected_nodes_type_rec(&alias_decl.aliased_type, nodes, accum);
+            }
+            TypeDeclaration::Type(type_decl) => {
+                type_decl
+                    .clone()
+                    .iter_constructors()
+                    .for_each(|constructor| {
+                        if let Some(fields) = constructor.fields {
+                            fields.value.iter().for_each(|field| {
+                                get_connected_nodes_type_rec(field, nodes, accum);
+                            })
+                        }
+                    });
+            }
+        }
     }
 
     fn get_connected_nodes_type_rec(t: &cst::Type, nodes: &Nodes, accum: &mut Nodes) {
@@ -613,8 +758,13 @@ fn toposort_type_declarations(
                 function,
                 arguments,
             } => {
-                if let cst::TypeCallFunction::Constructor(ctor) = function {
-                    let node = &ctor.value.0.value;
+                if let cst::TypeCallFunction::Constructor(cst::QualifiedProperName {
+                    // If it's imported (i.e. Qualified) then it's not interesting here
+                    module_name: None,
+                    value,
+                }) = function
+                {
+                    let node = &value.0.value;
                     if nodes.contains(node) && !accum.contains(node) {
                         accum.insert(node.clone());
                     }
@@ -624,8 +774,12 @@ fn toposort_type_declarations(
                 })
             }
 
-            Constructor(ctor) => {
-                let node = &ctor.value.0.value;
+            Constructor(cst::QualifiedProperName { module_name, value }) => {
+                if module_name.is_some() {
+                    // If it's imported (i.e. Qualified) then it's not interesting here
+                    return;
+                }
+                let node = &value.0.value;
                 if nodes.contains(node) && !accum.contains(node) {
                     accum.insert(node.clone());
                 }

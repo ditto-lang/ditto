@@ -207,7 +207,7 @@ pub fn check(env: &Env, state: &mut State, expected: Kind, cst_type: cst::Type) 
                     label, box value, ..
                 } in fields
                 {
-                    let value = infer(env, state, value)?;
+                    let value = check(env, state, Kind::Type, value)?;
                     row.insert(label.into(), value);
                 }
             }
@@ -246,7 +246,7 @@ pub fn check(env: &Env, state: &mut State, expected: Kind, cst_type: cst::Type) 
                 label, box value, ..
             } in fields
             {
-                let value = infer(env, state, value)?;
+                let value = check(env, state, Kind::Type, value)?;
                 row.insert(label.into(), value);
             }
             Ok(Type::RecordOpen {

@@ -67,6 +67,16 @@ pub enum EnvType {
         /// Note we're not supporting polymorphic kinds here, hence this isn't a scheme.
         constructor_kind: Kind,
     },
+    ConstructorAlias {
+        /// The canonical name for this type constructor.
+        canonical_value: FullyQualifiedProperName,
+        /// The kind of this constructor.
+        ///
+        /// Note we're not supporting polymorphic kinds here, hence this isn't a scheme.
+        constructor_kind: Kind,
+        alias_variables: Vec<usize>,
+        aliased_type: Box<Type>,
+    },
 }
 
 impl EnvType {
@@ -83,6 +93,18 @@ impl EnvType {
                 constructor_kind: constructor_kind.clone(),
                 canonical_value: canonical_value.clone(),
                 source_value: Some(source_value),
+            },
+            Self::ConstructorAlias {
+                canonical_value,
+                constructor_kind,
+                alias_variables,
+                box aliased_type,
+            } => Type::ConstructorAlias {
+                constructor_kind: constructor_kind.clone(),
+                canonical_value: canonical_value.clone(),
+                source_value: Some(source_value),
+                alias_variables: alias_variables.to_vec(),
+                aliased_type: Box::new(aliased_type.clone()),
             },
         }
     }
