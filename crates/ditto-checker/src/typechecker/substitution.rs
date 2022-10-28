@@ -1,4 +1,4 @@
-use ditto_ast::{Argument, Effect, Expression, FunctionBinder, Type};
+use ditto_ast::{Argument, Effect, Expression, FunctionBinder, Kind, Type};
 use non_empty_vec::NonEmpty;
 use std::collections::HashMap;
 
@@ -48,13 +48,13 @@ impl Substitution {
             } => {
                 match self.0.get(&var) {
                     Some(Type::RecordOpen {
-                        kind,
+                        kind: _,
                         var,
                         source_name,
                         row: new_row,
                     }) => {
                         let t = Type::RecordOpen {
-                            kind: kind.clone(), // yeh?
+                            kind: Kind::Type,
                             var: *var,
                             source_name: source_name.clone(),
                             row: row
@@ -65,16 +65,17 @@ impl Substitution {
                         };
                         self.apply_rec(t, depth + 1)
                     }
-                    Some(Type::RecordClosed { kind, row: new_row }) => {
-                        Type::RecordClosed {
-                            kind: kind.clone(), // yeh?
-                            row: row
-                                .into_iter()
-                                .chain(new_row.clone())
-                                .map(|(label, t)| (label, self.apply_rec(t, depth)))
-                                .collect(),
-                        }
-                    }
+                    Some(Type::RecordClosed {
+                        kind: _,
+                        row: new_row,
+                    }) => Type::RecordClosed {
+                        kind: Kind::Type,
+                        row: row
+                            .into_iter()
+                            .chain(new_row.clone())
+                            .map(|(label, t)| (label, self.apply_rec(t, depth)))
+                            .collect(),
+                    },
                     // This will happen as a result of instantiation
                     Some(Type::Variable {
                         var, source_name, ..
