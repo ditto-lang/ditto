@@ -5,9 +5,11 @@
   "exports": {
     "types": {
       "A": {
-        "doc_comments": [],
-        "doc_position": 0,
-        "kind": "Type"
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": "Type"
+        }
       }
     },
     "constructors": {
@@ -40,20 +42,24 @@
   },
   "types": {
     "B": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 47,
-        "end_offset": 48
-      },
-      "kind": "Type"
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 47,
+          "end_offset": 48
+        },
+        "kind": "Type"
+      }
     },
     "A": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 35,
-        "end_offset": 36
-      },
-      "kind": "Type"
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 35,
+          "end_offset": 36
+        },
+        "kind": "Type"
+      }
     }
   },
   "constructors": {

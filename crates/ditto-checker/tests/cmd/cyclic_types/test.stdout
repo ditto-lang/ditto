@@ -5,14 +5,18 @@
   "exports": {
     "types": {
       "A": {
-        "doc_comments": [],
-        "doc_position": 0,
-        "kind": "Type"
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": "Type"
+        }
       },
       "B": {
-        "doc_comments": [],
-        "doc_position": 1,
-        "kind": "Type"
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 1,
+          "kind": "Type"
+        }
       }
     },
     "constructors": {
@@ -121,20 +125,24 @@
   },
   "types": {
     "A": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 32,
-        "end_offset": 33
-      },
-      "kind": "Type"
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 32,
+          "end_offset": 33
+        },
+        "kind": "Type"
+      }
     },
     "B": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 48,
-        "end_offset": 49
-      },
-      "kind": "Type"
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 48,
+          "end_offset": 49
+        },
+        "kind": "Type"
+      }
     }
   },
   "constructors": {

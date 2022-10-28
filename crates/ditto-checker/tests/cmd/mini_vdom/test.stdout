@@ -5,20 +5,24 @@
   "exports": {
     "types": {
       "Attr": {
-        "doc_comments": [],
-        "doc_position": 0,
-        "kind": "Type"
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": "Type"
+        }
       },
       "Html": {
-        "doc_comments": [],
-        "doc_position": 1,
-        "kind": {
-          "Function": {
-            "parameters": [
-              {
-                "Variable": 1
-              }
-            ]
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 1,
+          "kind": {
+            "Function": {
+              "parameters": [
+                {
+                  "Variable": 1
+                }
+              ]
+            }
           }
         }
       }
@@ -209,26 +213,30 @@
   },
   "types": {
     "Attr": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 49,
-        "end_offset": 53
-      },
-      "kind": "Type"
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 49,
+          "end_offset": 53
+        },
+        "kind": "Type"
+      }
     },
     "Html": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 32,
-        "end_offset": 36
-      },
-      "kind": {
-        "Function": {
-          "parameters": [
-            {
-              "Variable": 1
-            }
-          ]
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 32,
+          "end_offset": 36
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              {
+                "Variable": 1
+              }
+            ]
+          }
         }
       }
     }

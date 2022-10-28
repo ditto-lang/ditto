@@ -5,12 +5,14 @@
   "exports": {
     "types": {
       "A": {
-        "doc_comments": [
-          "Documentation for",
-          "my type `A`"
-        ],
-        "doc_position": 1,
-        "kind": "Type"
+        "Type": {
+          "doc_comments": [
+            "Documentation for",
+            "my type `A`"
+          ],
+          "doc_position": 1,
+          "kind": "Type"
+        }
       }
     },
     "constructors": {
@@ -87,15 +89,17 @@
   },
   "types": {
     "A": {
-      "doc_comments": [
-        "Documentation for",
-        "my type `A`"
-      ],
-      "type_name_span": {
-        "start_offset": 97,
-        "end_offset": 98
-      },
-      "kind": "Type"
+      "Type": {
+        "doc_comments": [
+          "Documentation for",
+          "my type `A`"
+        ],
+        "type_name_span": {
+          "start_offset": 97,
+          "end_offset": 98
+        },
+        "kind": "Type"
+      }
     }
   },
   "constructors": {

@@ -5,13 +5,15 @@
   "exports": {
     "types": {
       "ABC": {
-        "doc_comments": [],
-        "doc_position": 0,
-        "kind": {
-          "Function": {
-            "parameters": [
-              "Type"
-            ]
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": {
+            "Function": {
+              "parameters": [
+                "Type"
+              ]
+            }
           }
         }
       }
@@ -243,16 +245,18 @@
   },
   "types": {
     "ABC": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 31,
-        "end_offset": 34
-      },
-      "kind": {
-        "Function": {
-          "parameters": [
-            "Type"
-          ]
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 31,
+          "end_offset": 34
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Type"
+            ]
+          }
         }
       }
     }
