@@ -19,7 +19,7 @@ pub fn assert_dirs_eq<Want: AsRef<std::path::Path>, Got: AsRef<std::path::Path>>
         let predicate_file = predicate::path::eq_file(&want_file);
         if !predicate_file.eval(got_file) {
             let want_file_contents = std::fs::read_to_string(&want_file)?;
-            let got_file_contents = std::fs::read_to_string(&got_file)?;
+            let got_file_contents = std::fs::read_to_string(got_file)?;
             similar_asserts::assert_eq!(want_file_contents, got_file_contents);
         }
     }
