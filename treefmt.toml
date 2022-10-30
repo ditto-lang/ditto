@@ -30,7 +30,7 @@ excludes = ["*/husky.sh"]
 [formatter.prettier]
 command = "npx"
 options = ["prettier", "--write"]
-includes = ["*.css", "*.html", "*.js", "*.json", "*.md", "*.ts"]
+includes = ["*.css", "*.html", "*.js", "*.json", "*.md", "*.ts", "*.yaml"]
 
 # Our generated JavaScript (and serde generated JSON)
 # doesn't agree with the prettier style!
