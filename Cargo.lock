@@ -605,6 +605,7 @@ dependencies = [
  "lsp-server",
  "lsp-types",
  "miette",
+ "ropey",
  "serde",
  "serde_json",
  "tree-sitter",
@@ -1981,6 +1982,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "ropey"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bbd22239fafefc42138ca5da064f3c17726a80d2379d817a3521240e78dd0064"
+dependencies = [
+ "smallvec",
+ "str_indices",
+]
+
+[[package]]
 name = "rustc-demangle"
 version = "0.1.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2232,6 +2243,12 @@ dependencies = [
  "libc",
  "winapi",
 ]
+
+[[package]]
+name = "str_indices"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d9199fa80c817e074620be84374a520062ebac833f358d74b37060ce4a0f2c0"
 
 [[package]]
 name = "string_cache"

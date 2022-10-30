@@ -19,6 +19,7 @@ tree-sitter = "0.20"
 url = "2.2"
 ditto-cst = { path = "../ditto-cst" }
 ditto-fmt = { path = "../ditto-fmt" }
+ropey = "1.5"
 #salsa = "xx"
 
 [dev-dependencies]

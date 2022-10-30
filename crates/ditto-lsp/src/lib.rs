@@ -5,6 +5,7 @@ mod semantic_tokens;
 
 use log::debug;
 use miette::IntoDiagnostic;
+use ropey::Rope;
 use serde_json as json;
 use std::collections::HashMap;
 use url::Url;
@@ -148,6 +149,9 @@ fn handle_formatting_request(
             match ditto_cst::Module::parse(contents) {
                 Ok(module) => {
                     let formatted = ditto_fmt::format_module(module);
+                    let rope = Rope::from_str(contents);
+                    let (lines, last_line) = rope.lines().enumerate().last().unwrap();
+
                     let edit = lsp_types::TextEdit {
                         range: lsp_types::Range {
                             start: lsp_types::Position {
@@ -155,11 +159,8 @@ fn handle_formatting_request(
                                 character: 0,
                             },
                             end: lsp_types::Position {
-                                line: contents.lines().count() as u32,
-                                character: contents
-                                    .lines()
-                                    .last()
-                                    .map_or(0, |line| line.len() as u32),
+                                line: lines as u32,
+                                character: last_line.len_utf16_cu() as u32,
                             },
                         },
                         new_text: formatted,
