@@ -1,0 +1,7 @@
+module Test exports (..);
+
+import Maybe;
+
+type alias Maybe = Maybe.Maybe(Int);
+
+just_int = fn (i: Int): Maybe -> Maybe.Just(i);

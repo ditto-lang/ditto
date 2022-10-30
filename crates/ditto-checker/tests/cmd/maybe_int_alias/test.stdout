@@ -1,0 +1,321 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "Maybe": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": "Type",
+          "aliased_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Type"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Maybe"
+                      ]
+                    ],
+                    "value": "Maybe"
+                  },
+                  "source_value": {
+                    "module_name": "Maybe",
+                    "value": "Maybe"
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              ]
+            }
+          },
+          "alias_variables": []
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "just_int": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          "Type"
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Maybe"
+                        ]
+                      ],
+                      "value": "Maybe"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Maybe"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Maybe": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 53,
+          "end_offset": 58
+        },
+        "kind": "Type",
+        "aliased_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Type"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Maybe"
+                    ]
+                  ],
+                  "value": "Maybe"
+                },
+                "source_value": {
+                  "module_name": "Maybe",
+                  "value": "Maybe"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ]
+          }
+        },
+        "alias_variables": []
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "just_int": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 80,
+        "end_offset": 88
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 91,
+            "end_offset": 126
+          },
+          "binders": [
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 95,
+                  "end_offset": 96
+                },
+                "binder_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                },
+                "value": "i"
+              }
+            }
+          ],
+          "body": {
+            "expression": "Call",
+            "data": {
+              "span": {
+                "start_offset": 113,
+                "end_offset": 126
+              },
+              "call_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Maybe"
+                          ]
+                        ],
+                        "value": "Maybe"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Maybe"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  ]
+                }
+              },
+              "function": {
+                "expression": "ImportedConstructor",
+                "data": {
+                  "span": {
+                    "start_offset": 113,
+                    "end_offset": 123
+                  },
+                  "constructor_type": {
+                    "type": "Function",
+                    "data": {
+                      "parameters": [
+                        {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      ],
+                      "return_type": {
+                        "type": "Call",
+                        "data": {
+                          "function": {
+                            "type": "Constructor",
+                            "data": {
+                              "constructor_kind": {
+                                "Function": {
+                                  "parameters": [
+                                    "Type"
+                                  ]
+                                }
+                              },
+                              "canonical_value": {
+                                "module_name": [
+                                  null,
+                                  [
+                                    "Maybe"
+                                  ]
+                                ],
+                                "value": "Maybe"
+                              },
+                              "source_value": {
+                                "module_name": null,
+                                "value": "Maybe"
+                              }
+                            }
+                          },
+                          "arguments": [
+                            {
+                              "type": "PrimConstructor",
+                              "data": "Int"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "constructor": {
+                    "module_name": [
+                      null,
+                      [
+                        "Maybe"
+                      ]
+                    ],
+                    "value": "Just"
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "Expression": {
+                    "expression": "LocalVariable",
+                    "data": {
+                      "span": {
+                        "start_offset": 124,
+                        "end_offset": 125
+                      },
+                      "variable_type": {
+                        "type": "PrimConstructor",
+                        "data": "Int"
+                      },
+                      "variable": "i"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "just_int"
+  ]
+}

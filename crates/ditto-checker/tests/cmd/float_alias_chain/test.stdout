@@ -1,0 +1,370 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "A": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": "Type",
+          "aliased_type": {
+            "type": "PrimConstructor",
+            "data": "Float"
+          },
+          "alias_variables": []
+        }
+      },
+      "B": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 1,
+          "kind": "Type",
+          "aliased_type": {
+            "type": "ConstructorAlias",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Test"
+                  ]
+                ],
+                "value": "A"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "A"
+              },
+              "alias_variables": [],
+              "aliased_type": {
+                "type": "PrimConstructor",
+                "data": "Float"
+              }
+            }
+          },
+          "alias_variables": []
+        }
+      },
+      "C": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 2,
+          "kind": "Type",
+          "aliased_type": {
+            "type": "ConstructorAlias",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Test"
+                  ]
+                ],
+                "value": "B"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "B"
+              },
+              "alias_variables": [],
+              "aliased_type": {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": "Type",
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "A"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "A"
+                  },
+                  "alias_variables": [],
+                  "aliased_type": {
+                    "type": "PrimConstructor",
+                    "data": "Float"
+                  }
+                }
+              }
+            }
+          },
+          "alias_variables": []
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "ConstructorAlias",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Test"
+                ]
+              ],
+              "value": "C"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "C"
+            },
+            "alias_variables": [],
+            "aliased_type": {
+              "type": "ConstructorAlias",
+              "data": {
+                "constructor_kind": "Type",
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "B"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "B"
+                },
+                "alias_variables": [],
+                "aliased_type": {
+                  "type": "ConstructorAlias",
+                  "data": {
+                    "constructor_kind": "Type",
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Test"
+                        ]
+                      ],
+                      "value": "A"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "A"
+                    },
+                    "alias_variables": [],
+                    "aliased_type": {
+                      "type": "PrimConstructor",
+                      "data": "Float"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "A": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 38,
+          "end_offset": 39
+        },
+        "kind": "Type",
+        "aliased_type": {
+          "type": "PrimConstructor",
+          "data": "Float"
+        },
+        "alias_variables": []
+      }
+    },
+    "B": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 60,
+          "end_offset": 61
+        },
+        "kind": "Type",
+        "aliased_type": {
+          "type": "ConstructorAlias",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Test"
+                ]
+              ],
+              "value": "A"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "A"
+            },
+            "alias_variables": [],
+            "aliased_type": {
+              "type": "PrimConstructor",
+              "data": "Float"
+            }
+          }
+        },
+        "alias_variables": []
+      }
+    },
+    "C": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 78,
+          "end_offset": 79
+        },
+        "kind": "Type",
+        "aliased_type": {
+          "type": "ConstructorAlias",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Test"
+                ]
+              ],
+              "value": "B"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "B"
+            },
+            "alias_variables": [],
+            "aliased_type": {
+              "type": "ConstructorAlias",
+              "data": {
+                "constructor_kind": "Type",
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "A"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "A"
+                },
+                "alias_variables": [],
+                "aliased_type": {
+                  "type": "PrimConstructor",
+                  "data": "Float"
+                }
+              }
+            }
+          }
+        },
+        "alias_variables": []
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 86,
+        "end_offset": 90
+      },
+      "expression": {
+        "expression": "Float",
+        "data": {
+          "span": {
+            "start_offset": 97,
+            "end_offset": 100
+          },
+          "value": "5.0",
+          "value_type": {
+            "type": "ConstructorAlias",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Test"
+                  ]
+                ],
+                "value": "C"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "C"
+              },
+              "alias_variables": [],
+              "aliased_type": {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": "Type",
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "B"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "B"
+                  },
+                  "alias_variables": [],
+                  "aliased_type": {
+                    "type": "ConstructorAlias",
+                    "data": {
+                      "constructor_kind": "Type",
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "A"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "A"
+                      },
+                      "alias_variables": [],
+                      "aliased_type": {
+                        "type": "PrimConstructor",
+                        "data": "Float"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "five"
+  ]
+}

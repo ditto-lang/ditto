@@ -1,0 +1,14 @@
+module Test exports (high_five);
+
+type alias Number = Float;
+
+number_five: Number = 5.0;
+
+floaty_five : Float = number_five;
+
+gimme_five = fn (five: Number): Float -> five;
+
+high_five = gimme_five(floaty_five);
+
+-- TODO: if the type alias isn't exported then references to it should
+-- be erased from the exports.

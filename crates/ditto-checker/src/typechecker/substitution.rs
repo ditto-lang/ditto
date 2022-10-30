@@ -1,3 +1,4 @@
+use super::common::type_variables;
 use ditto_ast::{Argument, Effect, Expression, FunctionBinder, Kind, Type};
 use non_empty_vec::NonEmpty;
 use std::collections::HashMap;
@@ -11,9 +12,6 @@ impl Substitution {
         self.0.insert(var, ast_type);
     }
     pub fn apply(&self, ast_type: Type) -> Type {
-        if self.0.is_empty() {
-            return ast_type;
-        }
         self.apply_rec(ast_type, 0)
     }
     fn apply_rec(&self, ast_type: Type, depth: usize) -> Type {
@@ -22,8 +20,8 @@ impl Substitution {
         if depth > 100 {
             // Panicking like this is nicer than a stackoverflow
             panic!(
-                "Substitution exceeded max depth: ast_type = {:#?}",
-                ast_type
+                "Substitution exceeded max depth:\nsubst = {:#?}\nast_type = {:#?}",
+                self, ast_type
             );
         }
         match ast_type {
@@ -108,6 +106,45 @@ impl Substitution {
                 }
             }
             Type::Call {
+                function:
+                    box Type::ConstructorAlias {
+                        canonical_value,
+                        constructor_kind,
+                        source_value,
+                        alias_variables,
+                        box aliased_type,
+                    },
+                arguments,
+            } => {
+                let (head, tail) = arguments.split_first();
+                let mut arguments = NonEmpty::new(self.apply_rec(head.clone(), depth));
+                for t in tail {
+                    arguments.push(self.apply_rec(t.clone(), depth));
+                }
+                let mut subst = self.0.clone();
+                subst.extend(
+                    alias_variables
+                        .clone()
+                        .into_iter()
+                        .zip(arguments.clone())
+                        // hmmmmmm...feels hacky doing an occurs check like this...?
+                        .filter(|(var, t)| !type_variables(t).contains(var)),
+                );
+                let subst = Substitution(subst);
+                let aliased_type = Box::new(subst.apply_rec(aliased_type, depth));
+                let function = Type::ConstructorAlias {
+                    canonical_value,
+                    constructor_kind,
+                    source_value,
+                    alias_variables,
+                    aliased_type,
+                };
+                Type::Call {
+                    function: Box::new(function),
+                    arguments,
+                }
+            }
+            Type::Call {
                 box function,
                 arguments,
             } => Type::Call {
@@ -137,6 +174,19 @@ impl Substitution {
                     .into_iter()
                     .map(|(label, t)| (label, self.apply_rec(t, depth)))
                     .collect(),
+            },
+            Type::ConstructorAlias {
+                constructor_kind,
+                canonical_value,
+                source_value,
+                alias_variables,
+                box aliased_type,
+            } => Type::ConstructorAlias {
+                constructor_kind,
+                canonical_value,
+                source_value,
+                alias_variables,
+                aliased_type: Box::new(self.apply_rec(aliased_type, depth)),
             },
             Type::Constructor {
                 constructor_kind: _,

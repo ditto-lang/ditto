@@ -1,0 +1,484 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "Option": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": {
+            "Function": {
+              "parameters": [
+                "Type"
+              ]
+            }
+          },
+          "aliased_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Type"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      "base",
+                      [
+                        "Maybe"
+                      ]
+                    ],
+                    "value": "Maybe"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "Maybe"
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": "Type",
+                    "var": 0,
+                    "source_name": "a"
+                  }
+                }
+              ]
+            }
+          },
+          "alias_variables": [
+            0
+          ]
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "none": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          "Type"
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        "base",
+                        [
+                          "Maybe"
+                        ]
+                      ],
+                      "value": "Maybe"
+                    },
+                    "source_value": null
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 0,
+                      "source_name": "a"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "some": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": "a"
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          "Type"
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        "base",
+                        [
+                          "Maybe"
+                        ]
+                      ],
+                      "value": "Maybe"
+                    },
+                    "source_value": null
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 0,
+                      "source_name": "a"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Option": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 68,
+          "end_offset": 74
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Type"
+            ]
+          }
+        },
+        "aliased_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Type"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    "base",
+                    [
+                      "Maybe"
+                    ]
+                  ],
+                  "value": "Maybe"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "Maybe"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": "a"
+                }
+              }
+            ]
+          }
+        },
+        "alias_variables": [
+          0
+        ]
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "none": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 137,
+        "end_offset": 141
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 144,
+            "end_offset": 177
+          },
+          "binders": [],
+          "body": {
+            "expression": "ImportedConstructor",
+            "data": {
+              "span": {
+                "start_offset": 164,
+                "end_offset": 177
+              },
+              "constructor_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          "base",
+                          [
+                            "Maybe"
+                          ]
+                        ],
+                        "value": "Maybe"
+                      },
+                      "source_value": null
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    }
+                  ]
+                }
+              },
+              "constructor": {
+                "module_name": [
+                  "base",
+                  [
+                    "Maybe"
+                  ]
+                ],
+                "value": "Nothing"
+              }
+            }
+          }
+        }
+      }
+    },
+    "some": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 91,
+        "end_offset": 95
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 98,
+            "end_offset": 135
+          },
+          "binders": [
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 102,
+                  "end_offset": 103
+                },
+                "binder_type": {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": "Type",
+                    "var": 0,
+                    "source_name": "a"
+                  }
+                },
+                "value": "a"
+              }
+            }
+          ],
+          "body": {
+            "expression": "Call",
+            "data": {
+              "span": {
+                "start_offset": 122,
+                "end_offset": 135
+              },
+              "call_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          "base",
+                          [
+                            "Maybe"
+                          ]
+                        ],
+                        "value": "Maybe"
+                      },
+                      "source_value": null
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    }
+                  ]
+                }
+              },
+              "function": {
+                "expression": "ImportedConstructor",
+                "data": {
+                  "span": {
+                    "start_offset": 122,
+                    "end_offset": 132
+                  },
+                  "constructor_type": {
+                    "type": "Function",
+                    "data": {
+                      "parameters": [
+                        {
+                          "type": "Variable",
+                          "data": {
+                            "variable_kind": "Type",
+                            "var": 0,
+                            "source_name": "a"
+                          }
+                        }
+                      ],
+                      "return_type": {
+                        "type": "Call",
+                        "data": {
+                          "function": {
+                            "type": "Constructor",
+                            "data": {
+                              "constructor_kind": {
+                                "Function": {
+                                  "parameters": [
+                                    "Type"
+                                  ]
+                                }
+                              },
+                              "canonical_value": {
+                                "module_name": [
+                                  "base",
+                                  [
+                                    "Maybe"
+                                  ]
+                                ],
+                                "value": "Maybe"
+                              },
+                              "source_value": null
+                            }
+                          },
+                          "arguments": [
+                            {
+                              "type": "Variable",
+                              "data": {
+                                "variable_kind": "Type",
+                                "var": 0,
+                                "source_name": "a"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "constructor": {
+                    "module_name": [
+                      "base",
+                      [
+                        "Maybe"
+                      ]
+                    ],
+                    "value": "Just"
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "Expression": {
+                    "expression": "LocalVariable",
+                    "data": {
+                      "span": {
+                        "start_offset": 133,
+                        "end_offset": 134
+                      },
+                      "variable_type": {
+                        "type": "Variable",
+                        "data": {
+                          "variable_kind": "Type",
+                          "var": 0,
+                          "source_name": "a"
+                        }
+                      },
+                      "variable": "a"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "none",
+    "some"
+  ]
+}

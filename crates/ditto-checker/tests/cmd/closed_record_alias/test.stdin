@@ -1,0 +1,7 @@
+module Test exports (..);
+
+type alias Props = { a: Int, b: Bool, c: Unit };
+
+get_a = fn (props: Props) -> props.a;
+
+five = get_a({ a = 5, b = true, c = unit });

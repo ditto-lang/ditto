@@ -5,9 +5,11 @@
   "exports": {
     "types": {
       "Abstract": {
-        "doc_comments": [],
-        "doc_position": 0,
-        "kind": "Type"
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": "Type"
+        }
       }
     },
     "constructors": {},
@@ -39,12 +41,14 @@
   },
   "types": {
     "Abstract": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 53,
-        "end_offset": 61
-      },
-      "kind": "Type"
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 53,
+          "end_offset": 61
+        },
+        "kind": "Type"
+      }
     }
   },
   "constructors": {

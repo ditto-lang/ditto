@@ -1,0 +1,5 @@
+module Test exports (..);
+
+type alias Foo = Foo;
+
+wut : Foo = unit;

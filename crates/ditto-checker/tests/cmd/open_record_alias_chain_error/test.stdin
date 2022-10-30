@@ -1,0 +1,18 @@
+module Test exports (..);
+
+type alias HasFoo(a) = { a | foo : Int };
+
+type alias HasFooBar(b) = HasFoo({ b | bar : Float });
+
+type alias HasFooBarBaz(r) = HasFooBar({ r | baz : Unit });
+
+foo : HasFoo({}) = { foo = 5 };
+
+foo_bar: HasFooBar({}) = { foo = 5, bar = 5.0 };
+
+foo_bar_baz : HasFooBarBaz({}) = { 
+    foo = 5, 
+    bar = 5.0, 
+    baz = unit, 
+    huh = [] 
+};

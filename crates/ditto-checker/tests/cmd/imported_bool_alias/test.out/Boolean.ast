@@ -1,0 +1,119 @@
+{
+  "module_name": [
+    "Boolean"
+  ],
+  "exports": {
+    "types": {
+      "Boolean": {
+        "Alias": {
+          "doc_comments": [
+            "It's like `Bool` but longer..."
+          ],
+          "doc_position": 1,
+          "kind": "Type",
+          "aliased_type": {
+            "type": "PrimConstructor",
+            "data": "Bool"
+          },
+          "alias_variables": []
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "example": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "ConstructorAlias",
+          "data": {
+            "constructor_kind": "Type",
+            "canonical_value": {
+              "module_name": [
+                null,
+                [
+                  "Boolean"
+                ]
+              ],
+              "value": "Boolean"
+            },
+            "source_value": {
+              "module_name": null,
+              "value": "Boolean"
+            },
+            "alias_variables": [],
+            "aliased_type": {
+              "type": "PrimConstructor",
+              "data": "Bool"
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Boolean": {
+      "Alias": {
+        "doc_comments": [
+          "It's like `Bool` but longer..."
+        ],
+        "type_name_span": {
+          "start_offset": 89,
+          "end_offset": 96
+        },
+        "kind": "Type",
+        "aliased_type": {
+          "type": "PrimConstructor",
+          "data": "Bool"
+        },
+        "alias_variables": []
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "example": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 106,
+        "end_offset": 113
+      },
+      "expression": {
+        "expression": "False",
+        "data": {
+          "span": {
+            "start_offset": 126,
+            "end_offset": 131
+          },
+          "value_type": {
+            "type": "ConstructorAlias",
+            "data": {
+              "constructor_kind": "Type",
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Boolean"
+                  ]
+                ],
+                "value": "Boolean"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Boolean"
+              },
+              "alias_variables": [],
+              "aliased_type": {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "example"
+  ]
+}

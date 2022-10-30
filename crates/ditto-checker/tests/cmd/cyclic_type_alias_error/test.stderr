@@ -1,0 +1,11 @@
+
+  × types don't unify
+   ╭─[cyclic_type_alias_error.ditto:4:1]
+ 4 │ 
+ 5 │ wut : Foo = unit;
+   ·             ──┬─
+   ·               ╰── here
+   ╰────
+  help: expected Foo
+        got Unit
+

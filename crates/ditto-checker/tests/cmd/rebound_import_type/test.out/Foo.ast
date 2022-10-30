@@ -5,15 +5,17 @@
   "exports": {
     "types": {
       "A": {
-        "doc_comments": [],
-        "doc_position": 0,
-        "kind": {
-          "Function": {
-            "parameters": [
-              {
-                "Variable": 1
-              }
-            ]
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": {
+            "Function": {
+              "parameters": [
+                {
+                  "Variable": 1
+                }
+              ]
+            }
           }
         }
       }
@@ -73,18 +75,20 @@
   },
   "types": {
     "A": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 31,
-        "end_offset": 32
-      },
-      "kind": {
-        "Function": {
-          "parameters": [
-            {
-              "Variable": 1
-            }
-          ]
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 31,
+          "end_offset": 32
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              {
+                "Variable": 1
+              }
+            ]
+          }
         }
       }
     }

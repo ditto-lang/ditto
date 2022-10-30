@@ -1,0 +1,702 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "HasFoo": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": {
+            "Function": {
+              "parameters": [
+                "Row"
+              ]
+            }
+          },
+          "aliased_type": {
+            "type": "RecordOpen",
+            "data": {
+              "kind": "Type",
+              "var": 0,
+              "source_name": "a",
+              "row": {
+                "foo": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              }
+            }
+          },
+          "alias_variables": [
+            0
+          ]
+        }
+      },
+      "HasFooBar": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 1,
+          "kind": {
+            "Function": {
+              "parameters": [
+                "Row"
+              ]
+            }
+          },
+          "aliased_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Row"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "HasFoo"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "HasFoo"
+                  },
+                  "alias_variables": [
+                    0
+                  ],
+                  "aliased_type": {
+                    "type": "RecordOpen",
+                    "data": {
+                      "kind": "Type",
+                      "var": 0,
+                      "source_name": "a",
+                      "row": {
+                        "foo": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "RecordOpen",
+                  "data": {
+                    "kind": "Row",
+                    "var": 0,
+                    "source_name": "b",
+                    "row": {
+                      "bar": {
+                        "type": "PrimConstructor",
+                        "data": "Float"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "alias_variables": [
+            0
+          ]
+        }
+      },
+      "HasFooBarBaz": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 2,
+          "kind": {
+            "Function": {
+              "parameters": [
+                "Row"
+              ]
+            }
+          },
+          "aliased_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Row"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "HasFooBar"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "HasFooBar"
+                  },
+                  "alias_variables": [
+                    0
+                  ],
+                  "aliased_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "ConstructorAlias",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Row"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "HasFoo"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "HasFoo"
+                          },
+                          "alias_variables": [
+                            0
+                          ],
+                          "aliased_type": {
+                            "type": "RecordOpen",
+                            "data": {
+                              "kind": "Type",
+                              "var": 0,
+                              "source_name": "a",
+                              "row": {
+                                "foo": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "RecordOpen",
+                          "data": {
+                            "kind": "Row",
+                            "var": 0,
+                            "source_name": "b",
+                            "row": {
+                              "bar": {
+                                "type": "PrimConstructor",
+                                "data": "Float"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "RecordOpen",
+                  "data": {
+                    "kind": "Row",
+                    "var": 0,
+                    "source_name": "r",
+                    "row": {
+                      "baz": {
+                        "type": "PrimConstructor",
+                        "data": "Unit"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "alias_variables": [
+            0
+          ]
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "foo": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "RecordClosed",
+          "data": {
+            "kind": "Type",
+            "row": {
+              "foo": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            }
+          }
+        }
+      },
+      "foo_bar": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "value_type": {
+          "type": "RecordClosed",
+          "data": {
+            "kind": "Type",
+            "row": {
+              "foo": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              },
+              "bar": {
+                "type": "PrimConstructor",
+                "data": "Float"
+              }
+            }
+          }
+        }
+      },
+      "foo_bar_baz": {
+        "doc_comments": [],
+        "doc_position": 2,
+        "value_type": {
+          "type": "RecordClosed",
+          "data": {
+            "kind": "Type",
+            "row": {
+              "foo": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              },
+              "bar": {
+                "type": "PrimConstructor",
+                "data": "Float"
+              },
+              "baz": {
+                "type": "PrimConstructor",
+                "data": "Unit"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "HasFoo": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 38,
+          "end_offset": 44
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Row"
+            ]
+          }
+        },
+        "aliased_type": {
+          "type": "RecordOpen",
+          "data": {
+            "kind": "Type",
+            "var": 0,
+            "source_name": "a",
+            "row": {
+              "foo": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            }
+          }
+        },
+        "alias_variables": [
+          0
+        ]
+      }
+    },
+    "HasFooBar": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 81,
+          "end_offset": 90
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Row"
+            ]
+          }
+        },
+        "aliased_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "ConstructorAlias",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Row"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "HasFoo"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "HasFoo"
+                },
+                "alias_variables": [
+                  0
+                ],
+                "aliased_type": {
+                  "type": "RecordOpen",
+                  "data": {
+                    "kind": "Type",
+                    "var": 0,
+                    "source_name": "a",
+                    "row": {
+                      "foo": {
+                        "type": "PrimConstructor",
+                        "data": "Int"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "RecordOpen",
+                "data": {
+                  "kind": "Row",
+                  "var": 0,
+                  "source_name": "b",
+                  "row": {
+                    "bar": {
+                      "type": "PrimConstructor",
+                      "data": "Float"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "alias_variables": [
+          0
+        ]
+      }
+    },
+    "HasFooBarBaz": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 137,
+          "end_offset": 149
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Row"
+            ]
+          }
+        },
+        "aliased_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "ConstructorAlias",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Row"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "HasFooBar"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "HasFooBar"
+                },
+                "alias_variables": [
+                  0
+                ],
+                "aliased_type": {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "ConstructorAlias",
+                      "data": {
+                        "constructor_kind": {
+                          "Function": {
+                            "parameters": [
+                              "Row"
+                            ]
+                          }
+                        },
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "HasFoo"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "HasFoo"
+                        },
+                        "alias_variables": [
+                          0
+                        ],
+                        "aliased_type": {
+                          "type": "RecordOpen",
+                          "data": {
+                            "kind": "Type",
+                            "var": 0,
+                            "source_name": "a",
+                            "row": {
+                              "foo": {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "arguments": [
+                      {
+                        "type": "RecordOpen",
+                        "data": {
+                          "kind": "Row",
+                          "var": 0,
+                          "source_name": "b",
+                          "row": {
+                            "bar": {
+                              "type": "PrimConstructor",
+                              "data": "Float"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "RecordOpen",
+                "data": {
+                  "kind": "Row",
+                  "var": 0,
+                  "source_name": "r",
+                  "row": {
+                    "baz": {
+                      "type": "PrimConstructor",
+                      "data": "Unit"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "alias_variables": [
+          0
+        ]
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "foo_bar_baz": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 270,
+        "end_offset": 281
+      },
+      "expression": {
+        "expression": "Record",
+        "data": {
+          "span": {
+            "start_offset": 303,
+            "end_offset": 337
+          },
+          "fields": {
+            "foo": {
+              "expression": "Int",
+              "data": {
+                "span": {
+                  "start_offset": 311,
+                  "end_offset": 312
+                },
+                "value": "5",
+                "value_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              }
+            },
+            "bar": {
+              "expression": "Float",
+              "data": {
+                "span": {
+                  "start_offset": 320,
+                  "end_offset": 323
+                },
+                "value": "5.0",
+                "value_type": {
+                  "type": "PrimConstructor",
+                  "data": "Float"
+                }
+              }
+            },
+            "baz": {
+              "expression": "Unit",
+              "data": {
+                "span": {
+                  "start_offset": 331,
+                  "end_offset": 335
+                },
+                "value_type": {
+                  "type": "PrimConstructor",
+                  "data": "Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "foo_bar": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 220,
+        "end_offset": 227
+      },
+      "expression": {
+        "expression": "Record",
+        "data": {
+          "span": {
+            "start_offset": 245,
+            "end_offset": 267
+          },
+          "fields": {
+            "foo": {
+              "expression": "Int",
+              "data": {
+                "span": {
+                  "start_offset": 253,
+                  "end_offset": 254
+                },
+                "value": "5",
+                "value_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              }
+            },
+            "bar": {
+              "expression": "Float",
+              "data": {
+                "span": {
+                  "start_offset": 262,
+                  "end_offset": 265
+                },
+                "value": "5.0",
+                "value_type": {
+                  "type": "PrimConstructor",
+                  "data": "Float"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "foo": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 187,
+        "end_offset": 190
+      },
+      "expression": {
+        "expression": "Record",
+        "data": {
+          "span": {
+            "start_offset": 206,
+            "end_offset": 217
+          },
+          "fields": {
+            "foo": {
+              "expression": "Int",
+              "data": {
+                "span": {
+                  "start_offset": 214,
+                  "end_offset": 215
+                },
+                "value": "5",
+                "value_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "foo_bar_baz",
+    "foo_bar",
+    "foo"
+  ]
+}

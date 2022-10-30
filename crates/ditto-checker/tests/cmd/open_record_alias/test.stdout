@@ -1,0 +1,160 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "HasFoo": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": {
+            "Function": {
+              "parameters": [
+                "Row",
+                "Type"
+              ]
+            }
+          },
+          "aliased_type": {
+            "type": "RecordOpen",
+            "data": {
+              "kind": "Type",
+              "var": 0,
+              "source_name": "r",
+              "row": {
+                "foo": {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": "Type",
+                    "var": 2,
+                    "source_name": "a"
+                  }
+                }
+              }
+            }
+          },
+          "alias_variables": [
+            0,
+            2
+          ]
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "foo": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "RecordClosed",
+          "data": {
+            "kind": "Type",
+            "row": {
+              "foo": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              },
+              "bar": {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "HasFoo": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 38,
+          "end_offset": 44
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Row",
+              "Type"
+            ]
+          }
+        },
+        "aliased_type": {
+          "type": "RecordOpen",
+          "data": {
+            "kind": "Type",
+            "var": 0,
+            "source_name": "r",
+            "row": {
+              "foo": {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 2,
+                  "source_name": "a"
+                }
+              }
+            }
+          }
+        },
+        "alias_variables": [
+          0,
+          2
+        ]
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "foo": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 70,
+        "end_offset": 73
+      },
+      "expression": {
+        "expression": "Record",
+        "data": {
+          "span": {
+            "start_offset": 105,
+            "end_offset": 128
+          },
+          "fields": {
+            "foo": {
+              "expression": "Int",
+              "data": {
+                "span": {
+                  "start_offset": 113,
+                  "end_offset": 114
+                },
+                "value": "5",
+                "value_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              }
+            },
+            "bar": {
+              "expression": "True",
+              "data": {
+                "span": {
+                  "start_offset": 122,
+                  "end_offset": 126
+                },
+                "value_type": {
+                  "type": "PrimConstructor",
+                  "data": "Bool"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "foo"
+  ]
+}

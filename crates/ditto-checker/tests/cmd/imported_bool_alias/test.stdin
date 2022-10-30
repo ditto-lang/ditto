@@ -1,0 +1,7 @@
+module Test exports (..);
+
+import Boolean (Boolean);
+
+my_boolean : Boolean = true;
+
+five = if Boolean.example then 5 else 5;

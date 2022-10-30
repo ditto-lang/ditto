@@ -1,0 +1,3 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["float_alias.ditto"]
+fs.sandbox = true

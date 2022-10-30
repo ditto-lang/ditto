@@ -22,18 +22,41 @@ fn export_everything(mut module: Module) -> Result<(Module, Warnings)> {
 
     // TYPES
     let mut module_types = module.types.iter().collect::<Vec<_>>();
-    module_types.sort_by(|a, b| a.0 .0.cmp(&b.0 .0)); // sort alphabetically.
+    module_types
+        .sort_by(|(lhs_type_name, _), (rhs_type_name, _)| lhs_type_name.0.cmp(&rhs_type_name.0)); // sort alphabetically.
     for (doc_position, (proper_name, module_type)) in module_types.into_iter().enumerate() {
-        let doc_comments = module_type.doc_comments.clone();
-        let kind = module_type.kind.clone();
-        module.exports.types.insert(
-            proper_name.clone(),
-            ModuleExportsType {
+        match module_type {
+            ModuleType::Type {
+                doc_comments, kind, ..
+            } => {
+                module.exports.types.insert(
+                    proper_name.clone(),
+                    ModuleExportsType::Type {
+                        doc_comments: doc_comments.clone(),
+                        doc_position,
+                        kind: kind.clone(),
+                    },
+                );
+            }
+            ModuleType::Alias {
                 doc_comments,
-                doc_position,
                 kind,
-            },
-        );
+                aliased_type,
+                alias_variables,
+                ..
+            } => {
+                module.exports.types.insert(
+                    proper_name.clone(),
+                    ModuleExportsType::Alias {
+                        doc_comments: doc_comments.clone(),
+                        doc_position,
+                        kind: kind.clone(),
+                        aliased_type: aliased_type.clone(),
+                        alias_variables: alias_variables.to_vec(),
+                    },
+                );
+            }
+        }
     }
 
     // CONSTRUCTORS
@@ -124,23 +147,45 @@ fn export_list(mut module: Module, expose_list: Vec<cst::Export>) -> Result<(Mod
                 } else {
                     types_seen.insert(type_name.clone(), span);
                 }
-
-                if let Some(ModuleType {
-                    kind, doc_comments, ..
-                }) = module.types.get(&type_name)
-                {
-                    module.exports.types.insert(
-                        type_name.clone(),
-                        ModuleExportsType {
-                            doc_comments: doc_comments.to_vec(),
-                            doc_position,
-                            kind: kind.clone(),
-                        },
-                    );
-                } else {
-                    return Err(TypeError::UnknownTypeExport { span, type_name });
+                match module.types.get(&type_name) {
+                    Some(module_type) => match module_type {
+                        ModuleType::Type {
+                            kind, doc_comments, ..
+                        } => {
+                            module.exports.types.insert(
+                                type_name.clone(),
+                                ModuleExportsType::Type {
+                                    doc_comments: doc_comments.to_vec(),
+                                    doc_position,
+                                    kind: kind.clone(),
+                                },
+                            );
+                        }
+                        ModuleType::Alias {
+                            kind,
+                            doc_comments,
+                            aliased_type,
+                            alias_variables,
+                            ..
+                        } => {
+                            module.exports.types.insert(
+                                type_name.clone(),
+                                ModuleExportsType::Alias {
+                                    doc_comments: doc_comments.to_vec(),
+                                    doc_position,
+                                    kind: kind.clone(),
+                                    aliased_type: aliased_type.clone(),
+                                    alias_variables: alias_variables.to_vec(),
+                                },
+                            );
+                        }
+                    },
+                    _ => {
+                        return Err(TypeError::UnknownTypeExport { span, type_name });
+                    }
                 }
 
+                // TODO: warn when attempting to import constructors for a type alias
                 if include_constructors.is_some() {
                     module
                         .exports

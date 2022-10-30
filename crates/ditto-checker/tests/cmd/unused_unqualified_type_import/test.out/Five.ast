@@ -5,9 +5,11 @@
   "exports": {
     "types": {
       "Five": {
-        "doc_comments": [],
-        "doc_position": 0,
-        "kind": "Type"
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": "Type"
+        }
       }
     },
     "constructors": {
@@ -49,12 +51,14 @@
   },
   "types": {
     "Five": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 32,
-        "end_offset": 36
-      },
-      "kind": "Type"
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 32,
+          "end_offset": 36
+        },
+        "kind": "Type"
+      }
     }
   },
   "constructors": {

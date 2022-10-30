@@ -1,13 +1,18 @@
 use super::{
     expression::{gen_body_expression, gen_type_annotation},
-    helpers::space,
+    has_comments::HasComments,
+    helpers::{group, space},
     name::{gen_name, gen_proper_name},
     r#type::gen_type,
     syntax::gen_parens_list1,
-    token::{gen_equals, gen_foreign_keyword, gen_pipe, gen_semicolon, gen_type_keyword},
+    token::{
+        gen_alias_keyword, gen_equals, gen_foreign_keyword, gen_pipe, gen_semicolon,
+        gen_type_keyword,
+    },
 };
 use ditto_cst::{
-    Constructor, Declaration, ForeignValueDeclaration, Pipe, TypeDeclaration, ValueDeclaration,
+    Constructor, Declaration, ForeignValueDeclaration, Pipe, TypeAliasDeclaration, TypeDeclaration,
+    ValueDeclaration,
 };
 use dprint_core::formatting::{ir_helpers, PrintItems, Signal};
 
@@ -15,6 +20,7 @@ pub fn gen_declaration(declaration: Declaration) -> PrintItems {
     match declaration {
         Declaration::Value(box value_declaration) => gen_value_declaration(value_declaration),
         Declaration::Type(box type_declaration) => gen_type_declaration(type_declaration),
+        Declaration::TypeAlias(box type_alias) => gen_type_alias(type_alias),
         Declaration::ForeignValue(box foreign_value_declaration) => {
             gen_foreign_value_declaration(foreign_value_declaration)
         }
@@ -36,6 +42,36 @@ fn gen_value_declaration(decl: ValueDeclaration) -> PrintItems {
     ));
 
     items.extend(gen_semicolon(decl.semicolon));
+    items
+}
+
+fn gen_type_alias(type_alias: TypeAliasDeclaration) -> PrintItems {
+    let TypeAliasDeclaration {
+        type_keyword,
+        alias_keyword,
+        type_name,
+        type_variables,
+        equals,
+        aliased_type,
+        semicolon,
+    } = type_alias;
+    let mut items = PrintItems::new();
+    items.extend(gen_type_keyword(type_keyword));
+    items.extend(space());
+    items.extend(gen_alias_keyword(alias_keyword));
+    items.extend(space());
+    items.extend(gen_proper_name(type_name));
+    if let Some(type_variables) = type_variables {
+        items.extend(gen_parens_list1(type_variables, gen_name, false));
+    }
+    items.extend(space());
+    items.extend(gen_equals(equals));
+    let aliased_type_has_leading_comments = aliased_type.has_leading_comments();
+    items.extend(group(
+        gen_type(aliased_type),
+        aliased_type_has_leading_comments,
+    ));
+    items.extend(gen_semicolon(semicolon));
     items
 }
 

@@ -1,0 +1,6 @@
+module Boolean exports (example, Boolean);
+
+-- It's like `Bool` but longer...
+type alias Boolean = Bool;
+
+example : Boolean = false;

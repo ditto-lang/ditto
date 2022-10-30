@@ -1,0 +1,9 @@
+module Test exports (..);
+
+type alias WhyTho(a) = a;
+
+identity = fn (a: WhyTho(a)): a -> a;
+
+-- FIXME: type information gets dropped if `WhyTho(a)` is the return type annotation
+
+five : Float = identity(5.0);

@@ -1,0 +1,594 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "WhyTho": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": {
+            "Function": {
+              "parameters": [
+                "Type"
+              ]
+            }
+          },
+          "aliased_type": {
+            "type": "Variable",
+            "data": {
+              "variable_kind": "Type",
+              "var": 0,
+              "source_name": "a"
+            }
+          },
+          "alias_variables": [
+            0
+          ]
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "five": {
+        "doc_comments": [
+          "FIXME: type information gets dropped if `WhyTho(a)` is the return type annotation"
+        ],
+        "doc_position": 0,
+        "value_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "ConstructorAlias",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Type"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "WhyTho"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "WhyTho"
+                },
+                "alias_variables": [
+                  0
+                ],
+                "aliased_type": {
+                  "type": "PrimConstructor",
+                  "data": "Float"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "PrimConstructor",
+                "data": "Float"
+              }
+            ]
+          }
+        }
+      },
+      "identity": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "ConstructorAlias",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "WhyTho"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "WhyTho"
+                      },
+                      "alias_variables": [
+                        0
+                      ],
+                      "aliased_type": {
+                        "type": "Variable",
+                        "data": {
+                          "variable_kind": "Type",
+                          "var": 0,
+                          "source_name": "a"
+                        }
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "ConstructorAlias",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          "Type"
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Test"
+                        ]
+                      ],
+                      "value": "WhyTho"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "WhyTho"
+                    },
+                    "alias_variables": [
+                      0
+                    ],
+                    "aliased_type": {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 0,
+                      "source_name": "a"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "WhyTho": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 38,
+          "end_offset": 44
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Type"
+            ]
+          }
+        },
+        "aliased_type": {
+          "type": "Variable",
+          "data": {
+            "variable_kind": "Type",
+            "var": 0,
+            "source_name": "a"
+          }
+        },
+        "alias_variables": [
+          0
+        ]
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "identity": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 54,
+        "end_offset": 62
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 65,
+            "end_offset": 90
+          },
+          "binders": [
+            {
+              "Name": {
+                "span": {
+                  "start_offset": 69,
+                  "end_offset": 70
+                },
+                "binder_type": {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "ConstructorAlias",
+                      "data": {
+                        "constructor_kind": {
+                          "Function": {
+                            "parameters": [
+                              "Type"
+                            ]
+                          }
+                        },
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "WhyTho"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "WhyTho"
+                        },
+                        "alias_variables": [
+                          0
+                        ],
+                        "aliased_type": {
+                          "type": "Variable",
+                          "data": {
+                            "variable_kind": "Type",
+                            "var": 0,
+                            "source_name": "a"
+                          }
+                        }
+                      }
+                    },
+                    "arguments": [
+                      {
+                        "type": "Variable",
+                        "data": {
+                          "variable_kind": "Type",
+                          "var": 0,
+                          "source_name": "a"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "value": "a"
+              }
+            }
+          ],
+          "body": {
+            "expression": "LocalVariable",
+            "data": {
+              "span": {
+                "start_offset": 89,
+                "end_offset": 90
+              },
+              "variable_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "ConstructorAlias",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "WhyTho"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "WhyTho"
+                      },
+                      "alias_variables": [
+                        0
+                      ],
+                      "aliased_type": {
+                        "type": "Variable",
+                        "data": {
+                          "variable_kind": "Type",
+                          "var": 0,
+                          "source_name": "a"
+                        }
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    }
+                  ]
+                }
+              },
+              "variable": "a"
+            }
+          }
+        }
+      }
+    },
+    "five": {
+      "doc_comments": [
+        "FIXME: type information gets dropped if `WhyTho(a)` is the return type annotation"
+      ],
+      "name_span": {
+        "start_offset": 179,
+        "end_offset": 183
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 194,
+            "end_offset": 207
+          },
+          "call_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Type"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "WhyTho"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "WhyTho"
+                  },
+                  "alias_variables": [
+                    0
+                  ],
+                  "aliased_type": {
+                    "type": "PrimConstructor",
+                    "data": "Float"
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "PrimConstructor",
+                  "data": "Float"
+                }
+              ]
+            }
+          },
+          "function": {
+            "expression": "LocalVariable",
+            "data": {
+              "span": {
+                "start_offset": 194,
+                "end_offset": 202
+              },
+              "variable_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "Call",
+                      "data": {
+                        "function": {
+                          "type": "ConstructorAlias",
+                          "data": {
+                            "constructor_kind": {
+                              "Function": {
+                                "parameters": [
+                                  "Type"
+                                ]
+                              }
+                            },
+                            "canonical_value": {
+                              "module_name": [
+                                null,
+                                [
+                                  "Test"
+                                ]
+                              ],
+                              "value": "WhyTho"
+                            },
+                            "source_value": {
+                              "module_name": null,
+                              "value": "WhyTho"
+                            },
+                            "alias_variables": [
+                              0
+                            ],
+                            "aliased_type": {
+                              "type": "PrimConstructor",
+                              "data": "Float"
+                            }
+                          }
+                        },
+                        "arguments": [
+                          {
+                            "type": "PrimConstructor",
+                            "data": "Float"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "return_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "ConstructorAlias",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Type"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "WhyTho"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "WhyTho"
+                          },
+                          "alias_variables": [
+                            0
+                          ],
+                          "aliased_type": {
+                            "type": "PrimConstructor",
+                            "data": "Float"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "PrimConstructor",
+                          "data": "Float"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "variable": "identity"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "Float",
+                "data": {
+                  "span": {
+                    "start_offset": 203,
+                    "end_offset": 206
+                  },
+                  "value": "5.0",
+                  "value_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "ConstructorAlias",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Type"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "WhyTho"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "WhyTho"
+                          },
+                          "alias_variables": [
+                            0
+                          ],
+                          "aliased_type": {
+                            "type": "PrimConstructor",
+                            "data": "Float"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "PrimConstructor",
+                          "data": "Float"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "identity",
+    "five"
+  ]
+}

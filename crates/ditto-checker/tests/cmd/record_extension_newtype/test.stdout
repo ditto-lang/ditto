@@ -5,29 +5,35 @@
   "exports": {
     "types": {
       "ExtendMe": {
-        "doc_comments": [],
-        "doc_position": 0,
-        "kind": {
-          "Function": {
-            "parameters": [
-              "Row"
-            ]
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": {
+            "Function": {
+              "parameters": [
+                "Row"
+              ]
+            }
           }
         }
       },
       "ExtendedClosed": {
-        "doc_comments": [],
-        "doc_position": 1,
-        "kind": "Type"
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 1,
+          "kind": "Type"
+        }
       },
       "ExtendedOpen": {
-        "doc_comments": [],
-        "doc_position": 2,
-        "kind": {
-          "Function": {
-            "parameters": [
-              "Row"
-            ]
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 2,
+          "kind": {
+            "Function": {
+              "parameters": [
+                "Row"
+              ]
+            }
           }
         }
       }
@@ -745,40 +751,46 @@
   },
   "types": {
     "ExtendMe": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 32,
-        "end_offset": 40
-      },
-      "kind": {
-        "Function": {
-          "parameters": [
-            "Row"
-          ]
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 32,
+          "end_offset": 40
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Row"
+            ]
+          }
         }
       }
     },
     "ExtendedOpen": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 515,
-        "end_offset": 527
-      },
-      "kind": {
-        "Function": {
-          "parameters": [
-            "Row"
-          ]
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 515,
+          "end_offset": 527
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Row"
+            ]
+          }
         }
       }
     },
     "ExtendedClosed": {
-      "doc_comments": [],
-      "type_name_span": {
-        "start_offset": 744,
-        "end_offset": 758
-      },
-      "kind": "Type"
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 744,
+          "end_offset": 758
+        },
+        "kind": "Type"
+      }
     }
   },
   "constructors": {

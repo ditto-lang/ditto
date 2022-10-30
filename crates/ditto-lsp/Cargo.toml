@@ -14,7 +14,7 @@ serde = "1.0"
 serde_json = "1.0"
 log = "0.4"
 miette = { version = "4.7" }
-tree-sitter-ditto = { git = "https://github.com/ditto-lang/tree-sitter-ditto", rev = "22e20f26b357792e074b0366c883dc70d742b6e0" }
+tree-sitter-ditto = { git = "https://github.com/ditto-lang/tree-sitter-ditto", rev = "6b70ae4dd05c087194ecc86f473dc40f855b78bb" }
 tree-sitter = "0.20"
 url = "2.2"
 ditto-cst = { path = "../ditto-cst" }

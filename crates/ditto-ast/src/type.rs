@@ -44,6 +44,21 @@ pub enum Type {
         /// The type name as it appeared in the source. Or as it _would_ have appeared in the source.
         source_value: Option<QualifiedProperName>,
     },
+    /// A type constructor that is aliasing another type.
+    ConstructorAlias {
+        /// The kind of this type alias.
+        constructor_kind: Kind,
+        /// The canonical name for this type alias.
+        canonical_value: FullyQualifiedProperName,
+        /// The type name as it appeared in the source.
+        source_value: Option<QualifiedProperName>,
+        /// The type variables (if any) associated with the alias.
+        ///
+        /// Need to capture this in order to properly substitute `aliased_type`.
+        alias_variables: Vec<usize>,
+        /// The type that this aliases.
+        aliased_type: Box<Self>,
+    },
     /// A primitive type constructor.
     PrimConstructor(PrimType),
     /// A type variable, which may or may not be named in the source.
@@ -151,6 +166,9 @@ impl Type {
             Self::Constructor {
                 constructor_kind, ..
             } => constructor_kind.clone(),
+            Self::ConstructorAlias {
+                constructor_kind, ..
+            } => constructor_kind.clone(),
             Self::PrimConstructor(prim) => prim.get_kind(),
             Self::Call { .. } => Kind::Type, // NOTE: we don't have curried types!
             Self::RecordClosed { kind, .. } | Self::RecordOpen { kind, .. } => kind.clone(),
@@ -207,6 +225,20 @@ impl Type {
                 parameters: parameters.iter().map(|param| param.anonymize()).collect(),
                 return_type: Box::new(return_type.anonymize()),
             },
+            Self::ConstructorAlias {
+                constructor_kind,
+                canonical_value,
+                source_value,
+                alias_variables,
+                aliased_type,
+            } => Self::ConstructorAlias {
+                constructor_kind: constructor_kind.clone(),
+                canonical_value: canonical_value.clone(),
+                source_value: source_value.clone(),
+                alias_variables: alias_variables.to_vec(),
+                aliased_type: Box::new(aliased_type.anonymize()),
+            },
+
             Self::PrimConstructor { .. } | Self::Constructor { .. } => self.clone(),
         }
     }
@@ -263,6 +295,17 @@ impl Type {
                 constructor_kind: _,
                 canonical_value,
                 source_value,
+            } => {
+                if let Some(source_value) = source_value {
+                    output.push_str(&source_value.to_string());
+                } else {
+                    output.push_str(&canonical_value.to_string());
+                }
+            }
+            Self::ConstructorAlias {
+                canonical_value,
+                source_value,
+                ..
             } => {
                 if let Some(source_value) = source_value {
                     output.push_str(&source_value.to_string());

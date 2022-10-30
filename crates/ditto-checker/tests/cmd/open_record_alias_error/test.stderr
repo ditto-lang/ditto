@@ -1,0 +1,11 @@
+
+  × types don't unify
+   ╭─[open_record_alias_error.ditto:4:1]
+ 4 │ 
+ 5 │ foo : HasFoo({ bar: Bool }, Int) = { foo = 5, bar = "nah" };
+   ·                                    ────────────┬───────────
+   ·                                                ╰── here
+   ╰────
+  help: expected HasFoo(#{ bar: Bool }, Int)
+        got { foo: Int, bar: String }
+

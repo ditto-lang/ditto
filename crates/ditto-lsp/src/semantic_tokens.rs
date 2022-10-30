@@ -117,6 +117,7 @@ impl TokensBuilder {
               "end"
               "do"
               "return"
+              "alias"
             ] @keyword
 
             ; 2, 3, 4
@@ -133,6 +134,7 @@ impl TokensBuilder {
             ; 9, 10
             (type_variable) @type_variable
             (type_declaration_variable) @type_variable
+            (type_open_record_row_variable) @type_variable
 
             ; 11, 12
             (type_declaration_constructor_name) @constructor

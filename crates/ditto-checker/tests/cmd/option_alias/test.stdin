@@ -1,0 +1,8 @@
+module Test exports (..);
+
+import (base) Maybe (Maybe);
+
+type alias Option(a) = Maybe(a);
+
+some = fn (a: a): Option(a) -> Maybe.Just(a);
+none = fn (): Option(a) -> Maybe.Nothing;
