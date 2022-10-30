@@ -4,7 +4,7 @@ fn lsp_test_suite_passes() {
         .arg("run")
         .arg("ditto-lsp-test")
         .arg("--")
-        .arg(env!("CARGO_BIN_EXE_ditto-lsp"))
+        .arg(env!("CARGO_BIN_EXE_ditto-lsp-testbin"))
         .current_dir(env!("CARGO_WORKSPACE_DIR"))
         .stdout(std::process::Stdio::inherit())
         .stderr(std::process::Stdio::inherit())
