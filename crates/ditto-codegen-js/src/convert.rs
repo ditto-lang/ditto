@@ -227,19 +227,78 @@ pub(crate) fn convert_expression(
     ast_expression: ditto_ast::Expression,
 ) -> Expression {
     match ast_expression {
-        ditto_ast::Expression::Function { binders, body, .. } => Expression::ArrowFunction {
-            parameters: binders
-                .into_iter()
-                .map(|binder| match binder {
-                    ditto_ast::FunctionBinder::Name { value, .. } => Ident::from(value),
-                    ditto_ast::FunctionBinder::Unused { value, .. } => Ident::from(value),
-                })
-                .collect(),
-            body: Box::new(ArrowFunctionBody::Expression(convert_expression(
-                imported_module_idents,
-                *body,
-            ))),
-        },
+        ditto_ast::Expression::Function {
+            binders, box body, ..
+        } => {
+            let mut parameters = Vec::new();
+            let mut condition = None;
+            let mut assignments = Assignments::new();
+            for (i, (pattern, _type)) in binders.into_iter().enumerate() {
+                if let ditto_ast::Pattern::Unused { unused_name, .. } = pattern {
+                    parameters.push(unused_name.into());
+                    continue;
+                }
+                if let ditto_ast::Pattern::Variable { name, .. } = pattern {
+                    parameters.push(name.into());
+                    continue;
+                }
+                let generated_ident = Ident(format!("${}", i));
+                parameters.push(generated_ident.clone());
+                let (cond, assigns) =
+                    convert_pattern(Expression::Variable(generated_ident), pattern);
+                if let Some(rhs) = cond {
+                    if let Some(lhs) = condition {
+                        condition = Some(Expression::Operator {
+                            op: Operator::And,
+                            lhs: Box::new(lhs),
+                            rhs: Box::new(rhs),
+                        });
+                    } else {
+                        condition = Some(rhs)
+                    }
+                }
+                assignments.extend(assigns);
+            }
+            let body_expression = convert_expression(imported_module_idents, body);
+            if let Some(condition) = condition {
+                let block = Block::If {
+                    condition,
+                    true_branch: Box::new(assignments.into_iter().fold(
+                        Block::Return(Some(body_expression)),
+                        |rest, (ident, value)| Block::ConstAssignment {
+                            ident,
+                            value,
+                            rest: Box::new(rest),
+                        },
+                    )),
+                    false_branch: Box::new(Block::Throw(String::from(
+                        // TODO: mention the file location here?
+                        "Pattern match error",
+                    ))),
+                };
+                Expression::ArrowFunction {
+                    parameters,
+                    body: Box::new(ArrowFunctionBody::Block(block)),
+                }
+            } else if !assignments.is_empty() {
+                Expression::ArrowFunction {
+                    parameters,
+                    body: Box::new(ArrowFunctionBody::Block(assignments.into_iter().fold(
+                        Block::Return(Some(body_expression)),
+                        |rest, (ident, value)| Block::ConstAssignment {
+                            ident,
+                            value,
+                            rest: Box::new(rest),
+                        },
+                    ))),
+                }
+            } else {
+                Expression::ArrowFunction {
+                    parameters,
+                    body: Box::new(ArrowFunctionBody::Expression(body_expression)),
+                }
+            }
+        }
 
         ditto_ast::Expression::Call {
             function,
