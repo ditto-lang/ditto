@@ -20,7 +20,7 @@ pub enum Expression {
         /// `fn`
         fn_keyword: FnKeyword,
         /// The parameters to be bound and added to the scope of `body`.
-        parameters: Box<ParensList<(FunctionParameter, Option<TypeAnnotation>)>>,
+        parameters: Box<ParensList<(Pattern, Option<TypeAnnotation>)>>,
         /// Optional type annotation for `body`.
         return_type_annotation: Box<Option<TypeAnnotation>>,
         /// `->`
@@ -162,15 +162,6 @@ pub struct RecordField {
     pub equals: Equals,
     /// The value to be associated with the `label`.
     pub value: Box<Expression>,
-}
-
-/// A function expression parameter.
-#[derive(Debug, Clone)]
-pub enum FunctionParameter {
-    /// A name to be bound in the body of the function.
-    Name(Name),
-    /// A name _not_ to be bound in the body of the function.
-    Unused(UnusedName),
 }
 
 /// A binary operator.

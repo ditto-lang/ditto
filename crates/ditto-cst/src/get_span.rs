@@ -1,7 +1,7 @@
 use crate::{
-    Braces, Brackets, Expression, FunctionParameter, ModuleName, Name, PackageName, Parens,
-    Pattern, ProperName, QualifiedName, QualifiedProperName, Span, Token, Type, TypeAnnotation,
-    TypeCallFunction, UnusedName,
+    Braces, Brackets, Expression, ModuleName, Name, PackageName, Parens, Pattern, ProperName,
+    QualifiedName, QualifiedProperName, Span, Token, Type, TypeAnnotation, TypeCallFunction,
+    UnusedName,
 };
 
 impl<Value> Token<Value> {
@@ -141,16 +141,6 @@ impl Type {
                 .merge(&return_type.get_span()),
             Self::RecordClosed(braces) => braces.get_span(),
             Self::RecordOpen(braces) => braces.get_span(),
-        }
-    }
-}
-
-impl FunctionParameter {
-    /// Get the source span.
-    pub fn get_span(&self) -> Span {
-        match self {
-            Self::Name(name) => name.get_span(),
-            Self::Unused(unused_name) => unused_name.get_span(),
         }
     }
 }
