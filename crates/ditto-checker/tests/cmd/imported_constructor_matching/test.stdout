@@ -120,55 +120,57 @@
             "end_offset": 203
           },
           "binders": [
-            {
-              "Name": {
-                "span": {
-                  "start_offset": 102,
-                  "end_offset": 105
-                },
-                "binder_type": {
-                  "type": "Call",
-                  "data": {
-                    "function": {
-                      "type": "Constructor",
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 102,
+                    "end_offset": 105
+                  },
+                  "name": "abc"
+                }
+              },
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Dep"
+                          ]
+                        ],
+                        "value": "ABC"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "ABC"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
                       "data": {
-                        "constructor_kind": {
-                          "Function": {
-                            "parameters": [
-                              "Type"
-                            ]
-                          }
-                        },
-                        "canonical_value": {
-                          "module_name": [
-                            null,
-                            [
-                              "Dep"
-                            ]
-                          ],
-                          "value": "ABC"
-                        },
-                        "source_value": {
-                          "module_name": null,
-                          "value": "ABC"
-                        }
+                        "variable_kind": "Type",
+                        "var": 1,
+                        "source_name": null
                       }
-                    },
-                    "arguments": [
-                      {
-                        "type": "Variable",
-                        "data": {
-                          "variable_kind": "Type",
-                          "var": 1,
-                          "source_name": null
-                        }
-                      }
-                    ]
-                  }
-                },
-                "value": "abc"
+                    }
+                  ]
+                }
               }
-            }
+            ]
           ],
           "body": {
             "expression": "Match",

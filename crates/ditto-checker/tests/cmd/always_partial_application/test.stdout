@@ -108,23 +108,25 @@
             "end_offset": 58
           },
           "binders": [
-            {
-              "Name": {
-                "span": {
-                  "start_offset": 40,
-                  "end_offset": 41
-                },
-                "binder_type": {
-                  "type": "Variable",
-                  "data": {
-                    "variable_kind": "Type",
-                    "var": 0,
-                    "source_name": null
-                  }
-                },
-                "value": "a"
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 40,
+                    "end_offset": 41
+                  },
+                  "name": "a"
+                }
+              },
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": null
+                }
               }
-            }
+            ]
           ],
           "body": {
             "expression": "Function",
@@ -134,23 +136,25 @@
                 "end_offset": 58
               },
               "binders": [
-                {
-                  "Unused": {
-                    "span": {
-                      "start_offset": 50,
-                      "end_offset": 52
-                    },
-                    "binder_type": {
-                      "type": "Variable",
-                      "data": {
-                        "variable_kind": "Type",
-                        "var": 1,
-                        "source_name": null
-                      }
-                    },
-                    "value": "_b"
+                [
+                  {
+                    "Unused": {
+                      "span": {
+                        "start_offset": 50,
+                        "end_offset": 52
+                      },
+                      "unused_name": "_b"
+                    }
+                  },
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 1,
+                      "source_name": null
+                    }
                   }
-                }
+                ]
               ],
               "body": {
                 "expression": "LocalVariable",

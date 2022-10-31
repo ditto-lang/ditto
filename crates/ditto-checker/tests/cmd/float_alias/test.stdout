@@ -69,39 +69,41 @@
             "end_offset": 171
           },
           "binders": [
-            {
-              "Name": {
-                "span": {
-                  "start_offset": 143,
-                  "end_offset": 147
-                },
-                "binder_type": {
-                  "type": "ConstructorAlias",
-                  "data": {
-                    "constructor_kind": "Type",
-                    "canonical_value": {
-                      "module_name": [
-                        null,
-                        [
-                          "Test"
-                        ]
-                      ],
-                      "value": "Number"
-                    },
-                    "source_value": {
-                      "module_name": null,
-                      "value": "Number"
-                    },
-                    "alias_variables": [],
-                    "aliased_type": {
-                      "type": "PrimConstructor",
-                      "data": "Float"
-                    }
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 143,
+                    "end_offset": 147
+                  },
+                  "name": "five"
+                }
+              },
+              {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": "Type",
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "Number"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "Number"
+                  },
+                  "alias_variables": [],
+                  "aliased_type": {
+                    "type": "PrimConstructor",
+                    "data": "Float"
                   }
-                },
-                "value": "five"
+                }
               }
-            }
+            ]
           ],
           "body": {
             "expression": "LocalVariable",
