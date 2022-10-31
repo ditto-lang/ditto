@@ -17,7 +17,7 @@ use std::collections::hash_map;
 pub enum Expression {
     Function {
         span: Span,
-        binders: Vec<FunctionBinder>,
+        binders: Vec<(Pattern, Option<Type>)>,
         return_type_annotation: Option<Type>,
         body: Box<Self>,
     },
@@ -82,20 +82,6 @@ pub enum Expression {
     },
     Unit {
         span: Span,
-    },
-}
-
-#[derive(Clone)]
-pub enum FunctionBinder {
-    Name {
-        span: Span,
-        type_annotation: Option<Type>,
-        value: Name,
-    },
-    Unused {
-        span: Span,
-        type_annotation: Option<Type>,
-        value: UnusedName,
     },
 }
 
@@ -268,8 +254,8 @@ fn convert_cst(
 
             let mut binders = Vec::new();
             if let Some(parameters) = parameters.value {
-                for (param, type_annotation) in parameters.into_iter() {
-                    let span = param.get_span();
+                for (pattern, type_annotation) in parameters.into_iter() {
+                    let pattern = Pattern::from(pattern);
                     let type_annotation = if let Some(type_annotation) = type_annotation {
                         Some(check_type_annotation(
                             &env.types,
@@ -280,22 +266,7 @@ fn convert_cst(
                     } else {
                         None
                     };
-                    match param {
-                        cst::FunctionParameter::Name(name) => {
-                            binders.push(FunctionBinder::Name {
-                                span,
-                                type_annotation,
-                                value: Name::from(name),
-                            });
-                        }
-                        cst::FunctionParameter::Unused(unused_name) => {
-                            binders.push(FunctionBinder::Unused {
-                                span,
-                                type_annotation,
-                                value: UnusedName::from(unused_name),
-                            });
-                        }
-                    }
+                    binders.push((pattern, type_annotation));
                 }
             }
 
@@ -472,26 +443,7 @@ fn substitute_type_annotations(subst: &Substitution, expression: Expression) -> 
             span,
             binders: binders
                 .into_iter()
-                .map(|binder| match binder {
-                    FunctionBinder::Name {
-                        span,
-                        type_annotation,
-                        value,
-                    } => FunctionBinder::Name {
-                        span,
-                        type_annotation: type_annotation.map(|t| subst.apply_type(t)),
-                        value,
-                    },
-                    FunctionBinder::Unused {
-                        span,
-                        type_annotation,
-                        value,
-                    } => FunctionBinder::Unused {
-                        span,
-                        type_annotation: type_annotation.map(|t| subst.apply_type(t)),
-                        value,
-                    },
-                })
+                .map(|(binder, tipe)| (binder, tipe.map(|t| subst.apply_type(t))))
                 .collect(),
             return_type_annotation: return_type_annotation.map(|t| subst.apply_type(t)),
             body: Box::new(substitute_type_annotations(subst, body)),
@@ -588,6 +540,16 @@ pub enum Pattern {
         span: Span,
         unused_name: UnusedName,
     },
+}
+
+impl Pattern {
+    pub fn get_span(&self) -> Span {
+        match self {
+            Self::Constructor { span, .. } => *span,
+            Self::Variable { span, .. } => *span,
+            Self::Unused { span, .. } => *span,
+        }
+    }
 }
 
 impl From<cst::Pattern> for Pattern {
