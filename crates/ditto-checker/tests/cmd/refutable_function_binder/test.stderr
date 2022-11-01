@@ -1,0 +1,10 @@
+
+  × refutable function binder
+   ╭─[refutable_function_binder.ditto:6:1]
+ 6 │ 
+ 7 │ from_just = fn (Just(a)) -> a;
+   ·                 ───┬───
+   ·                    ╰── this pattern
+   ╰────
+  help: patterns here must cover all cases
+

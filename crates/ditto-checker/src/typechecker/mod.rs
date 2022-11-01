@@ -292,7 +292,20 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
                     pattern_span,
                     state.substitution.apply(pattern_type.clone()),
                     vec![pattern.clone()],
-                )?;
+                )
+                .map_err(|err| {
+                    if let TypeError::MatchNotExhaustive {
+                        match_span,
+                        missing_patterns,
+                    } = err
+                    {
+                        return TypeError::RefutableFunctionBinder {
+                            match_span,
+                            missing_patterns,
+                        };
+                    }
+                    err
+                })?;
 
                 binders.push((pattern, pattern_type));
             }

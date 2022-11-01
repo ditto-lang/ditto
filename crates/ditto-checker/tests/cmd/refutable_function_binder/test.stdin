@@ -1,0 +1,7 @@
+module Test exports (..);
+
+type Maybe(a) =
+    | Just(a)
+    | Nothing;
+
+from_just = fn (Just(a)) -> a;
