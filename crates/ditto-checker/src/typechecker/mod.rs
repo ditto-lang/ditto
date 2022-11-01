@@ -21,8 +21,8 @@ use crate::{
     supply::Supply,
 };
 use ditto_ast::{
-    unqualified, Argument, Effect, Expression, FunctionBinder, Kind, Name, Pattern, PrimType,
-    QualifiedName, Row, Span, Type,
+    unqualified, Argument, Effect, Expression, Kind, Name, Pattern, PrimType, QualifiedName, Row,
+    Span, Type,
 };
 use ditto_cst as cst;
 use indexmap::IndexMap;
@@ -263,69 +263,65 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
             box body,
         } => {
             let mut binders = Vec::new();
-            for binder in pre_binders {
-                match binder {
-                    pre_ast::FunctionBinder::Name {
-                        span,
-                        type_annotation,
-                        value,
-                    } => {
-                        // Check this binder doesn't conflict with existing binders
-                        let conflict = binders.iter().find_map(|binder| match binder {
-                            FunctionBinder::Name {
-                                span: found_span,
-                                value: found_value,
-                                ..
-                            } if value == *found_value => Some(*found_span),
-                            _ => None,
-                        });
-                        if let Some(previous_binder) = conflict {
-                            return Err(TypeError::DuplicateFunctionBinder {
+            let mut local_values = HashMap::new();
+
+            for (pattern, type_annotation) in pre_binders {
+                let pattern_span = pattern.get_span();
+
+                let pattern_type = type_annotation.unwrap_or_else(|| state.supply.fresh_type());
+                let pattern =
+                    check_pattern(env, state, &mut local_values, pattern_type.clone(), pattern)
+                        .map_err(|err| {
+                            if let TypeError::DuplicatePatternBinder {
                                 previous_binder,
-                                duplicate_binder: span,
-                            });
-                        }
+                                duplicate_binder,
+                            } = err
+                            {
+                                TypeError::DuplicateFunctionBinder {
+                                    previous_binder,
+                                    duplicate_binder,
+                                }
+                            } else {
+                                err
+                            }
+                        })?;
 
-                        let binder_type =
-                            type_annotation.unwrap_or_else(|| state.supply.fresh_type());
-
-                        binders.push(FunctionBinder::Name {
-                            span,
-                            binder_type,
-                            value,
-                        });
+                check_exhaustiveness(
+                    env,
+                    state,
+                    pattern_span,
+                    state.substitution.apply(pattern_type.clone()),
+                    vec![pattern.clone()],
+                )
+                .map_err(|err| {
+                    if let TypeError::MatchNotExhaustive {
+                        match_span,
+                        missing_patterns,
+                    } = err
+                    {
+                        return TypeError::RefutableFunctionBinder {
+                            match_span,
+                            missing_patterns,
+                        };
                     }
-                    pre_ast::FunctionBinder::Unused {
-                        span,
-                        type_annotation,
-                        value,
-                    } => {
-                        // REVIEW: Check this binder doesn't conflict with existing binders?
-                        let binder_type =
-                            type_annotation.unwrap_or_else(|| state.supply.fresh_type());
+                    err
+                })?;
 
-                        binders.push(FunctionBinder::Unused {
-                            span,
-                            binder_type,
-                            value,
-                        });
-                    }
-                }
+                binders.push((pattern, pattern_type));
             }
-            let env_values = binders
-                .clone()
-                .into_iter()
-                .filter_map(LocalValue::from_function_binder)
-                .collect();
 
-            let (body, unused_spans) =
-                with_extended_env(env, state, env_values, move |env, state| {
+            let (body, unused_spans) = with_extended_env(
+                env,
+                state,
+                local_values.into_values().collect(),
+                move |env, state| {
                     if let Some(expected) = return_type_annotation {
                         check(env, state, expected, body)
                     } else {
                         infer(env, state, body)
                     }
-                })?;
+                },
+            )?;
 
             for span in unused_spans {
                 state.warnings.push(Warning::UnusedFunctionBinder { span });
@@ -1018,23 +1014,6 @@ struct LocalValue {
     span: Span,
     value_type: Type,
     name: Name,
-}
-
-impl LocalValue {
-    fn from_function_binder(binder: FunctionBinder) -> Option<Self> {
-        match binder {
-            FunctionBinder::Name {
-                span,
-                binder_type: value_type,
-                value: name,
-            } => Some(Self {
-                span,
-                value_type,
-                name,
-            }),
-            FunctionBinder::Unused { .. } => None,
-        }
-    }
 }
 
 fn with_extended_env<T>(

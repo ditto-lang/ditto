@@ -33,19 +33,21 @@
             "end_offset": 86
           },
           "binders": [
-            {
-              "Name": {
-                "span": {
-                  "start_offset": 74,
-                  "end_offset": 75
-                },
-                "binder_type": {
-                  "type": "PrimConstructor",
-                  "data": "Int"
-                },
-                "value": "n"
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 74,
+                    "end_offset": 75
+                  },
+                  "name": "n"
+                }
+              },
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
               }
-            }
+            ]
           ],
           "body": {
             "expression": "LocalVariable",

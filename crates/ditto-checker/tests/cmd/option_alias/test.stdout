@@ -317,23 +317,25 @@
             "end_offset": 135
           },
           "binders": [
-            {
-              "Name": {
-                "span": {
-                  "start_offset": 102,
-                  "end_offset": 103
-                },
-                "binder_type": {
-                  "type": "Variable",
-                  "data": {
-                    "variable_kind": "Type",
-                    "var": 0,
-                    "source_name": "a"
-                  }
-                },
-                "value": "a"
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 102,
+                    "end_offset": 103
+                  },
+                  "name": "a"
+                }
+              },
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": "a"
+                }
               }
-            }
+            ]
           ],
           "body": {
             "expression": "Call",

@@ -1,5 +1,5 @@
 use super::common::type_variables;
-use ditto_ast::{Argument, Effect, Expression, FunctionBinder, Kind, Type};
+use ditto_ast::{Argument, Effect, Expression, Kind, Type};
 use non_empty_vec::NonEmpty;
 use std::collections::HashMap;
 
@@ -230,26 +230,7 @@ impl Substitution {
                 span,
                 binders: binders
                     .into_iter()
-                    .map(|binder| match binder {
-                        FunctionBinder::Name {
-                            span,
-                            binder_type,
-                            value,
-                        } => FunctionBinder::Name {
-                            span,
-                            binder_type: self.apply(binder_type),
-                            value,
-                        },
-                        FunctionBinder::Unused {
-                            span,
-                            binder_type,
-                            value,
-                        } => FunctionBinder::Unused {
-                            span,
-                            binder_type: self.apply(binder_type),
-                            value,
-                        },
-                    })
+                    .map(|(pattern, t)| (pattern, self.apply(t)))
                     .collect(),
                 body: Box::new(self.apply_expression(body)),
             },

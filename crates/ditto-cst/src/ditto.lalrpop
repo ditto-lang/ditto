@@ -113,7 +113,7 @@ pub Expression: cst::Expression = {
 
 Expression3: cst::Expression = {
   // FIXME: why so much boxing here?
-  <fn_keyword: FnKeyword> <parameters: Box<ParensList<(FunctionParameter TypeAnnotation?)>>> <return_type_annotation: Box<ReturnTypeAnnotation?>> <right_arrow: RightArrow> <body: Box<Expression>> => cst::Expression::Function { fn_keyword, parameters, return_type_annotation, right_arrow, body },
+  <fn_keyword: FnKeyword> <parameters: Box<ParensList<(Pattern TypeAnnotation?)>>> <return_type_annotation: Box<ReturnTypeAnnotation?>> <right_arrow: RightArrow> <body: Box<Expression>> => cst::Expression::Function { fn_keyword, parameters, return_type_annotation, right_arrow, body },
 
   // match expression with | pattern -> ...
   <match_keyword: MatchKeyword> <expression: Box<Expression>> <with_keyword: WithKeyword> <head_arm: Box<MatchArm>> <tail_arms: MatchArm*> <end_keyword: EndKeyword> => cst::Expression::Match { match_keyword, expression, with_keyword, head_arm, tail_arms, end_keyword },
@@ -161,11 +161,6 @@ Expression0: cst::Expression = {
   String => cst::Expression::String(<>),
   Float => cst::Expression::Float(<>),
   Int => cst::Expression::Int(<>),
-}
-
-FunctionParameter: cst::FunctionParameter = {
-  Name => cst::FunctionParameter::Name(<>),
-  UnusedName => cst::FunctionParameter::Unused(<>),
 }
 
 ReturnTypeAnnotation: cst::TypeAnnotation = {

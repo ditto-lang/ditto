@@ -437,20 +437,11 @@ fn toposort_value_declarations(
                 parameters, body, ..
             } => {
                 if let Some(ref parameters) = parameters.value {
-                    let nodes = nodes
-                        .difference(
-                            &parameters
-                                .iter()
-                                .filter_map(|(param, _)| match param {
-                                    cst::FunctionParameter::Name(name) => {
-                                        Some(name.0.value.clone())
-                                    }
-                                    cst::FunctionParameter::Unused(_unused) => None,
-                                })
-                                .collect(),
-                        )
-                        .cloned()
-                        .collect();
+                    let mut bound_nodes = Nodes::new();
+                    for (pattern, _) in parameters.iter() {
+                        get_pattern_variable_names(&mut bound_nodes, pattern)
+                    }
+                    let nodes = nodes.difference(&bound_nodes).cloned().collect();
                     get_connected_nodes_rec(body, &nodes, accum)
                 } else {
                     get_connected_nodes_rec(body, nodes, accum)
@@ -546,6 +537,26 @@ fn toposort_value_declarations(
                     get_connected_nodes_rec_effect(rest, nodes, accum);
                 }
             }
+        }
+    }
+
+    fn get_pattern_variable_names(nodes: &mut Nodes, pattern: &cst::Pattern) {
+        match pattern {
+            cst::Pattern::NullaryConstructor { constructor: _ } => {}
+            cst::Pattern::Constructor {
+                constructor: _,
+                arguments: cst::Parens {
+                    value: parameters, ..
+                },
+            } => {
+                for box pattern in parameters.iter() {
+                    get_pattern_variable_names(nodes, pattern)
+                }
+            }
+            cst::Pattern::Variable { name } => {
+                nodes.insert(name.0.value.clone());
+            }
+            cst::Pattern::Unused { unused_name: _ } => {}
         }
     }
 }

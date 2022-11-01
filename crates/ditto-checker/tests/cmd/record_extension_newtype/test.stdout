@@ -2233,59 +2233,61 @@
             "end_offset": 456
           },
           "binders": [
-            {
-              "Name": {
-                "span": {
-                  "start_offset": 400,
-                  "end_offset": 401
-                },
-                "binder_type": {
-                  "type": "Call",
-                  "data": {
-                    "function": {
-                      "type": "Constructor",
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 400,
+                    "end_offset": 401
+                  },
+                  "name": "e"
+                }
+              },
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Row"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "ExtendMe"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "ExtendMe"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "RecordClosed",
                       "data": {
-                        "constructor_kind": {
-                          "Function": {
-                            "parameters": [
-                              "Row"
-                            ]
-                          }
-                        },
-                        "canonical_value": {
-                          "module_name": [
-                            null,
-                            [
-                              "Test"
-                            ]
-                          ],
-                          "value": "ExtendMe"
-                        },
-                        "source_value": {
-                          "module_name": null,
-                          "value": "ExtendMe"
-                        }
-                      }
-                    },
-                    "arguments": [
-                      {
-                        "type": "RecordClosed",
-                        "data": {
-                          "kind": "Type",
-                          "row": {
-                            "foo": {
-                              "type": "PrimConstructor",
-                              "data": "Int"
-                            }
+                        "kind": "Type",
+                        "row": {
+                          "foo": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
                           }
                         }
                       }
-                    ]
-                  }
-                },
-                "value": "e"
+                    }
+                  ]
+                }
               }
-            }
+            ]
           ],
           "body": {
             "expression": "Match",
@@ -2427,61 +2429,63 @@
             "end_offset": 374
           },
           "binders": [
-            {
-              "Name": {
-                "span": {
-                  "start_offset": 314,
-                  "end_offset": 315
-                },
-                "binder_type": {
-                  "type": "Call",
-                  "data": {
-                    "function": {
-                      "type": "Constructor",
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 314,
+                    "end_offset": 315
+                  },
+                  "name": "e"
+                }
+              },
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Row"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "ExtendMe"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "ExtendMe"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "RecordOpen",
                       "data": {
-                        "constructor_kind": {
-                          "Function": {
-                            "parameters": [
-                              "Row"
-                            ]
-                          }
-                        },
-                        "canonical_value": {
-                          "module_name": [
-                            null,
-                            [
-                              "Test"
-                            ]
-                          ],
-                          "value": "ExtendMe"
-                        },
-                        "source_value": {
-                          "module_name": null,
-                          "value": "ExtendMe"
-                        }
-                      }
-                    },
-                    "arguments": [
-                      {
-                        "type": "RecordOpen",
-                        "data": {
-                          "kind": "Type",
-                          "var": 4,
-                          "source_name": "r",
-                          "row": {
-                            "foo": {
-                              "type": "PrimConstructor",
-                              "data": "Int"
-                            }
+                        "kind": "Type",
+                        "var": 4,
+                        "source_name": "r",
+                        "row": {
+                          "foo": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
                           }
                         }
                       }
-                    ]
-                  }
-                },
-                "value": "e"
+                    }
+                  ]
+                }
               }
-            }
+            ]
           ],
           "body": {
             "expression": "Match",
@@ -2627,61 +2631,63 @@
             "end_offset": 507
           },
           "binders": [
-            {
-              "Name": {
-                "span": {
-                  "start_offset": 472,
-                  "end_offset": 473
-                },
-                "binder_type": {
-                  "type": "Call",
-                  "data": {
-                    "function": {
-                      "type": "Constructor",
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 472,
+                    "end_offset": 473
+                  },
+                  "name": "e"
+                }
+              },
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Row"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "ExtendMe"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "ExtendMe"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "RecordOpen",
                       "data": {
-                        "constructor_kind": {
-                          "Function": {
-                            "parameters": [
-                              "Row"
-                            ]
-                          }
-                        },
-                        "canonical_value": {
-                          "module_name": [
-                            null,
-                            [
-                              "Test"
-                            ]
-                          ],
-                          "value": "ExtendMe"
-                        },
-                        "source_value": {
-                          "module_name": null,
-                          "value": "ExtendMe"
-                        }
-                      }
-                    },
-                    "arguments": [
-                      {
-                        "type": "RecordOpen",
-                        "data": {
-                          "kind": "Type",
-                          "var": 6,
-                          "source_name": null,
-                          "row": {
-                            "foo": {
-                              "type": "PrimConstructor",
-                              "data": "Int"
-                            }
+                        "kind": "Type",
+                        "var": 6,
+                        "source_name": null,
+                        "row": {
+                          "foo": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
                           }
                         }
                       }
-                    ]
-                  }
-                },
-                "value": "e"
+                    }
+                  ]
+                }
               }
-            }
+            ]
           ],
           "body": {
             "expression": "RecordAccess",

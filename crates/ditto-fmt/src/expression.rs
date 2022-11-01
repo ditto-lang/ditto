@@ -13,8 +13,7 @@ use super::{
     },
 };
 use ditto_cst::{
-    BinOp, Effect, Expression, FunctionParameter, MatchArm, Pattern, RecordField, StringToken,
-    TypeAnnotation,
+    BinOp, Effect, Expression, MatchArm, Pattern, RecordField, StringToken, TypeAnnotation,
 };
 use dprint_core::formatting::{
     condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext, Info,
@@ -163,16 +162,9 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
         } => {
             let mut items = gen_fn_keyword(fn_keyword);
             items.extend(space());
-            items.extend(gen_parens_list(parameters, |(param, type_annotation)| {
+            items.extend(gen_parens_list(parameters, |(pattern, type_annotation)| {
                 let mut items = PrintItems::new();
-                match param {
-                    FunctionParameter::Name(name) => {
-                        items.extend(gen_name(name));
-                    }
-                    FunctionParameter::Unused(unused_name) => {
-                        items.extend(gen_unused_name(unused_name));
-                    }
-                }
+                items.extend(gen_pattern(pattern));
                 if let Some(type_annotation) = type_annotation {
                     items.extend(gen_type_annotation(type_annotation));
                 }
@@ -530,6 +522,9 @@ mod tests {
             "fn () ->\n\tif loooooooooong then\n\t\tx\n\telse\n\t\ty",
             20
         );
+
+        assert_fmt!("fn (Just(x)) -> true");
+        assert_fmt!("fn (Ok(Nothing)) -> false");
     }
 
     #[test]

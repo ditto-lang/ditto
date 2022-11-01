@@ -149,6 +149,10 @@ pub enum TypeError {
         match_span: Span,
         missing_patterns: Vec<String>,
     },
+    RefutableFunctionBinder {
+        match_span: Span,
+        missing_patterns: Vec<String>,
+    },
 }
 
 impl TypeError {
@@ -406,6 +410,14 @@ impl TypeError {
                 match_span,
                 missing_patterns,
             } => TypeErrorReport::MatchNotExhaustive {
+                input,
+                location: span_to_source_span(match_span),
+                missing_patterns: missing_patterns.join("\n"),
+            },
+            Self::RefutableFunctionBinder {
+                match_span,
+                missing_patterns,
+            } => TypeErrorReport::RefutableFunctionBinder {
                 input,
                 location: span_to_source_span(match_span),
                 missing_patterns: missing_patterns.join("\n"),
@@ -737,6 +749,15 @@ pub enum TypeErrorReport {
         #[source_code]
         input: NamedSource,
         #[label("this match expression")]
+        location: SourceSpan,
+        missing_patterns: String,
+    },
+    #[error("refutable function binder")]
+    #[diagnostic(severity(Error), help("patterns here must cover all cases"))]
+    RefutableFunctionBinder {
+        #[source_code]
+        input: NamedSource,
+        #[label("this pattern")]
         location: SourceSpan,
         missing_patterns: String,
     },

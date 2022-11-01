@@ -123,22 +123,6 @@ impl HasComments for Expression {
     }
 }
 
-impl HasComments for FunctionParameter {
-    fn has_comments(&self) -> bool {
-        match self {
-            Self::Name(name) => name.has_comments(),
-            Self::Unused(unused_name) => unused_name.has_comments(),
-        }
-    }
-
-    fn has_leading_comments(&self) -> bool {
-        match self {
-            Self::Name(name) => name.has_leading_comments(),
-            Self::Unused(unused_name) => unused_name.has_leading_comments(),
-        }
-    }
-}
-
 impl HasComments for RecordField {
     fn has_comments(&self) -> bool {
         self.label.has_comments() || self.equals.0.has_comments() || self.value.has_comments()

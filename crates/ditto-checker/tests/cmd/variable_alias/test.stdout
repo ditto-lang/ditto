@@ -240,53 +240,46 @@
             "end_offset": 90
           },
           "binders": [
-            {
-              "Name": {
-                "span": {
-                  "start_offset": 69,
-                  "end_offset": 70
-                },
-                "binder_type": {
-                  "type": "Call",
-                  "data": {
-                    "function": {
-                      "type": "ConstructorAlias",
-                      "data": {
-                        "constructor_kind": {
-                          "Function": {
-                            "parameters": [
-                              "Type"
-                            ]
-                          }
-                        },
-                        "canonical_value": {
-                          "module_name": [
-                            null,
-                            [
-                              "Test"
-                            ]
-                          ],
-                          "value": "WhyTho"
-                        },
-                        "source_value": {
-                          "module_name": null,
-                          "value": "WhyTho"
-                        },
-                        "alias_variables": [
-                          0
-                        ],
-                        "aliased_type": {
-                          "type": "Variable",
-                          "data": {
-                            "variable_kind": "Type",
-                            "var": 0,
-                            "source_name": "a"
-                          }
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 69,
+                    "end_offset": 70
+                  },
+                  "name": "a"
+                }
+              },
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "ConstructorAlias",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
                         }
-                      }
-                    },
-                    "arguments": [
-                      {
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "WhyTho"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "WhyTho"
+                      },
+                      "alias_variables": [
+                        0
+                      ],
+                      "aliased_type": {
                         "type": "Variable",
                         "data": {
                           "variable_kind": "Type",
@@ -294,12 +287,21 @@
                           "source_name": "a"
                         }
                       }
-                    ]
-                  }
-                },
-                "value": "a"
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    }
+                  ]
+                }
               }
-            }
+            ]
           ],
           "body": {
             "expression": "LocalVariable",

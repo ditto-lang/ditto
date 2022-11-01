@@ -153,23 +153,25 @@
             "end_offset": 261
           },
           "binders": [
-            {
-              "Unused": {
-                "span": {
-                  "start_offset": 249,
-                  "end_offset": 250
-                },
-                "binder_type": {
-                  "type": "Variable",
-                  "data": {
-                    "variable_kind": "Type",
-                    "var": 0,
-                    "source_name": null
-                  }
-                },
-                "value": "_"
+            [
+              {
+                "Unused": {
+                  "span": {
+                    "start_offset": 249,
+                    "end_offset": 250
+                  },
+                  "unused_name": "_"
+                }
+              },
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": null
+                }
               }
-            }
+            ]
           ],
           "body": {
             "expression": "LocalConstructor",

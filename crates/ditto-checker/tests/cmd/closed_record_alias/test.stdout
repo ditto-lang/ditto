@@ -149,55 +149,57 @@
             "end_offset": 113
           },
           "binders": [
-            {
-              "Name": {
-                "span": {
-                  "start_offset": 89,
-                  "end_offset": 94
-                },
-                "binder_type": {
-                  "type": "ConstructorAlias",
-                  "data": {
-                    "constructor_kind": "Type",
-                    "canonical_value": {
-                      "module_name": [
-                        null,
-                        [
-                          "Test"
-                        ]
-                      ],
-                      "value": "Props"
-                    },
-                    "source_value": {
-                      "module_name": null,
-                      "value": "Props"
-                    },
-                    "alias_variables": [],
-                    "aliased_type": {
-                      "type": "RecordClosed",
-                      "data": {
-                        "kind": "Type",
-                        "row": {
-                          "a": {
-                            "type": "PrimConstructor",
-                            "data": "Int"
-                          },
-                          "b": {
-                            "type": "PrimConstructor",
-                            "data": "Bool"
-                          },
-                          "c": {
-                            "type": "PrimConstructor",
-                            "data": "Unit"
-                          }
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 89,
+                    "end_offset": 94
+                  },
+                  "name": "props"
+                }
+              },
+              {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": "Type",
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "Props"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "Props"
+                  },
+                  "alias_variables": [],
+                  "aliased_type": {
+                    "type": "RecordClosed",
+                    "data": {
+                      "kind": "Type",
+                      "row": {
+                        "a": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        },
+                        "b": {
+                          "type": "PrimConstructor",
+                          "data": "Bool"
+                        },
+                        "c": {
+                          "type": "PrimConstructor",
+                          "data": "Unit"
                         }
                       }
                     }
                   }
-                },
-                "value": "props"
+                }
               }
-            }
+            ]
           ],
           "body": {
             "expression": "RecordAccess",

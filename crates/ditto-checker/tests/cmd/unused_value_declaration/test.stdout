@@ -60,23 +60,25 @@
             "end_offset": 76
           },
           "binders": [
-            {
-              "Name": {
-                "span": {
-                  "start_offset": 69,
-                  "end_offset": 70
-                },
-                "binder_type": {
-                  "type": "Variable",
-                  "data": {
-                    "variable_kind": "Type",
-                    "var": 0,
-                    "source_name": null
-                  }
-                },
-                "value": "b"
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 69,
+                    "end_offset": 70
+                  },
+                  "name": "b"
+                }
+              },
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": null
+                }
               }
-            }
+            ]
           ],
           "body": {
             "expression": "LocalVariable",
