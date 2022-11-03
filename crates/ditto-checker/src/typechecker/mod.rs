@@ -776,6 +776,44 @@ fn check_effect(
                 rest: Box::new(rest),
             });
         }
+        pre::Effect::Let {
+            pattern,
+            pattern_span,
+            type_annotation,
+            box expression,
+            box rest,
+        } => {
+            let pattern_type = type_annotation.unwrap_or_else(|| state.supply.fresh_type());
+            let expression = check(env, state, pattern_type.clone(), expression)?;
+            let mut local_values = HashMap::new();
+            let pattern =
+                check_pattern(env, state, &mut local_values, pattern_type.clone(), pattern)?;
+
+            check_exhaustiveness(
+                env,
+                state,
+                pattern_span,
+                state.substitution.apply(pattern_type),
+                vec![pattern.clone()],
+            )?;
+
+            let (rest, unused_spans) = with_extended_env(
+                env,
+                state,
+                local_values.into_values().collect(),
+                |env, state| check_effect(env, state, expected_return_type, rest),
+            )?;
+
+            for span in unused_spans {
+                state.warnings.push(Warning::UnusedEffectBinder { span });
+            }
+
+            return Ok(Effect::Let {
+                pattern,
+                expression: Box::new(expression),
+                rest: Box::new(rest),
+            });
+        }
     };
 
     fn mk_effect_type(t: Type) -> Type {

@@ -823,6 +823,7 @@ mod test_macros {
 
             let ast_expression = ast_module.values.into_values().next().unwrap().expression;
             let js_expression = $crate::convert::convert_expression(
+                &mut $crate::convert::Supply::default(),
                 &mut $crate::convert::ImportedModuleIdents::new(),
                 ast_expression,
             );

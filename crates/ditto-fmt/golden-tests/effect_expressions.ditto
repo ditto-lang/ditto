@@ -57,3 +57,13 @@ if_then_else_effects = do {
     else
         do_if_false()
 };
+
+let_binds = do {
+    let five = 5;
+    let another_five: Int =  -- comment
+        -- comment
+        5;
+    -- comment
+    let Wrapped(unwrapped): Wrapper(Int) = wrapped;
+    return unit
+};

@@ -7,9 +7,9 @@ use super::{
     token::{
         gen_close_brace, gen_colon, gen_do_keyword, gen_dot, gen_else_keyword, gen_end_keyword,
         gen_equals, gen_false_keyword, gen_fn_keyword, gen_if_keyword, gen_left_arrow,
-        gen_match_keyword, gen_open_brace, gen_pipe, gen_return_keyword, gen_right_arrow,
-        gen_right_pizza_operator, gen_semicolon, gen_string_token, gen_then_keyword,
-        gen_true_keyword, gen_unit_keyword, gen_with_keyword,
+        gen_let_keyword, gen_match_keyword, gen_open_brace, gen_pipe, gen_return_keyword,
+        gen_right_arrow, gen_right_pizza_operator, gen_semicolon, gen_string_token,
+        gen_then_keyword, gen_true_keyword, gen_unit_keyword, gen_with_keyword,
     },
 };
 use ditto_cst::{
@@ -299,6 +299,28 @@ fn gen_effect(effect: Effect, items: &mut PrintItems) {
                 gen_effect(rest, items)
             }
         }
+        Effect::Let {
+            let_keyword,
+            pattern,
+            type_annotation,
+            equals,
+            box expression,
+            semicolon,
+            box rest,
+        } => {
+            items.extend(gen_let_keyword(let_keyword));
+            items.extend(space());
+            items.extend(gen_pattern(pattern));
+            if let Some(type_annotation) = type_annotation {
+                items.extend(gen_type_annotation(type_annotation));
+            }
+            items.extend(space());
+            let equals_has_trailing_comment = equals.0.has_trailing_comment();
+            items.extend(gen_equals(equals));
+            items.extend(gen_body_expression(expression, equals_has_trailing_comment));
+            items.extend(gen_semicolon(semicolon));
+            gen_effect(rest, items);
+        }
     }
 }
 
@@ -558,6 +580,8 @@ mod tests {
         assert_fmt!("do {\n\tsome_effect()\n}");
         assert_fmt!("do {\n\tx <- some_effect();\n\treturn x\n}");
         assert_fmt!("do {\n\tsome_effect();\n\treturn 5\n}");
+        assert_fmt!("do {\n\tlet five: Int = 5;\n\treturn 5\n}");
+        assert_fmt!("do {\n\tlet Just(five): Int = maybe_five;\n\treturn five\n}");
     }
 
     #[test]

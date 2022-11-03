@@ -7,12 +7,12 @@ function Wrapper($0) {
 function curried_wrappers_to_triple($0) {
   if ($0[0] === "Wrapper") {
     const a = $0[1];
-    return $0 => {
-      if ($0[0] === "Wrapper") {
-        const b = $0[1];
-        return $0 => {
-          if ($0[0] === "Wrapper") {
-            const c = $0[1];
+    return $1 => {
+      if ($1[0] === "Wrapper") {
+        const b = $1[1];
+        return $2 => {
+          if ($2[0] === "Wrapper") {
+            const c = $2[1];
             return Triple(a, b, c);
           }
           throw new Error("Pattern match error");
@@ -38,9 +38,9 @@ function unwrap($0) {
   }
   throw new Error("Pattern match error");
 }
-function wrappers_to_triple($0, wrapped_b, $2) {
-  if ($0[0] === "Wrapper" && $2[0] === "Wrapper") {
-    const c = $2[1];
+function wrappers_to_triple($0, wrapped_b, $1) {
+  if ($0[0] === "Wrapper" && $1[0] === "Wrapper") {
+    const c = $1[1];
     const a = $0[1];
     return Triple(a, unwrap(wrapped_b), c);
   }

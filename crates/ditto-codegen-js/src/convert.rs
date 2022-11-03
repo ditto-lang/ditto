@@ -210,12 +210,27 @@ pub(crate) enum ImportedModule {
 type ImportedIdents = HashSet<ImportedIdent>; // need to be unique!
 type ImportedIdent = (Ident, Ident); // (foo, Some$Module$foo)
 
+#[derive(Default)]
+pub struct Supply(pub usize);
+
+impl Supply {
+    pub fn fresh_ident(&mut self) -> Ident {
+        let var = self.0;
+        self.0 += 1;
+        Ident(format!("${}", var))
+    }
+}
+
 pub(crate) fn convert_expression_and_optimize(
     imported_module_idents: &mut ImportedModuleIdents,
     ast_expression: ditto_ast::Expression,
 ) -> Expression {
     use crate::optimize::{optimize_expression, BlockOrExpression};
-    let expr = convert_expression(imported_module_idents, ast_expression);
+    let expr = convert_expression(
+        &mut Supply::default(),
+        imported_module_idents,
+        ast_expression,
+    );
     match optimize_expression(expr) {
         BlockOrExpression::Expression(expr) => expr,
         BlockOrExpression::Block(block) => iife!(block),
@@ -223,6 +238,7 @@ pub(crate) fn convert_expression_and_optimize(
 }
 
 pub(crate) fn convert_expression(
+    supply: &mut Supply,
     imported_module_idents: &mut ImportedModuleIdents,
     ast_expression: ditto_ast::Expression,
 ) -> Expression {
@@ -233,7 +249,7 @@ pub(crate) fn convert_expression(
             let mut parameters = Vec::new();
             let mut condition = None;
             let mut assignments = Assignments::new();
-            for (i, (pattern, _type)) in binders.into_iter().enumerate() {
+            for (pattern, _type) in binders.into_iter() {
                 if let ditto_ast::Pattern::Unused { unused_name, .. } = pattern {
                     parameters.push(unused_name.into());
                     continue;
@@ -242,7 +258,7 @@ pub(crate) fn convert_expression(
                     parameters.push(name.into());
                     continue;
                 }
-                let generated_ident = Ident(format!("${}", i));
+                let generated_ident = supply.fresh_ident();
                 parameters.push(generated_ident.clone());
                 let (cond, assigns) =
                     convert_pattern(Expression::Variable(generated_ident), pattern);
@@ -259,7 +275,7 @@ pub(crate) fn convert_expression(
                 }
                 assignments.extend(assigns);
             }
-            let body_expression = convert_expression(imported_module_idents, body);
+            let body_expression = convert_expression(supply, imported_module_idents, body);
             if let Some(condition) = condition {
                 let block = Block::If {
                     condition,
@@ -305,12 +321,16 @@ pub(crate) fn convert_expression(
             arguments,
             ..
         } => Expression::Call {
-            function: Box::new(convert_expression(imported_module_idents, *function)),
+            function: Box::new(convert_expression(
+                supply,
+                imported_module_idents,
+                *function,
+            )),
             arguments: arguments
                 .into_iter()
                 .map(|arg| match arg {
                     ditto_ast::Argument::Expression(expr) => {
-                        convert_expression(imported_module_idents, expr)
+                        convert_expression(supply, imported_module_idents, expr)
                     }
                 })
                 .collect(),
@@ -322,9 +342,21 @@ pub(crate) fn convert_expression(
             false_clause,
             ..
         } => Expression::Conditional {
-            condition: Box::new(convert_expression(imported_module_idents, *condition)),
-            true_clause: Box::new(convert_expression(imported_module_idents, *true_clause)),
-            false_clause: Box::new(convert_expression(imported_module_idents, *false_clause)),
+            condition: Box::new(convert_expression(
+                supply,
+                imported_module_idents,
+                *condition,
+            )),
+            true_clause: Box::new(convert_expression(
+                supply,
+                imported_module_idents,
+                *true_clause,
+            )),
+            false_clause: Box::new(convert_expression(
+                supply,
+                imported_module_idents,
+                *false_clause,
+            )),
         },
 
         ditto_ast::Expression::LocalVariable { variable, .. } => {
@@ -406,7 +438,7 @@ pub(crate) fn convert_expression(
         ditto_ast::Expression::Array { elements, .. } => Expression::Array(
             elements
                 .into_iter()
-                .map(|element| convert_expression(imported_module_idents, element))
+                .map(|element| convert_expression(supply, imported_module_idents, element))
                 .collect(),
         ),
         ditto_ast::Expression::True { .. } => Expression::True,
@@ -418,7 +450,7 @@ pub(crate) fn convert_expression(
             arms,
             ..
         } => {
-            let expression = convert_expression(imported_module_idents, expression);
+            let expression = convert_expression(supply, imported_module_idents, expression);
             let err = iife!(Block::Throw(String::from(
                 // TODO: mention the file location here?
                 "Pattern match error",
@@ -433,10 +465,10 @@ pub(crate) fn convert_expression(
                     let (condition, assignments) = convert_pattern(expression.clone(), pattern);
 
                     let expression = if assignments.is_empty() {
-                        convert_expression(imported_module_idents, arm_expression)
+                        convert_expression(supply, imported_module_idents, arm_expression)
                     } else {
                         let arm_expression =
-                            convert_expression(imported_module_idents, arm_expression);
+                            convert_expression(supply, imported_module_idents, arm_expression);
 
                         // NOTE: order of the assignments doesn't currently matter
                         let block = assignments.into_iter().fold(
@@ -462,7 +494,7 @@ pub(crate) fn convert_expression(
                 })
         }
         ditto_ast::Expression::Effect { effect, .. } => {
-            let block = convert_effect(imported_module_idents, effect);
+            let block = convert_effect(supply, imported_module_idents, effect);
             Expression::ArrowFunction {
                 parameters: vec![],
                 body: Box::new(ArrowFunctionBody::Block(block)),
@@ -471,7 +503,7 @@ pub(crate) fn convert_expression(
         ditto_ast::Expression::RecordAccess {
             box target, label, ..
         } => {
-            let target = convert_expression(imported_module_idents, target);
+            let target = convert_expression(supply, imported_module_idents, target);
             let index = Expression::String(label.0);
             Expression::IndexAccess {
                 target: Box::new(target),
@@ -481,7 +513,12 @@ pub(crate) fn convert_expression(
         ditto_ast::Expression::Record { fields, .. } => {
             let entries = fields
                 .into_iter()
-                .map(|(name, expr)| (name.0, convert_expression(imported_module_idents, expr)))
+                .map(|(name, expr)| {
+                    (
+                        name.0,
+                        convert_expression(supply, imported_module_idents, expr),
+                    )
+                })
                 .collect();
             Expression::Object(entries)
         }
@@ -489,12 +526,13 @@ pub(crate) fn convert_expression(
 }
 
 fn convert_effect(
+    supply: &mut Supply,
     imported_module_idents: &mut ImportedModuleIdents,
     effect: ditto_ast::Effect,
 ) -> Block {
     match effect {
         ditto_ast::Effect::Return { box expression } => {
-            let expression = convert_expression(imported_module_idents, expression);
+            let expression = convert_expression(supply, imported_module_idents, expression);
             Block::Return(Some(expression))
         }
         ditto_ast::Effect::Bind {
@@ -504,23 +542,94 @@ fn convert_effect(
         } => Block::ConstAssignment {
             ident: Ident::from(name),
             value: Expression::Call {
-                function: Box::new(convert_expression(imported_module_idents, expression)),
+                function: Box::new(convert_expression(
+                    supply,
+                    imported_module_idents,
+                    expression,
+                )),
                 arguments: vec![],
             },
-            rest: Box::new(convert_effect(imported_module_idents, rest)),
+            rest: Box::new(convert_effect(supply, imported_module_idents, rest)),
         },
+        ditto_ast::Effect::Let {
+            pattern: ditto_ast::Pattern::Variable { name, .. },
+            box expression,
+            box rest,
+        } => Block::ConstAssignment {
+            ident: Ident::from(name),
+            value: convert_expression(supply, imported_module_idents, expression),
+            rest: Box::new(convert_effect(supply, imported_module_idents, rest)),
+        },
+        ditto_ast::Effect::Let {
+            pattern: ditto_ast::Pattern::Unused { unused_name, .. },
+            box expression,
+            box rest,
+        } => {
+            // REVIEW: could just drop the unused assignment altogether?
+            Block::ConstAssignment {
+                ident: Ident::from(unused_name),
+                value: convert_expression(supply, imported_module_idents, expression),
+                rest: Box::new(convert_effect(supply, imported_module_idents, rest)),
+            }
+        }
+        ditto_ast::Effect::Let {
+            pattern,
+            box expression,
+            box rest,
+        } => {
+            let generated_ident = supply.fresh_ident();
+            Block::ConstAssignment {
+                ident: generated_ident.clone(),
+                value: convert_expression(supply, imported_module_idents, expression),
+                rest: {
+                    let (condition, assignments) =
+                        convert_pattern(Expression::Variable(generated_ident), pattern);
+
+                    let rest = convert_effect(supply, imported_module_idents, rest);
+                    if let Some(condition) = condition {
+                        Box::new(Block::If {
+                            condition,
+                            true_branch: Box::new(assignments.into_iter().fold(
+                                rest,
+                                |rest, (ident, value)| Block::ConstAssignment {
+                                    ident,
+                                    value,
+                                    rest: Box::new(rest),
+                                },
+                            )),
+                            false_branch: Box::new(Block::Throw(String::from(
+                                // TODO: mention the file location here?
+                                "Pattern match error",
+                            ))),
+                        })
+                    } else {
+                        Box::new(assignments.into_iter().fold(rest, |rest, (ident, value)| {
+                            Block::ConstAssignment {
+                                ident,
+                                value,
+                                rest: Box::new(rest),
+                            }
+                        }))
+                    }
+                },
+            }
+        }
         ditto_ast::Effect::Expression {
             box expression,
             rest,
         } => {
             let expression = Expression::Call {
-                function: Box::new(convert_expression(imported_module_idents, expression)),
+                function: Box::new(convert_expression(
+                    supply,
+                    imported_module_idents,
+                    expression,
+                )),
                 arguments: vec![],
             };
             if let Some(box rest) = rest {
                 Block::Expression {
                     expression,
-                    rest: Box::new(convert_effect(imported_module_idents, rest)),
+                    rest: Box::new(convert_effect(supply, imported_module_idents, rest)),
                 }
             } else {
                 Block::Return(Some(expression))

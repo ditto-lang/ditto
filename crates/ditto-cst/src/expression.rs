@@ -1,9 +1,9 @@
 use crate::{
     BracesList, BracketsList, CloseBrace, Colon, DoKeyword, Dot, ElseKeyword, EndKeyword, Equals,
-    FalseKeyword, FnKeyword, IfKeyword, LeftArrow, MatchKeyword, Name, OpenBrace, Parens,
-    ParensList, ParensList1, Pipe, QualifiedName, QualifiedProperName, ReturnKeyword, RightArrow,
-    RightPizzaOperator, Semicolon, StringToken, ThenKeyword, TrueKeyword, Type, UnitKeyword,
-    UnusedName, WithKeyword,
+    FalseKeyword, FnKeyword, IfKeyword, LeftArrow, LetKeyword, MatchKeyword, Name, OpenBrace,
+    Parens, ParensList, ParensList1, Pipe, QualifiedName, QualifiedProperName, ReturnKeyword,
+    RightArrow, RightPizzaOperator, Semicolon, StringToken, ThenKeyword, TrueKeyword, Type,
+    UnitKeyword, UnusedName, WithKeyword,
 };
 
 /// A value expression.
@@ -188,6 +188,23 @@ pub enum Effect {
         /// `<-`
         left_arrow: LeftArrow,
         /// The (effectful) expression to be evaluated.
+        expression: Box<Expression>,
+        /// `;`
+        semicolon: Semicolon,
+        /// Further effect statements.
+        rest: Box<Self>,
+    },
+    /// `do { let pattern: type_annotation = expression; rest }`
+    Let {
+        /// `return`
+        let_keyword: LetKeyword,
+        /// The binding(s)
+        pattern: Pattern,
+        /// Optional type annotation for `pattern`.
+        type_annotation: Option<TypeAnnotation>,
+        /// `=`
+        equals: Equals,
+        /// The (pure) expression to be bound.
         expression: Box<Expression>,
         /// `;`
         semicolon: Semicolon,

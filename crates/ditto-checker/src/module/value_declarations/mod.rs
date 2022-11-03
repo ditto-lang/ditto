@@ -537,6 +537,18 @@ fn toposort_value_declarations(
                     get_connected_nodes_rec_effect(rest, nodes, accum);
                 }
             }
+            cst::Effect::Let {
+                pattern,
+                expression,
+                rest,
+                ..
+            } => {
+                get_connected_nodes_rec(expression, nodes, accum);
+                let mut bound_nodes = Nodes::new();
+                get_pattern_variable_names(&mut bound_nodes, pattern);
+                let nodes = nodes.difference(&bound_nodes).cloned().collect();
+                get_connected_nodes_rec_effect(rest, &nodes, accum)
+            }
         }
     }
 

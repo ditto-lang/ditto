@@ -397,6 +397,15 @@ pub enum Effect {
         /// Further effect statements.
         rest: Box<Self>,
     },
+    /// `do { let pattern = expression; rest }`
+    Let {
+        /// The pattern binder.
+        pattern: Pattern,
+        /// The (pure) expression to be bound.
+        expression: Box<Expression>,
+        /// Further effect statements.
+        rest: Box<Self>,
+    },
     /// `do { expression }`
     Expression {
         /// The (effectful) expression to be evaluated.
