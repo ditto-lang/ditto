@@ -404,6 +404,37 @@ fn convert_cst_effect(env: &Env, state: &mut State, cst_effect: cst::Effect) -> 
                 rest: Some(Box::new(rest)),
             })
         }
+        cst::Effect::Let {
+            pattern,
+            type_annotation,
+            box expression,
+            box rest,
+            ..
+        } => {
+            let mut env_type_variables = env.type_variables.clone();
+            let pattern_span = pattern.get_span();
+            let pattern = Pattern::from(pattern);
+            let type_annotation = if let Some(type_annotation) = type_annotation {
+                let type_annotation = check_type_annotation(
+                    &env.types,
+                    &mut env_type_variables,
+                    state,
+                    type_annotation,
+                )?;
+                Some(type_annotation)
+            } else {
+                None
+            };
+            let expression = convert_cst(env, state, expression)?;
+            let rest = convert_cst_effect(env, state, rest)?;
+            Ok(Effect::Let {
+                pattern,
+                pattern_span,
+                type_annotation,
+                expression: Box::new(expression),
+                rest: Box::new(rest),
+            })
+        }
     }
 }
 
@@ -590,6 +621,13 @@ pub enum Effect {
     Bind {
         name: Name,
         name_span: Span,
+        expression: Box<Expression>,
+        rest: Box<Self>,
+    },
+    Let {
+        pattern: Pattern,
+        pattern_span: Span,
+        type_annotation: Option<Type>,
         expression: Box<Expression>,
         rest: Box<Self>,
     },

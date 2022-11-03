@@ -163,6 +163,23 @@ impl HasComments for Effect {
                     || semicolon.0.has_comments()
                     || rest.has_comments()
             }
+            Self::Let {
+                let_keyword,
+                pattern,
+                type_annotation,
+                equals,
+                expression,
+                semicolon,
+                rest,
+            } => {
+                let_keyword.0.has_comments()
+                    || pattern.has_comments()
+                    || type_annotation.has_comments()
+                    || equals.0.has_comments()
+                    || expression.has_comments()
+                    || semicolon.0.has_comments()
+                    || rest.has_comments()
+            }
             Self::Expression {
                 expression,
                 rest: None,
@@ -177,6 +194,7 @@ impl HasComments for Effect {
         match self {
             Self::Return { return_keyword, .. } => return_keyword.0.has_leading_comments(),
             Self::Bind { name, .. } => name.has_leading_comments(),
+            Self::Let { let_keyword, .. } => let_keyword.0.has_leading_comments(),
             Self::Expression { expression, .. } => expression.has_leading_comments(),
         }
     }

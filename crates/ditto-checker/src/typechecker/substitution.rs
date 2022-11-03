@@ -422,6 +422,15 @@ impl Substitution {
                 expression: Box::new(self.apply_expression(expression)),
                 rest: Some(Box::new(self.apply_effect(rest))),
             },
+            Effect::Let {
+                pattern,
+                box expression,
+                box rest,
+            } => Effect::Let {
+                pattern,
+                expression: Box::new(self.apply_expression(expression)),
+                rest: Box::new(self.apply_effect(rest)),
+            },
         }
     }
 }

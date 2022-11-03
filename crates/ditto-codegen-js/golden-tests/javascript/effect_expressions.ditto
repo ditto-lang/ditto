@@ -27,6 +27,21 @@ get_names_from_result = fn (res) -> do {
     end
 };
 
+type Wrapper(a) = Wrapped(a);
+
+get_wrapped_five = do { 
+    let five = 5;
+    return Wrapped(five) 
+};
+
+get_five: Effect(Int) = do {
+    wrapped_five <- get_wrapped_five;
+    let Wrapped(_) = wrapped_five;
+    let Wrapped(_) = wrapped_five;
+    let Wrapped(five) = wrapped_five;
+    return five
+};
+
 main : Effect(Unit) = do {
     effect_map(get_name, fn (name) -> unit)
 };

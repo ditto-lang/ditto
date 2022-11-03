@@ -188,6 +188,7 @@ Pattern: cst::Pattern = {
 
 Effect: cst::Effect = {
   <return_keyword: ReturnKeyword> <expression: Box<Expression>> => cst::Effect::Return { return_keyword, expression },
+  <let_keyword: LetKeyword> <pattern: Pattern> <type_annotation: TypeAnnotation?> <equals: Equals> <expression: Box<Expression>> <semicolon: Semicolon> <rest: Box<Effect>> => cst::Effect::Let { let_keyword, pattern, type_annotation, equals, expression, semicolon, rest },
   <expression: Box<Expression>> <rest: (Semicolon Box<Effect>)?> => cst::Effect::Expression { expression, rest },
   <name: Name> <left_arrow: LeftArrow> <expression: Box<Expression>> <semicolon: Semicolon> <rest: Box<Effect>> => cst::Effect::Bind { name, left_arrow, expression, semicolon, rest },
 }

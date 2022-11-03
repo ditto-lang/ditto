@@ -401,6 +401,20 @@ fn it_parses_effect_expressions() {
             ..
         }
     );
+    assert_parses!(
+        r#" do { let fiver = ("£5"); return fiver } "#,
+        Expression::Effect {
+            effect: Effect::Let { .. },
+            ..
+        }
+    );
+    assert_parses!(
+        "do { let five : Int = 5; let Wrapper(unwrapped) = wrapped; return [five, unwrapped] }",
+        Expression::Effect {
+            effect: Effect::Let { .. },
+            ..
+        }
+    );
 }
 
 #[test]
