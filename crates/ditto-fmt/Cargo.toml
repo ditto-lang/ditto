@@ -12,5 +12,9 @@ ditto-cst = { path = "../ditto-cst" }
 dprint-core = "0.54"
 
 [dev-dependencies]
-snapshot-test = { path = "../snapshot-test" }
 similar-asserts = "1.4"
+datatest-stable = "0.1"
+
+[[test]]
+name = "golden_tests"
+harness = false

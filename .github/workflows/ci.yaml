@@ -82,7 +82,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: nextest
-          args: run --workspace --exclude snapshot-test
+          args: run --workspace
         env:
           DITTO_BUILD_GIT_DESCRIBE: "0.0.0-test"
           #DITTO_NINJA  <-- would be nice to use this, along with https://github.com/marketplace/actions/setup-ninja
@@ -98,7 +98,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: llvm-cov
-          args: --lcov --output-path lcov.info nextest --workspace --exclude snapshot-test
+          args: --lcov --output-path lcov.info nextest --workspace
         env:
           DITTO_BUILD_GIT_DESCRIBE: "0.0.0-test"
           #DITTO_NINJA  <-- would be nice to use this, along with https://github.com/marketplace/actions/setup-ninja
