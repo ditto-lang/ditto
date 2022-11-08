@@ -20,8 +20,12 @@ logos = "0.12"
 #codespan = "xx" <-- might be a good replacement for our `Span` type
 
 [dev-dependencies]
-snapshot-test = { path = "../snapshot-test" }
 similar-asserts = "1.4"
+datatest-stable = "0.1"
 
 [build-dependencies]
 lalrpop = "0.19.8"
+
+[[test]]
+name = "golden_tests"
+harness = false

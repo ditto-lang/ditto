@@ -20,7 +20,15 @@ indexmap = "1.8"
 serde_json = "1.0"
 
 [dev-dependencies]
-snapshot-test = { path = "../snapshot-test" }
 similar-asserts = "1.4"
 serde_json = "1.0"
 trycmd = "0.14"
+datatest-stable = "0.1"
+
+[[test]]
+name = "golden_warning_tests"
+harness = false
+
+[[test]]
+name = "golden_error_tests"
+harness = false

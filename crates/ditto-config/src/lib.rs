@@ -115,8 +115,8 @@ impl Config {
         Ok(&self.package_set.packages)
     }
 
-    /// This method only really exists for testing. Use the `read_config` function.
-    fn parse(_name: &str, input: &str) -> Result<Config, ParseError> {
+    /// Parse a config file.
+    pub fn parse(_name: &str, input: &str) -> miette::Result<Config> {
         toml::from_str(input).map_err(|toml_error| {
             // TODO try and get this working nicely
             //if let Some((line, col)) = toml_error.line_col() {
@@ -127,9 +127,9 @@ impl Config {
             //        description: toml_error.to_string(),
             //    }
             //}
-            ParseError::Unlocated {
+            miette::Report::from(ParseError::Unlocated {
                 description: toml_error.to_string(),
-            }
+            })
         })
     }
 }

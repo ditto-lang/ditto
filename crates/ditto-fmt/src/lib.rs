@@ -32,15 +32,6 @@ pub fn format_module(module: ditto_cst::Module) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    #[snapshot_test::snapshot(input = "golden-tests/(.*).ditto")]
-    fn golden(input: &str) -> String {
-        let cst_module = ditto_cst::Module::parse(input).unwrap();
-        crate::format_module(cst_module)
-    }
-}
-
-#[cfg(test)]
 mod test_macros {
     macro_rules! assert_fmt {
         ($items:expr, $source:expr, $want:expr, $max_width:expr) => {{
