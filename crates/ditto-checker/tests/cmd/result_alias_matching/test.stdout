@@ -1,0 +1,459 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "Result": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": "Type",
+          "aliased_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Type",
+                        "Type"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Result"
+                      ]
+                    ],
+                    "value": "Result"
+                  },
+                  "source_value": {
+                    "module_name": "Result",
+                    "value": "Result"
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                },
+                {
+                  "type": "PrimConstructor",
+                  "data": "String"
+                }
+              ]
+            }
+          },
+          "alias_variables": []
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "match_my_result": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": "Type",
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "Result"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "Result"
+                  },
+                  "alias_variables": [],
+                  "aliased_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Type",
+                                "Type"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Result"
+                              ]
+                            ],
+                            "value": "Result"
+                          },
+                          "source_value": {
+                            "module_name": "Result",
+                            "value": "Result"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        },
+                        {
+                          "type": "PrimConstructor",
+                          "data": "String"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ],
+            "return_type": {
+              "type": "PrimConstructor",
+              "data": "Bool"
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Result": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 54,
+          "end_offset": 60
+        },
+        "kind": "Type",
+        "aliased_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Type",
+                      "Type"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Result"
+                    ]
+                  ],
+                  "value": "Result"
+                },
+                "source_value": {
+                  "module_name": "Result",
+                  "value": "Result"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              },
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ]
+          }
+        },
+        "alias_variables": []
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "match_my_result": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 92,
+        "end_offset": 107
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 110,
+            "end_offset": 219
+          },
+          "binders": [
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 114,
+                    "end_offset": 117
+                  },
+                  "name": "res"
+                }
+              },
+              {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": "Type",
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "Result"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "Result"
+                  },
+                  "alias_variables": [],
+                  "aliased_type": {
+                    "type": "Call",
+                    "data": {
+                      "function": {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": {
+                            "Function": {
+                              "parameters": [
+                                "Type",
+                                "Type"
+                              ]
+                            }
+                          },
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Result"
+                              ]
+                            ],
+                            "value": "Result"
+                          },
+                          "source_value": {
+                            "module_name": "Result",
+                            "value": "Result"
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        },
+                        {
+                          "type": "PrimConstructor",
+                          "data": "String"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          ],
+          "body": {
+            "expression": "Match",
+            "data": {
+              "span": {
+                "start_offset": 141,
+                "end_offset": 219
+              },
+              "match_type": {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              },
+              "expression": {
+                "expression": "LocalVariable",
+                "data": {
+                  "span": {
+                    "start_offset": 147,
+                    "end_offset": 150
+                  },
+                  "variable_type": {
+                    "type": "ConstructorAlias",
+                    "data": {
+                      "constructor_kind": "Type",
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "Result"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Result"
+                      },
+                      "alias_variables": [],
+                      "aliased_type": {
+                        "type": "Call",
+                        "data": {
+                          "function": {
+                            "type": "Constructor",
+                            "data": {
+                              "constructor_kind": {
+                                "Function": {
+                                  "parameters": [
+                                    "Type",
+                                    "Type"
+                                  ]
+                                }
+                              },
+                              "canonical_value": {
+                                "module_name": [
+                                  null,
+                                  [
+                                    "Result"
+                                  ]
+                                ],
+                                "value": "Result"
+                              },
+                              "source_value": {
+                                "module_name": "Result",
+                                "value": "Result"
+                              }
+                            }
+                          },
+                          "arguments": [
+                            {
+                              "type": "PrimConstructor",
+                              "data": "Int"
+                            },
+                            {
+                              "type": "PrimConstructor",
+                              "data": "String"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "variable": "res"
+                }
+              },
+              "arms": [
+                [
+                  {
+                    "ImportedConstructor": {
+                      "span": {
+                        "start_offset": 162,
+                        "end_offset": 174
+                      },
+                      "constructor": {
+                        "module_name": [
+                          null,
+                          [
+                            "Result"
+                          ]
+                        ],
+                        "value": "Ok"
+                      },
+                      "arguments": [
+                        {
+                          "Unused": {
+                            "span": {
+                              "start_offset": 172,
+                              "end_offset": 173
+                            },
+                            "unused_name": "_"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "expression": "True",
+                    "data": {
+                      "span": {
+                        "start_offset": 178,
+                        "end_offset": 182
+                      },
+                      "value_type": {
+                        "type": "PrimConstructor",
+                        "data": "Bool"
+                      }
+                    }
+                  }
+                ],
+                [
+                  {
+                    "ImportedConstructor": {
+                      "span": {
+                        "start_offset": 189,
+                        "end_offset": 202
+                      },
+                      "constructor": {
+                        "module_name": [
+                          null,
+                          [
+                            "Result"
+                          ]
+                        ],
+                        "value": "Err"
+                      },
+                      "arguments": [
+                        {
+                          "Unused": {
+                            "span": {
+                              "start_offset": 200,
+                              "end_offset": 201
+                            },
+                            "unused_name": "_"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "expression": "False",
+                    "data": {
+                      "span": {
+                        "start_offset": 206,
+                        "end_offset": 211
+                      },
+                      "value_type": {
+                        "type": "PrimConstructor",
+                        "data": "Bool"
+                      }
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "match_my_result"
+  ]
+}

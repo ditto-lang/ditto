@@ -1,0 +1,3 @@
+module Result exports (Result(..));
+
+type Result(a, e) = Ok(a) | Err(e);

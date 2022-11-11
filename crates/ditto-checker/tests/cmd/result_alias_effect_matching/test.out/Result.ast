@@ -1,0 +1,323 @@
+{
+  "module_name": [
+    "Result"
+  ],
+  "exports": {
+    "types": {
+      "Result": {
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": {
+            "Function": {
+              "parameters": [
+                "Type",
+                "Type"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "constructors": {
+      "Ok": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "constructor_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": "a"
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          "Type",
+                          "Type"
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Result"
+                        ]
+                      ],
+                      "value": "Result"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Result"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 0,
+                      "source_name": "a"
+                    }
+                  },
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 2,
+                      "source_name": "e"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "return_type_name": "Result"
+      },
+      "Err": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "constructor_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 2,
+                  "source_name": "e"
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          "Type",
+                          "Type"
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Result"
+                        ]
+                      ],
+                      "value": "Result"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Result"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 0,
+                      "source_name": "a"
+                    }
+                  },
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 2,
+                      "source_name": "e"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "return_type_name": "Result"
+      }
+    },
+    "values": {}
+  },
+  "types": {
+    "Result": {
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 42,
+          "end_offset": 48
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Type",
+              "Type"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "constructors": {
+    "Ok": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 57,
+        "end_offset": 59
+      },
+      "fields": [
+        {
+          "type": "Variable",
+          "data": {
+            "variable_kind": "Type",
+            "var": 0,
+            "source_name": "a"
+          }
+        }
+      ],
+      "return_type": {
+        "type": "Call",
+        "data": {
+          "function": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": {
+                "Function": {
+                  "parameters": [
+                    "Type",
+                    "Type"
+                  ]
+                }
+              },
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Result"
+                  ]
+                ],
+                "value": "Result"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Result"
+              }
+            }
+          },
+          "arguments": [
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 0,
+                "source_name": "a"
+              }
+            },
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 2,
+                "source_name": "e"
+              }
+            }
+          ]
+        }
+      },
+      "return_type_name": "Result"
+    },
+    "Err": {
+      "doc_comments": [],
+      "doc_position": 1,
+      "constructor_name_span": {
+        "start_offset": 65,
+        "end_offset": 68
+      },
+      "fields": [
+        {
+          "type": "Variable",
+          "data": {
+            "variable_kind": "Type",
+            "var": 2,
+            "source_name": "e"
+          }
+        }
+      ],
+      "return_type": {
+        "type": "Call",
+        "data": {
+          "function": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": {
+                "Function": {
+                  "parameters": [
+                    "Type",
+                    "Type"
+                  ]
+                }
+              },
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Result"
+                  ]
+                ],
+                "value": "Result"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Result"
+              }
+            }
+          },
+          "arguments": [
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 0,
+                "source_name": "a"
+              }
+            },
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 2,
+                "source_name": "e"
+              }
+            }
+          ]
+        }
+      },
+      "return_type_name": "Result"
+    }
+  },
+  "values": {},
+  "values_toposort": []
+}

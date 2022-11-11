@@ -1,0 +1,543 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {
+      "Result": {
+        "Alias": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": "Type",
+          "aliased_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Type",
+                        "Type"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Result"
+                      ]
+                    ],
+                    "value": "Result"
+                  },
+                  "source_value": {
+                    "module_name": "Result",
+                    "value": "Result"
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                },
+                {
+                  "type": "PrimConstructor",
+                  "data": "String"
+                }
+              ]
+            }
+          },
+          "alias_variables": []
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "match_my_result": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "PrimConstructor",
+                    "data": "Effect"
+                  },
+                  "arguments": [
+                    {
+                      "type": "ConstructorAlias",
+                      "data": {
+                        "constructor_kind": "Type",
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "Result"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "Result"
+                        },
+                        "alias_variables": [],
+                        "aliased_type": {
+                          "type": "Call",
+                          "data": {
+                            "function": {
+                              "type": "Constructor",
+                              "data": {
+                                "constructor_kind": {
+                                  "Function": {
+                                    "parameters": [
+                                      "Type",
+                                      "Type"
+                                    ]
+                                  }
+                                },
+                                "canonical_value": {
+                                  "module_name": [
+                                    null,
+                                    [
+                                      "Result"
+                                    ]
+                                  ],
+                                  "value": "Result"
+                                },
+                                "source_value": {
+                                  "module_name": "Result",
+                                  "value": "Result"
+                                }
+                              }
+                            },
+                            "arguments": [
+                              {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              },
+                              {
+                                "type": "PrimConstructor",
+                                "data": "String"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "PrimConstructor",
+                  "data": "Effect"
+                },
+                "arguments": [
+                  {
+                    "type": "PrimConstructor",
+                    "data": "Bool"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Result": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 54,
+          "end_offset": 60
+        },
+        "kind": "Type",
+        "aliased_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "Constructor",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Type",
+                      "Type"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Result"
+                    ]
+                  ],
+                  "value": "Result"
+                },
+                "source_value": {
+                  "module_name": "Result",
+                  "value": "Result"
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              },
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ]
+          }
+        },
+        "alias_variables": []
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "match_my_result": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 92,
+        "end_offset": 107
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 110,
+            "end_offset": 264
+          },
+          "binders": [
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 114,
+                    "end_offset": 117
+                  },
+                  "name": "eff"
+                }
+              },
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "PrimConstructor",
+                    "data": "Effect"
+                  },
+                  "arguments": [
+                    {
+                      "type": "ConstructorAlias",
+                      "data": {
+                        "constructor_kind": "Type",
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "Result"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "Result"
+                        },
+                        "alias_variables": [],
+                        "aliased_type": {
+                          "type": "Call",
+                          "data": {
+                            "function": {
+                              "type": "Constructor",
+                              "data": {
+                                "constructor_kind": {
+                                  "Function": {
+                                    "parameters": [
+                                      "Type",
+                                      "Type"
+                                    ]
+                                  }
+                                },
+                                "canonical_value": {
+                                  "module_name": [
+                                    null,
+                                    [
+                                      "Result"
+                                    ]
+                                  ],
+                                  "value": "Result"
+                                },
+                                "source_value": {
+                                  "module_name": "Result",
+                                  "value": "Result"
+                                }
+                              }
+                            },
+                            "arguments": [
+                              {
+                                "type": "PrimConstructor",
+                                "data": "Int"
+                              },
+                              {
+                                "type": "PrimConstructor",
+                                "data": "String"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          ],
+          "body": {
+            "expression": "Effect",
+            "data": {
+              "span": {
+                "start_offset": 152,
+                "end_offset": 264
+              },
+              "return_type": {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              },
+              "effect": {
+                "Bind": {
+                  "name": "res",
+                  "expression": {
+                    "expression": "LocalVariable",
+                    "data": {
+                      "span": {
+                        "start_offset": 168,
+                        "end_offset": 171
+                      },
+                      "variable_type": {
+                        "type": "Call",
+                        "data": {
+                          "function": {
+                            "type": "PrimConstructor",
+                            "data": "Effect"
+                          },
+                          "arguments": [
+                            {
+                              "type": "ConstructorAlias",
+                              "data": {
+                                "constructor_kind": "Type",
+                                "canonical_value": {
+                                  "module_name": [
+                                    null,
+                                    [
+                                      "Test"
+                                    ]
+                                  ],
+                                  "value": "Result"
+                                },
+                                "source_value": {
+                                  "module_name": null,
+                                  "value": "Result"
+                                },
+                                "alias_variables": [],
+                                "aliased_type": {
+                                  "type": "Call",
+                                  "data": {
+                                    "function": {
+                                      "type": "Constructor",
+                                      "data": {
+                                        "constructor_kind": {
+                                          "Function": {
+                                            "parameters": [
+                                              "Type",
+                                              "Type"
+                                            ]
+                                          }
+                                        },
+                                        "canonical_value": {
+                                          "module_name": [
+                                            null,
+                                            [
+                                              "Result"
+                                            ]
+                                          ],
+                                          "value": "Result"
+                                        },
+                                        "source_value": {
+                                          "module_name": "Result",
+                                          "value": "Result"
+                                        }
+                                      }
+                                    },
+                                    "arguments": [
+                                      {
+                                        "type": "PrimConstructor",
+                                        "data": "Int"
+                                      },
+                                      {
+                                        "type": "PrimConstructor",
+                                        "data": "String"
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "variable": "eff"
+                    }
+                  },
+                  "rest": {
+                    "Return": {
+                      "expression": {
+                        "expression": "Match",
+                        "data": {
+                          "span": {
+                            "start_offset": 184,
+                            "end_offset": 262
+                          },
+                          "match_type": {
+                            "type": "PrimConstructor",
+                            "data": "Bool"
+                          },
+                          "expression": {
+                            "expression": "LocalVariable",
+                            "data": {
+                              "span": {
+                                "start_offset": 190,
+                                "end_offset": 193
+                              },
+                              "variable_type": {
+                                "type": "Variable",
+                                "data": {
+                                  "variable_kind": "Type",
+                                  "var": 0,
+                                  "source_name": null
+                                }
+                              },
+                              "variable": "res"
+                            }
+                          },
+                          "arms": [
+                            [
+                              {
+                                "ImportedConstructor": {
+                                  "span": {
+                                    "start_offset": 205,
+                                    "end_offset": 217
+                                  },
+                                  "constructor": {
+                                    "module_name": [
+                                      null,
+                                      [
+                                        "Result"
+                                      ]
+                                    ],
+                                    "value": "Ok"
+                                  },
+                                  "arguments": [
+                                    {
+                                      "Unused": {
+                                        "span": {
+                                          "start_offset": 215,
+                                          "end_offset": 216
+                                        },
+                                        "unused_name": "_"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "expression": "True",
+                                "data": {
+                                  "span": {
+                                    "start_offset": 221,
+                                    "end_offset": 225
+                                  },
+                                  "value_type": {
+                                    "type": "PrimConstructor",
+                                    "data": "Bool"
+                                  }
+                                }
+                              }
+                            ],
+                            [
+                              {
+                                "ImportedConstructor": {
+                                  "span": {
+                                    "start_offset": 232,
+                                    "end_offset": 245
+                                  },
+                                  "constructor": {
+                                    "module_name": [
+                                      null,
+                                      [
+                                        "Result"
+                                      ]
+                                    ],
+                                    "value": "Err"
+                                  },
+                                  "arguments": [
+                                    {
+                                      "Unused": {
+                                        "span": {
+                                          "start_offset": 243,
+                                          "end_offset": 244
+                                        },
+                                        "unused_name": "_"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "expression": "False",
+                                "data": {
+                                  "span": {
+                                    "start_offset": 249,
+                                    "end_offset": 254
+                                  },
+                                  "value_type": {
+                                    "type": "PrimConstructor",
+                                    "data": "Bool"
+                                  }
+                                }
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "match_my_result"
+  ]
+}

@@ -1,0 +1,11 @@
+module Test exports (..);
+
+import Result;
+
+type alias Result = Result.Result(Int, String);
+
+match_my_result = fn (res: Result): Bool -> 
+    match res with
+    | Result.Ok(_) -> true
+    | Result.Err(_) -> false
+    end;

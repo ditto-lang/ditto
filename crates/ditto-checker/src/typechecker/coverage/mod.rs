@@ -234,6 +234,14 @@ impl Constructor {
 
 fn constructors_for_type(pattern_type: &Type, env_constructors: &EnvConstructors) -> Constructors {
     match pattern_type {
+        Type::ConstructorAlias {
+            box aliased_type,
+            alias_variables: _, // do we need to do anything with these? Some substitution maybe?
+            ..
+        } => {
+            return constructors_for_type(aliased_type, env_constructors);
+        }
+
         Type::Call {
             function:
                 box Type::Constructor {

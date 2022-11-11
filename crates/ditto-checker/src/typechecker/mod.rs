@@ -1148,6 +1148,47 @@ fn unify_else(
         actual: constraint.actual.clone(),
     });
     match constraint {
+        // Anonymous variables are bound to new types
+        // (important that this is the first match case)
+        Constraint {
+            expected:
+                Type::Variable {
+                    source_name: None,
+                    var,
+                    ..
+                },
+            actual: t,
+        }
+        | Constraint {
+            expected: t,
+            actual:
+                Type::Variable {
+                    source_name: None,
+                    var,
+                    ..
+                },
+        } => bind(state, span, var, t),
+
+        // An explicitly named type variable (named in the source) will only unify
+        // with another type variable with the same name, or an anonymous type
+        // variable.
+        //
+        // For example, the following shouldn't typecheck
+        //    five : a = 5;
+        //
+        Constraint {
+            expected:
+                Type::Variable {
+                    source_name: Some(expected),
+                    ..
+                },
+            actual:
+                Type::Variable {
+                    source_name: Some(actual),
+                    ..
+                },
+        } if expected == actual => Ok(()),
+
         // Recurse on type aliases
         Constraint {
             // SomeAlias ~ actual
@@ -1303,45 +1344,6 @@ fn unify_else(
                 Some(&err),
             )
         }),
-        // An explicitly named type variable (named in the source) will only unify
-        // with another type variable with the same name, or an anonymous type
-        // variable.
-        //
-        // For example, the following shouldn't typecheck
-        //    five : a = 5;
-        //
-        Constraint {
-            expected:
-                Type::Variable {
-                    source_name: Some(expected),
-                    ..
-                },
-            actual:
-                Type::Variable {
-                    source_name: Some(actual),
-                    ..
-                },
-        } if expected == actual => Ok(()),
-
-        // Anonymous variables are bound to new types
-        Constraint {
-            expected:
-                Type::Variable {
-                    source_name: None,
-                    var,
-                    ..
-                },
-            actual: t,
-        }
-        | Constraint {
-            expected: t,
-            actual:
-                Type::Variable {
-                    source_name: None,
-                    var,
-                    ..
-                },
-        } => bind(state, span, var, t),
 
         Constraint {
             expected:

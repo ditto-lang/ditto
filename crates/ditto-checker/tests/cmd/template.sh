@@ -15,7 +15,7 @@ set -x
 
 mkdir "$1"
 tee "$1/test.toml" <<EOF
-bin.name = "check_module"
+bin.name = "ditto-checker-testbin-check-module"
 args = ["$1.ditto"]
 fs.sandbox = true
 EOF
