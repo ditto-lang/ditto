@@ -165,8 +165,12 @@ pub enum Expression {
     IndexAccess { target: Box<Self>, index: Box<Self> },
     /// ```javascript
     /// { "key": value }
+    /// { ...expr, "key": value }
     /// ```
-    Object(indexmap::IndexMap<String, Self>),
+    Object {
+        spread: Option<Box<Self>>,
+        entries: indexmap::IndexMap<String, Self>,
+    },
 }
 
 /// A binary operator.

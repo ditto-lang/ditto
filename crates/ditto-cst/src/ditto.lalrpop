@@ -153,6 +153,10 @@ Expression0: cst::Expression = {
 
   Parens<Box<Expression>> => cst::Expression::Parens(<>),
   BracesList<RecordField> => cst::Expression::Record(<>),
+
+  // `{ Some.record | foo = bar }`
+  <open_brace: OpenBrace> <target: Box<Expression1>> <pipe: Pipe> <updates: CommaSep1<RecordField>> <close_brace: CloseBrace> => cst::Expression::RecordUpdate { open_brace, target, pipe, updates, close_brace },
+
   TrueKeyword => cst::Expression::True(<>),
   FalseKeyword => cst::Expression::False(<>),
   UnitKeyword => cst::Expression::Unit(<>),

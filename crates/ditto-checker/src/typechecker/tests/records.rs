@@ -35,6 +35,26 @@ fn it_typechecks_as_expected() {
         "(fn (r : { r | foo: Bool }) -> r.foo)({ foo = true })",
         "Bool"
     );
+
+    assert_type!(
+        "fn (r) -> { r | foo = 2 }",
+        "({ $1 | foo: Int }) -> { $1 | foo: Int }"
+    );
+    assert_type!(
+        "fn (r: { foo : Int }) -> { r | foo = 2 }",
+        "({ foo: Int }) -> { foo: Int }"
+    );
+
+    assert_type!("(fn (r) -> { r | foo = 2 })({ foo = 1 })", "{ foo: Int }");
+    assert_type!(
+        "(fn (r) -> { r | foo = 2 })({ foo = 1, bar = 5 })",
+        "{ foo: Int, bar: Int }"
+    );
+
+    assert_type!(
+        "fn (a, b) -> { a | foo = { b | bar = 5 } }",
+        "({ $3 | foo: { $2 | bar: Int } }, { $2 | bar: Int }) -> { $3 | foo: { $2 | bar: Int } }"
+    );
 }
 
 #[test]
@@ -75,4 +95,12 @@ fn it_errors_as_expected() {
     );
 
     assert_type_error!("(fn (r : { foo: Int }) -> r.foo)({})", TypesNotEqual { .. });
+
+    // record updates can't add a new field to a record
+    assert_type_error!("(fn (r) -> { r | foo = 2 })({})", TypesNotEqual { .. });
+    // record updates can't change the type of a record field
+    assert_type_error!(
+        "(fn (r) -> { r | foo = 2 })({ foo = true })",
+        TypesNotEqual { .. }
+    );
 }

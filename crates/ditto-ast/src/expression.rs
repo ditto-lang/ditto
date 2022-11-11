@@ -200,6 +200,17 @@ pub enum Expression {
         /// The record label being accessed.
         label: Name,
     },
+    /// `{ target | label = value }`
+    RecordUpdate {
+        /// The source span for this expression.
+        span: Span,
+        /// The type of the entire record being updated.
+        record_type: Type,
+        /// The expression being updated.
+        target: Box<Self>,
+        /// The record updates.
+        fields: IndexMap<Name, Self>,
+    },
     /// An array literal.
     Array {
         /// The source span for this expression.
@@ -279,6 +290,7 @@ impl Expression {
             Self::ForeignVariable { variable_type, .. } => variable_type.clone(),
             Self::ImportedVariable { variable_type, .. } => variable_type.clone(),
             Self::RecordAccess { field_type, .. } => field_type.clone(),
+            Self::RecordUpdate { record_type, .. } => record_type.clone(),
             Self::Array { value_type, .. } => value_type.clone(),
             Self::Record { fields, .. } => Type::RecordClosed {
                 kind: Kind::Type,
@@ -309,6 +321,7 @@ impl Expression {
             Self::ImportedVariable { span, .. } => *span,
             Self::Effect { span, .. } => *span,
             Self::RecordAccess { span, .. } => *span,
+            Self::RecordUpdate { span, .. } => *span,
             Self::String { span, .. } => *span,
             Self::Int { span, .. } => *span,
             Self::Float { span, .. } => *span,

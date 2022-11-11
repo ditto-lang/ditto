@@ -15,3 +15,12 @@ hanging_fives = [
 ];
 
 foreign some_npm_function: (Int) -> Int;
+
+update_fields = fn (r) ->
+    -- updates a bunch of things
+    {
+        -- specifically...
+        r |
+            foo = 2,
+            bar = { Stuff.r | baz = r.baz },
+    };

@@ -238,8 +238,13 @@ impl Render for Expression {
                 index.render(accum);
                 accum.push(']');
             }
-            Self::Object(entries) => {
+            Self::Object { spread, entries } => {
                 accum.push('{');
+                if let Some(box spread) = spread {
+                    accum.push_str("...(");
+                    spread.render(accum);
+                    accum.push_str("),");
+                }
                 let len = entries.len();
                 for (i, (key, value)) in entries.iter().enumerate() {
                     accum.push('"');
