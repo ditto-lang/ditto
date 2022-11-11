@@ -203,32 +203,43 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
     let cst = if log::log_enabled!(log::Level::Info) {
         log_time(
             || {
-                cst::Module::parse(&ditto_input_source)
-                    .map_err(|err| err.into_report(&ditto_input_name, ditto_input_source.clone()))
+                cst::Module::parse(&ditto_input_source).map_err(|err| {
+                    log::error!("{:#?}", err);
+                    err.into_report(&ditto_input_name, ditto_input_source.clone())
+                })
             },
             format!("{} parsed in", ditto_input_name),
         )
     } else {
-        cst::Module::parse(&ditto_input_source)
-            .map_err(|err| err.into_report(&ditto_input_name, ditto_input_source.clone()))
+        cst::Module::parse(&ditto_input_source).map_err(|err| {
+            log::error!("{:#?}", err);
+            err.into_report(&ditto_input_name, ditto_input_source.clone())
+        })
     }?;
 
     let (ast, warnings) = if log::log_enabled!(log::Level::Info) {
         log_time(
             || {
-                checker::check_module(&everything, cst)
-                    .map_err(|err| err.into_report(&ditto_input_name, ditto_input_source.clone()))
+                checker::check_module(&everything, cst).map_err(|err| {
+                    log::error!("{:#?}", err);
+                    err.into_report(&ditto_input_name, ditto_input_source.clone())
+                })
             },
             format!("{} checked in", ditto_input_name),
         )
     } else {
-        checker::check_module(&everything, cst)
-            .map_err(|err| err.into_report(&ditto_input_name, ditto_input_source.clone()))
+        checker::check_module(&everything, cst).map_err(|err| {
+            log::error!("{:#?}", err);
+            err.into_report(&ditto_input_name, ditto_input_source.clone())
+        })
     }?;
 
     let warnings = warnings
         .into_iter()
-        .map(|warning| warning.into_report())
+        .map(|warning| {
+            log::warn!("{:#?}", warning);
+            warning.into_report()
+        })
         .collect::<Vec<_>>();
 
     let mut print_warnings = true;
@@ -265,7 +276,7 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
         let source = std::sync::Arc::new(ditto_input_source);
         for warning in warnings {
             eprintln!(
-                "{:?}",
+                "{:#?}",
                 Report::from(warning)
                     .with_source_code(NamedSource::new(&ditto_input_name, source.clone()))
             );
