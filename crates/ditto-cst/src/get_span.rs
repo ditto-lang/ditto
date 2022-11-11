@@ -113,6 +113,11 @@ impl Expression {
             Self::Unit(unit_keyword) => unit_keyword.0.get_span(),
             Self::BinOp { lhs, rhs, .. } => lhs.get_span().merge(&rhs.get_span()),
             Self::RecordAccess { target, label, .. } => target.get_span().merge(&label.get_span()),
+            Self::RecordUpdate {
+                open_brace,
+                close_brace,
+                ..
+            } => open_brace.0.get_span().merge(&close_brace.0.get_span()),
         }
     }
 }

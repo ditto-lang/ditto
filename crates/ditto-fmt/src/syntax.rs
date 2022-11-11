@@ -85,10 +85,14 @@ where
     GenElement: FnOnce(T) -> PrintItems + Copy,
 {
     let mut items = PrintItems::new();
-
+    let parens_have_inner_comments =
+        parens.open_paren.0.has_trailing_comment() || parens.close_paren.0.has_leading_comments();
     items.extend(gen_open_paren(parens.open_paren));
-    let gen_separated_values_result =
-        gen_comma_sep1(parens.value, gen_element, force_use_new_lines);
+    let gen_separated_values_result = gen_comma_sep1(
+        parens.value,
+        gen_element,
+        force_use_new_lines || parens_have_inner_comments,
+    );
     let element_items = gen_separated_values_result.items;
     items.extend(element_items);
     items.extend(gen_close_paren(parens.close_paren));
@@ -104,9 +108,12 @@ where
     GenElement: FnOnce(T) -> PrintItems + Copy,
 {
     let mut items = PrintItems::new();
+    let brackets_have_inner_comments = brackets.open_bracket.0.has_trailing_comment()
+        || brackets.close_bracket.0.has_leading_comments();
     items.extend(gen_open_bracket(brackets.open_bracket));
     if let Some(elements) = brackets.value {
-        let gen_separated_values_result = gen_comma_sep1(elements, gen_element, false);
+        let gen_separated_values_result =
+            gen_comma_sep1(elements, gen_element, brackets_have_inner_comments);
         let element_items = gen_separated_values_result.items;
         items.extend(element_items);
     }
@@ -120,9 +127,12 @@ where
     GenElement: FnOnce(T) -> PrintItems + Copy,
 {
     let mut items = PrintItems::new();
+    let braces_have_inner_comments =
+        braces.open_brace.0.has_trailing_comment() || braces.close_brace.0.has_leading_comments();
     items.extend(gen_open_brace(braces.open_brace));
     if let Some(elements) = braces.value {
-        let gen_separated_values_result = gen_comma_sep1(elements, gen_element, false);
+        let gen_separated_values_result =
+            gen_comma_sep1(elements, gen_element, braces_have_inner_comments);
 
         let is_multiple_lines = gen_separated_values_result.is_multi_line_condition_ref;
         items.push_condition(conditions::if_false(

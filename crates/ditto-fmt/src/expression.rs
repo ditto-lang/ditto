@@ -3,7 +3,10 @@ use super::{
     helpers::{group, space},
     name::{gen_name, gen_qualified_name, gen_qualified_proper_name, gen_unused_name},
     r#type::gen_type,
-    syntax::{gen_braces_list, gen_brackets_list, gen_parens, gen_parens_list, gen_parens_list1},
+    syntax::{
+        gen_braces_list, gen_brackets_list, gen_comma_sep1, gen_parens, gen_parens_list,
+        gen_parens_list1,
+    },
     token::{
         gen_close_brace, gen_colon, gen_do_keyword, gen_dot, gen_else_keyword, gen_end_keyword,
         gen_equals, gen_false_keyword, gen_fn_keyword, gen_if_keyword, gen_left_arrow,
@@ -23,7 +26,7 @@ use std::rc::Rc;
 
 pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
     match expr {
-        // TODO remove redundant parens?
+        // TODO remove redundant parens (using _needs_parens)?
         Expression::Parens(parens) => gen_parens(parens, |box expr| gen_expression(expr, true)),
         Expression::True(keyword) => gen_true_keyword(keyword),
         Expression::False(keyword) => gen_false_keyword(keyword),
@@ -243,23 +246,76 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
             items.extend(gen_name(label));
             items
         }
-        Expression::Record(braces) => gen_braces_list(
-            braces,
-            |RecordField {
-                 label,
-                 equals,
-                 box value,
-             }| {
-                let mut items = PrintItems::new();
-                items.extend(gen_name(label));
-                items.extend(space());
-                items.extend(gen_equals(equals));
-                let force_use_new_lines = value.has_leading_comments();
-                items.extend(group(gen_expression(value, true), force_use_new_lines));
-                items
-            },
-        ),
+        Expression::Record(braces) => gen_braces_list(braces, gen_record_field),
+        Expression::RecordUpdate {
+            open_brace,
+            box target,
+            pipe,
+            updates,
+            close_brace,
+        } => {
+            let mut items = PrintItems::new();
+
+            let braces_have_inner_comments =
+                open_brace.0.has_trailing_comment() || close_brace.0.has_leading_comments();
+            let force_use_new_lines =
+                braces_have_inner_comments || target.has_comments() || pipe.0.has_comments();
+
+            items.extend(gen_open_brace(open_brace));
+
+            let gen_separated_values_result =
+                gen_comma_sep1(updates, gen_record_field, force_use_new_lines);
+
+            let is_multiple_lines = gen_separated_values_result.is_multi_line_condition_ref;
+
+            let element_items = gen_separated_values_result.items.into_rc_path();
+            items.push_condition(conditions::if_true_or(
+                "dunnoYet",
+                is_multiple_lines.create_resolver(),
+                {
+                    let mut items: PrintItems = Signal::NewLine.into();
+                    items.extend(ir_helpers::with_indent({
+                        let mut items = PrintItems::new();
+                        items.extend(gen_expression(target.clone(), true));
+                        items.extend(space());
+                        items.extend(gen_pipe(pipe.clone()));
+                        items.extend(element_items.into());
+                        items
+                    }));
+                    items.extend(gen_close_brace(close_brace.clone()));
+                    items
+                },
+                {
+                    let mut items: PrintItems = Signal::SpaceOrNewLine.into();
+                    items.extend(gen_expression(target, true));
+                    items.extend(space());
+                    items.extend(gen_pipe(pipe));
+                    items.extend(space());
+                    items.extend(element_items.into());
+                    items.extend(space());
+                    items.extend(gen_close_brace(close_brace));
+                    items
+                },
+            ));
+            items
+        }
     }
+}
+
+fn gen_record_field(
+    RecordField {
+        label,
+        equals,
+        box value,
+    }: RecordField,
+) -> PrintItems {
+    let mut items = PrintItems::new();
+    items.extend(gen_name(label));
+    items.extend(space());
+    items.extend(gen_equals(equals));
+    let force_use_new_lines = value.has_leading_comments();
+    items.extend(group(gen_expression(value, true), force_use_new_lines));
+    items
 }
 
 fn gen_effect(effect: Effect, items: &mut PrintItems) {
@@ -601,11 +657,27 @@ mod tests {
         assert_fmt!("{ foo = true, bar = false, baz = fn () -> true }");
         assert_fmt!("{\n\t-- comment\n\tfoo = Foo,\n\tbar = Bar,\n\tbaz = {},\n}");
         assert_fmt!("{\n\t-- comment\n\tfoo =\n\t\t-- comment\n\t\tFoo,\n}");
+        assert_fmt!("{ foo = true }  -- comment");
+        assert_fmt!("{  -- comment\n\tfoo = true,\n}");
+        assert_fmt!("{\n\tfoo = bar,\n\t-- comment\n}");
     }
 
     #[test]
     fn it_formats_record_access() {
         assert_fmt!("foo.bar");
         assert_fmt!("foo.bar.baz");
+    }
+    #[test]
+    fn it_formats_record_updates() {
+        assert_fmt!("{ r | foo = 2, bar = true }");
+        assert_fmt!("{ Imported.r | foo = 2, bar = true }");
+        assert_fmt!("{ deep.record.access | foo = 2, bar = true }");
+        assert_fmt!(
+            "{ r | foo = 2, bar = true, baz = unit, }",
+            "{ r | foo = 2, bar = true, baz = unit }"
+        );
+        assert_fmt!("{\n\tr |\n\t\t-- comment\n\t\tfoo = 2,\n}");
+        assert_fmt!("{  --comment\n\tr |\n\t\t-- comment\n\t\tfoo = 2,\n}");
+        assert_fmt!("{\n\tr |\n\t\tfoo = 2,\n\t-- comment\n}");
     }
 }

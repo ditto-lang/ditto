@@ -83,6 +83,10 @@ pub enum Expression {
         keys: Vec<String>,
         values: Vec<Id>,
     },
+    ObjectWithSpread {
+        keys: Vec<String>,
+        children: Vec<Id>,
+    },
     // Blocks
     BlockExpression {
         children: [Id; 2],
@@ -123,6 +127,7 @@ impl egg::Language for Expression {
             (Self::IndexAccess { .. }, Self::IndexAccess { .. }) => true,
             (Self::Operator { op: x, .. }, Self::Operator { op: y, .. }) => x == y,
             (Self::Object { .. }, Self::Object { .. }) => true, // check entries.len ?
+            (Self::ObjectWithSpread { .. }, Self::ObjectWithSpread { .. }) => true, // check entries.len ?
             // Blocks
             (Self::BlockExpression { .. }, Self::BlockExpression { .. }) => true,
             (Self::BlockReturn { .. }, Self::BlockReturn { .. }) => true,
@@ -154,6 +159,7 @@ impl egg::Language for Expression {
             Self::IndexAccess { children } => children,
             Self::Operator { children, .. } => children,
             Self::Object { values, .. } => values,
+            Self::ObjectWithSpread { children, .. } => children,
             // Blocks
             Self::BlockExpression { children } => children,
             Self::BlockConstAssignment { children, .. } => children,
@@ -184,6 +190,7 @@ impl egg::Language for Expression {
             Self::IndexAccess { children } => children,
             Self::Operator { children, .. } => children,
             Self::Object { values, .. } => values,
+            Self::ObjectWithSpread { children, .. } => children,
             // Blocks
             Self::BlockConstAssignment { children, .. } => children,
             Self::BlockExpression { children } => children,
@@ -305,7 +312,10 @@ fn ast_expr_to_rec_expr(ast_expr: &ast::Expression, rec_expr: &mut RecExpr) -> I
             };
             rec_expr.add(node)
         }
-        ast::Expression::Object(entries) => {
+        ast::Expression::Object {
+            spread: None,
+            entries,
+        } => {
             let mut keys = Vec::with_capacity(entries.len());
             let mut values = Vec::with_capacity(entries.len());
             for (key, value) in entries {
@@ -313,6 +323,20 @@ fn ast_expr_to_rec_expr(ast_expr: &ast::Expression, rec_expr: &mut RecExpr) -> I
                 values.push(ast_expr_to_rec_expr(value, rec_expr));
             }
             let node = Expression::Object { keys, values };
+            rec_expr.add(node)
+        }
+        ast::Expression::Object {
+            spread: Some(spread),
+            entries,
+        } => {
+            let mut keys = Vec::with_capacity(entries.len());
+            let mut children = Vec::with_capacity(entries.len() + 1);
+            children.push(ast_expr_to_rec_expr(spread, rec_expr));
+            for (key, value) in entries {
+                keys.push(key.clone());
+                children.push(ast_expr_to_rec_expr(value, rec_expr));
+            }
+            let node = Expression::ObjectWithSpread { keys, children };
             rec_expr.add(node)
         }
         // Leaves
@@ -402,6 +426,7 @@ fn unbuild_rec_expr(expr: &Expression, rec_expr: &RecExpr) -> BlockOrExpression 
         | Expression::IndexAccess { .. }
         | Expression::Operator { .. }
         | Expression::Object { .. }
+        | Expression::ObjectWithSpread { .. }
         | Expression::True
         | Expression::False
         | Expression::Undefined
@@ -511,8 +536,28 @@ fn rec_expr_to_ast_expr(expr: &Expression, rec_expr: &RecExpr) -> ast::Expressio
                 let value = rec_expr_to_ast_expr(&rec_expr[*value_id], rec_expr);
                 entries.insert(key.clone(), value);
             }
-            ast::Expression::Object(entries)
+            ast::Expression::Object {
+                spread: None,
+                entries,
+            }
         }
+        Expression::ObjectWithSpread { keys, children } => match children.as_slice() {
+            [spread_id, values @ ..] => {
+                let spread = rec_expr_to_ast_expr(&rec_expr[*spread_id], rec_expr);
+                let mut entries = indexmap::IndexMap::with_capacity(keys.len());
+                for (key, value_id) in keys.iter().zip(values) {
+                    let value = rec_expr_to_ast_expr(&rec_expr[*value_id], rec_expr);
+                    entries.insert(key.clone(), value);
+                }
+                ast::Expression::Object {
+                    spread: Some(Box::new(spread)),
+                    entries,
+                }
+            }
+            _ => {
+                unreachable!();
+            }
+        },
         // Leaves
         Expression::True => ast::Expression::True,
         Expression::False => ast::Expression::False,
@@ -591,6 +636,7 @@ fn rec_expr_to_ast_block(expr: &Expression, rec_expr: &RecExpr) -> ast::Block {
         | Expression::IndexAccess { .. }
         | Expression::Operator { .. }
         | Expression::Object { .. }
+        | Expression::ObjectWithSpread { .. }
         | Expression::True
         | Expression::False
         | Expression::Undefined
@@ -677,7 +723,7 @@ mod test {
                         3, // Array
                         4, // Operator
                         5, // IndexAccess
-                        6, // IndexAccess
+                        6, // Object
                     ])
                     .cloned()
                     .unwrap();
@@ -724,7 +770,7 @@ mod test {
                         target: Box::new(Self::arbitrary_stacksafe(g, depth - 1)),
                         index: Box::new(Self::arbitrary_stacksafe(g, depth - 1)),
                     },
-                    6 => Self::Object({
+                    6 => {
                         let mut entries = indexmap::IndexMap::with_capacity(3);
                         entries.insert(
                             String::arbitrary(g),
@@ -738,8 +784,14 @@ mod test {
                             String::arbitrary(g),
                             Self::arbitrary_stacksafe(g, depth - 1),
                         );
-                        entries
-                    }),
+                        let with_spread: bool = Arbitrary::arbitrary(g);
+                        let spread = if with_spread {
+                            Some(Box::new(Self::arbitrary_stacksafe(g, depth - 1)))
+                        } else {
+                            None
+                        };
+                        Self::Object { spread, entries }
+                    }
                     _ => unreachable!(),
                 }
             }

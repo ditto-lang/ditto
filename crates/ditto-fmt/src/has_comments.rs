@@ -96,6 +96,19 @@ impl HasComments for Expression {
                     || braces.value.has_comments()
                     || braces.close_brace.0.has_comments()
             }
+            Self::RecordUpdate {
+                open_brace,
+                target,
+                pipe,
+                updates,
+                close_brace,
+            } => {
+                open_brace.0.has_comments()
+                    || target.has_comments()
+                    || pipe.0.has_comments()
+                    || updates.has_comments()
+                    || close_brace.0.has_comments()
+            }
         }
     }
 
@@ -119,6 +132,7 @@ impl HasComments for Expression {
             Self::BinOp { lhs, .. } => lhs.has_leading_comments(),
             Self::RecordAccess { target, .. } => target.has_leading_comments(),
             Self::Record(braces) => braces.open_brace.0.has_leading_comments(),
+            Self::RecordUpdate { open_brace, .. } => open_brace.0.has_leading_comments(),
         }
     }
 }

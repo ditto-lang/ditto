@@ -520,7 +520,28 @@ pub(crate) fn convert_expression(
                     )
                 })
                 .collect();
-            Expression::Object(entries)
+            Expression::Object {
+                spread: None,
+                entries,
+            }
+        }
+        ditto_ast::Expression::RecordUpdate {
+            box target, fields, ..
+        } => {
+            let spread = Box::new(convert_expression(supply, imported_module_idents, target));
+            let entries = fields
+                .into_iter()
+                .map(|(name, expr)| {
+                    (
+                        name.0,
+                        convert_expression(supply, imported_module_idents, expr),
+                    )
+                })
+                .collect();
+            Expression::Object {
+                spread: Some(spread),
+                entries,
+            }
         }
     }
 }

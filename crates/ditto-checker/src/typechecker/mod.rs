@@ -378,6 +378,44 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
                 label,
             })
         }
+        pre::Expression::RecordUpdate {
+            span,
+            box target,
+            updates,
+        } => {
+            let target = infer(env, state, target)?;
+            let fields: IndexMap<Name, Expression> = updates
+                .into_iter()
+                .map(|(label, expr)| infer(env, state, expr).map(|expr| (label, expr)))
+                .collect::<Result<_>>()?;
+
+            let record_type = Type::RecordOpen {
+                kind: Kind::Type,
+                var: state.supply.fresh(),
+                source_name: None,
+                row: fields
+                    .clone()
+                    .into_iter()
+                    .map(|(label, expr)| (label, expr.get_type()))
+                    .collect(),
+            };
+
+            unify(
+                state,
+                span,
+                Constraint {
+                    expected: record_type.clone(),
+                    actual: target.get_type(),
+                },
+            )?;
+
+            Ok(Expression::RecordUpdate {
+                span,
+                record_type,
+                target: Box::new(target),
+                fields,
+            })
+        }
     }
 }
 

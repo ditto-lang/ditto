@@ -350,6 +350,20 @@ impl Substitution {
                 target: Box::new(self.apply_expression(target)),
                 label,
             },
+            RecordUpdate {
+                span,
+                record_type,
+                box target,
+                fields,
+            } => RecordUpdate {
+                span,
+                record_type: self.apply(record_type),
+                target: Box::new(self.apply_expression(target)),
+                fields: fields
+                    .into_iter()
+                    .map(|(label, expr)| (label, self.apply_expression(expr)))
+                    .collect(),
+            },
             True { span, value_type } => True {
                 span,
                 value_type: self.apply(value_type),

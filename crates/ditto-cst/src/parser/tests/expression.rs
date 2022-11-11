@@ -552,3 +552,13 @@ fn it_parses_record_access() {
         }
     );
 }
+
+#[test]
+fn it_parses_record_updates() {
+    assert_parses!("{ r | foo = 2 }", Expression::RecordUpdate { .. });
+    assert_parses!("{ Mod.r | foo = 2 }", Expression::RecordUpdate { .. });
+    assert_parses!(
+        "{ r | foo = 2, bar = unit, }",
+        Expression::RecordUpdate { .. }
+    );
+}

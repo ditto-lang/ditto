@@ -14,3 +14,12 @@ foo = mk_has_foo(true).foo;
 
 pure_object = fn () -> {};
 do_object = do { return {} };
+
+update_foo_bar = fn (r) -> { r | foo = 1, bar = 2 };
+
+deep_update = fn (r) -> 
+    { r | a = 
+        { r.a | b = 
+            { r.a.b | c = true } 
+        } 
+    };

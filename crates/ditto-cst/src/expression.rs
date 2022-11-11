@@ -1,9 +1,9 @@
 use crate::{
-    BracesList, BracketsList, CloseBrace, Colon, DoKeyword, Dot, ElseKeyword, EndKeyword, Equals,
-    FalseKeyword, FnKeyword, IfKeyword, LeftArrow, LetKeyword, MatchKeyword, Name, OpenBrace,
-    Parens, ParensList, ParensList1, Pipe, QualifiedName, QualifiedProperName, ReturnKeyword,
-    RightArrow, RightPizzaOperator, Semicolon, StringToken, ThenKeyword, TrueKeyword, Type,
-    UnitKeyword, UnusedName, WithKeyword,
+    BracesList, BracketsList, CloseBrace, Colon, CommaSep1, DoKeyword, Dot, ElseKeyword,
+    EndKeyword, Equals, FalseKeyword, FnKeyword, IfKeyword, LeftArrow, LetKeyword, MatchKeyword,
+    Name, OpenBrace, Parens, ParensList, ParensList1, Pipe, QualifiedName, QualifiedProperName,
+    ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon, StringToken, ThenKeyword,
+    TrueKeyword, Type, UnitKeyword, UnusedName, WithKeyword,
 };
 
 /// A value expression.
@@ -150,6 +150,19 @@ pub enum Expression {
         dot: Dot,
         /// Label of the field being accessed.
         label: Name,
+    },
+    /// `{ target | label = value }`
+    RecordUpdate {
+        /// `{`
+        open_brace: OpenBrace,
+        /// The record expression being updated.
+        target: Box<Self>,
+        /// `|`
+        pipe: Pipe,
+        /// Record fields to be updated.
+        updates: CommaSep1<RecordField>,
+        /// `}`
+        close_brace: CloseBrace,
     },
 }
 

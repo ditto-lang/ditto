@@ -489,6 +489,14 @@ fn toposort_value_declarations(
             Expression::RecordAccess { target, .. } => {
                 get_connected_nodes_rec(target, nodes, accum);
             }
+            Expression::RecordUpdate {
+                target, updates, ..
+            } => {
+                get_connected_nodes_rec(target, nodes, accum);
+                updates.iter().for_each(|cst::RecordField { value, .. }| {
+                    get_connected_nodes_rec(value, nodes, accum);
+                })
+            }
             Expression::Parens(parens) => {
                 get_connected_nodes_rec(&parens.value, nodes, accum);
             }

@@ -74,6 +74,11 @@ pub enum Expression {
         target: Box<Self>,
         label: Name,
     },
+    RecordUpdate {
+        span: Span,
+        target: Box<Self>,
+        updates: Vec<(Name, Self)>,
+    },
     True {
         span: Span,
     },
@@ -353,6 +358,26 @@ fn convert_cst(
                 label: label.into(),
             })
         }
+        cst::Expression::RecordUpdate {
+            box target,
+            updates: cst_updates,
+            ..
+        } => {
+            let target = convert_cst(env, state, target)?;
+            let mut updates = Vec::new(); // with capacity (should do this in more places)?
+            for cst::RecordField {
+                label, box value, ..
+            } in cst_updates.into_iter()
+            {
+                let update = convert_cst(env, state, value)?;
+                updates.push((label.into(), update));
+            }
+            Ok(Expression::RecordUpdate {
+                span,
+                target: Box::new(target),
+                updates,
+            })
+        }
     }
 }
 
@@ -541,6 +566,18 @@ fn substitute_type_annotations(subst: &Substitution, expression: Expression) -> 
             span,
             target: Box::new(substitute_type_annotations(subst, target)),
             label,
+        },
+        RecordUpdate {
+            span,
+            box target,
+            updates,
+        } => RecordUpdate {
+            span,
+            target: Box::new(substitute_type_annotations(subst, target)),
+            updates: updates
+                .into_iter()
+                .map(|(label, expr)| (label, substitute_type_annotations(subst, expr)))
+                .collect(),
         },
         Array { span, elements } => Array {
             span,
