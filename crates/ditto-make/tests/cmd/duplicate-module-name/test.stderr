@@ -1,0 +1,9 @@
+
+  × module name `A` is taken
+   ╭─[./ditto-src/A.ditto:1:1]
+ 1 │ module A exports (..);
+   ·        ┬
+   ·        ╰── module name is used by ./ditto-src/B.ditto
+ 2 │ 
+   ╰────
+

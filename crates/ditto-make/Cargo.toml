@@ -30,4 +30,4 @@ log = "0.4"
 
 [dev-dependencies]
 similar-asserts = "1.4"
-lazy_static = "1.4"
+trycmd = "0.14"
