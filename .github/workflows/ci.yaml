@@ -41,6 +41,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      # https://github.com/actions/cache/blob/5c79b3fd6c0e87c9444fe7b18edafe7d9ba61531/workarounds.md#improving-cache-restore-performance-on-windowsusing-cross-os-caching
+      - name: Use GNU tar
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: |
+          echo "Adding GNU tar to PATH"
+          echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
+
       - name: Setup Rust 🦀
         uses: ./.github/actions/setup-rust
         with:

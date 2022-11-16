@@ -11,16 +11,29 @@ runs:
 
     # https://github.com/actions/cache/blob/main/examples.md#haskell---stack
     - uses: actions/cache@v3
-      name: Cache ~/.stack
+      if: runner.os != 'Windows'
+      name: Cache global stack stuff (Linux or macOS)
       with:
         path: ~/.stack
         key: ${{ runner.os }}-stack-global-${{ hashFiles('stack.yaml') }}
         restore-keys: |
           ${{ runner.os }}-stack-global-
+
+    - uses: actions/cache@v3
+      if: runner.os == 'Windows'
+      name: Cache global stack stuff (Windows)
+      with:
+        path: |
+          ~\AppData\Roaming\stack
+          ~\AppData\Local\Programs\stack
+        key: ${{ runner.os }}-haskell-stack-global-${{ hashFiles('stack.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-haskell-stack-global-
+
     - uses: actions/cache@v3
       name: Cache .stack-work
       with:
         path: .stack-work
-        key: ${{ runner.os }}-stack-work-${{ hashFiles('stack.yaml') }}
+        key: ${{ runner.os }}-haskell-stack-work-${{ hashFiles('stack.yaml') }}-${{ hashFiles('**/*.hs') }}
         restore-keys: |
-          ${{ runner.os }}-stack-work-
+          ${{ runner.os }}-haskell-stack-work-
