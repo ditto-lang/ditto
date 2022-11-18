@@ -33,7 +33,9 @@ runs:
     - uses: actions/cache@v3
       name: Cache .stack-work
       with:
-        path: .stack-work
+        path: |
+          .stack-work
+          scripts/ditto-lsp-test/.stack-work
         key: ${{ runner.os }}-haskell-stack-work-${{ hashFiles('stack.yaml') }}-${{ hashFiles('**/*.hs') }}
         restore-keys: |
           ${{ runner.os }}-haskell-stack-work-
