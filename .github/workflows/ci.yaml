@@ -74,7 +74,12 @@ jobs:
 
       # Build the Haskell lsp-test in its own step rather than as part of
       # the integration test because tarpaulin will timeout
+      #
+      # We don't currently run this test on Windows because I've not been able to
+      # get GitHub actions to properly cache Haskell stuff there and it takes
+      # about 20 minutes on the first run...
       - name: Build ditto-lsp-test λ
+        if: matrix.os != 'windows-latest'
         run: stack build ditto-lsp-test
 
       - name: Run tests (without coverage)

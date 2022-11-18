@@ -1,4 +1,5 @@
 #[test]
+#[cfg_attr(target_os = "windows", ignore)]
 fn lsp_test_suite_passes() {
     let output = std::process::Command::new("stack") // fail if stack isn't installed
         .arg("run")
