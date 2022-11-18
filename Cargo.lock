@@ -651,7 +651,6 @@ dependencies = [
  "ditto-codegen-js",
  "ditto-config",
  "ditto-cst",
- "lazy_static",
  "log",
  "miette",
  "path-slash",
@@ -662,6 +661,7 @@ dependencies = [
  "serde_json",
  "similar-asserts",
  "thiserror",
+ "trycmd",
  "walkdir",
 ]
 

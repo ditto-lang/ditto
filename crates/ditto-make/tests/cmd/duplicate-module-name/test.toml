@@ -1,0 +1,3 @@
+bin.name = "ditto-make-testbin"
+args = []
+fs.sandbox = true

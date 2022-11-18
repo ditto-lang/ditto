@@ -17,6 +17,9 @@ pub fn find_ditto_files<P: AsRef<Path>>(root: P) -> io::Result<Vec<PathBuf>> {
             }
         }
     }
+    if cfg!(debug_assertions) {
+        files.sort()
+    }
     Ok(files)
 }
 
@@ -24,20 +27,20 @@ pub fn find_ditto_files<P: AsRef<Path>>(root: P) -> io::Result<Vec<PathBuf>> {
 mod tests {
     #[test]
     fn it_walks_as_expected() {
-        let mut paths = super::find_ditto_files("fixtures/all-good/ditto-src")
+        let paths = super::find_ditto_files("tests/cmd/all-good/test.in/ditto-src")
             .unwrap()
             .into_iter()
             .map(|path| path_slash::PathBufExt::to_slash_lossy(&path))
             .collect::<Vec<String>>();
-        paths.sort();
+
         assert_eq!(
             paths,
             vec![
-                "fixtures/all-good/ditto-src/A.ditto",
-                "fixtures/all-good/ditto-src/B.ditto",
-                "fixtures/all-good/ditto-src/C.ditto",
-                "fixtures/all-good/ditto-src/D.ditto",
-                "fixtures/all-good/ditto-src/D/E.ditto",
+                "tests/cmd/all-good/test.in/ditto-src/A.ditto",
+                "tests/cmd/all-good/test.in/ditto-src/B.ditto",
+                "tests/cmd/all-good/test.in/ditto-src/C.ditto",
+                "tests/cmd/all-good/test.in/ditto-src/D/E.ditto",
+                "tests/cmd/all-good/test.in/ditto-src/D.ditto",
             ]
         );
     }
