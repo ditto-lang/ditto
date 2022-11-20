@@ -16,7 +16,7 @@ log = "0.4"
 miette = { version = "4.7" }
 tree-sitter-ditto = { git = "https://github.com/ditto-lang/tree-sitter-ditto", rev = "a0588121f9be33e8220a2779efa299f5e24dd79f" }
 tree-sitter = "0.20"
-url = "2.2"
+url = "2.3"
 ditto-cst = { path = "../ditto-cst" }
 ditto-fmt = { path = "../ditto-fmt" }
 ropey = "1.5"
