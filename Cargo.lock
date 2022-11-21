@@ -237,13 +237,25 @@ dependencies = [
  "atty",
  "bitflags",
  "clap_derive",
- "clap_lex",
+ "clap_lex 0.2.4",
  "indexmap",
  "once_cell",
- "regex",
  "strsim",
  "termcolor",
  "textwrap",
+]
+
+[[package]]
+name = "clap"
+version = "4.0.26"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2148adefda54e14492fb9bddcc600b4344c5d1a3123bd666dcb939c6f0e0e57e"
+dependencies = [
+ "atty",
+ "bitflags",
+ "clap_lex 0.3.0",
+ "strsim",
+ "termcolor",
 ]
 
 [[package]]
@@ -264,6 +276,15 @@ name = "clap_lex"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2850f2f5a82cbf437dd5af4d49848fbdfc27c157c3d010345776f952765261c5"
+dependencies = [
+ "os_str_bytes",
+]
+
+[[package]]
+name = "clap_lex"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0d4198f73e42b4936b35b5bb248d81d2b595ecb170da0bac7655c54eedfa8da8"
 dependencies = [
  "os_str_bytes",
 ]
@@ -525,7 +546,7 @@ dependencies = [
  "assert_cmd",
  "assert_fs",
  "atty",
- "clap",
+ "clap 4.0.26",
  "clearscreen",
  "console",
  "convert_case",
@@ -645,7 +666,7 @@ name = "ditto-make"
 version = "0.0.1"
 dependencies = [
  "ciborium",
- "clap",
+ "clap 4.0.26",
  "ditto-ast",
  "ditto-checker",
  "ditto-codegen-js",
@@ -1310,7 +1331,7 @@ version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "79529479c298f5af41375b0c1a77ef670d450b4c9cd7949d2b43af08121b20ec"
 dependencies = [
- "clap",
+ "clap 3.2.22",
  "termcolor",
  "threadpool",
 ]

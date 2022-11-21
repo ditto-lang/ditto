@@ -1,0 +1,2 @@
+bin.name = "ditto"
+args = ["fmt", "--stdin"]

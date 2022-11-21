@@ -1,0 +1,4 @@
+name = "vanilla-pkg"
+targets = []
+dependencies = []
+test-dependencies = []

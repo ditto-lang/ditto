@@ -1,5 +1,5 @@
 use crate::{common, ninja::get_ninja_exe, pkg, spinner::Spinner, version::Version};
-use clap::{Arg, ArgMatches, Command};
+use clap::{arg, ArgMatches, Command};
 use console::Style;
 use ditto_config::{read_config, Config, PackageName, CONFIG_FILE_NAME};
 use ditto_make::{self as make, BuildNinja, GetWarnings, PackageSources, Sources};
@@ -19,51 +19,70 @@ use std::{
 
 pub static COMPILE_SUBCOMMAND: &str = "compile";
 
-pub fn command<'a>(name: &str) -> Command<'a> {
+pub fn command(name: impl Into<clap::builder::Str>) -> Command {
     Command::new(name)
         .about("Build a project")
-        .arg(
-            Arg::new("watch")
-                .short('w')
-                .long("watch")
-                .help("Watch files for changes"),
-        )
-        .arg(
-            Arg::new("no-tests")
-                .long("no-tests")
-                .help("Ignore test modules and dependencies"),
-        )
-        .arg(
-            Arg::new("execs")
-                .long("exec")
-                .help("Shell command to run on success")
-                .takes_value(true)
-                .multiple_occurrences(true),
-        )
+        .arg(arg!(-w --watch "Watch files for changes"))
+        .arg(arg!(--"no-tests" "Ignore test modules and dependencies"))
+        .arg(arg!(execs: --exec <CMD> ... "Shell command to run on success"))
         // Useful for debugging why watches are/aren't triggering.
         // Should remove it eventually.
-        .arg(Arg::new("debug-watcher").long("debug-watcher").hide(true))
+        .arg(arg!(--"debug-watcher").hide(true))
+}
+
+#[test]
+fn verify_cmd() {
+    command("make").debug_assert();
+}
+
+#[derive(Clone)]
+struct Args {
+    watch: bool,
+    no_tests: bool,
+    debug_watcher: bool,
+    execs: Execs,
+}
+type Execs = Vec<String>;
+
+fn matches_to_args(matches: &ArgMatches) -> Args {
+    let watch = matches.get_flag("watch");
+    let no_tests = matches.get_flag("no-tests");
+    let debug_watcher = matches.get_flag("debug-watcher");
+    let execs = matches
+        .get_many::<String>("execs")
+        .unwrap_or_default()
+        .cloned()
+        .collect::<Vec<_>>();
+
+    Args {
+        watch,
+        no_tests,
+        debug_watcher,
+        execs,
+    }
 }
 
 pub async fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
+    let args = matches_to_args(matches);
+
     // Read the ditto.toml immediately,
     // failing early if it's not present.
     let config_path: PathBuf = [".", CONFIG_FILE_NAME].iter().collect();
     let config = read_config(&config_path)?;
 
-    if matches.is_present("watch") {
-        run_watch(matches, ditto_version, &config_path, config).await
+    if args.watch {
+        run_watch(&args, ditto_version, &config_path, config).await
     } else {
-        let what_happened = run_once(matches, ditto_version, &config_path, &config, true).await?;
+        let what_happened = run_once(&args, ditto_version, &config_path, &config, true).await?;
         if !what_happened.is_error() {
-            run_execs(matches)
+            run_execs(&args.execs)
         }
         what_happened.exit()
     }
 }
 
-pub async fn run_watch(
-    matches: &ArgMatches,
+async fn run_watch(
+    args: &Args,
     ditto_version: &Version,
     config_path: &Path,
     mut config: Config,
@@ -104,7 +123,7 @@ pub async fn run_watch(
     let (done_sender, done_receiver) = crossbeam_channel::bounded::<()>(1);
 
     // Clone unchanging things that need to be moved into the new thread
-    let matches_clone = matches.clone();
+    let args_clone = args.clone();
     let ditto_version_clone = ditto_version.clone();
     let config_path_clone = config_path.to_path_buf();
 
@@ -112,7 +131,7 @@ pub async fn run_watch(
         loop {
             let (config, install_packages) = run_receiver.recv().unwrap();
             run_once_watch(
-                &matches_clone,
+                &args_clone,
                 &ditto_version_clone,
                 &config_path_clone,
                 &config,
@@ -138,7 +157,7 @@ pub async fn run_watch(
     let mut handle_event_result = |event: EventResult| -> bool {
         match event {
             Ok(ref event) if should_run_for_event(event) => {
-                if matches.is_present("debug-watcher") {
+                if args.debug_watcher {
                     dbg!(event);
                 }
 
@@ -220,26 +239,19 @@ pub async fn run_watch(
     }
 
     async fn run_once_watch(
-        matches: &ArgMatches,
+        args: &Args,
         ditto_version: &Version,
         config_path: &Path,
         config: &Config,
         install_packages: bool,
     ) {
-        if !matches.is_present("debug-watcher") {
+        if !args.debug_watcher {
             if let Err(_err) = clearscreen::clear() {
                 // doesn't matter, let it fail?
             }
         }
 
-        let result = run_once(
-            matches,
-            ditto_version,
-            config_path,
-            config,
-            install_packages,
-        )
-        .await;
+        let result = run_once(args, ditto_version, config_path, config, install_packages).await;
         match result {
             Err(err) => {
                 // print the error but don't exit!
@@ -270,7 +282,7 @@ pub async fn run_watch(
                 }
 
                 // Run shell hooks
-                run_execs(matches);
+                run_execs(&args.execs);
             }
         }
     }
@@ -311,7 +323,7 @@ impl WhatHappened {
 
 /// If successful returns the exit status of `ninja` and whether anything actually happened.
 async fn run_once(
-    matches: &ArgMatches,
+    args: &Args,
     ditto_version: &Version,
     config_path: &Path,
     config: &Config,
@@ -322,7 +334,7 @@ async fn run_once(
     let lock = acquire_lock(config)?;
     debug!("Lock acquired");
 
-    let include_test_stuff = !matches.is_present("no-tests");
+    let include_test_stuff = !args.no_tests;
 
     // Install/remove packages as needed
     // (this is a nicer pattern than requiring a run of a separate CLI command, IMO)
@@ -346,30 +358,17 @@ async fn run_once(
     result
 }
 
-fn run_execs(matches: &ArgMatches) {
-    if let Some(mut execs) = matches.values_of("execs") {
-        while let Some(exec) = execs.next() {
-            if let Some(shell_words) = shlex::split(exec) {
-                if let Some((program, args)) = shell_words.split_first() {
-                    print_feedback(format!("running {:?}", exec));
-                    let result = process::Command::new(program).args(args).status();
-                    match result {
-                        Ok(exit_status) => {
-                            if !exit_status.success() {
-                                print_error(format!(
-                                    "non-zero exit from {:?}, {}",
-                                    exec, exit_status
-                                ));
-                                // Stop there, multiple `--exec` flags are effectively
-                                // `&&` together
-                                if execs.next().is_some() {
-                                    print_error("stopping there".to_string());
-                                }
-                                return;
-                            }
-                        }
-                        Err(err) => {
-                            print_error(format!("EXEC ERROR {}", err));
+fn run_execs(execs: &Execs) {
+    let mut execs = execs.iter();
+    while let Some(exec) = execs.next() {
+        if let Some(shell_words) = shlex::split(exec) {
+            if let Some((program, args)) = shell_words.split_first() {
+                print_feedback(format!("running {:?}", exec));
+                let result = process::Command::new(program).args(args).status();
+                match result {
+                    Ok(exit_status) => {
+                        if !exit_status.success() {
+                            print_error(format!("non-zero exit from {:?}, {}", exec, exit_status));
                             // Stop there, multiple `--exec` flags are effectively
                             // `&&` together
                             if execs.next().is_some() {
@@ -378,12 +377,21 @@ fn run_execs(matches: &ArgMatches) {
                             return;
                         }
                     }
-                } else {
-                    print_feedback(format!("don't know how to execute {:?}, skipping", exec));
+                    Err(err) => {
+                        print_error(format!("EXEC ERROR {}", err));
+                        // Stop there, multiple `--exec` flags are effectively
+                        // `&&` together
+                        if execs.next().is_some() {
+                            print_error("stopping there".to_string());
+                        }
+                        return;
+                    }
                 }
             } else {
-                unreachable!("Unexpected `None` value from shlex for {:?}", exec);
+                print_feedback(format!("don't know how to execute {:?}, skipping", exec));
             }
+        } else {
+            unreachable!("Unexpected `None` value from shlex for {:?}", exec);
         }
     }
 

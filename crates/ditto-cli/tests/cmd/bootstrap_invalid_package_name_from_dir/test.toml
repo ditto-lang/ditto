@@ -1,0 +1,4 @@
+bin.name = "ditto"
+args = ["bootstrap", "--no-make", "pkgs/not_quite"]
+fs.sandbox = true
+status = "failed"

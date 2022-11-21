@@ -1,4 +1,4 @@
-use clap::{Arg, ArgMatches, Command};
+use clap::{arg, error::ErrorKind, ArgMatches, Command};
 use miette::{bail, IntoDiagnostic, Result, WrapErr};
 use std::{
     fs,
@@ -6,60 +6,106 @@ use std::{
     path::Path,
 };
 
-pub fn command<'a>(name: &str) -> Command<'a> {
+pub fn command(name: impl Into<clap::builder::Str>) -> Command {
     Command::new(name)
         .about("Format ditto code")
-        .arg(Arg::new("stdin").long("stdin"))
-        .arg(Arg::new("check").long("check"))
-        .arg(Arg::new("globs").takes_value(true).multiple_values(true))
+        .arg(arg!(--check "Error if input(s) aren't formatted"))
+        .arg(arg!(--stdin "Format stdin"))
+        .arg(arg!(paths: [PATH]... "Files to format")) // TODO: support globbing
 }
 
-pub fn run(matches: &ArgMatches) -> Result<()> {
-    if matches.is_present("stdin") {
-        if matches.is_present("globs") {
-            bail!("can only specify `--stdin` or paths, not both")
-        }
-        let mut contents = String::new();
-        io::stdin()
-            .read_to_string(&mut contents)
-            .into_diagnostic()?;
-        let formatted = fmt("stdin".into(), &contents)?;
-        if matches.is_present("check") {
-            if formatted != contents {
-                bail!("Stdin isn't formatted");
-            }
-        } else {
-            io::stdout()
-                .write_all(formatted.as_bytes())
+#[test]
+fn verify_cmd() {
+    command("fmt").debug_assert();
+}
+
+struct Args {
+    source: Source,
+    check: bool,
+}
+
+enum Source {
+    Stdin,
+    Paths(Vec<String>),
+}
+
+fn matches_to_args(cmd: &mut Command, matches: &ArgMatches) -> Args {
+    let check = matches.get_flag("check");
+    let stdin = matches.get_flag("stdin");
+    let paths = matches
+        .get_many::<String>("paths")
+        .unwrap_or_default()
+        .cloned()
+        .collect::<Vec<_>>();
+    if !paths.is_empty() && stdin {
+        cmd.error(
+            ErrorKind::ArgumentConflict,
+            "Can't specify stdin and input paths",
+        )
+        .exit();
+    }
+    if stdin {
+        return Args {
+            source: Source::Stdin,
+            check,
+        };
+    }
+    Args {
+        source: Source::Paths(paths),
+        check,
+    }
+}
+
+pub fn run(cmd: &mut Command, matches: &ArgMatches) -> Result<()> {
+    let Args { source, check } = matches_to_args(cmd, matches);
+
+    match source {
+        Source::Stdin => {
+            let mut contents = String::new();
+            io::stdin()
+                .read_to_string(&mut contents)
                 .into_diagnostic()?;
-        }
-    } else if let Some(globs) = matches.values_of("globs") {
-        // TODO actually glob the input(s)
-        let check = matches.is_present("check");
-        let exit_error = false;
-        for path in globs {
+            let formatted = fmt("stdin".into(), &contents)?;
             if check {
-                match fmt_path(path) {
-                    Err(report) => {
-                        eprintln!("{:?}", report);
-                    }
-                    Ok((formatted, unformatted)) => {
-                        if formatted != unformatted {
-                            eprintln!("{} needs formatting", path);
-                        }
-                    }
+                if formatted != contents {
+                    bail!("stdin isn't formatted");
                 }
             } else {
-                eprintln!("Formatting {}", path);
-                if let Err(report) = fmt_inplace(path) {
-                    eprintln!("{:?}", report);
-                }
+                io::stdout()
+                    .write_all(formatted.as_bytes())
+                    .into_diagnostic()?;
             }
         }
-        if exit_error {
-            bail!("Some files need formatting");
+        Source::Paths(paths) => {
+            let mut exit_error = false;
+            for path in paths {
+                if check {
+                    match fmt_path(&path) {
+                        Err(report) => {
+                            eprintln!("{:?}", report);
+                            exit_error = true
+                        }
+                        Ok((formatted, unformatted)) => {
+                            if formatted != unformatted {
+                                eprintln!("{} needs formatting", path);
+                                exit_error = true;
+                            }
+                        }
+                    }
+                } else {
+                    eprintln!("Formatting {}", path);
+                    if let Err(report) = fmt_inplace(path) {
+                        eprintln!("{:?}", report);
+                        exit_error = true;
+                    }
+                }
+            }
+            if exit_error {
+                std::process::exit(1);
+            }
         }
     }
+
     Ok(())
 }
 

@@ -8,11 +8,23 @@ mod pkg;
 mod spinner;
 mod version;
 
-use clap::{ArgMatches, Command};
+use clap::{
+    builder::{IntoResettable, Str},
+    ArgMatches, Command,
+};
 use miette::{IntoDiagnostic, Result};
 use version::Version;
 
-fn command<'a>(version_short: &'a str, version_long: &'a str) -> Command<'a> {
+static SUBCOMMAND_BOOTSTRAP: &str = "bootstrap";
+static SUBCOMMAND_MAKE: &str = "make";
+static SUBCOMMAND_FMT: &str = "fmt";
+static SUBCOMMAND_LSP: &str = "lsp";
+static SUBCOMMAND_NINJA: &str = "ninja";
+
+fn command(
+    version_short: impl IntoResettable<Str>,
+    version_long: impl IntoResettable<Str>,
+) -> Command {
     Command::new("ditto")
         .bin_name("ditto")
         .version(version_short)
@@ -20,35 +32,36 @@ fn command<'a>(version_short: &'a str, version_long: &'a str) -> Command<'a> {
         .disable_help_subcommand(true)
         .subcommand_required(true)
         .about("putting the fun in functional")
-        .subcommand(bootstrap::command("bootstrap").display_order(0))
-        .subcommand(make::command("make").display_order(1))
-        .subcommand(fmt::command("fmt").display_order(2))
-        .subcommand(lsp::command("lsp").display_order(3))
-        .subcommand(
-            ninja::command("ninja")
-                // For internal use !
-                .hide(true),
-        )
-        .subcommand(
-            ditto_make::command_compile(make::COMPILE_SUBCOMMAND)
-                // For internal use only!
-                .hide(true),
-        )
+        .subcommand(bootstrap::command(SUBCOMMAND_BOOTSTRAP).display_order(0))
+        .subcommand(make::command(SUBCOMMAND_MAKE).display_order(1))
+        .subcommand(fmt::command(SUBCOMMAND_FMT).display_order(2))
+        .subcommand(lsp::command(SUBCOMMAND_LSP).display_order(3))
+        // internals!
+        .subcommand(ninja::command(SUBCOMMAND_NINJA).hide(true))
+        .subcommand(ditto_make::command_compile(make::COMPILE_SUBCOMMAND).hide(true))
 }
 
-async fn run(matches: &ArgMatches, version: &Version) -> Result<()> {
+async fn run(mut cmd: Command, matches: &ArgMatches, version: &Version) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches(make::COMPILE_SUBCOMMAND) {
         ditto_make::run_compile(matches)
-    } else if let Some(matches) = matches.subcommand_matches("make") {
+    } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_MAKE) {
         make::run(matches, version).await
-    } else if let Some(matches) = matches.subcommand_matches("lsp") {
+    } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_LSP) {
         lsp::run(matches)
-    } else if let Some(matches) = matches.subcommand_matches("ninja") {
+    } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_NINJA) {
         ninja::run(matches).await
-    } else if let Some(matches) = matches.subcommand_matches("fmt") {
-        fmt::run(matches)
-    } else if let Some(matches) = matches.subcommand_matches("bootstrap") {
-        bootstrap::run(matches, version)
+    } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_FMT) {
+        let cmd = cmd
+            .get_subcommands_mut()
+            .find(|cmd| cmd.get_name() == SUBCOMMAND_FMT)
+            .unwrap();
+        fmt::run(cmd, matches)
+    } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_BOOTSTRAP) {
+        let cmd = cmd
+            .get_subcommands_mut()
+            .find(|cmd| cmd.get_name() == SUBCOMMAND_BOOTSTRAP)
+            .unwrap();
+        bootstrap::run(cmd, matches, version)
     } else {
         unreachable!()
     }
@@ -89,8 +102,8 @@ async fn try_main() -> Result<()> {
     let version_short = version.render_short();
     let version_long = version.render_long();
 
-    let cmd = command(&version_short, &version_long);
-    let matches = cmd.get_matches();
+    let mut cmd = command(&version_short, &version_long);
+    let matches = cmd.get_matches_mut();
 
     if let Ok(logs_dir) = std::env::var("DITTO_LOG_DIR") {
         let args = std::env::args().collect::<Vec<_>>();
@@ -127,7 +140,7 @@ async fn try_main() -> Result<()> {
         log::debug!("{:?}", version);
     }
 
-    run(&matches, &version).await
+    run(cmd, &matches, &version).await
 }
 
 fn calculate_hash<T: std::hash::Hash>(t: &T) -> u64 {

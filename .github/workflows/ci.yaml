@@ -35,6 +35,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            ninja-platform: linux
+          - os: macos-latest
+            ninja-platform: mac
+          - os: windows-latest
+            ninja-platform: win
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -72,6 +79,13 @@ jobs:
       - name: Install required NPM packages
         run: npm install --omit optional --ignore-scripts
 
+      - name: Setup Ninja 🥷
+        id: setup-ninja
+        uses: ditto-lang/actions/setup-ninja@main
+        with:
+          release-version: v1.10.2
+          platform: ${{matrix.ninja-platform}}
+
       # Build the Haskell lsp-test in its own step rather than as part of
       # the integration test because tarpaulin will timeout
       #
@@ -90,7 +104,7 @@ jobs:
           args: run --workspace
         env:
           DITTO_BUILD_GIT_DESCRIBE: "0.0.0-test"
-          #DITTO_NINJA  <-- would be nice to use this, along with https://github.com/marketplace/actions/setup-ninja
+          DITTO_NINJA: ${{steps.setup-ninja.outputs.which}}
 
       - name: Install cargo-llvm-cov
         # Only run tests with coverage if running on Linux
@@ -106,7 +120,7 @@ jobs:
           args: --lcov --output-path lcov.info nextest --workspace
         env:
           DITTO_BUILD_GIT_DESCRIBE: "0.0.0-test"
-          #DITTO_NINJA  <-- would be nice to use this, along with https://github.com/marketplace/actions/setup-ninja
+          DITTO_NINJA: ${{steps.setup-ninja.outputs.which}}
 
       - name: Upload coverage results to codecov.io 📡
         if: matrix.os == 'ubuntu-latest'

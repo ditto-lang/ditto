@@ -5,7 +5,7 @@ use std::{collections::HashMap, hash::Hash, path::PathBuf};
 use validated_newtype::validated_newtype;
 
 /// Regular expression string for package names.
-pub static PACKAGE_NAME_RE: &str = "[a-z][a-z0-9-]*";
+pub static PACKAGE_NAME_RE: &str = "^[a-z][a-z0-9-]*$";
 //                               ^ IMPORTANT keep this in sync with the parser logic
 
 lazy_static! {

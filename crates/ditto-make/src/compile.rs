@@ -1,4 +1,4 @@
-use clap::{Arg, ArgMatches, Command};
+use clap::{arg, Arg, ArgMatches, Command};
 use ditto_ast as ast;
 use ditto_checker as checker;
 use ditto_codegen_js as js;
@@ -17,51 +17,18 @@ use crate::common;
 
 pub static SUBCOMMAND_AST: &str = "ast";
 pub static SUBCOMMAND_JS: &str = "js";
-pub static SUBCOMMAND_PACKAGE_JSON: &str = "package_json";
+pub static SUBCOMMAND_PACKAGE_JSON: &str = "package-json";
 
 pub static ARG_BUILD_DIR: &str = "build-dir";
 pub static ARG_INPUTS: char = 'i';
 pub static ARG_OUTPUTS: char = 'o';
 
 /// The internal compile CLI.
-pub fn command(name: &str) -> Command<'_> {
-    let arg_input = || {
-        Arg::new("input")
-            .short(ARG_INPUTS)
-            .required(true)
-            .takes_value(true)
-    };
-    let arg_inputs = || {
-        Arg::new("inputs")
-            .short(ARG_INPUTS)
-            .required(true)
-            .takes_value(true)
-            .multiple_values(true)
-    };
-
-    let arg_output = || {
-        Arg::new("output")
-            .short(ARG_OUTPUTS)
-            .required(true)
-            .takes_value(true)
-    };
-    let arg_outputs = || {
-        Arg::new("outputs")
-            .short(ARG_OUTPUTS)
-            .required(true)
-            .takes_value(true)
-            .multiple_values(true)
-    };
-
-    Command::new(name)
+pub fn command(name: impl Into<clap::builder::Str>) -> Command {
+    return Command::new(name)
         .subcommand(
             Command::new(SUBCOMMAND_AST)
-                .arg(
-                    Arg::new("build-dir")
-                        .long(ARG_BUILD_DIR)
-                        .required(true)
-                        .takes_value(true),
-                )
+                .arg(arg!(--"build-dir" <DIR>).required(true))
                 .arg(arg_inputs())
                 .arg(arg_outputs()),
         )
@@ -74,44 +41,48 @@ pub fn command(name: &str) -> Command<'_> {
             Command::new(SUBCOMMAND_PACKAGE_JSON)
                 .arg(arg_input())
                 .arg(arg_output()),
-        )
+        );
+
+    fn arg_input() -> Arg {
+        Arg::new("input")
+            .short(ARG_INPUTS)
+            .num_args(1)
+            .required(true)
+    }
+    fn arg_inputs() -> Arg {
+        Arg::new("inputs")
+            .short(ARG_INPUTS)
+            .num_args(1..)
+            .required(true)
+    }
+    fn arg_output() -> Arg {
+        Arg::new("output")
+            .short(ARG_OUTPUTS)
+            .num_args(1)
+            .required(true)
+    }
+    fn arg_outputs() -> Arg {
+        Arg::new("outputs")
+            .short(ARG_OUTPUTS)
+            .num_args(1..)
+            .required(true)
+    }
 }
 
 /// Run the program given matches from [compile].
 pub fn run(matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_AST) {
-        let build_dir = matches.value_of("build-dir").unwrap();
-
-        let inputs = matches.values_of("inputs").unwrap();
-        let input_strings = inputs
-            .into_iter()
-            .map(|input| input.to_owned())
-            .collect::<Vec<_>>();
-
-        let outputs = matches.values_of("outputs").unwrap();
-        let output_strings = outputs
-            .into_iter()
-            .map(|output| output.to_owned())
-            .collect::<Vec<_>>();
-
-        run_ast(build_dir, input_strings, output_strings)
+        let build_dir = matches.get_one::<String>("build-dir").unwrap();
+        let inputs = matches.get_many("inputs").unwrap().cloned().collect();
+        let outputs = matches.get_many("outputs").unwrap().cloned().collect();
+        run_ast(build_dir, inputs, outputs)
     } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_JS) {
-        let inputs = matches.values_of("inputs").unwrap();
-        let input_strings = inputs
-            .into_iter()
-            .map(|input| input.to_owned())
-            .collect::<Vec<_>>();
-
-        let outputs = matches.values_of("outputs").unwrap();
-        let output_strings = outputs
-            .into_iter()
-            .map(|output| output.to_owned())
-            .collect::<Vec<_>>();
-
-        run_js(input_strings, output_strings)
+        let inputs = matches.get_many("inputs").unwrap().cloned().collect();
+        let outputs = matches.get_many("outputs").unwrap().cloned().collect();
+        run_js(inputs, outputs)
     } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_PACKAGE_JSON) {
-        let input = matches.value_of("input").unwrap();
-        let output = matches.value_of("output").unwrap();
+        let input = matches.get_one::<String>("input").unwrap();
+        let output = matches.get_one::<String>("output").unwrap();
         run_package_json(input, output)
     } else {
         unreachable!()

@@ -1,0 +1,5 @@
+error: Can't specify stdin and input paths
+
+Usage: ditto fmt [OPTIONS] [PATH]...
+
+For more information try '--help'
