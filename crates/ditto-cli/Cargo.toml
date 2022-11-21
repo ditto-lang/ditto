@@ -15,7 +15,7 @@ ditto-ast = { path = "../ditto-ast" }
 ditto-cst = { path = "../ditto-cst" }
 ditto-config = { path = "../ditto-config" }
 ditto-fmt = { path = "../ditto-fmt" }
-clap = { version = "3.1", features = ["regex"] }
+clap = { version = "3.2", features = ["regex"] }
 time = "0.3"
 miette = { version = "4.7", features = ["fancy"] }
 log = "0.4"
