@@ -27,14 +27,18 @@ impl Spinner {
         if let Some(ref prefix) = prefix {
             progress.set_style(
                 ProgressStyle::default_spinner()
-                    .template("{prefix:.bold.dim} {spinner} {msg:.cyan}"),
+                    .template("{prefix:.bold.dim} {spinner} {msg:.cyan}")
+                    .unwrap(),
             );
             progress.set_prefix(prefix.clone());
         } else {
-            progress.set_style(ProgressStyle::default_spinner().template("{spinner} {msg:.cyan}"));
+            progress.set_style(
+                ProgressStyle::default_spinner()
+                    .template("{spinner} {msg:.cyan}")
+                    .unwrap(),
+            );
         }
-        progress.enable_steady_tick(10);
-        progress.set_draw_rate(25);
+        progress.enable_steady_tick(std::time::Duration::from_millis(10));
         Self {
             progress: Some(progress),
             prefix,
@@ -65,12 +69,17 @@ impl Spinner {
                 progress
                     .with_style(
                         ProgressStyle::default_spinner()
-                            .template("{prefix:.bold.green} {spinner} {msg}"),
+                            .template("{prefix:.bold.green} {spinner} {msg}")
+                            .unwrap(),
                     )
                     .finish_with_message(prefix);
             } else {
                 progress
-                    .with_style(ProgressStyle::default_spinner().template("{msg:.bold.green}"))
+                    .with_style(
+                        ProgressStyle::default_spinner()
+                            .template("{msg:.bold.green}")
+                            .unwrap(),
+                    )
                     .finish_with_message(message);
             }
         } else {
@@ -84,12 +93,17 @@ impl Spinner {
                 progress
                     .with_style(
                         ProgressStyle::default_spinner()
-                            .template("{prefix:.bold.yellow} {spinner} {msg}"),
+                            .template("{prefix:.bold.yellow} {spinner} {msg}")
+                            .unwrap(),
                     )
                     .finish_with_message(prefix);
             } else {
                 progress
-                    .with_style(ProgressStyle::default_spinner().template("{msg:.bold.yellow}"))
+                    .with_style(
+                        ProgressStyle::default_spinner()
+                            .template("{msg:.bold.yellow}")
+                            .unwrap(),
+                    )
                     .finish_with_message(message);
             }
         } else {
@@ -103,12 +117,17 @@ impl Spinner {
                 progress
                     .with_style(
                         ProgressStyle::default_spinner()
-                            .template("{prefix:.bold.red} {spinner} {msg}"),
+                            .template("{prefix:.bold.red} {spinner} {msg}")
+                            .unwrap(),
                     )
                     .finish_with_message(prefix);
             } else {
                 progress
-                    .with_style(ProgressStyle::default_spinner().template("{msg:.bold.red}"))
+                    .with_style(
+                        ProgressStyle::default_spinner()
+                            .template("{msg:.bold.red}")
+                            .unwrap(),
+                    )
                     .finish_with_message(message);
             }
         } else {

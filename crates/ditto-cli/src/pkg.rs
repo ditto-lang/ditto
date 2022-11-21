@@ -78,7 +78,6 @@ pub async fn check_packages_up_to_date(
         &installed_packages,
         &available_packages,
     )?;
-    multi_progress.join().into_diagnostic()?;
 
     debug!(
         "Updating {} with {}",
