@@ -20,7 +20,7 @@ non-empty-vec = { version = "0.2" }
 similar-asserts = "1.4"
 quickcheck = "1.0"
 datatest-stable = "0.1"
-path-slash = "0.1"
+path-slash = "0.2"
 
 [[test]]
 name = "golden_tests"
