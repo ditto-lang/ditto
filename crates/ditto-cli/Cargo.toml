@@ -34,7 +34,7 @@ zip = { version = "0.6", default-features = false, features = [
   # don't want the `time` feature
   "deflate",
 ] }
-indicatif = "0.16"
+indicatif = "0.17"
 futures-util = "0.3"
 console = "0.15"
 serde = "1.0"
