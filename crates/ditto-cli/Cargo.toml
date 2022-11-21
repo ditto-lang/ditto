@@ -20,7 +20,7 @@ time = "0.3"
 miette = { version = "5.5", features = ["fancy"] }
 log = "0.4"
 toml = "0.5"
-flexi_logger = "0.22"
+flexi_logger = "0.24"
 # https://github.com/notify-rs/notify/issues/249
 notify = "5.0.0"
 clearscreen = "1.0"
