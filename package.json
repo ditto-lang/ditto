@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "prettier": "2.7.1"
+    "prettier": "2.8.0"
   },
   "optionalDependencies": {
     "husky": "8.0.1",
