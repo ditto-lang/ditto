@@ -9,7 +9,7 @@ doctest = false
 
 [dependencies]
 ditto-cst = { path = "../ditto-cst" }
-dprint-core = "0.54"
+dprint-core = "0.59"
 
 [dev-dependencies]
 similar-asserts = "1.4"
