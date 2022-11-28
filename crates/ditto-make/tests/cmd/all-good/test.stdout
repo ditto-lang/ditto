@@ -7,7 +7,7 @@ rule js
   command = ditto compile js -i ${in} -o ${out}
 
 rule package_json
-  command = ditto compile package_json -i ${in} -o ${out}
+  command = ditto compile package-json -i ${in} -o ${out}
 
 build builddir/A.ast builddir/A.ast-exports builddir/A.checker-warnings: ast ./ditto-src/A.ditto
   description = Checking A

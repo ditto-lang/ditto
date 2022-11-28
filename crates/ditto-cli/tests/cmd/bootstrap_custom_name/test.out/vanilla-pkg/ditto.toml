@@ -1,0 +1,8 @@
+# Welcome to your new ditto project!
+#
+# Options for this file can be found at:
+# https://github.com/ditto-lang/ditto/tree/test/crates/ditto-config#readme
+name = "custom"
+targets = []
+dependencies = []
+test-dependencies = []

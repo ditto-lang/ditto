@@ -1,0 +1,3 @@
+bin.name = "ditto"
+args = ["fmt", "--stdin", "Foo.ditto", "Bar.ditto"]
+status = "failed"

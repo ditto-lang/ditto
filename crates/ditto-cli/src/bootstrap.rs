@@ -1,9 +1,9 @@
 use crate::Version;
-use clap::{Arg, ArgMatches, Command};
+use clap::{arg, error::ErrorKind, value_parser, ArgMatches, Command};
 use console::{Emoji, Style};
 use convert_case::{Case, Casing};
 use ditto_config::{self as config, PackageName};
-use miette::{bail, miette, IntoDiagnostic, Result, WrapErr};
+use miette::{miette, IntoDiagnostic, Result, WrapErr};
 use std::{
     env::current_exe,
     fs,
@@ -11,49 +11,86 @@ use std::{
     process,
 };
 
-pub fn command<'a>(name: &str) -> Command<'a> {
+pub fn command(name: impl Into<clap::builder::Str>) -> Command {
     Command::new(name)
         .about("Bootstrap a new project")
+        .arg(arg!(javascript: --js "JavaScript project?"))
+        .arg(arg!(--"no-make" "Don't run `ditto make`").hide(true)) // used for testing!
+        .arg(arg!(--name <NAME> "Optional package name (defaults to DIR)"))
         .arg(
-            Arg::new("name")
-                .long("name")
-                .takes_value(true)
-                .validator_regex(config::PACKAGE_NAME_REGEX.clone(), "Bad package name")
-                .help("Optional package name (defaults to DIR)"),
+            arg!(directory: <DIR> "Directory for the project").value_parser(value_parser!(PathBuf)),
         )
-        .arg(
-            Arg::new("javascript")
-                .long("js")
-                .help("JavaScript project?"),
-        )
-        .arg(
-            Arg::new("directory")
-                .id("DIR")
-                .takes_value(true)
-                .required(true)
-                .help("Directory for the project"),
-        )
-        .arg(Arg::new("no-make").long("no-make").hide(true))
 }
 
-pub fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
-    let project_dir = matches.value_of("DIR").unwrap();
-    let package_name = PackageName::new_unchecked(
-        matches
-            .value_of("name")
-            .map_or_else(
-                || {
-                    if !config::PACKAGE_NAME_REGEX.is_match(project_dir) {
-                        bail!("If `--name` isn't specified, DIR must be a valid package name")
-                    }
-                    Ok(project_dir)
-                },
-                Ok,
-            )?
-            .to_owned(),
-    );
+#[test]
+fn verify_cmd() {
+    command("bootstrap").debug_assert();
+}
 
-    let project_dir = PathBuf::from(project_dir);
+struct Args {
+    project_dir: PathBuf,
+    package_name: PackageName,
+    flavour: Flavour,
+    no_make: bool,
+}
+
+enum Flavour {
+    Bland,
+    JavaScript,
+}
+
+fn matches_to_args(cmd: &mut Command, matches: &ArgMatches) -> Args {
+    let project_dir = matches.get_one::<PathBuf>("directory").cloned().unwrap();
+
+    let flavour = if matches.get_flag("javascript") {
+        Flavour::JavaScript
+    } else {
+        Flavour::Bland
+    };
+
+    let package_name = if let Some(package_name) = matches.get_one::<String>("name").cloned() {
+        if !config::PACKAGE_NAME_REGEX.is_match(&package_name) {
+            cmd.error(
+                ErrorKind::InvalidValue,
+                format!("{:?} is not a valid package name", package_name),
+            )
+            .exit();
+        }
+        PackageName::new_unchecked(package_name)
+    } else {
+        let package_name = project_dir
+            .file_name()
+            .unwrap()
+            .to_string_lossy()
+            .into_owned();
+
+        if !config::PACKAGE_NAME_REGEX.is_match(&package_name) {
+            cmd.error(
+                ErrorKind::InvalidValue,
+                format!("{:?} cannot be used as a package name", package_name),
+            )
+            .exit();
+        }
+        PackageName::new_unchecked(package_name)
+    };
+
+    let no_make = matches.get_flag("no-make");
+
+    Args {
+        project_dir,
+        package_name,
+        flavour,
+        no_make,
+    }
+}
+
+pub fn run(cmd: &mut Command, matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
+    let Args {
+        project_dir,
+        package_name,
+        flavour,
+        no_make,
+    } = matches_to_args(cmd, matches);
 
     if project_dir.exists() {
         return Err(miette!(
@@ -70,13 +107,11 @@ pub fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
             project_dir.to_string_lossy()
         ))?;
 
-    let flavour = get_flavour(matches)?;
-
     write_files(package_name, &project_dir, ditto_version, &flavour)?;
 
     // Run an initial `ditto make` in the new directory to kick things off
     // unless `--no-make` is passed
-    if matches.is_present("no-make") {
+    if no_make {
         return Ok(());
     }
     if let Ok(ditto) = current_exe() {
@@ -90,18 +125,6 @@ pub fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
     }
 
     Ok(())
-}
-
-enum Flavour {
-    Bland,
-    JavaScript, // `--javascript`
-}
-
-fn get_flavour(matches: &ArgMatches) -> Result<Flavour> {
-    if matches.is_present("javascript") {
-        return Ok(Flavour::JavaScript);
-    }
-    Ok(Flavour::Bland)
 }
 
 fn write_files(

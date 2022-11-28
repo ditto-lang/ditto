@@ -1,0 +1,3 @@
+bin.name = "ditto"
+args = ["bootstrap", "--no-make", "--js", "js-pkg"]
+fs.sandbox = true

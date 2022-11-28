@@ -35,6 +35,5 @@ includes = ["*.css", "*.html", "*.js", "*.json", "*.md", "*.ts", "*.yaml"]
 # Our generated JavaScript (and serde generated JSON)
 # doesn't agree with the prettier style!
 excludes = [
-  "crates/ditto-cli/tests/bootstrapped-projects/**",
-  "crates/ditto-cli/tests/example-projects/**",
+  "crates/ditto-cli/tests/cmd/**",
 ]

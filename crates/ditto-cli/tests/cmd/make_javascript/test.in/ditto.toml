@@ -1,0 +1,4 @@
+name = "js-pkg"
+targets = ["nodejs"]
+dependencies = []
+test-dependencies = []

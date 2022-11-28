@@ -1,0 +1,5 @@
+error: "not_quite" is not a valid package name
+
+Usage: ditto bootstrap [OPTIONS] <DIR>
+
+For more information try '--help'

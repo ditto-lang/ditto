@@ -11,7 +11,7 @@ use std::{
     process,
 };
 
-pub fn command<'a>(name: &str) -> Command<'a> {
+pub fn command(name: impl Into<clap::builder::Str>) -> Command {
     Command::new(name)
         .about("Run a ninja command")
         .arg(arg!(<ninja_args> ... "arguments passed to ninja"))
@@ -20,9 +20,14 @@ pub fn command<'a>(name: &str) -> Command<'a> {
         .allow_hyphen_values(true)
 }
 
+#[test]
+fn verify_cmd() {
+    command("ninja").debug_assert();
+}
+
 pub async fn run(matches: &ArgMatches) -> Result<()> {
     let exe = get_ninja_exe().await?;
-    let args = matches.values_of("ninja_args").unwrap();
+    let args = matches.get_many::<String>("ninja_args").unwrap();
     let status = process::Command::new(exe)
         .args(args)
         .status()
