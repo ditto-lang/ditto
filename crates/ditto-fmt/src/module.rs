@@ -68,7 +68,7 @@ pub fn gen_module(module: Module) -> PrintItems {
         items.push_signal(Signal::NewLine);
         items.push_signal(Signal::NewLine);
         for comment in module.trailing_comments.iter() {
-            items.push_str(comment.0.trim_end());
+            items.push_string(comment.0.trim_end().to_string());
             items.push_signal(Signal::NewLine);
         }
     } else if !module_declarations_empty {

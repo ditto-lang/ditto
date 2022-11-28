@@ -8,8 +8,8 @@ use super::{
 };
 use ditto_cst::{BracesList, BracketsList, Comma, CommaSep1, Parens, ParensList, ParensList1};
 use dprint_core::formatting::{
-    condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext, Info,
-    PrintItems, Signal,
+    condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext,
+    LineNumber, PrintItems, Signal,
 };
 use std::rc::Rc;
 
@@ -43,16 +43,16 @@ where
 {
     let mut items = PrintItems::new();
 
-    let start_info = Info::new("start");
-    let end_info = Info::new("end");
+    let start_ln = LineNumber::new("start");
+    let end_ln = LineNumber::new("end");
 
     let is_multiple_lines: ConditionResolver =
         Rc::new(move |ctx: &mut ConditionResolverContext| -> Option<bool> {
-            condition_helpers::is_multiple_lines(ctx, &start_info, &end_info)
+            condition_helpers::is_multiple_lines(ctx, start_ln, end_ln)
         });
 
     items.extend(gen_open_paren(parens.open_paren));
-    items.push_info(start_info);
+    items.push_info(start_ln);
     items.push_condition(conditions::if_true(
         "newLineBeforeParensValueIfMultipleLines",
         is_multiple_lines.clone(),
@@ -71,7 +71,7 @@ where
         Signal::NewLine.into(),
     ));
     items.extend(gen_close_paren(parens.close_paren));
-    items.push_info(end_info);
+    items.push_info(end_ln);
     items
 }
 

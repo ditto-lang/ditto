@@ -110,7 +110,7 @@ fn gen_token(
         //
         ([], None) => {
             let mut items = PrintItems::new();
-            items.push_str(&text);
+            items.push_string(text);
             items
         }
         //
@@ -118,9 +118,9 @@ fn gen_token(
         //
         ([], Some(trailing_comment)) => {
             let mut items = PrintItems::new();
-            items.push_str(&text);
+            items.push_string(text);
             items.push_str("  "); // two spaces before comment (python style)
-            items.push_str(trailing_comment.0.trim_end());
+            items.push_string(trailing_comment.0.trim_end().to_string());
             items.push_signal(Signal::ExpectNewLine);
             items
         }
@@ -140,7 +140,7 @@ fn gen_token(
                 if opts.indent_leading_comments {
                     items.push_signal(Signal::SingleIndent);
                 }
-                items.push_str(comment.0.trim_end());
+                items.push_string(comment.0.trim_end().to_string());
                 items.push_signal(Signal::NewLine);
             }
             items.push_string(text);
@@ -163,12 +163,12 @@ fn gen_token(
                 if opts.indent_leading_comments {
                     items.push_signal(Signal::SingleIndent);
                 }
-                items.push_str(comment.0.trim_end());
+                items.push_string(comment.0.trim_end().to_string());
                 items.push_signal(Signal::NewLine);
             }
-            items.push_str(&text);
+            items.push_string(text);
             items.push_str("  "); // two spaces before comment (python style)
-            items.push_str(trailing_comment.0.trim_end());
+            items.push_string(trailing_comment.0.trim_end().to_string());
             items.push_signal(Signal::ExpectNewLine);
             items
         }

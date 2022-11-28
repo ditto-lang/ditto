@@ -19,8 +19,8 @@ use ditto_cst::{
     BinOp, Effect, Expression, MatchArm, Pattern, RecordField, StringToken, TypeAnnotation,
 };
 use dprint_core::formatting::{
-    condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext, Info,
-    PrintItems, Signal,
+    condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext,
+    LineNumber, PrintItems, Signal,
 };
 use std::rc::Rc;
 
@@ -59,9 +59,9 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
             // -- comment
             // if true then yes else no
             // ```
-            let start_info = Info::new("start");
+            let start_ln = LineNumber::new("start");
 
-            let end_info = Info::new("end");
+            let end_ln = LineNumber::new("end");
 
             let force_use_new_lines = if_keyword.0.has_trailing_comment();
             let is_multiple_lines: ConditionResolver =
@@ -69,7 +69,7 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
                     if force_use_new_lines {
                         return Some(true);
                     }
-                    condition_helpers::is_multiple_lines(ctx, &start_info, &end_info)
+                    condition_helpers::is_multiple_lines(ctx, start_ln, end_ln)
                 });
 
             let mut items: PrintItems = conditions::if_true_or(
@@ -88,7 +88,7 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
                     // ```
                     let mut items = PrintItems::new();
                     items.extend(gen_if_keyword(if_keyword.clone()));
-                    items.push_info(start_info);
+                    items.push_info(start_ln);
                     items.extend(space());
                     items.extend(gen_expression(condition.clone(), true));
                     items.extend(space());
@@ -120,7 +120,7 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
                     // ```
                     let mut items = PrintItems::new();
                     items.extend(gen_if_keyword(if_keyword));
-                    items.push_info(start_info);
+                    items.push_info(start_ln);
                     items.push_signal(Signal::SpaceOrNewLine);
                     items.extend(gen_expression(condition, true));
                     items.push_signal(Signal::SpaceOrNewLine);
@@ -136,7 +136,7 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
             )
             .into();
 
-            items.push_info(end_info);
+            items.push_info(end_ln);
             items
         }
         Expression::Effect {
@@ -421,8 +421,8 @@ fn gen_pattern(pattern: Pattern) -> PrintItems {
 pub fn gen_body_expression(expr: Expression, force_use_new_lines: bool) -> PrintItems {
     let mut items = PrintItems::new();
 
-    let start_info = Info::new("start");
-    let end_info = Info::new("end");
+    let start_ln = LineNumber::new("start");
+    let end_ln = LineNumber::new("end");
 
     let has_leading_comments = expr.has_leading_comments();
     let deserves_new_line_if_multi_lines = matches!(
@@ -441,7 +441,7 @@ pub fn gen_body_expression(expr: Expression, force_use_new_lines: bool) -> Print
                 return Some(true);
             }
             if deserves_new_line_if_multi_lines {
-                return condition_helpers::is_multiple_lines(ctx, &start_info, &end_info);
+                return condition_helpers::is_multiple_lines(ctx, start_ln, end_ln);
             }
             // return Some(false);
             None // NOTE I'm not sure what the implications are of None vs Some(false) ?
@@ -452,16 +452,16 @@ pub fn gen_body_expression(expr: Expression, force_use_new_lines: bool) -> Print
         expression_should_be_on_new_line,
         {
             let mut items = PrintItems::new();
-            items.push_info(start_info);
+            items.push_info(start_ln);
             items.extend(group(gen_expression(expr.clone(), true), true));
-            items.push_info(end_info);
+            items.push_info(end_ln);
             items
         },
         {
             let mut items = PrintItems::new();
-            items.push_info(start_info);
+            items.push_info(start_ln);
             items.extend(group(gen_expression(expr, true), false));
-            items.push_info(end_info);
+            items.push_info(end_ln);
             items
         },
     ));
