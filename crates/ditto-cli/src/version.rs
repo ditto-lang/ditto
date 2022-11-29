@@ -1,5 +1,3 @@
-use time::{format_description::well_known::Rfc3339, OffsetDateTime};
-
 // These are set by build.rs
 static GIT_REV: &str = env!("GIT_REV");
 static GIT_DESCRIBE: &str = env!("GIT_DESCRIBE");
@@ -12,7 +10,7 @@ pub struct Version {
     pub semversion: semver::Version,
     pub git_rev: String,
     pub git_is_dirty: bool,
-    pub build_time: OffsetDateTime,
+    pub build_time: chrono::DateTime<chrono::FixedOffset>,
     pub build_profile: String,
 }
 
@@ -28,7 +26,7 @@ impl Version {
                 .unwrap_or_else(|_| panic!("invalid GIT_DESCRIBE: \"{GIT_DESCRIBE}\"")),
             git_rev: GIT_REV.to_owned(),
             git_is_dirty: GIT_DIRTY == "yes", // see build.rs
-            build_time: OffsetDateTime::parse(BUILD_TIME, &Rfc3339)
+            build_time: chrono::DateTime::parse_from_rfc3339(BUILD_TIME)
                 .unwrap_or_else(|_| panic!("invalid BUILD_TIME: \"{BUILD_TIME}\"")),
             build_profile: PROFILE.to_owned(),
         }
@@ -46,18 +44,19 @@ impl Version {
             version = self.semversion,
             dirty = if self.git_is_dirty { "*" } else { "" },
             profile = self.build_profile,
-            build_time = self
-                .build_time
-                .format(&Rfc3339)
-                .unwrap_or_else(|_| panic!("Error formatting build_time: {:?}", self.build_time))
+            build_time = self.build_time.to_rfc3339()
         )
     }
     fn new_test() -> Self {
+        use chrono::TimeZone;
         Self {
             semversion: semver::Version::new(0, 0, 0),
             git_rev: String::from("test"),
             git_is_dirty: false,
-            build_time: OffsetDateTime::UNIX_EPOCH,
+            build_time: chrono::Utc
+                .with_ymd_and_hms(1970, 1, 1, 0, 0, 0)
+                .unwrap()
+                .into(),
             build_profile: String::from("test"),
         }
     }
