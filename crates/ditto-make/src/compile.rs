@@ -304,7 +304,8 @@ fn run_js(inputs: Vec<String>, outputs: Vec<String>) -> Result<()> {
     let codegen_config = js::Config {
         // We don't want platform specific path seperators here,
         // NodeJS will handle Unix slash paths
-        foreign_module_path: path_slash::PathBufExt::to_slash_lossy(&foreign_module_path),
+        foreign_module_path: path_slash::PathBufExt::to_slash_lossy(&foreign_module_path)
+            .into_owned(),
         module_name_to_path: Box::new(move |(package_name, module_name)| match package_name {
             Some(package_name) => {
                 format!(
