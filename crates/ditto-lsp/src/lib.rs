@@ -65,33 +65,41 @@ fn main_loop(connection: lsp_server::Connection) -> miette::Result<()> {
     let mut trees = Trees::new(); // TODO: use salsa for this
 
     for msg in &connection.receiver {
-        use lsp_server::Message::*;
+        use lsp_server::{ExtractError, Message::*};
         match msg {
-            Request(req) => {
-                if connection.handle_shutdown(&req).into_diagnostic()? {
+            Request(request) => {
+                if connection.handle_shutdown(&request).into_diagnostic()? {
                     return Ok(());
                 }
-
                 use lsp_types::request::{Formatting, SemanticTokensFullRequest};
-                match cast_request::<SemanticTokensFullRequest>(req) {
+                match cast_request::<SemanticTokensFullRequest>(request) {
                     Ok(request) => handle_semantic_tokens_request(&trees, &connection, request)?,
-                    Err(req) => match cast_request::<Formatting>(req) {
-                        Ok(request) => handle_formatting_request(&trees, &connection, request)?,
 
-                        // Unsupported method
-                        Err(request) => connection
-                            .sender
-                            .send(lsp_server::Message::Response(lsp_server::Response {
-                                id: request.id,
-                                result: None,
-                                error: Some(lsp_server::ResponseError {
-                                    message: format!("{} not supported", request.method),
-                                    code: lsp_server::ErrorCode::MethodNotFound as i32,
-                                    data: None,
-                                }),
-                            }))
-                            .into_diagnostic()?,
-                    },
+                    Err(err @ ExtractError::JsonError { .. }) => panic!("{:?}", err),
+
+                    Err(ExtractError::MethodMismatch(request)) => {
+                        match cast_request::<Formatting>(request) {
+                            Ok(request) => handle_formatting_request(&trees, &connection, request)?,
+
+                            // Unsupported method
+                            Err(ExtractError::MethodMismatch(request)) => connection
+                                .sender
+                                .send(lsp_server::Message::Response(lsp_server::Response {
+                                    id: request.id,
+                                    result: None,
+                                    error: Some(lsp_server::ResponseError {
+                                        message: format!("{} not supported", request.method),
+                                        code: lsp_server::ErrorCode::MethodNotFound as i32,
+                                        data: None,
+                                    }),
+                                }))
+                                .into_diagnostic()?,
+
+                            Err(err @ ExtractError::JsonError { .. }) => {
+                                panic!("{:?}", err)
+                            }
+                        }
+                    }
                 };
             }
             Response(_response) => {
@@ -103,7 +111,8 @@ fn main_loop(connection: lsp_server::Connection) -> miette::Result<()> {
                     Ok(params) => {
                         trees.insert(params.text_document.uri, params.text_document.text);
                     }
-                    Err(notification) => {
+
+                    Err(ExtractError::MethodMismatch(notification)) => {
                         match cast_notification::<DidChangeTextDocument>(notification) {
                             Ok(params) => {
                                 for change in params.content_changes {
@@ -111,11 +120,17 @@ fn main_loop(connection: lsp_server::Connection) -> miette::Result<()> {
                                     trees.update(&params.text_document.uri, source);
                                 }
                             }
+
+                            Err(err @ ExtractError::JsonError { .. }) => {
+                                panic!("{:?}", err)
+                            }
                             Err(_notification) => {
                                 // ignored
                             }
                         }
                     }
+
+                    Err(err @ ExtractError::JsonError { .. }) => panic!("{:?}", err),
                 }
             }
         }
@@ -250,7 +265,7 @@ where
 
 fn cast_notification<N>(
     not: lsp_server::Notification,
-) -> Result<N::Params, lsp_server::Notification>
+) -> Result<N::Params, lsp_server::ExtractError<lsp_server::Notification>>
 where
     N: lsp_types::notification::Notification,
     N::Params: serde::de::DeserializeOwned,
@@ -260,7 +275,7 @@ where
 
 fn cast_request<R>(
     req: lsp_server::Request,
-) -> Result<(lsp_server::RequestId, R::Params), lsp_server::Request>
+) -> Result<(lsp_server::RequestId, R::Params), lsp_server::ExtractError<lsp_server::Request>>
 where
     R: lsp_types::request::Request,
     R::Params: serde::de::DeserializeOwned,
