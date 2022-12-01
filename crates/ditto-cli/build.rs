@@ -1,5 +1,4 @@
 use std::{env, process::Command};
-use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 
 fn main() {
     let git_rev = env::var("DITTO_BUILD_GIT_REV").unwrap_or_else(|_| {
@@ -35,8 +34,9 @@ fn main() {
     });
     println!("cargo:rustc-env=GIT_DIRTY={}", git_dirty);
 
-    let build_time = env::var("DITTO_BUILD_TIME")
-        .unwrap_or_else(|_| OffsetDateTime::now_utc().format(&Rfc3339).unwrap());
+    let build_time =
+        env::var("DITTO_BUILD_TIME").unwrap_or_else(|_| chrono::offset::Utc::now().to_rfc3339());
+
     println!("cargo:rustc-env=BUILD_TIME={}", build_time);
 
     println!("cargo:rustc-env=PROFILE={}", env::var("PROFILE").unwrap());
