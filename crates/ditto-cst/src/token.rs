@@ -200,6 +200,10 @@ pub struct WithKeyword(pub EmptyToken);
 #[derive(Debug, Clone)]
 pub struct LetKeyword(pub EmptyToken);
 
+/// `in`
+#[derive(Debug, Clone)]
+pub struct InKeyword(pub EmptyToken);
+
 /// `do`
 #[derive(Debug, Clone)]
 pub struct DoKeyword(pub EmptyToken);

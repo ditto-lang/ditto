@@ -108,6 +108,13 @@ RecordTypeField: cst::RecordTypeField = {
 // EXPRESSIONS
 
 pub Expression: cst::Expression = {
+  Expression4
+}
+
+pub Expression4: cst::Expression = {
+  // let decl0; decl1; in expression
+  <let_keyword: LetKeyword> <head_declaration: Box<LetValueDeclaration>> <tail_declarations: LetValueDeclaration*> <in_keyword: InKeyword> <expr: Box<Expression>> => cst::Expression::Let { let_keyword, head_declaration, tail_declarations, in_keyword, expr },
+
   Expression3
 }
 
@@ -190,10 +197,14 @@ Pattern: cst::Pattern = {
   <unused_name: UnusedName> => cst::Pattern::Unused { unused_name },
 }
 
+pub LetValueDeclaration: cst::LetValueDeclaration = {
+  <pattern: Pattern> <type_annotation: TypeAnnotation?> <equals: Equals> <expression: Expression> <semicolon: Semicolon> => cst::LetValueDeclaration { pattern, type_annotation, equals, expression, semicolon }
+}
+
 Effect: cst::Effect = {
   <return_keyword: ReturnKeyword> <expression: Box<Expression>> => cst::Effect::Return { return_keyword, expression },
   <let_keyword: LetKeyword> <pattern: Pattern> <type_annotation: TypeAnnotation?> <equals: Equals> <expression: Box<Expression>> <semicolon: Semicolon> <rest: Box<Effect>> => cst::Effect::Let { let_keyword, pattern, type_annotation, equals, expression, semicolon, rest },
-  <expression: Box<Expression>> <rest: (Semicolon Box<Effect>)?> => cst::Effect::Expression { expression, rest },
+  <expression: Box<Expression3>> <rest: (Semicolon Box<Effect>)?> => cst::Effect::Expression { expression, rest },
   <name: Name> <left_arrow: LeftArrow> <expression: Box<Expression>> <semicolon: Semicolon> <rest: Box<Effect>> => cst::Effect::Bind { name, left_arrow, expression, semicolon, rest },
 }
 
@@ -301,6 +312,7 @@ ForeignKeyword: cst::ForeignKeyword = { <start_offset: @L> <token: "foreign"> <e
 MatchKeyword: cst::MatchKeyword = { <start_offset: @L> <token: "match"> <end_offset: @R> => cst::MatchKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
 WithKeyword: cst::WithKeyword = { <start_offset: @L> <token: "with"> <end_offset: @R> => cst::WithKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
 LetKeyword: cst::LetKeyword = { <start_offset: @L> <token: "let"> <end_offset: @R> => cst::LetKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
+InKeyword: cst::InKeyword = { <start_offset: @L> <token: "in"> <end_offset: @R> => cst::InKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
 DoKeyword: cst::DoKeyword = { <start_offset: @L> <token: "do"> <end_offset: @R> => cst::DoKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
 ReturnKeyword: cst::ReturnKeyword = { <start_offset: @L> <token: "return"> <end_offset: @R> => cst::ReturnKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
 FnKeyword: cst::FnKeyword = { <start_offset: @L> <token: "fn"> <end_offset: @R> => cst::FnKeyword(cst::EmptyToken { span: cst::Span { start_offset, end_offset }, leading_comments: token.leading, trailing_comment: token.trailing, value: () }) }
@@ -343,6 +355,7 @@ extern {
     "match" => Token::MatchKeyword(<Comments>),
     "with" => Token::WithKeyword(<Comments>),
     "let" => Token::LetKeyword(<Comments>),
+    "in" => Token::InKeyword(<Comments>),
     "do" => Token::DoKeyword(<Comments>),
     "return" => Token::ReturnKeyword(<Comments>),
     "fn" => Token::FnKeyword(<Comments>),

@@ -118,6 +118,9 @@ impl Expression {
                 close_brace,
                 ..
             } => open_brace.0.get_span().merge(&close_brace.0.get_span()),
+            Self::Let {
+                let_keyword, expr, ..
+            } => let_keyword.0.get_span().merge(&expr.get_span()),
         }
     }
 }

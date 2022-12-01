@@ -1,9 +1,9 @@
 use crate::{
     BracesList, BracketsList, CloseBrace, Colon, CommaSep1, DoKeyword, Dot, ElseKeyword,
-    EndKeyword, Equals, FalseKeyword, FnKeyword, IfKeyword, LeftArrow, LetKeyword, MatchKeyword,
-    Name, OpenBrace, Parens, ParensList, ParensList1, Pipe, QualifiedName, QualifiedProperName,
-    ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon, StringToken, ThenKeyword,
-    TrueKeyword, Type, UnitKeyword, UnusedName, WithKeyword,
+    EndKeyword, Equals, FalseKeyword, FnKeyword, IfKeyword, InKeyword, LeftArrow, LetKeyword,
+    MatchKeyword, Name, OpenBrace, Parens, ParensList, ParensList1, Pipe, QualifiedName,
+    QualifiedProperName, ReturnKeyword, RightArrow, RightPizzaOperator, Semicolon, StringToken,
+    ThenKeyword, TrueKeyword, Type, UnitKeyword, UnusedName, WithKeyword,
 };
 
 /// A value expression.
@@ -164,6 +164,19 @@ pub enum Expression {
         /// `}`
         close_brace: CloseBrace,
     },
+    /// `let x : Float = 5.0; y : Float = 10.0; in Float.add(x, y)`
+    Let {
+        /// `let`
+        let_keyword: LetKeyword,
+        /// `x : Float = 5.0`
+        head_declaration: Box<LetValueDeclaration>,
+        /// Any more declarations (there will always be at least one).
+        tail_declarations: Vec<LetValueDeclaration>,
+        /// `in`
+        in_keyword: InKeyword,
+        /// Expression where declaration names are bound.
+        expr: Box<Expression>,
+    },
 }
 
 /// A labelled expression within a record.
@@ -276,6 +289,25 @@ pub enum Pattern {
         /// The unused binder.
         unused_name: UnusedName,
     },
+}
+
+/// Binding an expression to names/patterns.
+///
+/// ```ditto
+/// name : type = expression;
+/// ```
+#[derive(Debug, Clone)]
+pub struct LetValueDeclaration {
+    /// The binding(s)
+    pub pattern: Pattern,
+    /// Optional type of the binding(s).
+    pub type_annotation: Option<TypeAnnotation>,
+    /// `=`
+    pub equals: Equals,
+    /// The value definition itself.
+    pub expression: Expression,
+    /// `;`
+    pub semicolon: Semicolon,
 }
 
 /// `: String`
