@@ -418,7 +418,7 @@ impl BuildNinja {
 
     /// Used for integration testing, where we need predictable path separators.
     pub fn into_syntax_path_slash(self) -> String {
-        self.into_syntax_with(|path| path_slash::PathBufExt::to_slash_lossy(&path))
+        self.into_syntax_with(|path| path_slash::PathBufExt::to_slash_lossy(&path).into_owned())
     }
 
     fn into_syntax_with(self, path_to_string: impl Fn(PathBuf) -> String + Copy) -> String {

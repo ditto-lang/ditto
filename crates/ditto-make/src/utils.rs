@@ -30,7 +30,7 @@ mod tests {
         let paths = super::find_ditto_files("tests/cmd/all-good/test.in/ditto-src")
             .unwrap()
             .into_iter()
-            .map(|path| path_slash::PathBufExt::to_slash_lossy(&path))
+            .map(|path| path_slash::PathBufExt::to_slash_lossy(&path).into_owned())
             .collect::<Vec<String>>();
 
         assert_eq!(
