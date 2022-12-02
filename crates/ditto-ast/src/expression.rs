@@ -145,6 +145,15 @@ pub enum Expression {
         /// The chain of effect statements.
         effect: Effect,
     },
+    /// An expression with a value added to scope.
+    Let {
+        /// The source span for this expression.
+        span: Span,
+        /// The declaration to be added to the scope.
+        declaration: LetValueDeclaration,
+        /// The expression with a new value in scope.
+        expression: Box<Expression>,
+    },
     /// A string literal.
     String {
         /// The source span for this expression.
@@ -299,6 +308,7 @@ impl Expression {
                     .map(|(label, element)| (label.clone(), element.get_type()))
                     .collect(),
             },
+            Self::Let { expression, .. } => expression.get_type(),
             Self::String { value_type, .. } => value_type.clone(),
             Self::Int { value_type, .. } => value_type.clone(),
             Self::Float { value_type, .. } => value_type.clone(),
@@ -322,6 +332,7 @@ impl Expression {
             Self::Effect { span, .. } => *span,
             Self::RecordAccess { span, .. } => *span,
             Self::RecordUpdate { span, .. } => *span,
+            Self::Let { span, .. } => *span,
             Self::String { span, .. } => *span,
             Self::Int { span, .. } => *span,
             Self::Float { span, .. } => *span,
@@ -431,4 +442,15 @@ pub enum Effect {
         /// The expression to be returned.
         expression: Box<Expression>,
     },
+}
+
+/// A value declaration that appears within a `let` expression.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LetValueDeclaration {
+    /// The pattern containing names to be bound.
+    pub pattern: Pattern,
+    /// The type of the expression being bound.
+    pub expression_type: Type,
+    /// The expression being bound.
+    pub expression: Box<Expression>,
 }
