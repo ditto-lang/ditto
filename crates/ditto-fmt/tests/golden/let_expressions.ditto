@@ -37,3 +37,16 @@ funky_fives = [
     five,
     5,
 ];
+
+many_lets =
+    -- y tho - maybe we should have a lint for this?
+    let
+        one = 1;
+    in
+    let
+        two = 2;
+    in
+    let
+        three = 3;
+    in
+    [one, two, three];

@@ -4,6 +4,12 @@ function Pair($0, $1) {
 function Pence($0) {
   return ["Pence", $0];
 }
+const many_lets = (() => {
+  const one = 1;
+  const two = 2;
+  const three = 3;
+  return [one, two, three];
+})();
 function pair_to_array(pair) {
   if (pair[0] === "Pair") {
     const snd = pair[2];
@@ -28,4 +34,4 @@ const fives = (() => {
   const five = 5;
   return [five, five, five];
 })();
-export { Pair, Pence, fives, gbp_to_pence, mk_ints, pair_to_array };
+export { Pair, Pence, fives, gbp_to_pence, many_lets, mk_ints, pair_to_array };
