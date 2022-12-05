@@ -8,4 +8,5 @@ members = [
   "crates/ditto-fmt",
   "crates/ditto-cli",
   "crates/ditto-lsp",
+  "crates/ditto-tree-sitter",
 ]

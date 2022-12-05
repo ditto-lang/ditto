@@ -1,3 +1,4 @@
+use ditto_tree_sitter as tree_sitter;
 use lsp_types::{SemanticTokenType, SemanticTokens, SemanticTokensLegend};
 
 pub fn legend() -> SemanticTokensLegend {
@@ -159,7 +160,7 @@ impl TokensBuilder {
             
         "#;
         let mut query_cursor = tree_sitter::QueryCursor::new();
-        let query = tree_sitter::Query::new(tree_sitter_ditto::language(), QUERY).unwrap();
+        let query = tree_sitter::Query::new(tree_sitter::ditto_language(), QUERY).unwrap();
         let matches = query_cursor.matches(&query, tree.root_node(), source);
         for query_match in matches {
             let token_type = match query_match.pattern_index {
