@@ -43,6 +43,7 @@ gen_empty_token_like!(gen_foreign_keyword, cst::ForeignKeyword, "foreign");
 gen_empty_token_like!(gen_fn_keyword, cst::FnKeyword, "fn");
 gen_empty_token_like!(gen_end_keyword, cst::EndKeyword, "end");
 gen_empty_token_like!(gen_let_keyword, cst::LetKeyword, "let");
+gen_empty_token_like!(gen_in_keyword, cst::InKeyword, "in");
 gen_empty_token_like!(gen_open_bracket, cst::OpenBracket, "[");
 gen_empty_token_like!(gen_open_brace, cst::OpenBrace, "{");
 gen_empty_token_like!(gen_pipe, cst::Pipe, "|");

@@ -9,14 +9,15 @@ use super::{
     },
     token::{
         gen_close_brace, gen_colon, gen_do_keyword, gen_dot, gen_else_keyword, gen_end_keyword,
-        gen_equals, gen_false_keyword, gen_fn_keyword, gen_if_keyword, gen_left_arrow,
-        gen_let_keyword, gen_match_keyword, gen_open_brace, gen_pipe, gen_return_keyword,
-        gen_right_arrow, gen_right_pizza_operator, gen_semicolon, gen_string_token,
-        gen_then_keyword, gen_true_keyword, gen_unit_keyword, gen_with_keyword,
+        gen_equals, gen_false_keyword, gen_fn_keyword, gen_if_keyword, gen_in_keyword,
+        gen_left_arrow, gen_let_keyword, gen_match_keyword, gen_open_brace, gen_pipe,
+        gen_return_keyword, gen_right_arrow, gen_right_pizza_operator, gen_semicolon,
+        gen_string_token, gen_then_keyword, gen_true_keyword, gen_unit_keyword, gen_with_keyword,
     },
 };
 use ditto_cst::{
-    BinOp, Effect, Expression, MatchArm, Pattern, RecordField, StringToken, TypeAnnotation,
+    BinOp, Effect, Expression, LetValueDeclaration, MatchArm, Pattern, RecordField, StringToken,
+    TypeAnnotation,
 };
 use dprint_core::formatting::{
     condition_helpers, conditions, ir_helpers, ConditionResolver, ConditionResolverContext,
@@ -299,6 +300,30 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
             ));
             items
         }
+        Expression::Let {
+            let_keyword,
+            box head_declaration,
+            tail_declarations,
+            in_keyword,
+            box expr,
+        } => {
+            let mut items = PrintItems::new();
+            items.extend(gen_let_keyword(let_keyword));
+            items.push_signal(Signal::ExpectNewLine);
+            items.extend(ir_helpers::with_indent(gen_let_value_declaration(
+                head_declaration,
+            )));
+            for decl in tail_declarations {
+                items.push_signal(Signal::NewLine);
+                items.push_signal(Signal::ExpectNewLine);
+                items.extend(ir_helpers::with_indent(gen_let_value_declaration(decl)));
+            }
+            items.push_signal(Signal::ExpectNewLine);
+            items.extend(gen_in_keyword(in_keyword));
+            items.push_signal(Signal::ExpectNewLine);
+            items.extend(gen_expression(expr, true));
+            items
+        }
     }
 }
 
@@ -429,6 +454,7 @@ pub fn gen_body_expression(expr: Expression, force_use_new_lines: bool) -> Print
         expr,
         Expression::If { .. }
             | Expression::Match { .. }
+            | Expression::Let { .. }
             | Expression::BinOp {
                 operator: BinOp::RightPizza(_),
                 ..
@@ -473,6 +499,24 @@ pub fn gen_type_annotation(type_annotation: TypeAnnotation) -> PrintItems {
     items.extend(gen_colon(type_annotation.0));
     items.extend(space());
     items.extend(gen_type(type_annotation.1));
+    items
+}
+
+fn gen_let_value_declaration(decl: LetValueDeclaration) -> PrintItems {
+    let mut items = PrintItems::new();
+    items.extend(gen_pattern(decl.pattern));
+    if let Some(type_ann) = decl.type_annotation {
+        items.extend(gen_type_annotation(type_ann));
+    }
+    items.extend(space());
+    let equals_has_trailing_comment = decl.equals.0.has_trailing_comment();
+    items.extend(gen_equals(decl.equals));
+    items.extend(gen_body_expression(
+        decl.expression,
+        equals_has_trailing_comment,
+    ));
+
+    items.extend(gen_semicolon(decl.semicolon));
     items
 }
 

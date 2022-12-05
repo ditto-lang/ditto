@@ -1,0 +1,39 @@
+module Let exports (..);
+
+
+fives =
+    let
+        five = 5;  -- comment
+    in
+    [five, five, five];
+
+mk_ints = fn (i: Int) ->
+    let
+        -- comment
+        five = 5;  -- comment
+
+        -- comment
+        six = 6;
+
+        ints = [
+            -- comment
+            five,
+            six,
+            i,  -- comment
+            i,
+            i,
+        ];
+    in
+    -- comment
+    {
+        -- comment
+        ints = [ints],
+    };
+
+funky_fives = [
+    let
+        five = 5;
+    in
+    five,
+    5,
+];

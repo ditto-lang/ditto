@@ -109,6 +109,19 @@ impl HasComments for Expression {
                     || updates.has_comments()
                     || close_brace.0.has_comments()
             }
+            Self::Let {
+                let_keyword,
+                head_declaration,
+                tail_declarations,
+                in_keyword,
+                expr,
+            } => {
+                let_keyword.0.has_comments()
+                    || head_declaration.has_comments()
+                    || tail_declarations.iter().any(|decl| decl.has_comments())
+                    || in_keyword.0.has_comments()
+                    || expr.has_comments()
+            }
         }
     }
 
@@ -133,6 +146,7 @@ impl HasComments for Expression {
             Self::RecordAccess { target, .. } => target.has_leading_comments(),
             Self::Record(braces) => braces.open_brace.0.has_leading_comments(),
             Self::RecordUpdate { open_brace, .. } => open_brace.0.has_leading_comments(),
+            Self::Let { let_keyword, .. } => let_keyword.0.has_leading_comments(),
         }
     }
 }
@@ -451,6 +465,27 @@ impl HasComments for Export {
             Self::Value(name) => name.has_leading_comments(),
             Self::Type(proper_name, _everything) => proper_name.has_leading_comments(),
         }
+    }
+}
+
+impl HasComments for LetValueDeclaration {
+    fn has_comments(&self) -> bool {
+        let LetValueDeclaration {
+            pattern,
+            type_annotation,
+            equals,
+            expression,
+            semicolon,
+        } = self;
+        pattern.has_comments()
+            || type_annotation.has_comments()
+            || equals.0.has_comments()
+            || expression.has_comments()
+            || semicolon.0.has_comments()
+    }
+    fn has_leading_comments(&self) -> bool {
+        let LetValueDeclaration { pattern, .. } = self;
+        pattern.has_leading_comments()
     }
 }
 
