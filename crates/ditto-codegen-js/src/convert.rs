@@ -543,6 +543,49 @@ pub(crate) fn convert_expression(
                 entries,
             }
         }
+        ditto_ast::Expression::Let {
+            declaration,
+            box expression,
+            ..
+        } => {
+            let expression = convert_expression(supply, imported_module_idents, expression);
+            let decl_expression =
+                convert_expression(supply, imported_module_idents, *declaration.expression);
+
+            match convert_pattern(decl_expression, declaration.pattern) {
+                (Some(condition), assignments) => {
+                    let block = Block::If {
+                        condition,
+                        true_branch: Box::new(assignments.into_iter().fold(
+                            Block::Return(Some(expression)),
+                            |rest, (ident, value)| Block::ConstAssignment {
+                                ident,
+                                value,
+                                rest: Box::new(rest),
+                            },
+                        )),
+                        false_branch: Box::new(Block::Throw(String::from(
+                            // TODO: mention the file location here?
+                            "Pattern match error",
+                        ))),
+                    };
+                    iife!(block)
+                }
+
+                (None, assignments) if assignments.is_empty() => expression,
+                (None, assignments) => {
+                    let block = assignments.into_iter().fold(
+                        Block::Return(Some(expression)),
+                        |rest, (ident, value)| Block::ConstAssignment {
+                            ident,
+                            value,
+                            rest: Box::new(rest),
+                        },
+                    );
+                    iife!(block)
+                }
+            }
+        }
     }
 }
 
