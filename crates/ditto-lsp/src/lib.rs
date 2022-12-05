@@ -3,6 +3,7 @@
 
 mod semantic_tokens;
 
+use ditto_tree_sitter as tree_sitter;
 use log::debug;
 use miette::IntoDiagnostic;
 use ropey::Rope;
@@ -136,22 +137,6 @@ fn main_loop(connection: lsp_server::Connection) -> miette::Result<()> {
         }
     }
     Ok(())
-}
-
-// Panic if the parser fails to initialise, as this really shouldn't happen.
-fn init_parser() -> tree_sitter::Parser {
-    try_init_parser().unwrap_or_else(|lang_err| {
-        panic!(
-            "Error initialising tree-sitter parser with ditto language: {}",
-            lang_err
-        )
-    })
-}
-
-fn try_init_parser() -> Result<tree_sitter::Parser, tree_sitter::LanguageError> {
-    let mut parser = tree_sitter::Parser::new();
-    parser.set_language(tree_sitter_ditto::language())?;
-    Ok(parser)
 }
 
 fn handle_formatting_request(
@@ -320,7 +305,7 @@ impl Trees {
     }
 
     fn insert(&mut self, url: Url, source: String) {
-        let mut parser = init_parser();
+        let mut parser = ditto_tree_sitter::init_parser();
         if let Some(tree) = parser.parse(&source, None) {
             //log::debug!("tree inserted for {}", url);
             self.0.insert(url, (tree, source));
@@ -330,7 +315,7 @@ impl Trees {
     }
 
     fn update(&mut self, url: &Url, source: String) {
-        let mut parser = init_parser();
+        let mut parser = ditto_tree_sitter::init_parser();
         if let Some(tree) = parser.parse(&source, None) {
             //log::debug!("tree updated for {}", url);
             self.0.insert(url.clone(), (tree, source));

@@ -1,0 +1,19 @@
+[package]
+name = "ditto-tree-sitter"
+version = "0.0.1"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[lib]
+doctest = false
+
+[dependencies]
+tree-sitter = "0.20"
+tree-sitter-ditto = { git = "https://github.com/ditto-lang/tree-sitter-ditto", rev = "d2a30bc3aab2a4c4502e8b6d192aa648bacd84a4" }
+
+[dev-dependencies]
+datatest-stable = "0.1"
+
+[[test]]
+name = "parsing_tests"
+harness = false

@@ -727,6 +727,7 @@ version = "0.0.1"
 dependencies = [
  "ditto-cst",
  "ditto-fmt",
+ "ditto-tree-sitter",
  "log",
  "lsp-server",
  "lsp-types",
@@ -734,8 +735,6 @@ dependencies = [
  "ropey",
  "serde",
  "serde_json",
- "tree-sitter",
- "tree-sitter-ditto",
  "url",
 ]
 
@@ -762,6 +761,15 @@ dependencies = [
  "thiserror",
  "trycmd",
  "walkdir",
+]
+
+[[package]]
+name = "ditto-tree-sitter"
+version = "0.0.1"
+dependencies = [
+ "datatest-stable",
+ "tree-sitter",
+ "tree-sitter-ditto",
 ]
 
 [[package]]
@@ -2795,7 +2803,7 @@ dependencies = [
 [[package]]
 name = "tree-sitter-ditto"
 version = "0.0.1"
-source = "git+https://github.com/ditto-lang/tree-sitter-ditto?rev=a0588121f9be33e8220a2779efa299f5e24dd79f#a0588121f9be33e8220a2779efa299f5e24dd79f"
+source = "git+https://github.com/ditto-lang/tree-sitter-ditto?rev=d2a30bc3aab2a4c4502e8b6d192aa648bacd84a4#d2a30bc3aab2a4c4502e8b6d192aa648bacd84a4"
 dependencies = [
  "cc",
  "tree-sitter",
