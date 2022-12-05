@@ -21,8 +21,8 @@ use crate::{
     supply::Supply,
 };
 use ditto_ast::{
-    unqualified, Argument, Effect, Expression, Kind, Name, Pattern, PrimType, QualifiedName, Row,
-    Span, Type,
+    unqualified, Argument, Effect, Expression, Kind, LetValueDeclaration, Name, Pattern, PrimType,
+    QualifiedName, Row, Span, Type,
 };
 use ditto_cst as cst;
 use indexmap::IndexMap;
@@ -414,6 +414,56 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
                 record_type,
                 target: Box::new(target),
                 fields,
+            })
+        }
+        pre::Expression::Let {
+            span,
+            declaration,
+            box expression,
+            ..
+        } => {
+            let pattern_type = declaration
+                .type_annotation
+                .unwrap_or_else(|| state.supply.fresh_type());
+            let decl_expression = check(env, state, pattern_type.clone(), *declaration.expression)?;
+            let mut local_values = HashMap::new();
+            let pattern = check_pattern(
+                env,
+                state,
+                &mut local_values,
+                pattern_type.clone(),
+                declaration.pattern,
+            )?;
+
+            check_exhaustiveness(
+                env,
+                state,
+                declaration.pattern_span,
+                state.substitution.apply(pattern_type.clone()),
+                vec![pattern.clone()],
+            )?;
+
+            let (expression, unused_spans) = with_extended_env(
+                env,
+                state,
+                local_values.into_values().collect(),
+                |env, state| infer(env, state, expression),
+            )?;
+
+            for span in unused_spans {
+                state.warnings.push(Warning::UnusedLetBinder { span });
+            }
+
+            let declaration = LetValueDeclaration {
+                pattern,
+                expression_type: pattern_type,
+                expression: Box::new(decl_expression),
+            };
+
+            Ok(Expression::Let {
+                span,
+                declaration,
+                expression: Box::new(expression),
             })
         }
     }

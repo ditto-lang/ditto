@@ -1,5 +1,5 @@
 use super::common::type_variables;
-use ditto_ast::{Argument, Effect, Expression, Kind, Type};
+use ditto_ast::{Argument, Effect, Expression, Kind, LetValueDeclaration, Type};
 use non_empty_vec::NonEmpty;
 use std::collections::HashMap;
 
@@ -363,6 +363,24 @@ impl Substitution {
                     .into_iter()
                     .map(|(label, expr)| (label, self.apply_expression(expr)))
                     .collect(),
+            },
+            Let {
+                span,
+                declaration:
+                    LetValueDeclaration {
+                        pattern: decl_pattern,
+                        expression_type: decl_type,
+                        expression: box decl_expr,
+                    },
+                box expression,
+            } => Let {
+                span,
+                declaration: LetValueDeclaration {
+                    pattern: decl_pattern,
+                    expression_type: self.apply(decl_type),
+                    expression: Box::new(self.apply_expression(decl_expr)),
+                },
+                expression: Box::new(self.apply_expression(expression)),
             },
             True { span, value_type } => True {
                 span,

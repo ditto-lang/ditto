@@ -1,0 +1,11 @@
+module Test exports (..);
+
+type Option(a) = None | Some(a);
+
+option_five = Some(5);
+
+bang = 
+    let
+        Some(five) = option_five;
+    in
+    unit;

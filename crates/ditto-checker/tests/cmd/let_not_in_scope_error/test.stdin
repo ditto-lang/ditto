@@ -1,0 +1,8 @@
+module Test exports (..);
+
+bang = 
+    let
+        fives = [five];
+        five: Int = 5;
+    in 
+    fives;

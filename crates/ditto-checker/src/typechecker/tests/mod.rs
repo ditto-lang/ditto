@@ -6,6 +6,7 @@ mod effect;
 mod float;
 mod function;
 mod int;
+mod r#let;
 pub(self) mod macros;
 mod r#match;
 mod records;

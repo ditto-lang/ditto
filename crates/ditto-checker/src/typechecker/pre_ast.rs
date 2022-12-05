@@ -79,6 +79,11 @@ pub enum Expression {
         target: Box<Self>,
         updates: Vec<(Name, Self)>,
     },
+    Let {
+        span: Span,
+        declaration: LetValueDeclaration,
+        expression: Box<Expression>,
+    },
     True {
         span: Span,
     },
@@ -88,6 +93,14 @@ pub enum Expression {
     Unit {
         span: Span,
     },
+}
+
+#[derive(Clone)]
+pub struct LetValueDeclaration {
+    pub pattern: Pattern,
+    pub pattern_span: Span,
+    pub type_annotation: Option<Type>,
+    pub expression: Box<Expression>,
 }
 
 #[derive(Clone)]
@@ -378,6 +391,73 @@ fn convert_cst(
                 updates,
             })
         }
+        cst::Expression::Let {
+            let_keyword,
+            box head_declaration,
+            mut tail_declarations,
+            box expr,
+            ..
+        } => {
+            let terminal_expression_span = expr.get_span();
+            let mut expression = convert_cst(env, state, expr)?;
+
+            tail_declarations.reverse();
+            for decl in tail_declarations {
+                let decl_pattern_span = decl.pattern.get_span();
+                let decl_pattern = Pattern::from(decl.pattern);
+                let decl_type = if let Some(type_annotation) = decl.type_annotation {
+                    let t = check_type_annotation(
+                        &env.types,
+                        &mut env.type_variables.clone(),
+                        state,
+                        type_annotation,
+                    )?;
+                    Some(t)
+                } else {
+                    None
+                };
+                let decl_expression = convert_cst(env, state, decl.expression)?;
+                let declaration = LetValueDeclaration {
+                    pattern: decl_pattern,
+                    pattern_span: decl_pattern_span,
+                    type_annotation: decl_type,
+                    expression: Box::new(decl_expression),
+                };
+                expression = Expression::Let {
+                    span: decl_pattern_span.merge(&terminal_expression_span),
+                    declaration,
+                    expression: Box::new(expression),
+                };
+            }
+
+            let decl_pattern_span = head_declaration.pattern.get_span();
+            let decl_pattern = Pattern::from(head_declaration.pattern);
+            let decl_type = if let Some(type_annotation) = head_declaration.type_annotation {
+                let t = check_type_annotation(
+                    &env.types,
+                    &mut env.type_variables.clone(),
+                    state,
+                    type_annotation,
+                )?;
+                Some(t)
+            } else {
+                None
+            };
+            let decl_expression = convert_cst(env, state, head_declaration.expression)?;
+            let declaration = LetValueDeclaration {
+                pattern: decl_pattern,
+                pattern_span: decl_pattern_span,
+                type_annotation: decl_type,
+                expression: Box::new(decl_expression),
+            };
+            expression = Expression::Let {
+                span: let_keyword.0.get_span().merge(&terminal_expression_span),
+                declaration,
+                expression: Box::new(expression),
+            };
+
+            Ok(expression)
+        }
     }
 }
 
@@ -578,6 +658,26 @@ fn substitute_type_annotations(subst: &Substitution, expression: Expression) -> 
                 .into_iter()
                 .map(|(label, expr)| (label, substitute_type_annotations(subst, expr)))
                 .collect(),
+        },
+        Let {
+            span,
+            declaration:
+                LetValueDeclaration {
+                    pattern,
+                    pattern_span,
+                    type_annotation,
+                    expression: box decl_expr,
+                },
+            box expression,
+        } => Let {
+            span,
+            declaration: LetValueDeclaration {
+                pattern,
+                pattern_span,
+                type_annotation: type_annotation.map(|t| subst.apply_type(t)),
+                expression: Box::new(substitute_type_annotations(subst, decl_expr)),
+            },
+            expression: Box::new(substitute_type_annotations(subst, expression)),
         },
         Array { span, elements } => Array {
             span,

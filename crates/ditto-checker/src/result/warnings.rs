@@ -35,6 +35,9 @@ pub enum Warning {
     UnusedEffectBinder {
         span: Span,
     },
+    UnusedLetBinder {
+        span: Span,
+    },
     UnusedValueDeclaration {
         span: Span,
     },
@@ -94,6 +97,9 @@ impl Warning {
                 location: span_to_source_span(span),
             },
             Self::UnusedEffectBinder { span } => WarningReport::UnusedEffectBinder {
+                location: span_to_source_span(span),
+            },
+            Self::UnusedLetBinder { span } => WarningReport::UnusedLetBinder {
                 location: span_to_source_span(span),
             },
             Self::UnusedValueDeclaration { span } => WarningReport::UnusedValueDeclaration {
@@ -182,6 +188,13 @@ pub enum WarningReport {
     #[error("unused effect binder")]
     #[diagnostic(severity(Warning))]
     UnusedEffectBinder {
+        #[label("this isn't used")]
+        #[serde(with = "SourceSpanDef")]
+        location: SourceSpan,
+    },
+    #[error("unused let binder")]
+    #[diagnostic(severity(Warning))]
+    UnusedLetBinder {
         #[label("this isn't used")]
         #[serde(with = "SourceSpanDef")]
         location: SourceSpan,

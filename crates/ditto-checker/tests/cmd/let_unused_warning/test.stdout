@@ -1,0 +1,125 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "why": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Unit"
+        }
+      }
+    }
+  },
+  "types": {},
+  "constructors": {},
+  "values": {
+    "why": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 27,
+        "end_offset": 30
+      },
+      "expression": {
+        "expression": "Let",
+        "data": {
+          "span": {
+            "start_offset": 33,
+            "end_offset": 70
+          },
+          "declaration": {
+            "pattern": {
+              "Variable": {
+                "span": {
+                  "start_offset": 37,
+                  "end_offset": 42
+                },
+                "name": "fives"
+              }
+            },
+            "expression_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "PrimConstructor",
+                  "data": "Array"
+                },
+                "arguments": [
+                  {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  }
+                ]
+              }
+            },
+            "expression": {
+              "expression": "Array",
+              "data": {
+                "span": {
+                  "start_offset": 58,
+                  "end_offset": 61
+                },
+                "element_type": {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                },
+                "elements": [
+                  {
+                    "expression": "Int",
+                    "data": {
+                      "span": {
+                        "start_offset": 59,
+                        "end_offset": 60
+                      },
+                      "value": "5",
+                      "value_type": {
+                        "type": "PrimConstructor",
+                        "data": "Int"
+                      }
+                    }
+                  }
+                ],
+                "value_type": {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "PrimConstructor",
+                      "data": "Array"
+                    },
+                    "arguments": [
+                      {
+                        "type": "PrimConstructor",
+                        "data": "Int"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "expression": {
+            "expression": "Unit",
+            "data": {
+              "span": {
+                "start_offset": 66,
+                "end_offset": 70
+              },
+              "value_type": {
+                "type": "PrimConstructor",
+                "data": "Unit"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "why"
+  ]
+}

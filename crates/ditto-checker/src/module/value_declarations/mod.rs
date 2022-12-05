@@ -508,6 +508,26 @@ fn toposort_value_declarations(
                 get_connected_nodes_rec(lhs, nodes, accum);
                 get_connected_nodes_rec(rhs, nodes, accum);
             }
+            Expression::Let {
+                head_declaration,
+                tail_declarations,
+                expr,
+                ..
+            } => {
+                get_connected_nodes_rec(&head_declaration.expression, nodes, accum);
+
+                let mut bound_nodes = Nodes::new();
+                get_pattern_variable_names(&mut bound_nodes, &head_declaration.pattern);
+
+                for decl in tail_declarations.iter() {
+                    let nodes = nodes.difference(&bound_nodes).cloned().collect();
+                    get_connected_nodes_rec(&head_declaration.expression, &nodes, accum);
+                    get_pattern_variable_names(&mut bound_nodes, &decl.pattern);
+                }
+
+                let nodes = nodes.difference(&bound_nodes).cloned().collect();
+                get_connected_nodes_rec(expr, &nodes, accum);
+            }
             // noop
             Expression::Constructor(_qualified_proper_name) => {}
             Expression::String(_) => {}
