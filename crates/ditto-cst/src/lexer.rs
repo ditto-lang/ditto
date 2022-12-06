@@ -395,6 +395,7 @@ mod tests {
 
     #[test]
     fn it_lexes_unsued_names() {
+        assert_token!("_", Token::UnusedName { .. });
         assert_token!("_abcde", Token::UnusedName { .. });
         assert_token!("_a_b_cde_", Token::UnusedName { .. });
         assert_token!("_a123456789", Token::UnusedName { .. });
