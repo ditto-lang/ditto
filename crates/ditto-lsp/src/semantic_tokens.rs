@@ -119,6 +119,8 @@ impl TokensBuilder {
               "do"
               "return"
               "alias"
+              "let"
+              "in"
             ] @keyword
 
             ; 2, 3, 4
