@@ -1,0 +1,26 @@
+module Test exports (..);
+
+fives = let five = 5; in [five, five, five];
+
+type alias Ints = Array(Int);
+mk_ints = fn (i: Int): Ints -> let five = 5; six = 6; in [five, six, i, i, i];
+
+type Gbp = Pence(Int);
+
+gbp_to_pence = fn (gbp : Gbp): Int -> let Pence(i) = gbp; in i;
+
+type Pair(a, b) = Pair(a, b);
+pair_to_array = fn (pair: Pair(a, a)): Array(a) -> let Pair(fst, snd) = pair; in [fst, snd];
+
+many_lets =
+    -- y tho, maybe we should have a lint for this?
+    let
+        one = 1;
+    in
+    let
+        two = 2;
+    in
+    let
+        three = 3;
+    in
+    [one, two, three];

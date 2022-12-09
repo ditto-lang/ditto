@@ -1,0 +1,4 @@
+bin.name = "ditto-checker-testbin-check-module"
+args = ["let_destructure_not_exhaustive_error.ditto"]
+fs.sandbox = true
+status = "failed"

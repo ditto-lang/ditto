@@ -102,6 +102,7 @@ impl<'input> Iterator for Lexer<'input> {
             RawToken::MatchKeyword => Token::MatchKeyword(self.collect_comments()),
             RawToken::WithKeyword => Token::WithKeyword(self.collect_comments()),
             RawToken::LetKeyword => Token::LetKeyword(self.collect_comments()),
+            RawToken::InKeyword => Token::InKeyword(self.collect_comments()),
             RawToken::DoKeyword => Token::DoKeyword(self.collect_comments()),
             RawToken::ReturnKeyword => Token::ReturnKeyword(self.collect_comments()),
             RawToken::FnKeyword => Token::FnKeyword(self.collect_comments()),
@@ -161,6 +162,7 @@ pub enum Token {
     MatchKeyword(Comments),
     WithKeyword(Comments),
     LetKeyword(Comments),
+    InKeyword(Comments),
     DoKeyword(Comments),
     ReturnKeyword(Comments),
     FnKeyword(Comments),
@@ -244,6 +246,8 @@ enum RawToken {
     WithKeyword,
     #[token("let")]
     LetKeyword,
+    #[token("in")]
+    InKeyword,
     #[token("do")]
     DoKeyword,
     #[token("return")]

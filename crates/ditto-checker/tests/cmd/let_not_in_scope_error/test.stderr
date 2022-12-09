@@ -1,0 +1,10 @@
+
+  × unknown variable
+   ╭─[let_not_in_scope_error.ditto:4:1]
+ 4 │     let
+ 5 │         fives = [five];
+   ·                  ──┬─
+   ·                    ╰── not in scope
+ 6 │         five: Int = 5;
+   ╰────
+

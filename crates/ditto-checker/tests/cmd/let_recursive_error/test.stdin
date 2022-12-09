@@ -1,0 +1,8 @@
+module Test exports (..);
+
+bang = 
+    let
+        a = b;
+        b = a;
+    in 
+    unit;
