@@ -1,0 +1,20 @@
+[package]
+name = "ditto-highlight"
+version = "0.0.1"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[lib]
+doctest = false
+
+[dependencies]
+ditto-tree-sitter = { path = "../ditto-tree-sitter" }
+ropey = "1.5"
+
+[dev-dependencies]
+similar-asserts = "1.4"
+datatest-stable = "0.1"
+
+[[test]]
+name = "golden_tests"
+harness = false

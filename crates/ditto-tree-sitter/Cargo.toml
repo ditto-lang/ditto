@@ -9,7 +9,7 @@ doctest = false
 
 [dependencies]
 tree-sitter = "0.20"
-tree-sitter-ditto = { git = "https://github.com/ditto-lang/tree-sitter-ditto", rev = "06f09cc4a923fa656381949a0952df863bbc3170" }
+tree-sitter-ditto = { git = "https://github.com/ditto-lang/tree-sitter-ditto", rev = "9522591cb90540632d758a0e589e43b47a43b4d7" }
 
 [dev-dependencies]
 datatest-stable = "0.1"

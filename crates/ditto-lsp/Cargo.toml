@@ -18,6 +18,7 @@ url = "2.3"
 ditto-cst = { path = "../ditto-cst" }
 ditto-fmt = { path = "../ditto-fmt" }
 ditto-tree-sitter = { path = "../ditto-tree-sitter" }
+ditto-highlight = { path = "../ditto-highlight" }
 ropey = "1.5"
 #salsa = "xx"
 

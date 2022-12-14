@@ -1,0 +1,9 @@
+<KeywordImport>module</KeywordImport> <Namespace>Test</Namespace> <KeywordImport>exports</KeywordImport> <Bracket>(</Bracket>
+    <Type>Foo</Type><Delimiter>,</Delimiter>
+    <Type>Bar</Type><Bracket>(</Bracket><Symbol>..</Symbol><Bracket>)</Bracket><Delimiter>,</Delimiter>
+<Bracket>)</Bracket><Delimiter>;</Delimiter>
+
+
+<Keyword>type</Keyword> <Keyword>alias</Keyword> <Type>T</Type> = <Namespace>SomeModule.</Namespace><Type>T</Type><Bracket>(</Bracket><Type>Int</Type><Bracket>)</Bracket><Delimiter>;</Delimiter>
+
+<Keyword>type</Keyword> <Keyword>alias</Keyword> <Type>Identity</Type><Bracket>(</Bracket><TypeVariable>a</TypeVariable><Bracket>)</Bracket> = <Bracket>(</Bracket><TypeVariable>a</TypeVariable><Bracket>)</Bracket> <Type>-></Type> <TypeVariable>a</TypeVariable><Delimiter>;</Delimiter>

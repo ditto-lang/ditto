@@ -1,0 +1,9 @@
+module Test exports (
+    Foo,
+    Bar(..),
+);
+
+
+type alias T = SomeModule.T(Int);
+
+type alias Identity(a) = (a) -> a;

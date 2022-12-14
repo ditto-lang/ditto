@@ -722,11 +722,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "ditto-highlight"
+version = "0.0.1"
+dependencies = [
+ "datatest-stable",
+ "ditto-tree-sitter",
+ "ropey",
+ "similar-asserts",
+]
+
+[[package]]
 name = "ditto-lsp"
 version = "0.0.1"
 dependencies = [
  "ditto-cst",
  "ditto-fmt",
+ "ditto-highlight",
  "ditto-tree-sitter",
  "log",
  "lsp-server",
@@ -2803,7 +2814,7 @@ dependencies = [
 [[package]]
 name = "tree-sitter-ditto"
 version = "0.0.1"
-source = "git+https://github.com/ditto-lang/tree-sitter-ditto?rev=06f09cc4a923fa656381949a0952df863bbc3170#06f09cc4a923fa656381949a0952df863bbc3170"
+source = "git+https://github.com/ditto-lang/tree-sitter-ditto?rev=9522591cb90540632d758a0e589e43b47a43b4d7#9522591cb90540632d758a0e589e43b47a43b4d7"
 dependencies = [
  "cc",
  "tree-sitter",

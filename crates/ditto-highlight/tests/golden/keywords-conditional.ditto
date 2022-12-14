@@ -1,0 +1,9 @@
+module Test exports (..);
+
+
+bool = fn (b, x, y) -> if b then x else y;
+
+unwrap = fn (wrapped) ->
+    match wrapped with
+    | Wrapped(x) -> x
+    end;

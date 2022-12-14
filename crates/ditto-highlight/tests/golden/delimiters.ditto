@@ -1,0 +1,9 @@
+module Test exports (..);
+
+
+fives = [5, 5, 5];
+
+type ABC =
+    | A
+    | B
+    | C;

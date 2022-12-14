@@ -1,0 +1,10 @@
+<KeywordImport>module</KeywordImport> <Namespace>Test</Namespace> <KeywordImport>exports</KeywordImport> <Bracket>(</Bracket><Symbol>..</Symbol><Bracket>)</Bracket><Delimiter>;</Delimiter>
+
+
+<Keyword>type</Keyword> <Type>Maybe</Type><Bracket>(</Bracket><TypeVariable>a</TypeVariable><Bracket>)</Bracket> =
+    <Delimiter>|</Delimiter> <EnumMember>Nothing</EnumMember>
+    <Delimiter>|</Delimiter> <EnumMember>Just</EnumMember><Bracket>(</Bracket><TypeVariable>a</TypeVariable><Bracket>)</Bracket><Delimiter>;</Delimiter>
+
+<TopLevelName>id</TopLevelName> = <Keyword>fn</Keyword> <Bracket>(</Bracket><Variable>a</Variable><Operator>:</Operator> <TypeVariable>a</TypeVariable><Bracket>)</Bracket><Operator>:</Operator> <TypeVariable>a</TypeVariable> <Operator>-></Operator> <Variable>a</Variable><Delimiter>;</Delimiter>
+
+<TopLevelName>update_foo</TopLevelName> = <Keyword>fn</Keyword> <Bracket>(</Bracket><Variable>r</Variable><Operator>:</Operator> <Bracket>{</Bracket> <TypeVariable>r</TypeVariable> <Delimiter>|</Delimiter> foo<Operator>:</Operator> <Type>Int</Type> <Bracket>}</Bracket><Bracket>)</Bracket> <Operator>-></Operator> <Bracket>{</Bracket> <Variable>r</Variable> <Delimiter>|</Delimiter> foo = <Int>5</Int> <Bracket>}</Bracket><Delimiter>;</Delimiter>

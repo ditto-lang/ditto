@@ -1,0 +1,9 @@
+<KeywordImport>module</KeywordImport> <Namespace>Test</Namespace> <KeywordImport>exports</KeywordImport> <Bracket>(</Bracket><Symbol>..</Symbol><Bracket>)</Bracket><Delimiter>;</Delimiter>
+
+
+<TopLevelName>bool</TopLevelName> = <Keyword>fn</Keyword> <Bracket>(</Bracket><Variable>b</Variable><Delimiter>,</Delimiter> <Variable>x</Variable><Delimiter>,</Delimiter> <Variable>y</Variable><Bracket>)</Bracket> <Operator>-></Operator> <KeywordConditional>if</KeywordConditional> <Variable>b</Variable> <KeywordConditional>then</KeywordConditional> <Variable>x</Variable> <KeywordConditional>else</KeywordConditional> <Variable>y</Variable><Delimiter>;</Delimiter>
+
+<TopLevelName>unwrap</TopLevelName> = <Keyword>fn</Keyword> <Bracket>(</Bracket><Variable>wrapped</Variable><Bracket>)</Bracket> <Operator>-></Operator>
+    <KeywordConditional>match</KeywordConditional> <Variable>wrapped</Variable> <KeywordConditional>with</KeywordConditional>
+    <Delimiter>|</Delimiter> <EnumMember>Wrapped</EnumMember><Bracket>(</Bracket><Variable>x</Variable><Bracket>)</Bracket> <Operator>-></Operator> <Variable>x</Variable>
+    <KeywordConditional>end</KeywordConditional><Delimiter>;</Delimiter>

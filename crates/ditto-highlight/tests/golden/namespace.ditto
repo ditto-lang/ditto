@@ -1,0 +1,8 @@
+module Test exports (..);
+
+import Some.Module as SM;
+
+
+id = SM.identity;
+
+unwrap = fn (SM.Pair(x, y)) -> [x, y, SM.z];

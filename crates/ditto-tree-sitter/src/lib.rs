@@ -1,5 +1,7 @@
 pub use tree_sitter::*;
-pub use tree_sitter_ditto::language as ditto_language;
+pub use tree_sitter_ditto::{
+    language as ditto_language, HIGHLIGHTS_QUERY as DITTO_HIGHLIGHTS_QUERY,
+};
 
 pub fn init_parser() -> tree_sitter::Parser {
     try_init_parser().unwrap_or_else(|lang_err| {
