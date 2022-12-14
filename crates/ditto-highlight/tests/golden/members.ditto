@@ -1,0 +1,14 @@
+module Test exports (..);
+
+
+type Maybe(a) =
+    | Nothing
+    | Just(a);
+
+nothing = Nothing;
+
+is_just = fn (mb) ->
+    match mb with
+    | Maybe.Just(_) -> true
+    | Nothing -> false
+    end;

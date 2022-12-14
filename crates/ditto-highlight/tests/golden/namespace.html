@@ -1,0 +1,8 @@
+<KeywordImport>module</KeywordImport> <Namespace>Test</Namespace> <KeywordImport>exports</KeywordImport> <Bracket>(</Bracket><Symbol>..</Symbol><Bracket>)</Bracket><Delimiter>;</Delimiter>
+
+<KeywordImport>import</KeywordImport> <Namespace>Some.Module</Namespace> <KeywordImport>as</KeywordImport> <Namespace>SM</Namespace><Delimiter>;</Delimiter>
+
+
+<TopLevelName>id</TopLevelName> = <Namespace>SM.</Namespace><Variable>identity</Variable><Delimiter>;</Delimiter>
+
+<TopLevelName>unwrap</TopLevelName> = <Keyword>fn</Keyword> <Bracket>(</Bracket><Namespace>SM.</Namespace><EnumMember>Pair</EnumMember><Bracket>(</Bracket><Variable>x</Variable><Delimiter>,</Delimiter> <Variable>y</Variable><Bracket>)</Bracket><Bracket>)</Bracket> <Operator>-></Operator> <Bracket>[</Bracket><Variable>x</Variable><Delimiter>,</Delimiter> <Variable>y</Variable><Delimiter>,</Delimiter> <Namespace>SM.</Namespace><Variable>z</Variable><Bracket>]</Bracket><Delimiter>;</Delimiter>

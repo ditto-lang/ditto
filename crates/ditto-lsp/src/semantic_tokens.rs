@@ -34,9 +34,42 @@ enum TokenType {
     Special = 8,
 }
 
+impl std::convert::TryFrom<ditto_highlight::TokenType> for TokenType {
+    type Error = ditto_highlight::TokenType;
+    fn try_from(tt: ditto_highlight::TokenType) -> Result<Self, Self::Error> {
+        match tt {
+            ditto_highlight::TokenType::Comment => Ok(Self::Comment),
+            ditto_highlight::TokenType::Bracket => Err(tt),
+            ditto_highlight::TokenType::Delimiter => Err(tt),
+            ditto_highlight::TokenType::KeywordImport => Ok(Self::Keyword),
+            ditto_highlight::TokenType::Keyword => Ok(Self::Keyword),
+            ditto_highlight::TokenType::KeywordReturn => Ok(Self::Keyword),
+            ditto_highlight::TokenType::KeywordConditional => Ok(Self::Keyword),
+            ditto_highlight::TokenType::Symbol => Ok(Self::Special),
+            ditto_highlight::TokenType::Namespace => Ok(Self::Namespace),
+            ditto_highlight::TokenType::Type => Ok(Self::Type),
+            ditto_highlight::TokenType::TypeVariable => Ok(Self::TypeVariable),
+            ditto_highlight::TokenType::EnumMember => Ok(Self::Constructor),
+            ditto_highlight::TokenType::TopLevelName => Err(tt),
+            ditto_highlight::TokenType::Variable => Err(tt),
+            ditto_highlight::TokenType::Operator => Err(tt),
+            ditto_highlight::TokenType::String => Ok(Self::String),
+            ditto_highlight::TokenType::Int => Ok(Self::Number),
+            ditto_highlight::TokenType::Float => Ok(Self::Number),
+            ditto_highlight::TokenType::Boolean => Err(tt),
+            ditto_highlight::TokenType::Builtin => Err(tt),
+        }
+    }
+}
+
 pub fn get_tokens(tree: &tree_sitter::Tree, source: &str) -> SemanticTokens {
+    let tokens = ditto_highlight::get_tokens(source, tree, &ditto_highlight::init_query());
     let mut tokens_builder = TokensBuilder::new();
-    tokens_builder.build(tree, source.as_bytes());
+    for token in tokens {
+        if let Ok(token_type) = token.token_type.try_into() {
+            tokens_builder.push_node(token.node, token_type)
+        }
+    }
     SemanticTokens {
         result_id: None,
         data: tokens_builder.into_tokens(),
@@ -92,102 +125,5 @@ impl TokensBuilder {
             current_col = node.start_col;
         }
         tokens
-    }
-
-    fn build(&mut self, tree: &tree_sitter::Tree, source: &[u8]) {
-        // NOTE: could just expose the highlights.scm in the tree-sitter-ditto
-        // crate but relying on those indices feels brittle/wrong...
-        static QUERY: &str = r#"
-            ; 0
-            (comment) @comment
-
-            ; 1
-            [
-              "if"
-              "then"
-              "else"
-              "module"
-              "exports"
-              "import"
-              "as"
-              "type"
-              "foreign"
-              "fn"
-              "match"
-              "with"
-              "end"
-              "do"
-              "return"
-              "alias"
-              "let"
-              "in"
-            ] @keyword
-
-            ; 2, 3, 4
-            (module_name) @namespace
-            (module_import_alias) @namespace
-            (qualifier) @namespace
-
-            ; 5, 6, 7, 8
-            (exposing_type_name) @type
-            (type_declaration_name) @type
-            (type_constructor) @type
-            (type_function ("->" @type))
-
-            ; 9, 10
-            (type_variable) @type_variable
-            (type_declaration_variable) @type_variable
-            (type_open_record_row_variable) @type_variable
-
-            ; 11, 12
-            (type_declaration_constructor_name) @constructor
-            (expression_constructor_proper_name) @constructor
-
-            ; 13
-            (expression_string) @string
-
-            ; 14, 15
-            (expression_int) @number
-            (expression_float) @number
-
-            ; 16, 17
-            (expression_true) @boolean
-            (expression_false) @boolean
-
-            ; 18
-            (expression_unit) @builtin
-
-            ; 19
-            ("..") @special
-            
-        "#;
-        let mut query_cursor = tree_sitter::QueryCursor::new();
-        let query = tree_sitter::Query::new(tree_sitter::ditto_language(), QUERY).unwrap();
-        let matches = query_cursor.matches(&query, tree.root_node(), source);
-        for query_match in matches {
-            let token_type = match query_match.pattern_index {
-                0 => Some(TokenType::Comment),
-                1 => Some(TokenType::Keyword),
-                2 | 3 | 4 => Some(TokenType::Namespace),
-                5 | 6 | 7 | 8 => Some(TokenType::Type),
-                9 | 10 => Some(TokenType::TypeVariable),
-                11 | 12 => Some(TokenType::Constructor),
-                13 => Some(TokenType::String),
-                14 | 15 => Some(TokenType::Number),
-                // no boolean token type?
-                // https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide#standard-token-types-and-modifiers
-                //
-                // Might be worth "contributing" one?
-                // https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide#custom-token-types-and-modifiers
-                16 | 17 | 18 => Some(TokenType::Keyword),
-                19 => Some(TokenType::Special),
-                _ => None,
-            };
-            if let Some(token_type) = token_type {
-                for capture in query_match.captures {
-                    self.push_node(capture.node, token_type)
-                }
-            }
-        }
     }
 }

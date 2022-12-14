@@ -1,0 +1,24 @@
+<KeywordImport>module</KeywordImport> <Namespace>Test</Namespace> <KeywordImport>exports</KeywordImport> <Bracket>(</Bracket><Symbol>..</Symbol><Bracket>)</Bracket><Delimiter>;</Delimiter>
+
+
+<Keyword>type</Keyword> <Type>Foo</Type> = <EnumMember>Foo</EnumMember><Delimiter>;</Delimiter>
+
+<Keyword>type</Keyword> <Keyword>alias</Keyword> <Type>F</Type> = <Type>Foo</Type><Delimiter>;</Delimiter>
+
+<Keyword>foreign</Keyword> is_eq_impl<Operator>:</Operator> <Bracket>(</Bracket><Type>Int</Type><Delimiter>,</Delimiter> <Type>Int</Type><Bracket>)</Bracket> <Type>-></Type> <Type>Bool</Type><Delimiter>;</Delimiter>
+
+<TopLevelName>identity</TopLevelName> = <Keyword>fn</Keyword> <Bracket>(</Bracket><Variable>a</Variable><Bracket>)</Bracket> <Operator>-></Operator> <Variable>a</Variable><Delimiter>;</Delimiter>
+
+<TopLevelName>main</TopLevelName> = <Keyword>do</Keyword> <Bracket>{</Bracket>
+    <KeywordReturn>return</KeywordReturn> <Builtin>unit</Builtin>
+<Bracket>}</Bracket><Delimiter>;</Delimiter>
+
+<TopLevelName>fives</TopLevelName> =
+    <Keyword>let</Keyword>
+        <Variable>five</Variable> = <Int>5</Int><Delimiter>;</Delimiter>
+    <Keyword>in</Keyword>
+    <Bracket>[</Bracket><Variable>five</Variable><Delimiter>,</Delimiter> <Variable>five</Variable><Delimiter>,</Delimiter> <Variable>five</Variable><Bracket>]</Bracket><Delimiter>;</Delimiter>
+
+<TopLevelName>main</TopLevelName> = <Keyword>do</Keyword> <Bracket>{</Bracket>
+    <KeywordReturn>return</KeywordReturn> <Builtin>unit</Builtin>
+<Bracket>}</Bracket><Delimiter>;</Delimiter>

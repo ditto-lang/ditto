@@ -1,0 +1,11 @@
+module Test exports (..);
+
+
+literals = [
+    "string",
+    5,
+    5.0,
+    true,
+    false,
+    unit,
+];

@@ -1,0 +1,6 @@
+module Test exports (
+    five,
+);
+
+
+five = 5;

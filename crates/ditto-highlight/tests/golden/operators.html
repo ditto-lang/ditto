@@ -1,0 +1,18 @@
+<KeywordImport>module</KeywordImport> <Namespace>Test</Namespace> <KeywordImport>exports</KeywordImport> <Bracket>(</Bracket><Symbol>..</Symbol><Bracket>)</Bracket><Delimiter>;</Delimiter>
+
+
+<TopLevelName>identity</TopLevelName> = <Keyword>fn</Keyword> <Bracket>(</Bracket><Variable>a</Variable><Operator>:</Operator> <TypeVariable>a</TypeVariable><Bracket>)</Bracket> <Operator>-></Operator> <Variable>a</Variable><Delimiter>;</Delimiter>
+
+<TopLevelName>is_just</TopLevelName> = <Keyword>fn</Keyword> <Bracket>(</Bracket><Variable>mb</Variable><Operator>:</Operator> <Type>Maybe</Type><Bracket>(</Bracket><TypeVariable>a</TypeVariable><Bracket>)</Bracket><Bracket>)</Bracket><Operator>:</Operator> <Type>Bool</Type> <Operator>-></Operator>
+    <KeywordConditional>match</KeywordConditional> <Variable>mb</Variable> <KeywordConditional>with</KeywordConditional>
+    <Delimiter>|</Delimiter> <EnumMember>Just</EnumMember><Bracket>(</Bracket>_<Bracket>)</Bracket> <Operator>-></Operator> <Boolean>true</Boolean>
+    <Delimiter>|</Delimiter> _ <Operator>-></Operator> <Boolean>false</Boolean>
+    <KeywordConditional>end</KeywordConditional><Delimiter>;</Delimiter>
+
+<TopLevelName>main</TopLevelName> = <Keyword>do</Keyword> <Bracket>{</Bracket>
+    five <Operator><-</Operator> <Variable>read_five</Variable><Delimiter>;</Delimiter>
+    <Keyword>let</Keyword> <Variable>another_five</Variable><Operator>:</Operator> <Type>Int</Type> =
+        <Variable>five</Variable>
+        <Operator>|></Operator> <Variable>identity</Variable><Delimiter>;</Delimiter>
+    <KeywordReturn>return</KeywordReturn> <Builtin>unit</Builtin>
+<Bracket>}</Bracket><Delimiter>;</Delimiter>

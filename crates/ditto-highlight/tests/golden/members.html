@@ -1,0 +1,14 @@
+<KeywordImport>module</KeywordImport> <Namespace>Test</Namespace> <KeywordImport>exports</KeywordImport> <Bracket>(</Bracket><Symbol>..</Symbol><Bracket>)</Bracket><Delimiter>;</Delimiter>
+
+
+<Keyword>type</Keyword> <Type>Maybe</Type><Bracket>(</Bracket><TypeVariable>a</TypeVariable><Bracket>)</Bracket> =
+    <Delimiter>|</Delimiter> <EnumMember>Nothing</EnumMember>
+    <Delimiter>|</Delimiter> <EnumMember>Just</EnumMember><Bracket>(</Bracket><TypeVariable>a</TypeVariable><Bracket>)</Bracket><Delimiter>;</Delimiter>
+
+<TopLevelName>nothing</TopLevelName> = <EnumMember>Nothing</EnumMember><Delimiter>;</Delimiter>
+
+<TopLevelName>is_just</TopLevelName> = <Keyword>fn</Keyword> <Bracket>(</Bracket><Variable>mb</Variable><Bracket>)</Bracket> <Operator>-></Operator>
+    <KeywordConditional>match</KeywordConditional> <Variable>mb</Variable> <KeywordConditional>with</KeywordConditional>
+    <Delimiter>|</Delimiter> <Namespace>Maybe.</Namespace><EnumMember>Just</EnumMember><Bracket>(</Bracket>_<Bracket>)</Bracket> <Operator>-></Operator> <Boolean>true</Boolean>
+    <Delimiter>|</Delimiter> <EnumMember>Nothing</EnumMember> <Operator>-></Operator> <Boolean>false</Boolean>
+    <KeywordConditional>end</KeywordConditional><Delimiter>;</Delimiter>

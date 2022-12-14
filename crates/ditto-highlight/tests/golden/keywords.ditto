@@ -1,0 +1,24 @@
+module Test exports (..);
+
+
+type Foo = Foo;
+
+type alias F = Foo;
+
+foreign is_eq_impl: (Int, Int) -> Bool;
+
+identity = fn (a) -> a;
+
+main = do {
+    return unit
+};
+
+fives =
+    let
+        five = 5;
+    in
+    [five, five, five];
+
+main = do {
+    return unit
+};
