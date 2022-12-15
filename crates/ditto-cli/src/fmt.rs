@@ -110,13 +110,22 @@ pub fn run(cmd: &mut Command, matches: &ArgMatches) -> Result<()> {
 }
 
 fn fmt_inplace<P: AsRef<Path>>(path: P) -> Result<()> {
-    let formatted = fmt_path(&path)?.0;
-    fs::write(&path, formatted)
-        .into_diagnostic()
-        .wrap_err(format!(
-            "error writing formatted code to {}",
-            path.as_ref().to_string_lossy()
-        ))
+    let (formatted, unformatted) = fmt_path(&path)?;
+
+    // For treefmt compatibility:
+    //
+    //     "If, and only if, a file format has changed, the formatter MUST write the new content in place of the original file."
+    //
+    // https://github.com/numtide/treefmt/blob/897bf115b136eaa67fa79051465bc5c37d298a0e/docs/formatters-spec.md
+    if formatted != unformatted {
+        return fs::write(&path, formatted)
+            .into_diagnostic()
+            .wrap_err(format!(
+                "error writing formatted code to {}",
+                path.as_ref().to_string_lossy()
+            ));
+    }
+    Ok(())
 }
 
 fn fmt_path<P: AsRef<Path>>(path: P) -> Result<(String, String)> {
