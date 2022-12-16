@@ -21,6 +21,8 @@ select = fn (c, x, y) -> if c then x else y;
 -- REVIEW `return undefined` is redundant
 denied = fn (a) -> unit;
 
+empty_array = [];
+
 fives = [
   5,
   five,

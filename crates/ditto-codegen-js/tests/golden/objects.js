@@ -17,7 +17,9 @@ const foo = mk_has_foo(true)["foo"];
 function get_foo(x) {
   return x["foo"];
 }
-const very_nested = { a: { b: { c: { d: [] } } } };
+const very_nested = {
+  a: { b: { c: { d: /** @type {readonly any[]} */ [] } } },
+};
 const d = very_nested["a"]["b"]["c"]["d"];
 const just_object_things = { yep: true, huh: undefined, why: () => ({}) };
 const empty_object = {};

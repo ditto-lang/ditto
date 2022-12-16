@@ -1,3 +1,4 @@
+const empty_array = /** @type {readonly any[]} */ [];
 function denied(a) {
   return;
 }

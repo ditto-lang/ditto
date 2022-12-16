@@ -190,6 +190,9 @@ impl Render for Expression {
                 accum.push(':');
                 false_clause.render(accum);
             }
+            Self::Array(expressions) if expressions.is_empty() => {
+                accum.push_str("/** @type {readonly any[]} */([])");
+            }
             Self::Array(expressions) => {
                 accum.push('[');
                 render_comma_sep(expressions, accum);
