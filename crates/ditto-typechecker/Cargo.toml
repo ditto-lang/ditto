@@ -1,0 +1,39 @@
+[package]
+name = "ditto-typechecker"
+version = "0.0.1"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[lib]
+doctest = false
+
+[dependencies]
+ditto-cst = { path = "../ditto-cst" }
+ditto-ast = { path = "../ditto-ast" }
+non-empty-vec = "0.2"
+smallvec = "1.10"
+halfbrown = "0.1"
+tinyset = "0.4"
+smol_str = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+miette = { version = "5.5", features = ["fancy"] }
+thiserror = "1.0"
+
+# lazy_static = "1.4"
+# simsearch = "0.2"
+# indexmap = "1.9"
+# serde_json = "1.0"
+
+# [dev-dependencies]
+# similar-asserts = "1.4"
+# serde_json = "1.0"
+# trycmd = "0.14"
+# datatest-stable = "0.1"
+
+# [[test]]
+# name = "golden_warning_tests"
+# harness = false
+
+# [[test]]
+# name = "golden_error_tests"
+# harness = false

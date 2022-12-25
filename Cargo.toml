@@ -2,6 +2,7 @@
 members = [
   "crates/ditto-cst",
   "crates/ditto-ast",
+  "crates/ditto-typechecker",
   "crates/ditto-checker",
   "crates/ditto-config",
   "crates/ditto-codegen-js",
