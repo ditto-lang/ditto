@@ -81,7 +81,7 @@ pkgs.mkShell {
     rust-analyzer
     pkgs.cargo-nextest
     cargo-llvm-cov
-    #pkgs.cargo-watch <-- currently broken on MacOS https://github.com/NixOS/nixpkgs/issues/189687
+    pkgs.cargo-watch
     pkgs.cargo-udeps
     pkgs.cargo-audit
     pkgs.cargo-outdated
