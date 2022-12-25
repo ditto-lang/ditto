@@ -37,3 +37,12 @@ chained =
             nah
     else
         no;
+
+multi_line_condition =
+    if
+        --
+        foo
+    then
+        unit
+    else
+        unit;

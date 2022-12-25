@@ -90,11 +90,51 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
                     let mut items = PrintItems::new();
                     items.extend(gen_if_keyword(if_keyword.clone()));
                     items.push_info(start_ln);
-                    items.extend(space());
-                    items.extend(gen_expression(condition.clone(), true));
-                    items.extend(space());
-                    items.extend(gen_then_keyword(then_keyword.clone()));
-                    items.push_signal(Signal::NewLine);
+                    items.extend({
+                        let start_ln = LineNumber::new("start");
+                        let end_ln = LineNumber::new("end");
+
+                        let force_use_new_lines = if_keyword.0.has_trailing_comment()
+                            || then_keyword.0.has_leading_comments();
+
+                        let is_multiple_lines =
+                            Rc::new(move |ctx: &mut ConditionResolverContext| -> Option<bool> {
+                                if force_use_new_lines {
+                                    return Some(true);
+                                }
+                                condition_helpers::is_multiple_lines(ctx, start_ln, end_ln)
+                            });
+
+                        let condition = {
+                            let mut items = PrintItems::new();
+                            items.push_info(start_ln);
+                            items.extend(gen_expression(condition.clone(), true));
+                            items.push_info(end_ln);
+                            items.into_rc_path()
+                        };
+
+                        conditions::if_true_or(
+                            "multiLineConditionIfMultipleLines",
+                            is_multiple_lines,
+                            {
+                                let mut items: PrintItems = Signal::NewLine.into();
+                                items.extend(ir_helpers::with_indent(condition.into()));
+                                items.push_signal(Signal::NewLine);
+                                items.extend(gen_then_keyword(then_keyword.clone()));
+                                items.push_signal(Signal::NewLine);
+                                items
+                            },
+                            {
+                                let mut items = space();
+                                items.extend(condition.into());
+                                items.extend(space());
+                                items.extend(gen_then_keyword(then_keyword.clone()));
+                                items.push_signal(Signal::NewLine);
+                                items
+                            },
+                        )
+                        .into()
+                    });
                     items.extend(ir_helpers::with_indent(gen_expression(
                         true_clause.clone(),
                         true,
@@ -653,9 +693,9 @@ mod tests {
     fn it_formats_conditionals() {
         assert_fmt!("if true then 5 else 5");
         assert_fmt!("-- comment\nif true then 5 else 5");
-        assert_fmt!("if  -- comment\n true then\n\t5\nelse\n\t5");
+        assert_fmt!("if  -- comment\n\ttrue\nthen\n\t5\nelse\n\t5");
         assert_fmt!("if true then\n\t--comment\n\t5\nelse\n\t5");
-        assert_fmt!("if  -- comment\n true then\n\t5\nelse\n\t5");
+        assert_fmt!("if  -- comment\n\ttrue\nthen\n\t5\nelse\n\t5");
         assert_fmt!(
             "if true then loooooooooooooooooong else 5",
             "if true then\n\tloooooooooooooooooong\nelse\n\t5",
