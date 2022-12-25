@@ -12,7 +12,7 @@ let
       url = "https://github.com/nix-community/fenix/archive/${fenixRev}.tar.gz";
       sha256 = "10kjfa00fs98cvs137x5kr5dmfblmkz8ya5ribb5l0dnfnpgvf5s";
     })
-    { };
+    { inherit pkgs; };
 
   rustToolchain = fenixPackages.fromToolchainFile {
     file = ./rust-toolchain.toml;
@@ -107,4 +107,5 @@ pkgs.mkShell {
     pkgs.libiconv
     pkgs.darwin.apple_sdk.frameworks.CoreServices
   ]));
+  DITTO_NINJA = "${pkgs.ninja}/bin/ninja";
 }
