@@ -258,12 +258,14 @@ fn typecheck_cyclic_value_declarations(
                 values: env_values.clone(),
                 constructors: env.constructors.clone(),
             };
+
+            let env_type = guess_type(&expr, &mut supply);
             env_values.insert(
                 unqualified(name.clone()),
                 EnvValue::ModuleValue {
                     span,
                     // REVIEW we can probably shortcut this generalization logic?
-                    variable_scheme: env.generalize(supply.fresh_type()),
+                    variable_scheme: env.generalize(env_type),
                     variable: name.clone(),
                 },
             );
@@ -312,13 +314,44 @@ fn typecheck_cyclic_value_declarations(
             },
         ));
     }
-    Ok((
+    return Ok((
         module_values,
         value_references,
         constructor_references,
         type_references,
         warnings,
-    ))
+    ));
+
+    // When we initially add a cyclic/recursively defined value to the typing environment we need to
+    // make an informed guess as to what it's type is.
+    //
+    // This prevents something like the following from type-checking:
+    //
+    //    spin = fn () -> spin(2);
+    //
+    fn guess_type(expr: &pre_ast::Expression, supply: &mut Supply) -> ditto_ast::Type {
+        match expr {
+            pre_ast::Expression::Function {
+                binders,
+                return_type_annotation,
+                ..
+            } => ditto_ast::Type::Function {
+                parameters: binders
+                    .iter()
+                    .map(|(_pat, type_ann)| {
+                        type_ann.to_owned().unwrap_or_else(|| supply.fresh_type())
+                    })
+                    .collect(),
+                return_type: Box::new(
+                    return_type_annotation
+                        .to_owned()
+                        .unwrap_or_else(|| supply.fresh_type()),
+                ),
+            },
+
+            _ => supply.fresh_type(),
+        }
+    }
 }
 
 fn typecheck_value_declaration(
