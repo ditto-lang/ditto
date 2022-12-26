@@ -108,4 +108,7 @@ pkgs.mkShell {
     pkgs.darwin.apple_sdk.frameworks.CoreServices
   ]));
   DITTO_NINJA = "${pkgs.ninja}/bin/ninja";
+
+  # less output from `cargo nextest`
+  NEXTEST_STATUS_LEVEL = "retry";
 }
