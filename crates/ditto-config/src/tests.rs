@@ -86,6 +86,11 @@ mod successes {
 
             [package-set.packages] 
             foo = { path = "../test" }
+
+            [package-set.packages.bar]
+            github = { owner = "some-owner", repo = "some-repo"}
+            revision = "some-rev"
+            sha256 = "some-digest"
         "#
         );
     }

@@ -73,5 +73,22 @@ pub enum PackageSpec {
         /// Path to the local package.
         path: PathBuf,
     },
-    // TODO Url
+    /// A GitHub repo.
+    Github {
+        /// The owner and repo names.
+        github: GithubPackageSpec,
+        /// The revision to use.
+        revision: String,
+        /// The hash of the repo zip.
+        sha256: String,
+    },
+}
+
+/// Description of a Github repository.
+#[derive(Clone, Hash, Debug, Deserialize, Serialize, PartialEq, Eq)]
+pub struct GithubPackageSpec {
+    /// The user or organisation name.
+    pub owner: String,
+    /// The repository name.
+    pub repo: String,
 }
