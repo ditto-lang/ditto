@@ -168,6 +168,53 @@
             "start_offset": 91,
             "end_offset": 126
           },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              ],
+              "return_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Maybe"
+                          ]
+                        ],
+                        "value": "Maybe"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Maybe"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "binders": [
             [
               {

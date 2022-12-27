@@ -295,6 +295,142 @@
             "start_offset": 85,
             "end_offset": 188
           },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "PrimConstructor",
+                      "data": "Array"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Constructor",
+                        "data": {
+                          "constructor_kind": "Type",
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "Attr"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "Attr"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "PrimConstructor",
+                      "data": "Array"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Call",
+                        "data": {
+                          "function": {
+                            "type": "Constructor",
+                            "data": {
+                              "constructor_kind": {
+                                "Function": {
+                                  "parameters": [
+                                    {
+                                      "Variable": 1
+                                    }
+                                  ]
+                                }
+                              },
+                              "canonical_value": {
+                                "module_name": [
+                                  null,
+                                  [
+                                    "Test"
+                                  ]
+                                ],
+                                "value": "Html"
+                              },
+                              "source_value": {
+                                "module_name": null,
+                                "value": "Html"
+                              }
+                            }
+                          },
+                          "arguments": [
+                            {
+                              "type": "Variable",
+                              "data": {
+                                "variable_kind": {
+                                  "Variable": 1
+                                },
+                                "var": 0,
+                                "source_name": "msg"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            {
+                              "Variable": 1
+                            }
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "Html"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Html"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": {
+                          "Variable": 1
+                        },
+                        "var": 0,
+                        "source_name": "msg"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "binders": [
             [
               {

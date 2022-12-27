@@ -343,28 +343,8 @@
                   "end_offset": 179
                 },
                 "variable_type": {
-                  "type": "ConstructorAlias",
-                  "data": {
-                    "constructor_kind": "Type",
-                    "canonical_value": {
-                      "module_name": [
-                        null,
-                        [
-                          "Test"
-                        ]
-                      ],
-                      "value": "Foo"
-                    },
-                    "source_value": {
-                      "module_name": null,
-                      "value": "Foo"
-                    },
-                    "alias_variables": [],
-                    "aliased_type": {
-                      "type": "PrimConstructor",
-                      "data": "Bool"
-                    }
-                  }
+                  "type": "PrimConstructor",
+                  "data": "Bool"
                 },
                 "variable": "foo"
               }
@@ -377,28 +357,8 @@
                   "end_offset": 184
                 },
                 "variable_type": {
-                  "type": "ConstructorAlias",
-                  "data": {
-                    "constructor_kind": "Type",
-                    "canonical_value": {
-                      "module_name": [
-                        null,
-                        [
-                          "Test"
-                        ]
-                      ],
-                      "value": "Bar"
-                    },
-                    "source_value": {
-                      "module_name": null,
-                      "value": "Bar"
-                    },
-                    "alias_variables": [],
-                    "aliased_type": {
-                      "type": "PrimConstructor",
-                      "data": "Bool"
-                    }
-                  }
+                  "type": "PrimConstructor",
+                  "data": "Bool"
                 },
                 "variable": "bar"
               }
@@ -411,28 +371,8 @@
                   "end_offset": 189
                 },
                 "variable_type": {
-                  "type": "ConstructorAlias",
-                  "data": {
-                    "constructor_kind": "Type",
-                    "canonical_value": {
-                      "module_name": [
-                        null,
-                        [
-                          "Test"
-                        ]
-                      ],
-                      "value": "Baz"
-                    },
-                    "source_value": {
-                      "module_name": null,
-                      "value": "Baz"
-                    },
-                    "alias_variables": [],
-                    "aliased_type": {
-                      "type": "PrimConstructor",
-                      "data": "Bool"
-                    }
-                  }
+                  "type": "PrimConstructor",
+                  "data": "Bool"
                 },
                 "variable": "baz"
               }

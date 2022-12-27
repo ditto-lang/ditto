@@ -74,7 +74,7 @@
               "type": "Call",
               "data": {
                 "function": {
-                  "type": "Constructor",
+                  "type": "ConstructorAlias",
                   "data": {
                     "constructor_kind": {
                       "Function": {
@@ -85,14 +85,60 @@
                     },
                     "canonical_value": {
                       "module_name": [
-                        "base",
+                        null,
                         [
-                          "Maybe"
+                          "Test"
                         ]
                       ],
-                      "value": "Maybe"
+                      "value": "Option"
                     },
-                    "source_value": null
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Option"
+                    },
+                    "alias_variables": [
+                      0
+                    ],
+                    "aliased_type": {
+                      "type": "Call",
+                      "data": {
+                        "function": {
+                          "type": "Constructor",
+                          "data": {
+                            "constructor_kind": {
+                              "Function": {
+                                "parameters": [
+                                  "Type"
+                                ]
+                              }
+                            },
+                            "canonical_value": {
+                              "module_name": [
+                                "base",
+                                [
+                                  "Maybe"
+                                ]
+                              ],
+                              "value": "Maybe"
+                            },
+                            "source_value": {
+                              "module_name": null,
+                              "value": "Maybe"
+                            }
+                          }
+                        },
+                        "arguments": [
+                          {
+                            "type": "Variable",
+                            "data": {
+                              "variable_kind": "Type",
+                              "var": 0,
+                              "source_name": "a"
+                            }
+                          }
+                        ]
+                      }
+                    }
                   }
                 },
                 "arguments": [
@@ -244,6 +290,95 @@
             "start_offset": 144,
             "end_offset": 177
           },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [],
+              "return_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "ConstructorAlias",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "Option"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Option"
+                      },
+                      "alias_variables": [
+                        0
+                      ],
+                      "aliased_type": {
+                        "type": "Call",
+                        "data": {
+                          "function": {
+                            "type": "Constructor",
+                            "data": {
+                              "constructor_kind": {
+                                "Function": {
+                                  "parameters": [
+                                    "Type"
+                                  ]
+                                }
+                              },
+                              "canonical_value": {
+                                "module_name": [
+                                  "base",
+                                  [
+                                    "Maybe"
+                                  ]
+                                ],
+                                "value": "Maybe"
+                              },
+                              "source_value": {
+                                "module_name": null,
+                                "value": "Maybe"
+                              }
+                            }
+                          },
+                          "arguments": [
+                            {
+                              "type": "Variable",
+                              "data": {
+                                "variable_kind": "Type",
+                                "var": 0,
+                                "source_name": "a"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "binders": [],
           "body": {
             "expression": "ImportedConstructor",
@@ -256,7 +391,7 @@
                 "type": "Call",
                 "data": {
                   "function": {
-                    "type": "Constructor",
+                    "type": "ConstructorAlias",
                     "data": {
                       "constructor_kind": {
                         "Function": {
@@ -267,14 +402,60 @@
                       },
                       "canonical_value": {
                         "module_name": [
-                          "base",
+                          null,
                           [
-                            "Maybe"
+                            "Test"
                           ]
                         ],
-                        "value": "Maybe"
+                        "value": "Option"
                       },
-                      "source_value": null
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Option"
+                      },
+                      "alias_variables": [
+                        0
+                      ],
+                      "aliased_type": {
+                        "type": "Call",
+                        "data": {
+                          "function": {
+                            "type": "Constructor",
+                            "data": {
+                              "constructor_kind": {
+                                "Function": {
+                                  "parameters": [
+                                    "Type"
+                                  ]
+                                }
+                              },
+                              "canonical_value": {
+                                "module_name": [
+                                  "base",
+                                  [
+                                    "Maybe"
+                                  ]
+                                ],
+                                "value": "Maybe"
+                              },
+                              "source_value": {
+                                "module_name": null,
+                                "value": "Maybe"
+                              }
+                            }
+                          },
+                          "arguments": [
+                            {
+                              "type": "Variable",
+                              "data": {
+                                "variable_kind": "Type",
+                                "var": 0,
+                                "source_name": "a"
+                              }
+                            }
+                          ]
+                        }
+                      }
                     }
                   },
                   "arguments": [
@@ -315,6 +496,58 @@
           "span": {
             "start_offset": 98,
             "end_offset": 135
+          },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": "Type",
+                    "var": 0,
+                    "source_name": "a"
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          "base",
+                          [
+                            "Maybe"
+                          ]
+                        ],
+                        "value": "Maybe"
+                      },
+                      "source_value": null
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "binders": [
             [

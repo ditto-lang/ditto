@@ -1,6 +1,5 @@
 use crate::{
-    FullyQualifiedName, FullyQualifiedProperName, Kind, Name, PrimType, ProperName, Span, Type,
-    UnusedName,
+    FullyQualifiedName, FullyQualifiedProperName, Name, ProperName, Span, Type, UnusedName,
 };
 use indexmap::IndexMap;
 use non_empty_vec::NonEmpty;
@@ -18,6 +17,9 @@ pub enum Expression {
     Function {
         /// The source span for this expression.
         span: Span,
+
+        /// type of this function expression.
+        function_type: Type,
 
         /// The arguments to be bound and added to the scope of `body`.
         binders: Vec<(Pattern, Type)>, // REVIEW should this be a HashSet?
@@ -139,6 +141,11 @@ pub enum Expression {
         /// The source span for this expression.
         span: Span,
 
+        /// The type of this effect.
+        ///
+        /// Generally this will be `PrimType::Effect`, but it might have been aliased.
+        effect_type: Type,
+
         /// The return type of this effect.
         return_type: Type,
 
@@ -161,6 +168,7 @@ pub enum Expression {
         /// `"string"`
         value: String,
         /// The type of this string literal.
+        ///
         /// Generally this will be `PrimType::String`, but it might have been aliased.
         value_type: Type,
     },
@@ -236,6 +244,12 @@ pub enum Expression {
     Record {
         /// The source span for this expression.
         span: Span,
+
+        /// The type of this record.
+        ///
+        /// Generally this will be `RecordClosed`, but it might have been aliased.
+        record_type: Type,
+
         /// Record fields.
         fields: IndexMap<Name, Self>,
     },
@@ -271,24 +285,10 @@ impl Expression {
         // It'd be nice if we could call this `typeof` but that's a keyword in rust, sad face
         match self {
             Self::Call { call_type, .. } => call_type.clone(),
-            Self::Function { binders, body, .. } =>
-            // NOTE we derive a function type rather than storing it in a
-            // `function_type` field because a) we can, and b) it removes the
-            // opportunity for the derived and stored types to disagree...?
-            //
-            // BUT maybe we should just store it for efficiency?
-            {
-                Type::Function {
-                    parameters: binders.iter().map(|(_, t)| t.clone()).collect(),
-                    return_type: Box::new(body.get_type()),
-                }
-            }
+            Self::Function { function_type, .. } => function_type.clone(),
             Self::If { output_type, .. } => output_type.clone(),
             Self::Match { match_type, .. } => match_type.clone(),
-            Self::Effect { return_type, .. } => Type::Call {
-                function: Box::new(Type::PrimConstructor(PrimType::Effect)),
-                arguments: NonEmpty::new(return_type.clone()),
-            },
+            Self::Effect { effect_type, .. } => effect_type.clone(),
             Self::LocalConstructor {
                 constructor_type, ..
             } => constructor_type.clone(),
@@ -301,13 +301,7 @@ impl Expression {
             Self::RecordAccess { field_type, .. } => field_type.clone(),
             Self::RecordUpdate { record_type, .. } => record_type.clone(),
             Self::Array { value_type, .. } => value_type.clone(),
-            Self::Record { fields, .. } => Type::RecordClosed {
-                kind: Kind::Type,
-                row: fields
-                    .iter()
-                    .map(|(label, element)| (label.clone(), element.get_type()))
-                    .collect(),
-            },
+            Self::Record { record_type, .. } => record_type.clone(),
             Self::Let { expression, .. } => expression.get_type(),
             Self::String { value_type, .. } => value_type.clone(),
             Self::Int { value_type, .. } => value_type.clone(),
@@ -315,6 +309,213 @@ impl Expression {
             Self::True { value_type, .. } => value_type.clone(),
             Self::False { value_type, .. } => value_type.clone(),
             Self::Unit { value_type, .. } => value_type.clone(),
+        }
+    }
+    /// Set the type of this expression.
+    /// Useful when checking against source type annotations that use aliases.
+    pub fn set_type(self, t: Type) -> Self {
+        match self {
+            Self::Call {
+                span,
+                call_type: _,
+                function,
+                arguments,
+            } => Self::Call {
+                span,
+                call_type: t,
+                function,
+                arguments,
+            },
+            Self::Function {
+                span,
+                function_type: _,
+                binders,
+                body,
+            } => Self::Function {
+                span,
+                function_type: t,
+                binders,
+                body,
+            },
+            Self::If {
+                span,
+                output_type: _,
+                condition,
+                true_clause,
+                false_clause,
+            } => Self::If {
+                span,
+                output_type: t,
+                condition,
+                true_clause,
+                false_clause,
+            },
+            Self::Match {
+                span,
+                match_type: _,
+                expression,
+                arms,
+            } => Self::Match {
+                span,
+                match_type: t,
+                expression,
+                arms,
+            },
+            Self::Effect {
+                span,
+                effect_type: _,
+                return_type,
+                effect,
+            } => Self::Effect {
+                span,
+                effect_type: t,
+                return_type,
+                effect,
+            },
+            Self::Record {
+                span,
+                record_type: _,
+                fields,
+            } => Self::Record {
+                span,
+                record_type: t,
+                fields,
+            },
+            Self::LocalConstructor {
+                span,
+                constructor_type: _,
+                constructor,
+            } => Self::LocalConstructor {
+                span,
+                constructor_type: t,
+                constructor,
+            },
+            Self::ImportedConstructor {
+                span,
+                constructor_type: _,
+                constructor,
+            } => Self::ImportedConstructor {
+                span,
+                constructor_type: t,
+                constructor,
+            },
+            Self::LocalVariable {
+                span,
+                variable_type: _,
+                variable,
+            } => Self::LocalVariable {
+                span,
+                variable_type: t,
+                variable,
+            },
+            Self::ForeignVariable {
+                span,
+                variable_type: _,
+                variable,
+            } => Self::ForeignVariable {
+                span,
+                variable_type: t,
+                variable,
+            },
+            Self::ImportedVariable {
+                span,
+                variable_type: _,
+                variable,
+            } => Self::ImportedVariable {
+                span,
+                variable_type: t,
+                variable,
+            },
+            Self::Let {
+                span,
+                declaration,
+                box expression,
+            } => Self::Let {
+                span,
+                declaration,
+                expression: Box::new(expression.set_type(t)),
+            },
+            Self::RecordAccess {
+                span,
+                field_type: _,
+                target,
+                label,
+            } => Self::RecordAccess {
+                span,
+                field_type: t,
+                target,
+                label,
+            },
+            Self::RecordUpdate {
+                span,
+                record_type: _,
+                target,
+                fields,
+            } => Self::RecordUpdate {
+                span,
+                record_type: t,
+                target,
+                fields,
+            },
+            Self::Array {
+                span,
+                element_type,
+                elements,
+                value_type: _,
+            } => Self::Array {
+                span,
+                element_type,
+                elements,
+                value_type: t,
+            },
+            Self::String {
+                span,
+                value,
+                value_type: _,
+            } => Self::String {
+                span,
+                value,
+                value_type: t,
+            },
+            Self::Int {
+                span,
+                value,
+                value_type: _,
+            } => Self::Int {
+                span,
+                value,
+                value_type: t,
+            },
+            Self::Float {
+                span,
+                value,
+                value_type: _,
+            } => Self::Float {
+                span,
+                value,
+                value_type: t,
+            },
+            Self::True {
+                span,
+                value_type: _,
+            } => Self::True {
+                span,
+                value_type: t,
+            },
+            Self::False {
+                span,
+                value_type: _,
+            } => Self::False {
+                span,
+                value_type: t,
+            },
+            Self::Unit {
+                span,
+                value_type: _,
+            } => Self::Unit {
+                span,
+                value_type: t,
+            },
         }
     }
     /// Get the source span.

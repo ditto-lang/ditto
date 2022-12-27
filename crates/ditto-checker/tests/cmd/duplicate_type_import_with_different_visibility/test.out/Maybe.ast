@@ -346,6 +346,31 @@
             "start_offset": 146,
             "end_offset": 162
           },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [],
+              "return_type": {
+                "type": "Constructor",
+                "data": {
+                  "constructor_kind": "Type",
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Maybe"
+                      ]
+                    ],
+                    "value": "Private"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "Private"
+                  }
+                }
+              }
+            }
+          },
           "binders": [],
           "body": {
             "expression": "LocalConstructor",
