@@ -47,19 +47,74 @@
         "doc_comments": [],
         "doc_position": 0,
         "value_type": {
-          "type": "RecordClosed",
+          "type": "Call",
           "data": {
-            "kind": "Type",
-            "row": {
-              "foo": {
+            "function": {
+              "type": "ConstructorAlias",
+              "data": {
+                "constructor_kind": {
+                  "Function": {
+                    "parameters": [
+                      "Row",
+                      "Type"
+                    ]
+                  }
+                },
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Test"
+                    ]
+                  ],
+                  "value": "HasFoo"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "HasFoo"
+                },
+                "alias_variables": [
+                  0,
+                  2
+                ],
+                "aliased_type": {
+                  "type": "RecordOpen",
+                  "data": {
+                    "kind": "Type",
+                    "var": 0,
+                    "source_name": "r",
+                    "row": {
+                      "foo": {
+                        "type": "Variable",
+                        "data": {
+                          "variable_kind": "Type",
+                          "var": 2,
+                          "source_name": "a"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "RecordClosed",
+                "data": {
+                  "kind": "Row",
+                  "row": {
+                    "bar": {
+                      "type": "PrimConstructor",
+                      "data": "Bool"
+                    }
+                  }
+                }
+              },
+              {
                 "type": "PrimConstructor",
                 "data": "Int"
-              },
-              "bar": {
-                "type": "PrimConstructor",
-                "data": "Bool"
               }
-            }
+            ]
           }
         }
       }
@@ -120,6 +175,77 @@
           "span": {
             "start_offset": 105,
             "end_offset": 128
+          },
+          "record_type": {
+            "type": "Call",
+            "data": {
+              "function": {
+                "type": "ConstructorAlias",
+                "data": {
+                  "constructor_kind": {
+                    "Function": {
+                      "parameters": [
+                        "Row",
+                        "Type"
+                      ]
+                    }
+                  },
+                  "canonical_value": {
+                    "module_name": [
+                      null,
+                      [
+                        "Test"
+                      ]
+                    ],
+                    "value": "HasFoo"
+                  },
+                  "source_value": {
+                    "module_name": null,
+                    "value": "HasFoo"
+                  },
+                  "alias_variables": [
+                    0,
+                    2
+                  ],
+                  "aliased_type": {
+                    "type": "RecordOpen",
+                    "data": {
+                      "kind": "Type",
+                      "var": 0,
+                      "source_name": "r",
+                      "row": {
+                        "foo": {
+                          "type": "Variable",
+                          "data": {
+                            "variable_kind": "Type",
+                            "var": 2,
+                            "source_name": "a"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "RecordClosed",
+                  "data": {
+                    "kind": "Row",
+                    "row": {
+                      "bar": {
+                        "type": "PrimConstructor",
+                        "data": "Bool"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              ]
+            }
           },
           "fields": {
             "foo": {

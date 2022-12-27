@@ -445,6 +445,57 @@
             "start_offset": 77,
             "end_offset": 169
           },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "Constructor",
+                      "data": {
+                        "constructor_kind": {
+                          "Function": {
+                            "parameters": [
+                              "Type"
+                            ]
+                          }
+                        },
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Dep"
+                            ]
+                          ],
+                          "value": "ABC"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "ABC"
+                        }
+                      }
+                    },
+                    "arguments": [
+                      {
+                        "type": "Variable",
+                        "data": {
+                          "variable_kind": "Type",
+                          "var": 3,
+                          "source_name": null
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            }
+          },
           "binders": [
             [
               {

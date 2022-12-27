@@ -224,10 +224,12 @@ impl Substitution {
             },
             Function {
                 span,
+                function_type,
                 binders,
                 box body,
             } => Function {
                 span,
+                function_type: self.apply(function_type),
                 binders: binders
                     .into_iter()
                     .map(|(pattern, t)| (pattern, self.apply(t)))
@@ -266,10 +268,12 @@ impl Substitution {
             },
             Effect {
                 span,
+                effect_type,
                 return_type,
                 effect,
             } => Effect {
                 span,
+                effect_type: self.apply(effect_type),
                 return_type: self.apply(return_type),
                 effect: self.apply_effect(effect),
             },
@@ -332,8 +336,13 @@ impl Substitution {
                     .collect(),
                 value_type: self.apply(value_type),
             },
-            Record { span, fields } => Record {
+            Record {
                 span,
+                record_type,
+                fields,
+            } => Record {
+                span,
+                record_type: self.apply(record_type),
                 fields: fields
                     .into_iter()
                     .map(|(label, expr)| (label, self.apply_expression(expr)))

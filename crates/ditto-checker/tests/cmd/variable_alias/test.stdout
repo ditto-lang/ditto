@@ -32,9 +32,7 @@
     "constructors": {},
     "values": {
       "five": {
-        "doc_comments": [
-          "FIXME: type information gets dropped if `WhyTho(a)` is the return type annotation"
-        ],
+        "doc_comments": [],
         "doc_position": 0,
         "value_type": {
           "type": "Call",
@@ -237,7 +235,116 @@
         "data": {
           "span": {
             "start_offset": 65,
-            "end_offset": 90
+            "end_offset": 87
+          },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "ConstructorAlias",
+                      "data": {
+                        "constructor_kind": {
+                          "Function": {
+                            "parameters": [
+                              "Type"
+                            ]
+                          }
+                        },
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "WhyTho"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "WhyTho"
+                        },
+                        "alias_variables": [
+                          0
+                        ],
+                        "aliased_type": {
+                          "type": "Variable",
+                          "data": {
+                            "variable_kind": "Type",
+                            "var": 0,
+                            "source_name": "a"
+                          }
+                        }
+                      }
+                    },
+                    "arguments": [
+                      {
+                        "type": "Variable",
+                        "data": {
+                          "variable_kind": "Type",
+                          "var": 0,
+                          "source_name": "a"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "ConstructorAlias",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "WhyTho"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "WhyTho"
+                      },
+                      "alias_variables": [
+                        0
+                      ],
+                      "aliased_type": {
+                        "type": "Variable",
+                        "data": {
+                          "variable_kind": "Type",
+                          "var": 0,
+                          "source_name": "a"
+                        }
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "binders": [
             [
@@ -307,8 +414,8 @@
             "expression": "LocalVariable",
             "data": {
               "span": {
-                "start_offset": 89,
-                "end_offset": 90
+                "start_offset": 86,
+                "end_offset": 87
               },
               "variable_type": {
                 "type": "Call",
@@ -368,19 +475,17 @@
       }
     },
     "five": {
-      "doc_comments": [
-        "FIXME: type information gets dropped if `WhyTho(a)` is the return type annotation"
-      ],
+      "doc_comments": [],
       "name_span": {
-        "start_offset": 179,
-        "end_offset": 183
+        "start_offset": 90,
+        "end_offset": 94
       },
       "expression": {
         "expression": "Call",
         "data": {
           "span": {
-            "start_offset": 194,
-            "end_offset": 207
+            "start_offset": 105,
+            "end_offset": 118
           },
           "call_type": {
             "type": "Call",
@@ -429,8 +534,8 @@
             "expression": "LocalVariable",
             "data": {
               "span": {
-                "start_offset": 194,
-                "end_offset": 202
+                "start_offset": 105,
+                "end_offset": 113
               },
               "variable_type": {
                 "type": "Function",
@@ -534,8 +639,8 @@
                 "expression": "Float",
                 "data": {
                   "span": {
-                    "start_offset": 203,
-                    "end_offset": 206
+                    "start_offset": 114,
+                    "end_offset": 117
                   },
                   "value": "5.0",
                   "value_type": {

@@ -131,6 +131,40 @@
             "start_offset": 79,
             "end_offset": 166
           },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": "Type",
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Test"
+                        ]
+                      ],
+                      "value": "Never"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Never"
+                    }
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": "a"
+                }
+              }
+            }
+          },
           "binders": [
             [
               {

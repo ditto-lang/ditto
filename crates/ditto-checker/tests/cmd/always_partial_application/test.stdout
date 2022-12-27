@@ -107,6 +107,44 @@
             "start_offset": 36,
             "end_offset": 58
           },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": "Type",
+                    "var": 0,
+                    "source_name": null
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 1,
+                        "source_name": null
+                      }
+                    }
+                  ],
+                  "return_type": {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 0,
+                      "source_name": null
+                    }
+                  }
+                }
+              }
+            }
+          },
           "binders": [
             [
               {
@@ -134,6 +172,29 @@
               "span": {
                 "start_offset": 46,
                 "end_offset": 58
+              },
+              "function_type": {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 1,
+                        "source_name": null
+                      }
+                    }
+                  ],
+                  "return_type": {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 0,
+                      "source_name": null
+                    }
+                  }
+                }
               },
               "binders": [
                 [

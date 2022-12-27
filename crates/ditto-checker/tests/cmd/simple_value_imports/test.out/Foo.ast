@@ -80,6 +80,29 @@
             "start_offset": 60,
             "end_offset": 71
           },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": "Type",
+                    "var": 0,
+                    "source_name": null
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": null
+                }
+              }
+            }
+          },
           "binders": [
             [
               {

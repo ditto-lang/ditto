@@ -586,7 +586,7 @@
                       "type": "RecordOpen",
                       "data": {
                         "kind": "Type",
-                        "var": 6,
+                        "var": 8,
                         "source_name": null,
                         "row": {
                           "foo": {
@@ -1457,6 +1457,26 @@
                                     "start_offset": 853,
                                     "end_offset": 895
                                   },
+                                  "record_type": {
+                                    "type": "RecordClosed",
+                                    "data": {
+                                      "kind": "Type",
+                                      "row": {
+                                        "foo": {
+                                          "type": "PrimConstructor",
+                                          "data": "Int"
+                                        },
+                                        "bar": {
+                                          "type": "PrimConstructor",
+                                          "data": "Int"
+                                        },
+                                        "baz": {
+                                          "type": "PrimConstructor",
+                                          "data": "Int"
+                                        }
+                                      }
+                                    }
+                                  },
                                   "fields": {
                                     "foo": {
                                       "expression": "Int",
@@ -1833,6 +1853,26 @@
                             "start_offset": 702,
                             "end_offset": 734
                           },
+                          "record_type": {
+                            "type": "RecordClosed",
+                            "data": {
+                              "kind": "Type",
+                              "row": {
+                                "foo": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                },
+                                "bar": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                },
+                                "baz": {
+                                  "type": "PrimConstructor",
+                                  "data": "Unit"
+                                }
+                              }
+                            }
+                          },
                           "fields": {
                             "foo": {
                               "expression": "Int",
@@ -2178,6 +2218,22 @@
                             "start_offset": 618,
                             "end_offset": 637
                           },
+                          "record_type": {
+                            "type": "RecordClosed",
+                            "data": {
+                              "kind": "Type",
+                              "row": {
+                                "foo": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                },
+                                "bar": {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                }
+                              }
+                            }
+                          },
                           "fields": {
                             "foo": {
                               "expression": "Int",
@@ -2231,6 +2287,69 @@
           "span": {
             "start_offset": 396,
             "end_offset": 456
+          },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "Constructor",
+                      "data": {
+                        "constructor_kind": {
+                          "Function": {
+                            "parameters": [
+                              "Row"
+                            ]
+                          }
+                        },
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "ExtendMe"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "ExtendMe"
+                        }
+                      }
+                    },
+                    "arguments": [
+                      {
+                        "type": "RecordClosed",
+                        "data": {
+                          "kind": "Type",
+                          "row": {
+                            "foo": {
+                              "type": "PrimConstructor",
+                              "data": "Int"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "RecordClosed",
+                "data": {
+                  "kind": "Type",
+                  "row": {
+                    "foo": {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  }
+                }
+              }
+            }
           },
           "binders": [
             [
@@ -2427,6 +2546,73 @@
           "span": {
             "start_offset": 310,
             "end_offset": 374
+          },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "Constructor",
+                      "data": {
+                        "constructor_kind": {
+                          "Function": {
+                            "parameters": [
+                              "Row"
+                            ]
+                          }
+                        },
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "ExtendMe"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "ExtendMe"
+                        }
+                      }
+                    },
+                    "arguments": [
+                      {
+                        "type": "RecordOpen",
+                        "data": {
+                          "kind": "Type",
+                          "var": 4,
+                          "source_name": "r",
+                          "row": {
+                            "foo": {
+                              "type": "PrimConstructor",
+                              "data": "Int"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "RecordOpen",
+                "data": {
+                  "kind": "Type",
+                  "var": 4,
+                  "source_name": "r",
+                  "row": {
+                    "foo": {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  }
+                }
+              }
+            }
           },
           "binders": [
             [
@@ -2630,6 +2816,63 @@
             "start_offset": 468,
             "end_offset": 507
           },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "Constructor",
+                      "data": {
+                        "constructor_kind": {
+                          "Function": {
+                            "parameters": [
+                              "Row"
+                            ]
+                          }
+                        },
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Test"
+                            ]
+                          ],
+                          "value": "ExtendMe"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "ExtendMe"
+                        }
+                      }
+                    },
+                    "arguments": [
+                      {
+                        "type": "RecordOpen",
+                        "data": {
+                          "kind": "Type",
+                          "var": 8,
+                          "source_name": null,
+                          "row": {
+                            "foo": {
+                              "type": "PrimConstructor",
+                              "data": "Int"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            }
+          },
           "binders": [
             [
               {
@@ -2674,7 +2917,7 @@
                       "type": "RecordOpen",
                       "data": {
                         "kind": "Type",
-                        "var": 6,
+                        "var": 8,
                         "source_name": null,
                         "row": {
                           "foo": {
@@ -2711,7 +2954,7 @@
                     "type": "RecordOpen",
                     "data": {
                       "kind": "Type",
-                      "var": 6,
+                      "var": 8,
                       "source_name": null,
                       "row": {
                         "foo": {
@@ -2765,7 +3008,7 @@
                                     "type": "RecordOpen",
                                     "data": {
                                       "kind": "Type",
-                                      "var": 6,
+                                      "var": 8,
                                       "source_name": null,
                                       "row": {
                                         "foo": {
@@ -2783,7 +3026,7 @@
                             "type": "RecordOpen",
                             "data": {
                               "kind": "Type",
-                              "var": 6,
+                              "var": 8,
                               "source_name": null,
                               "row": {
                                 "foo": {
@@ -2840,7 +3083,7 @@
                                   "type": "RecordOpen",
                                   "data": {
                                     "kind": "Type",
-                                    "var": 6,
+                                    "var": 8,
                                     "source_name": null,
                                     "row": {
                                       "foo": {
@@ -3020,6 +3263,26 @@
                   "span": {
                     "start_offset": 211,
                     "end_offset": 240
+                  },
+                  "record_type": {
+                    "type": "RecordClosed",
+                    "data": {
+                      "kind": "Type",
+                      "row": {
+                        "foo": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        },
+                        "bar": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        },
+                        "baz": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      }
+                    }
                   },
                   "fields": {
                     "foo": {
@@ -3223,6 +3486,22 @@
                     "start_offset": 131,
                     "end_offset": 151
                   },
+                  "record_type": {
+                    "type": "RecordClosed",
+                    "data": {
+                      "kind": "Type",
+                      "row": {
+                        "foo": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        },
+                        "bar": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      }
+                    }
+                  },
                   "fields": {
                     "foo": {
                       "expression": "Int",
@@ -3398,6 +3677,18 @@
                   "span": {
                     "start_offset": 96,
                     "end_offset": 107
+                  },
+                  "record_type": {
+                    "type": "RecordClosed",
+                    "data": {
+                      "kind": "Type",
+                      "row": {
+                        "foo": {
+                          "type": "PrimConstructor",
+                          "data": "Int"
+                        }
+                      }
+                    }
                   },
                   "fields": {
                     "foo": {

@@ -225,6 +225,100 @@
             "start_offset": 110,
             "end_offset": 264
           },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "PrimConstructor",
+                      "data": "Effect"
+                    },
+                    "arguments": [
+                      {
+                        "type": "ConstructorAlias",
+                        "data": {
+                          "constructor_kind": "Type",
+                          "canonical_value": {
+                            "module_name": [
+                              null,
+                              [
+                                "Test"
+                              ]
+                            ],
+                            "value": "Result"
+                          },
+                          "source_value": {
+                            "module_name": null,
+                            "value": "Result"
+                          },
+                          "alias_variables": [],
+                          "aliased_type": {
+                            "type": "Call",
+                            "data": {
+                              "function": {
+                                "type": "Constructor",
+                                "data": {
+                                  "constructor_kind": {
+                                    "Function": {
+                                      "parameters": [
+                                        "Type",
+                                        "Type"
+                                      ]
+                                    }
+                                  },
+                                  "canonical_value": {
+                                    "module_name": [
+                                      null,
+                                      [
+                                        "Result"
+                                      ]
+                                    ],
+                                    "value": "Result"
+                                  },
+                                  "source_value": {
+                                    "module_name": "Result",
+                                    "value": "Result"
+                                  }
+                                }
+                              },
+                              "arguments": [
+                                {
+                                  "type": "PrimConstructor",
+                                  "data": "Int"
+                                },
+                                {
+                                  "type": "PrimConstructor",
+                                  "data": "String"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "PrimConstructor",
+                    "data": "Effect"
+                  },
+                  "arguments": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Bool"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "binders": [
             [
               {
@@ -316,6 +410,21 @@
               "span": {
                 "start_offset": 152,
                 "end_offset": 264
+              },
+              "effect_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "PrimConstructor",
+                    "data": "Effect"
+                  },
+                  "arguments": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Bool"
+                    }
+                  ]
+                }
               },
               "return_type": {
                 "type": "PrimConstructor",

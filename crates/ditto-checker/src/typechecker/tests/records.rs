@@ -16,7 +16,7 @@ fn it_typechecks_as_expected() {
 
     assert_type!(
         "fn (x) -> x.foo.bar",
-        "({ $3 | foo: { $1 | bar: $2 } }) -> $2"
+        "({ $1 | foo: { $3 | bar: $4 } }) -> $4"
     );
     assert_type!(
         "fn (x) -> [x.foo, x.bar, x.baz]",

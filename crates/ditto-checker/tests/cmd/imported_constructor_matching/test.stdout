@@ -119,6 +119,89 @@
             "start_offset": 98,
             "end_offset": 203
           },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "Constructor",
+                      "data": {
+                        "constructor_kind": {
+                          "Function": {
+                            "parameters": [
+                              "Type"
+                            ]
+                          }
+                        },
+                        "canonical_value": {
+                          "module_name": [
+                            null,
+                            [
+                              "Dep"
+                            ]
+                          ],
+                          "value": "ABC"
+                        },
+                        "source_value": {
+                          "module_name": null,
+                          "value": "ABC"
+                        }
+                      }
+                    },
+                    "arguments": [
+                      {
+                        "type": "Variable",
+                        "data": {
+                          "variable_kind": "Type",
+                          "var": 1,
+                          "source_name": null
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Maybe"
+                          ]
+                        ],
+                        "value": "Maybe"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Maybe"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Bool"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "binders": [
             [
               {

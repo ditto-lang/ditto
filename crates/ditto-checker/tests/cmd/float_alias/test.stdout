@@ -10,28 +10,8 @@
         "doc_comments": [],
         "doc_position": 0,
         "value_type": {
-          "type": "ConstructorAlias",
-          "data": {
-            "constructor_kind": "Type",
-            "canonical_value": {
-              "module_name": [
-                null,
-                [
-                  "Test"
-                ]
-              ],
-              "value": "Number"
-            },
-            "source_value": {
-              "module_name": null,
-              "value": "Number"
-            },
-            "alias_variables": [],
-            "aliased_type": {
-              "type": "PrimConstructor",
-              "data": "Float"
-            }
-          }
+          "type": "PrimConstructor",
+          "data": "Float"
         }
       }
     }
@@ -67,6 +47,41 @@
           "span": {
             "start_offset": 139,
             "end_offset": 171
+          },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "ConstructorAlias",
+                  "data": {
+                    "constructor_kind": "Type",
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Test"
+                        ]
+                      ],
+                      "value": "Number"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Number"
+                    },
+                    "alias_variables": [],
+                    "aliased_type": {
+                      "type": "PrimConstructor",
+                      "data": "Float"
+                    }
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "PrimConstructor",
+                "data": "Float"
+              }
+            }
           },
           "binders": [
             [
@@ -113,28 +128,8 @@
                 "end_offset": 171
               },
               "variable_type": {
-                "type": "ConstructorAlias",
-                "data": {
-                  "constructor_kind": "Type",
-                  "canonical_value": {
-                    "module_name": [
-                      null,
-                      [
-                        "Test"
-                      ]
-                    ],
-                    "value": "Number"
-                  },
-                  "source_value": {
-                    "module_name": null,
-                    "value": "Number"
-                  },
-                  "alias_variables": [],
-                  "aliased_type": {
-                    "type": "PrimConstructor",
-                    "data": "Float"
-                  }
-                }
+                "type": "PrimConstructor",
+                "data": "Float"
               },
               "variable": "five"
             }
@@ -197,28 +192,8 @@
             "end_offset": 123
           },
           "variable_type": {
-            "type": "ConstructorAlias",
-            "data": {
-              "constructor_kind": "Type",
-              "canonical_value": {
-                "module_name": [
-                  null,
-                  [
-                    "Test"
-                  ]
-                ],
-                "value": "Number"
-              },
-              "source_value": {
-                "module_name": null,
-                "value": "Number"
-              },
-              "alias_variables": [],
-              "aliased_type": {
-                "type": "PrimConstructor",
-                "data": "Float"
-              }
-            }
+            "type": "PrimConstructor",
+            "data": "Float"
           },
           "variable": "number_five"
         }
@@ -238,28 +213,8 @@
             "end_offset": 209
           },
           "call_type": {
-            "type": "ConstructorAlias",
-            "data": {
-              "constructor_kind": "Type",
-              "canonical_value": {
-                "module_name": [
-                  null,
-                  [
-                    "Test"
-                  ]
-                ],
-                "value": "Number"
-              },
-              "source_value": {
-                "module_name": null,
-                "value": "Number"
-              },
-              "alias_variables": [],
-              "aliased_type": {
-                "type": "PrimConstructor",
-                "data": "Float"
-              }
-            }
+            "type": "PrimConstructor",
+            "data": "Float"
           },
           "function": {
             "expression": "LocalVariable",
@@ -298,28 +253,8 @@
                     }
                   ],
                   "return_type": {
-                    "type": "ConstructorAlias",
-                    "data": {
-                      "constructor_kind": "Type",
-                      "canonical_value": {
-                        "module_name": [
-                          null,
-                          [
-                            "Test"
-                          ]
-                        ],
-                        "value": "Number"
-                      },
-                      "source_value": {
-                        "module_name": null,
-                        "value": "Number"
-                      },
-                      "alias_variables": [],
-                      "aliased_type": {
-                        "type": "PrimConstructor",
-                        "data": "Float"
-                      }
-                    }
+                    "type": "PrimConstructor",
+                    "data": "Float"
                   }
                 }
               },

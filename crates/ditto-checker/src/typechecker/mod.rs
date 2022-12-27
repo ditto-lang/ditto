@@ -222,7 +222,15 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
             box true_clause,
             box false_clause,
         } => {
-            let condition = check(env, state, Type::PrimConstructor(PrimType::Bool), condition)?;
+            let condition = infer(env, state, condition)?;
+            unify(
+                state,
+                condition.get_span(),
+                Constraint {
+                    actual: condition.get_type(),
+                    expected: Type::PrimConstructor(PrimType::Bool),
+                },
+            )?;
             let true_clause = infer(env, state, true_clause)?;
             let true_type = state.substitution.apply(true_clause.get_type());
             let false_clause = check(env, state, true_type.clone(), false_clause)?;
@@ -250,8 +258,13 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
             } else {
                 infer(env, state, body)
             }?;
+            let function_type = Type::Function {
+                parameters: vec![],
+                return_type: Box::new(body.get_type()),
+            };
             Ok(Expression::Function {
                 span,
+                function_type,
                 binders: vec![],
                 body: Box::new(body),
             })
@@ -326,9 +339,13 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
             for span in unused_spans {
                 state.warnings.push(Warning::UnusedFunctionBinder { span });
             }
-
+            let function_type = Type::Function {
+                parameters: binders.iter().map(|(_pattern, t)| t.clone()).collect(),
+                return_type: Box::new(body.get_type()),
+            };
             Ok(Expression::Function {
                 span,
+                function_type,
                 binders,
                 body: Box::new(body),
             })
@@ -341,9 +358,14 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
 
         pre::Expression::Effect { span, effect } => {
             let return_type = state.supply.fresh_type();
+            let effect_type = Type::Call {
+                function: Box::new(Type::PrimConstructor(PrimType::Effect)),
+                arguments: non_empty_vec::ne_vec![return_type.clone()],
+            };
             let effect = check_effect(env, state, return_type.clone(), effect)?;
             Ok(Expression::Effect {
                 span,
+                effect_type,
                 return_type,
                 effect,
             })
@@ -352,25 +374,46 @@ pub fn infer(env: &Env, state: &mut State, expr: pre::Expression) -> Result<Expr
             let fields = fields
                 .into_iter()
                 .map(|(label, expr)| infer(env, state, expr).map(|expr| (label, expr)))
-                .collect::<Result<_>>()?;
-            Ok(Expression::Record { span, fields })
+                .collect::<Result<IndexMap<_, _>>>()?;
+            let record_type = Type::RecordClosed {
+                kind: Kind::Type,
+                row: fields
+                    .iter()
+                    .map(|(label, expr)| (label.clone(), expr.get_type()))
+                    .collect(),
+            };
+            Ok(Expression::Record {
+                span,
+                record_type,
+                fields,
+            })
         }
         pre::Expression::RecordAccess {
             span,
             box target,
             label,
         } => {
+            let target = infer(env, state, target)?;
+
             let var = state.supply.fresh();
             let field_type = state.supply.fresh_type();
             let mut row = Row::new();
             row.insert(label.clone(), field_type.clone());
-            let expected = Type::RecordOpen {
-                kind: Kind::Type,
-                var,
-                source_name: None,
-                row,
-            };
-            let target = check(env, state, expected, target)?;
+
+            unify(
+                state,
+                span,
+                Constraint {
+                    actual: target.get_type(),
+                    expected: Type::RecordOpen {
+                        kind: Kind::Type,
+                        var,
+                        source_name: None,
+                        row,
+                    },
+                },
+            )?;
+
             Ok(Expression::RecordAccess {
                 span,
                 field_type,
@@ -511,7 +554,15 @@ pub fn check(
             },
             output_type,
         ) => {
-            let condition = check(env, state, Type::PrimConstructor(PrimType::Bool), condition)?;
+            let condition = infer(env, state, condition)?;
+            unify(
+                state,
+                condition.get_span(),
+                Constraint {
+                    actual: condition.get_type(),
+                    expected: Type::PrimConstructor(PrimType::Bool),
+                },
+            )?;
             let true_clause = check(env, state, output_type.clone(), true_clause)?;
             let false_clause = check(env, state, output_type.clone(), false_clause)?;
             Ok(Expression::If {
@@ -559,6 +610,10 @@ pub fn check(
             let effect = check_effect(env, state, return_type.clone(), effect)?;
             Ok(Expression::Effect {
                 span,
+                effect_type: Type::Call {
+                    function: Box::new(Type::PrimConstructor(PrimType::Effect)),
+                    arguments: arguments.clone(),
+                },
                 return_type: return_type.clone(),
                 effect,
             })
@@ -568,7 +623,7 @@ pub fn check(
                 span,
                 fields: pre_fields,
             },
-            Type::RecordClosed { row, .. },
+            Type::RecordClosed { kind, row },
         ) if pre_fields.len() == row.len()
             && pre_fields.iter().all(|(label, _)| row.contains_key(label)) =>
         {
@@ -577,93 +632,10 @@ pub fn check(
                 let expr = check(env, state, row.get(&label).cloned().unwrap(), pre_expr)?;
                 fields.insert(label, expr);
             }
-            Ok(Expression::Record { span, fields })
-        }
-        (pre::Expression::True { span }, expected) => {
-            unify(
-                state,
+            Ok(Expression::Record {
                 span,
-                Constraint {
-                    expected: expected.clone(),
-                    actual: Type::PrimConstructor(PrimType::Bool),
-                },
-            )?;
-            Ok(Expression::True {
-                span,
-                value_type: expected,
-            })
-        }
-        (pre::Expression::False { span }, expected) => {
-            unify(
-                state,
-                span,
-                Constraint {
-                    expected: expected.clone(),
-                    actual: Type::PrimConstructor(PrimType::Bool),
-                },
-            )?;
-            Ok(Expression::False {
-                span,
-                value_type: expected,
-            })
-        }
-        (pre::Expression::Unit { span }, expected) => {
-            unify(
-                state,
-                span,
-                Constraint {
-                    expected: expected.clone(),
-                    actual: Type::PrimConstructor(PrimType::Unit),
-                },
-            )?;
-            Ok(Expression::Unit {
-                span,
-                value_type: expected,
-            })
-        }
-        (pre::Expression::String { span, value }, expected) => {
-            unify(
-                state,
-                span,
-                Constraint {
-                    expected: expected.clone(),
-                    actual: Type::PrimConstructor(PrimType::String),
-                },
-            )?;
-            Ok(Expression::String {
-                span,
-                value,
-                value_type: expected,
-            })
-        }
-        (pre::Expression::Int { span, value }, expected) => {
-            unify(
-                state,
-                span,
-                Constraint {
-                    expected: expected.clone(),
-                    actual: Type::PrimConstructor(PrimType::Int),
-                },
-            )?;
-            Ok(Expression::Int {
-                span,
-                value,
-                value_type: expected,
-            })
-        }
-        (pre::Expression::Float { span, value }, expected) => {
-            unify(
-                state,
-                span,
-                Constraint {
-                    expected: expected.clone(),
-                    actual: Type::PrimConstructor(PrimType::Float),
-                },
-            )?;
-            Ok(Expression::Float {
-                span,
-                value,
-                value_type: expected,
+                record_type: Type::RecordClosed { kind, row },
+                fields,
             })
         }
         (expr, expected) => {
@@ -676,20 +648,7 @@ pub fn check(
                     actual: expression.get_type(),
                 },
             )?;
-            match expression {
-                Expression::Array {
-                    element_type,
-                    elements,
-                    span,
-                    value_type: _,
-                } => Ok(Expression::Array {
-                    element_type,
-                    elements,
-                    span,
-                    value_type: expected,
-                }),
-                _ => Ok(expression),
-            }
+            Ok(expression.set_type(expected))
         }
     }
 }

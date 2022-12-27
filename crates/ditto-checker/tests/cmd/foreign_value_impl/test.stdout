@@ -32,6 +32,21 @@
             "start_offset": 70,
             "end_offset": 86
           },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "PrimConstructor",
+                  "data": "Int"
+                }
+              ],
+              "return_type": {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            }
+          },
           "binders": [
             [
               {
