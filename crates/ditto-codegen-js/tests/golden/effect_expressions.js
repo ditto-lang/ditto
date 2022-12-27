@@ -28,7 +28,7 @@ function get_five() {
   }
   throw new Error("Pattern match error");
 }
-function always(_a, b) {
+function always(_a$0, b) {
   return b;
 }
 function effect_map(effect_a, f) {

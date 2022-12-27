@@ -660,8 +660,12 @@ mod test {
 
     #[test]
     fn roundtrippin() {
-        assert_optimized!("fn (x, _y) -> x", "(x,_y) => x", &[]);
-        assert_optimized!("fn (x, _y) -> if x then 5 else 10", "(x,_y) => x?5:10", &[]);
+        assert_optimized!("fn (x, _y) -> x", "(x,_y$0) => x", &[]);
+        assert_optimized!(
+            "fn (x, _y) -> if x then 5 else 10",
+            "(x,_y$0) => x?5:10",
+            &[]
+        );
         assert_optimized!(
             "fn (x, y) -> if x then 5 else if y then 10 else 15",
             "(x,y) => x?5:y?10:15",
