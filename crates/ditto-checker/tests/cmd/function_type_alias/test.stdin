@@ -1,0 +1,7 @@
+module Test exports (five);
+
+type alias Identity(a) = (a) -> a;
+
+five = identity_impl(5);
+
+foreign identity_impl: Identity(a);
