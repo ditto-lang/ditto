@@ -1,0 +1,4 @@
+module Test exports (..);
+
+
+always_five = fn (_, _, _) -> 5;

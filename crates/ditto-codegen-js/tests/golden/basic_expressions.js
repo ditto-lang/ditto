@@ -6,7 +6,7 @@ function select(c, x, y) {
   return c ? x : y;
 }
 function always(a) {
-  return _b => a;
+  return _b$0 => a;
 }
 function uncurry(f) {
   return (a, b) => f(a)(b);
@@ -27,7 +27,7 @@ const fives = [
   select(true, 5, 50),
   always(five)(floaty_five),
   uncurry(always)(five, true),
-  ((a, _b) => a)(5, undefined),
+  ((a, _b$0) => a)(5, undefined),
   uncurry(always)(five, fifth_string),
   always(identity)(false)(five),
 ];

@@ -219,6 +219,11 @@ impl Supply {
         self.0 += 1;
         Ident(format!("${}", var))
     }
+    pub fn fresh_unused_ident(&mut self, unused: ditto_ast::UnusedName) -> Ident {
+        let var = self.0;
+        self.0 += 1;
+        Ident(format!("{}${}", unused.0, var))
+    }
 }
 
 pub(crate) fn convert_expression_and_optimize(
@@ -251,7 +256,7 @@ pub(crate) fn convert_expression(
             let mut assignments = Assignments::new();
             for (pattern, _type) in binders.into_iter() {
                 if let ditto_ast::Pattern::Unused { unused_name, .. } = pattern {
-                    parameters.push(unused_name.into());
+                    parameters.push(supply.fresh_unused_ident(unused_name));
                     continue;
                 }
                 if let ditto_ast::Pattern::Variable { name, .. } = pattern {
@@ -631,7 +636,7 @@ fn convert_effect(
         } => {
             // REVIEW: could just drop the unused assignment altogether?
             Block::ConstAssignment {
-                ident: Ident::from(unused_name),
+                ident: supply.fresh_unused_ident(unused_name),
                 value: convert_expression(supply, imported_module_idents, expression),
                 rest: Box::new(convert_effect(supply, imported_module_idents, rest)),
             }
@@ -791,12 +796,6 @@ fn convert_pattern_rec(
 impl From<ditto_ast::Name> for Ident {
     fn from(ast_name: ditto_ast::Name) -> Self {
         Self(name_string_to_ident_string(ast_name.0))
-    }
-}
-
-impl From<ditto_ast::UnusedName> for Ident {
-    fn from(ast_unused_name: ditto_ast::UnusedName) -> Self {
-        Self(name_string_to_ident_string(ast_unused_name.0))
     }
 }
 
