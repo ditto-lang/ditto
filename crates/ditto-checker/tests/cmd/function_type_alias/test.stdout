@@ -1,0 +1,171 @@
+{
+  "module_name": [
+    "Test"
+  ],
+  "exports": {
+    "types": {},
+    "constructors": {},
+    "values": {
+      "five": {
+        "doc_comments": [],
+        "doc_position": 0,
+        "value_type": {
+          "type": "PrimConstructor",
+          "data": "Int"
+        }
+      }
+    }
+  },
+  "types": {
+    "Identity": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 40,
+          "end_offset": 48
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Type"
+            ]
+          }
+        },
+        "aliased_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": "a"
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 0,
+                "source_name": "a"
+              }
+            }
+          }
+        },
+        "alias_variables": [
+          0
+        ]
+      }
+    }
+  },
+  "constructors": {},
+  "values": {
+    "five": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 65,
+        "end_offset": 69
+      },
+      "expression": {
+        "expression": "Call",
+        "data": {
+          "span": {
+            "start_offset": 72,
+            "end_offset": 88
+          },
+          "call_type": {
+            "type": "PrimConstructor",
+            "data": "Int"
+          },
+          "function": {
+            "expression": "ForeignVariable",
+            "data": {
+              "span": {
+                "start_offset": 72,
+                "end_offset": 85
+              },
+              "variable_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "ConstructorAlias",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Test"
+                          ]
+                        ],
+                        "value": "Identity"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Identity"
+                      },
+                      "alias_variables": [
+                        0
+                      ],
+                      "aliased_type": {
+                        "type": "Function",
+                        "data": {
+                          "parameters": [
+                            {
+                              "type": "PrimConstructor",
+                              "data": "Int"
+                            }
+                          ],
+                          "return_type": {
+                            "type": "PrimConstructor",
+                            "data": "Int"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "Int"
+                    }
+                  ]
+                }
+              },
+              "variable": "identity_impl"
+            }
+          },
+          "arguments": [
+            {
+              "Expression": {
+                "expression": "Int",
+                "data": {
+                  "span": {
+                    "start_offset": 86,
+                    "end_offset": 87
+                  },
+                  "value": "5",
+                  "value_type": {
+                    "type": "PrimConstructor",
+                    "data": "Int"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "five"
+  ]
+}

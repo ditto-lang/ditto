@@ -720,7 +720,7 @@ fn infer_or_check_call(
         function_type = function_type.anonymize()
     }
 
-    match function_type {
+    match function_type.unalias() {
         Type::Function {
             parameters,
             box return_type,
@@ -747,17 +747,17 @@ fn infer_or_check_call(
             }
             let arguments = arguments
                 .into_iter()
-                .zip(parameters.into_iter())
+                .zip(parameters.iter())
                 .map(|(arg, expected)| match arg {
                     pre::Argument::Expression(expr) => {
-                        check(env, state, expected, expr).map(Argument::Expression)
+                        check(env, state, expected.clone(), expr).map(Argument::Expression)
                     }
                 })
                 .collect::<Result<Vec<_>>>()?;
 
             Ok(Expression::Call {
                 span,
-                call_type: return_type,
+                call_type: return_type.clone(),
                 function: Box::new(function),
                 arguments,
             })
@@ -781,7 +781,7 @@ fn infer_or_check_call(
                     parameters,
                     return_type: Box::new(call_type.clone()),
                 },
-                actual: type_variable,
+                actual: type_variable.clone(),
             };
             unify(state, function_span, constraint)?;
 
