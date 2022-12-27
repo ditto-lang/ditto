@@ -801,7 +801,7 @@ impl From<ditto_ast::Name> for Ident {
 
 impl From<ditto_ast::ProperName> for Ident {
     fn from(ast_proper_name: ditto_ast::ProperName) -> Self {
-        Self(ast_proper_name.0)
+        Self(name_string_to_ident_string(ast_proper_name.0))
     }
 }
 
@@ -894,5 +894,9 @@ lazy_static! {
         "while",
         "with",
         "yield",
+
+        // not a reserverd word as such, but we can't shadow the global `Error` value
+        // as it's used for pattern match errors
+        "Error"
     ]);
 }

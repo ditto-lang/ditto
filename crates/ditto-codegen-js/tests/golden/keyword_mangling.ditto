@@ -1,3 +1,8 @@
 module Test exports (..);
 
+
 const = fn (a) -> fn (b) -> a;
+
+type E = Error(String);
+
+unwrap_error = fn (Error(msg)) -> msg;
