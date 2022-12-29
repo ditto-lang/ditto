@@ -60,3 +60,11 @@ nested = fn () ->
         end
     | Outer1 -> unit
     end;
+
+multi_line_expr = fn () ->
+    match
+        x
+        |> y
+    with
+    | z -> unit
+    end;

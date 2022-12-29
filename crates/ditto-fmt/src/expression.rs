@@ -250,11 +250,51 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
             //
             // If so, we should probably make that leading `|` optional in the parser
             // like we do for type declarations.
+
+            let force_use_new_lines =
+                match_keyword.0.has_trailing_comment() || with_keyword.0.has_leading_comments();
+
             items.extend(gen_match_keyword(match_keyword));
-            items.extend(space());
-            items.extend(gen_expression(expression, true));
-            items.extend(space());
-            items.extend(gen_with_keyword(with_keyword));
+            items.extend({
+                let start_ln = LineNumber::new("start");
+                let end_ln = LineNumber::new("end");
+
+                let is_multiple_lines =
+                    Rc::new(move |ctx: &mut ConditionResolverContext| -> Option<bool> {
+                        if force_use_new_lines {
+                            return Some(true);
+                        }
+                        condition_helpers::is_multiple_lines(ctx, start_ln, end_ln)
+                    });
+
+                let expression = {
+                    let mut items = PrintItems::new();
+                    items.push_info(start_ln);
+                    items.extend(gen_expression(expression, true));
+                    items.push_info(end_ln);
+                    items.into_rc_path()
+                };
+                conditions::if_true_or(
+                    "multiLineMatchExpressionIfMultipleLines",
+                    is_multiple_lines,
+                    {
+                        let mut items: PrintItems = Signal::NewLine.into();
+                        items.extend(ir_helpers::with_indent(expression.into()));
+                        items.push_signal(Signal::NewLine);
+                        items.extend(gen_with_keyword(with_keyword.clone()));
+                        items
+                    },
+                    {
+                        let mut items = space();
+                        items.extend(expression.into());
+                        items.extend(space());
+                        items.extend(gen_with_keyword(with_keyword));
+                        items
+                    },
+                )
+                .into()
+            });
+
             items.extend(gen_match_arm(head_arm));
             for match_arm in tail_arms {
                 items.extend(gen_match_arm(match_arm));
