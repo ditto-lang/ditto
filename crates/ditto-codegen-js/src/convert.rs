@@ -316,7 +316,7 @@ pub(crate) fn convert_expression(
             } else {
                 Expression::ArrowFunction {
                     parameters,
-                    body: Box::new(ArrowFunctionBody::Expression(body_expression)),
+                    body: Box::new(uniife(body_expression)),
                 }
             }
         }
@@ -456,47 +456,68 @@ pub(crate) fn convert_expression(
             ..
         } => {
             let expression = convert_expression(supply, imported_module_idents, expression);
-            let err = iife!(Block::Throw(String::from(
+
+            let (expression_ident, expression_var) =
+                if let Expression::Variable(ref ident) = expression {
+                    (ident.clone(), expression.clone())
+                } else {
+                    let expression_ident = supply.fresh_ident();
+                    let expression_var = Expression::Variable(expression_ident.clone());
+                    (expression_ident, expression_var)
+                };
+
+            let err = Block::Throw(String::from(
                 // TODO: mention the file location here?
                 "Pattern match error",
-            )));
+            ));
 
             // Reverse the arm order ahead of folding so the generated code
             // kinda resembles the ditto source
             let mut arms = arms.to_vec();
             arms.reverse();
-            arms.into_iter()
-                .fold(err, |false_clause, (pattern, arm_expression)| {
-                    let (condition, assignments) = convert_pattern(expression.clone(), pattern);
+            let block = arms
+                .into_iter()
+                .fold(err, |false_branch, (pattern, arm_expression)| {
+                    let (condition, assignments) = convert_pattern(expression_var.clone(), pattern);
 
-                    let expression = if assignments.is_empty() {
-                        convert_expression(supply, imported_module_idents, arm_expression)
-                    } else {
-                        let arm_expression =
-                            convert_expression(supply, imported_module_idents, arm_expression);
+                    let mut true_branch = Block::Return(Some(convert_expression(
+                        supply,
+                        imported_module_idents,
+                        arm_expression,
+                    )));
 
+                    if !assignments.is_empty() {
                         // NOTE: order of the assignments doesn't currently matter
-                        let block = assignments.into_iter().fold(
-                            Block::Return(Some(arm_expression)),
-                            |rest, (ident, value)| Block::ConstAssignment {
-                                ident,
-                                value,
-                                rest: Box::new(rest),
-                            },
-                        );
-                        iife!(block)
-                    };
+                        true_branch =
+                            assignments
+                                .into_iter()
+                                .fold(true_branch, |rest, (ident, value)| Block::ConstAssignment {
+                                    ident,
+                                    value,
+                                    rest: Box::new(rest),
+                                });
+                    }
 
                     if let Some(condition) = condition {
-                        Expression::Conditional {
-                            condition: Box::new(condition),
-                            true_clause: Box::new(expression),
-                            false_clause: Box::new(false_clause),
+                        Block::If {
+                            condition,
+                            true_branch: Box::new(true_branch),
+                            false_branch: Box::new(false_branch),
                         }
                     } else {
-                        expression
+                        true_branch
                     }
+                });
+
+            if let Expression::Variable(_) = expression {
+                iife!(block)
+            } else {
+                iife!(Block::ConstAssignment {
+                    ident: expression_ident,
+                    value: expression,
+                    rest: Box::new(block)
                 })
+            }
         }
         ditto_ast::Expression::Effect { effect, .. } => {
             let block = convert_effect(supply, imported_module_idents, effect);
@@ -591,6 +612,20 @@ pub(crate) fn convert_expression(
                 }
             }
         }
+    }
+}
+
+fn uniife(expression: Expression) -> ArrowFunctionBody {
+    match expression {
+        Expression::Call {
+            function:
+                box Expression::ArrowFunction {
+                    ref parameters,
+                    box body,
+                },
+            ref arguments,
+        } if parameters.is_empty() && arguments.is_empty() => body,
+        expression => ArrowFunctionBody::Expression(expression),
     }
 }
 

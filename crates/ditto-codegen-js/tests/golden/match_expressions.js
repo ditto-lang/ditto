@@ -8,6 +8,20 @@ function ManyFields($0, $1, $2, $3) {
   return ["ManyFields", $0, $1, $2, $3];
 }
 const Nothing = ["Nothing"];
+function id(a) {
+  return a;
+}
+function complex_matched_expresion(x) {
+  const $0 = id(id(id(id(id(id(x))))));
+  if ($0[0] === "Just") {
+    const y = $0[1];
+    return [y];
+  }
+  if ($0[0] === "Nothing") {
+    return [2];
+  }
+  throw new Error("Pattern match error");
+}
 function to_string(abc) {
   if (abc[0] === "A") {
     return "A";
@@ -92,8 +106,10 @@ export {
   Just,
   ManyFields,
   Nothing,
+  complex_matched_expresion,
   effect_arms,
   function_arms,
+  id,
   is_just,
   many_fields_to_array,
   mk_five,
