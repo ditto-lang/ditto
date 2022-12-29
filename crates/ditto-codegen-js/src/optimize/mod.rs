@@ -673,12 +673,12 @@ mod test {
         );
         assert_optimized!(
             "fn (a) -> match a with | A -> 5 end",
-            "(a) => (a[0] === \"A\")?5:(() => {throw new Error(\"Pattern match error\");})()",
+            "(a) => {if ((a[0] === \"A\")){return 5;}throw new Error(\"Pattern match error\");}",
             &[]
         );
         assert_optimized!(
             "fn (bc) -> match bc with | B -> 1 | C -> 2 end",
-            "(bc) => (bc[0] === \"B\")?1:(bc[0] === \"C\")?2:(() => {throw new Error(\"Pattern match error\");})()",
+            "(bc) => {if ((bc[0] === \"B\")){return 1;}if ((bc[0] === \"C\")){return 2;}throw new Error(\"Pattern match error\");}",
             &[]
         );
     }

@@ -57,3 +57,11 @@ to_string = fn (abc) ->
     | B -> "C"
     | C -> "C"
     end;
+
+id = fn (a) -> a;
+
+complex_matched_expresion = fn (x) ->
+    match id(id(id(id(id(id(x)))))) with
+    | Just(y) -> [y]
+    | Nothing -> [2]
+    end;
