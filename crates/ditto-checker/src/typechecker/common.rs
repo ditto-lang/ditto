@@ -1,14 +1,14 @@
 use ditto_ast::{Name, Type};
 use ditto_cst as cst;
-use std::collections::HashSet;
+use indexmap::IndexSet;
 
-pub fn type_variables(ast_type: &Type) -> HashSet<usize> {
-    let mut accum = HashSet::new();
+pub fn type_variables(ast_type: &Type) -> IndexSet<usize> {
+    let mut accum = IndexSet::new();
     type_variables_rec(ast_type, &mut accum);
     accum
 }
 
-fn type_variables_rec(ast_type: &Type, accum: &mut HashSet<usize>) {
+fn type_variables_rec(ast_type: &Type, accum: &mut IndexSet<usize>) {
     use Type::*;
     match ast_type {
         Call {
@@ -43,22 +43,18 @@ fn type_variables_rec(ast_type: &Type, accum: &mut HashSet<usize>) {
                 type_variables_rec(t, accum);
             }
         }
-        ConstructorAlias {
-            alias_variables, ..
-        } => {
-            accum.extend(alias_variables);
-        }
+        ConstructorAlias { aliased_type, .. } => type_variables_rec(aliased_type, accum),
         Constructor { .. } | PrimConstructor { .. } => {}
     }
 }
 
-pub fn cst_type_variables(t: &cst::Type) -> HashSet<Name> {
-    let mut accum = HashSet::new();
+pub fn cst_type_variables(t: &cst::Type) -> IndexSet<Name> {
+    let mut accum = IndexSet::new();
     cst_type_variables_rec(t, &mut accum);
     accum
 }
 
-fn cst_type_variables_rec(t: &cst::Type, accum: &mut HashSet<Name>) {
+fn cst_type_variables_rec(t: &cst::Type, accum: &mut IndexSet<Name>) {
     use cst::Type::*;
     match t {
         Parens(parens) => cst_type_variables_rec(&parens.value, accum),
@@ -151,13 +147,13 @@ mod test_macros {
     macro_rules! identity_scheme {
         ($name:expr) => {
             Scheme {
-                forall: std::collections::HashSet::from_iter(vec![0]),
+                forall: indexmap::IndexSet::from_iter(vec![0]),
                 signature: $crate::typechecker::common::identity_type!($name),
             }
         };
         () => {
             Scheme {
-                forall: std::collections::HashSet::from_iter(vec![0]),
+                forall: indexmap::IndexSet::from_iter(vec![0]),
                 signature: $crate::typechecker::common::identity_type!(),
             }
         };

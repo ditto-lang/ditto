@@ -550,6 +550,9 @@ pub fn check_type_annotation(
     type_annotation: cst::TypeAnnotation,
 ) -> Result<Type> {
     let cst_type = type_annotation.1;
+
+    // WARNING: we are inadvertently depending on the order of these type variables,
+    // hence why we use an `IndexSet`. This should be fixed.
     for name in cst_type_variables(&cst_type) {
         if let hash_map::Entry::Vacant(e) = env_type_variables.entry(name) {
             let (var, variable_kind) = state.supply.fresh_kind();

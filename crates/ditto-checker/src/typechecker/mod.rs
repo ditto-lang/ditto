@@ -25,8 +25,8 @@ use ditto_ast::{
     QualifiedName, Row, Span, Type,
 };
 use ditto_cst as cst;
-use indexmap::IndexMap;
-use std::collections::{HashMap, HashSet};
+use indexmap::{IndexMap, IndexSet};
+use std::collections::HashMap;
 
 #[cfg(test)]
 pub fn typecheck(
@@ -1137,7 +1137,7 @@ fn with_extended_env<T>(
             EnvValue::ModuleValue {
                 span,
                 variable_scheme: Scheme {
-                    forall: HashSet::new(),
+                    forall: IndexSet::new(),
                     signature: value_type,
                 },
                 variable: unqualified_name.value,
