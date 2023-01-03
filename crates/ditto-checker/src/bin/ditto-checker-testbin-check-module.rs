@@ -66,7 +66,7 @@ fn read_module_dir<P: AsRef<std::path::Path>>(
     modules
 }
 
-fn main() {
+fn run() {
     let mut everything = ditto_checker::Everything::default();
 
     let mut package_paths = Vec::new();
@@ -105,4 +105,18 @@ fn main() {
     let module = parse_and_check_module(source, source_name, &everything);
 
     serde_json::to_writer_pretty(std::io::stdout(), &module).unwrap();
+}
+
+fn main() {
+    let builder = std::thread::Builder::new();
+
+    let handler = builder
+        .stack_size(
+            // 32 MB
+            32 * 1024 * 1024,
+        )
+        .spawn(run)
+        .unwrap();
+
+    handler.join().unwrap();
 }
