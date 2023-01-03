@@ -45,14 +45,15 @@ impl PackageName {
 #[derive(Clone, Debug, Deserialize, Serialize, Default)]
 #[serde(deny_unknown_fields)]
 pub struct PackageSet {
+    /// Package sets to extend. Later entries override previous ones.
+    #[serde(default)]
+    pub extends: Vec<PackageSetExtension>,
+
     /// Packages specified within the root ditto config.
+    ///
+    /// Packages specified here have the highet precedence, so will override `extends`.
     #[serde(default)]
     pub packages: PackageSetPackages,
-    // TODO
-    // extends = [{ url = "...", sha256 = "..." }, {path = "./my-overrides.toml"}
-    // where
-    //   - later entries override earlier ones
-    //   - extended URL package sets can't reference paths
 }
 
 impl PackageSet {
@@ -61,6 +62,23 @@ impl PackageSet {
     }
 }
 
+/// The specification of a package set to be extended.
+#[derive(Clone, Hash, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(untagged)]
+pub enum PackageSetExtension {
+    /// A local package set.
+    Path {
+        /// Path to the local package set.
+        path: PathBuf,
+    },
+    /// A GitHub repo.
+    Url {
+        /// Where to fetch the packages file from.
+        url: String,
+        /// The hash of the url response.
+        sha256: String,
+    },
+}
 /// The type of `package_set.packages`, for convenience.
 pub type PackageSetPackages = HashMap<PackageName, PackageSpec>;
 

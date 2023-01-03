@@ -96,6 +96,23 @@ mod successes {
     }
 
     #[test]
+    fn it_parses_package_set_extensions() {
+        assert_parses!(
+            r#"
+            name = "test"
+            dependencies = ["foo"]
+
+            [[package-set.extends]]
+            path = "../test"
+
+            [[package-set.extends]]
+            url = "https://example.com"
+            sha256 = "some-hash"
+        "#
+        );
+    }
+
+    #[test]
     fn it_parses_targets() {
         assert_parses!(
             r#"

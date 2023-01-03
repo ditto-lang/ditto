@@ -111,8 +111,62 @@ impl Config {
 
     /// Resolve packages, taking into account `extends` and overrides/additions listed in the
     /// config.
-    pub fn resolve_packages(&self) -> miette::Result<&PackageSetPackages> {
-        Ok(&self.package_set.packages)
+    pub async fn resolve_packages(&self) -> miette::Result<PackageSetPackages> {
+        let mut packages = PackageSetPackages::new();
+        for extension in self.package_set.extends.iter() {
+            match extension {
+                PackageSetExtension::Path { path } => {
+                    let contents = std::fs::read_to_string(path)
+                        .into_diagnostic()
+                        .wrap_err(format!("error reading packages at {:?}", path.as_os_str()))?;
+
+                    let new_packages: PackageSetPackages =
+                        toml::from_str(&contents).map_err(|toml_error| {
+                            miette::Report::from(ParseError::Unlocated {
+                                description: toml_error.to_string(),
+                            })
+                        })?;
+                    packages.extend(new_packages);
+                }
+                PackageSetExtension::Url { url, sha256 } => {
+                    let response = reqwest::get(url).await.into_diagnostic()?;
+                    if !response.status().is_success() {
+                        return Err(miette::miette!("{} {}", response.status(), url));
+                    }
+                    let contents = response.bytes().await.into_diagnostic()?;
+                    let got_sha256 = sha256::digest(contents.as_ref());
+                    if &got_sha256 != sha256 {
+                        return Err(miette::miette!(
+                            "sha256 mismatch for {}, expected {:?} but got {:?}",
+                            url,
+                            sha256,
+                            got_sha256
+                        ));
+                    }
+                    let new_packages: PackageSetPackages =
+                        toml::from_slice(&contents).map_err(|toml_error| {
+                            miette::Report::from(ParseError::Unlocated {
+                                description: toml_error.to_string(),
+                            })
+                        })?;
+
+                    // Because we fetched these packages from a remote, it's not allowed to contain
+                    // path references!
+                    let any_paths = new_packages
+                        .iter()
+                        .any(|(_, pkg)| matches!(pkg, PackageSpec::Path { .. }));
+                    if any_paths {
+                        return Err(miette::miette!(
+                            "{url} cannot contain packages specified by path"
+                        ));
+                    }
+
+                    packages.extend(new_packages);
+                }
+            }
+        }
+        packages.extend(self.package_set.packages.clone());
+        Ok(packages)
     }
 
     /// Parse a config file.
