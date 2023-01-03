@@ -1,7 +1,7 @@
 use super::common::type_variables;
-use ditto_ast::{graph, Argument, Effect, Expression, Kind, LetValueDeclaration, Type};
+use ditto_ast::{Argument, Effect, Expression, Kind, LetValueDeclaration, Type};
 use non_empty_vec::NonEmpty;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 #[derive(Debug, Default)]
 #[repr(transparent)]
@@ -12,9 +12,6 @@ impl Substitution {
         self.0.insert(var, ast_type);
     }
     pub fn apply(&self, ast_type: Type) -> Type {
-        if self.has_cycles() {
-            panic!("Cycles detected in substitution: {:#?}", self)
-        }
         self.apply_rec(ast_type, 0)
     }
     fn apply_rec(&self, ast_type: Type, depth: usize) -> Type {
@@ -491,20 +488,5 @@ impl Substitution {
             Some(Type::Variable { var, .. }) => self.apply_var(*var),
             _ => var,
         }
-    }
-    fn has_cycles(&self) -> bool {
-        let sccs = graph::toposort(
-            self.0.values().flat_map(type_variables).collect(),
-            |var| *var, // Copy
-            |var| {
-                if let Some(t) = self.0.get(var) {
-                    type_variables(t).into_iter().collect::<HashSet<_>>()
-                } else {
-                    HashSet::new()
-                }
-            },
-        );
-        sccs.into_iter()
-            .any(|scc| matches!(scc, graph::Scc::Cyclic(_)))
     }
 }
