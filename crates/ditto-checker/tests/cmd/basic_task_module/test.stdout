@@ -1,0 +1,1674 @@
+{
+  "module_name": [
+    "Task"
+  ],
+  "exports": {
+    "types": {
+      "Task": {
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": {
+            "Function": {
+              "parameters": [
+                "Type",
+                "Type"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "succeed": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": "a"
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          "Type",
+                          "Type"
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Task"
+                        ]
+                      ],
+                      "value": "Task"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Task"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 0,
+                      "source_name": "a"
+                    }
+                  },
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 2,
+                      "source_name": "e"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {
+    "Result": {
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 94,
+          "end_offset": 100
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Type",
+              "Type"
+            ]
+          }
+        }
+      }
+    },
+    "VoidEffect": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 61,
+          "end_offset": 71
+        },
+        "kind": "Type",
+        "aliased_type": {
+          "type": "Call",
+          "data": {
+            "function": {
+              "type": "PrimConstructor",
+              "data": "Effect"
+            },
+            "arguments": [
+              {
+                "type": "PrimConstructor",
+                "data": "Unit"
+              }
+            ]
+          }
+        },
+        "alias_variables": []
+      }
+    },
+    "Callback": {
+      "Alias": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 147,
+          "end_offset": 155
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Type",
+              "Type"
+            ]
+          }
+        },
+        "aliased_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type",
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Task"
+                          ]
+                        ],
+                        "value": "Result"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Result"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    },
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 2,
+                        "source_name": "e"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "return_type": {
+              "type": "ConstructorAlias",
+              "data": {
+                "constructor_kind": "Type",
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Task"
+                    ]
+                  ],
+                  "value": "VoidEffect"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "VoidEffect"
+                },
+                "alias_variables": [],
+                "aliased_type": {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "PrimConstructor",
+                      "data": "Effect"
+                    },
+                    "arguments": [
+                      {
+                        "type": "PrimConstructor",
+                        "data": "Unit"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "alias_variables": [
+          0,
+          2
+        ]
+      }
+    },
+    "Task": {
+      "Type": {
+        "doc_comments": [],
+        "type_name_span": {
+          "start_offset": 200,
+          "end_offset": 204
+        },
+        "kind": {
+          "Function": {
+            "parameters": [
+              "Type",
+              "Type"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "constructors": {
+    "Ok": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 115,
+        "end_offset": 117
+      },
+      "fields": [
+        {
+          "type": "Variable",
+          "data": {
+            "variable_kind": "Type",
+            "var": 0,
+            "source_name": "a"
+          }
+        }
+      ],
+      "return_type": {
+        "type": "Call",
+        "data": {
+          "function": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": {
+                "Function": {
+                  "parameters": [
+                    "Type",
+                    "Type"
+                  ]
+                }
+              },
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Task"
+                  ]
+                ],
+                "value": "Result"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Result"
+              }
+            }
+          },
+          "arguments": [
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 0,
+                "source_name": "a"
+              }
+            },
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 2,
+                "source_name": "e"
+              }
+            }
+          ]
+        }
+      },
+      "return_type_name": "Result"
+    },
+    "Err": {
+      "doc_comments": [],
+      "doc_position": 1,
+      "constructor_name_span": {
+        "start_offset": 127,
+        "end_offset": 130
+      },
+      "fields": [
+        {
+          "type": "Variable",
+          "data": {
+            "variable_kind": "Type",
+            "var": 2,
+            "source_name": "e"
+          }
+        }
+      ],
+      "return_type": {
+        "type": "Call",
+        "data": {
+          "function": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": {
+                "Function": {
+                  "parameters": [
+                    "Type",
+                    "Type"
+                  ]
+                }
+              },
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Task"
+                  ]
+                ],
+                "value": "Result"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Result"
+              }
+            }
+          },
+          "arguments": [
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 0,
+                "source_name": "a"
+              }
+            },
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 2,
+                "source_name": "e"
+              }
+            }
+          ]
+        }
+      },
+      "return_type_name": "Result"
+    },
+    "Task": {
+      "doc_comments": [],
+      "doc_position": 0,
+      "constructor_name_span": {
+        "start_offset": 213,
+        "end_offset": 217
+      },
+      "fields": [
+        {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "ConstructorAlias",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type",
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Task"
+                          ]
+                        ],
+                        "value": "Callback"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Callback"
+                      },
+                      "alias_variables": [
+                        0,
+                        2
+                      ],
+                      "aliased_type": {
+                        "type": "Function",
+                        "data": {
+                          "parameters": [
+                            {
+                              "type": "Call",
+                              "data": {
+                                "function": {
+                                  "type": "Constructor",
+                                  "data": {
+                                    "constructor_kind": {
+                                      "Function": {
+                                        "parameters": [
+                                          "Type",
+                                          "Type"
+                                        ]
+                                      }
+                                    },
+                                    "canonical_value": {
+                                      "module_name": [
+                                        null,
+                                        [
+                                          "Task"
+                                        ]
+                                      ],
+                                      "value": "Result"
+                                    },
+                                    "source_value": {
+                                      "module_name": null,
+                                      "value": "Result"
+                                    }
+                                  }
+                                },
+                                "arguments": [
+                                  {
+                                    "type": "Variable",
+                                    "data": {
+                                      "variable_kind": "Type",
+                                      "var": 0,
+                                      "source_name": "a"
+                                    }
+                                  },
+                                  {
+                                    "type": "Variable",
+                                    "data": {
+                                      "variable_kind": "Type",
+                                      "var": 2,
+                                      "source_name": "e"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ],
+                          "return_type": {
+                            "type": "ConstructorAlias",
+                            "data": {
+                              "constructor_kind": "Type",
+                              "canonical_value": {
+                                "module_name": [
+                                  null,
+                                  [
+                                    "Task"
+                                  ]
+                                ],
+                                "value": "VoidEffect"
+                              },
+                              "source_value": {
+                                "module_name": null,
+                                "value": "VoidEffect"
+                              },
+                              "alias_variables": [],
+                              "aliased_type": {
+                                "type": "Call",
+                                "data": {
+                                  "function": {
+                                    "type": "PrimConstructor",
+                                    "data": "Effect"
+                                  },
+                                  "arguments": [
+                                    {
+                                      "type": "PrimConstructor",
+                                      "data": "Unit"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    },
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 2,
+                        "source_name": "e"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "return_type": {
+              "type": "ConstructorAlias",
+              "data": {
+                "constructor_kind": "Type",
+                "canonical_value": {
+                  "module_name": [
+                    null,
+                    [
+                      "Task"
+                    ]
+                  ],
+                  "value": "VoidEffect"
+                },
+                "source_value": {
+                  "module_name": null,
+                  "value": "VoidEffect"
+                },
+                "alias_variables": [],
+                "aliased_type": {
+                  "type": "Call",
+                  "data": {
+                    "function": {
+                      "type": "PrimConstructor",
+                      "data": "Effect"
+                    },
+                    "arguments": [
+                      {
+                        "type": "PrimConstructor",
+                        "data": "Unit"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "return_type": {
+        "type": "Call",
+        "data": {
+          "function": {
+            "type": "Constructor",
+            "data": {
+              "constructor_kind": {
+                "Function": {
+                  "parameters": [
+                    "Type",
+                    "Type"
+                  ]
+                }
+              },
+              "canonical_value": {
+                "module_name": [
+                  null,
+                  [
+                    "Task"
+                  ]
+                ],
+                "value": "Task"
+              },
+              "source_value": {
+                "module_name": null,
+                "value": "Task"
+              }
+            }
+          },
+          "arguments": [
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 0,
+                "source_name": "a"
+              }
+            },
+            {
+              "type": "Variable",
+              "data": {
+                "variable_kind": "Type",
+                "var": 2,
+                "source_name": "e"
+              }
+            }
+          ]
+        }
+      },
+      "return_type_name": "Task"
+    }
+  },
+  "values": {
+    "succeed": {
+      "doc_comments": [],
+      "name_span": {
+        "start_offset": 252,
+        "end_offset": 259
+      },
+      "expression": {
+        "expression": "Function",
+        "data": {
+          "span": {
+            "start_offset": 262,
+            "end_offset": 322
+          },
+          "function_type": {
+            "type": "Function",
+            "data": {
+              "parameters": [
+                {
+                  "type": "Variable",
+                  "data": {
+                    "variable_kind": "Type",
+                    "var": 0,
+                    "source_name": "a"
+                  }
+                }
+              ],
+              "return_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type",
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Task"
+                          ]
+                        ],
+                        "value": "Task"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Task"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    },
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 2,
+                        "source_name": "e"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "binders": [
+            [
+              {
+                "Variable": {
+                  "span": {
+                    "start_offset": 266,
+                    "end_offset": 267
+                  },
+                  "name": "a"
+                }
+              },
+              {
+                "type": "Variable",
+                "data": {
+                  "variable_kind": "Type",
+                  "var": 0,
+                  "source_name": "a"
+                }
+              }
+            ]
+          ],
+          "body": {
+            "expression": "Call",
+            "data": {
+              "span": {
+                "start_offset": 284,
+                "end_offset": 322
+              },
+              "call_type": {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            "Type",
+                            "Type"
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Task"
+                          ]
+                        ],
+                        "value": "Task"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Task"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 0,
+                        "source_name": "a"
+                      }
+                    },
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 2,
+                        "source_name": "e"
+                      }
+                    }
+                  ]
+                }
+              },
+              "function": {
+                "expression": "LocalConstructor",
+                "data": {
+                  "span": {
+                    "start_offset": 284,
+                    "end_offset": 288
+                  },
+                  "constructor_type": {
+                    "type": "Function",
+                    "data": {
+                      "parameters": [
+                        {
+                          "type": "Function",
+                          "data": {
+                            "parameters": [
+                              {
+                                "type": "Call",
+                                "data": {
+                                  "function": {
+                                    "type": "ConstructorAlias",
+                                    "data": {
+                                      "constructor_kind": {
+                                        "Function": {
+                                          "parameters": [
+                                            "Type",
+                                            "Type"
+                                          ]
+                                        }
+                                      },
+                                      "canonical_value": {
+                                        "module_name": [
+                                          null,
+                                          [
+                                            "Task"
+                                          ]
+                                        ],
+                                        "value": "Callback"
+                                      },
+                                      "source_value": {
+                                        "module_name": null,
+                                        "value": "Callback"
+                                      },
+                                      "alias_variables": [
+                                        0,
+                                        2
+                                      ],
+                                      "aliased_type": {
+                                        "type": "Function",
+                                        "data": {
+                                          "parameters": [
+                                            {
+                                              "type": "Call",
+                                              "data": {
+                                                "function": {
+                                                  "type": "Constructor",
+                                                  "data": {
+                                                    "constructor_kind": {
+                                                      "Function": {
+                                                        "parameters": [
+                                                          "Type",
+                                                          "Type"
+                                                        ]
+                                                      }
+                                                    },
+                                                    "canonical_value": {
+                                                      "module_name": [
+                                                        null,
+                                                        [
+                                                          "Task"
+                                                        ]
+                                                      ],
+                                                      "value": "Result"
+                                                    },
+                                                    "source_value": {
+                                                      "module_name": null,
+                                                      "value": "Result"
+                                                    }
+                                                  }
+                                                },
+                                                "arguments": [
+                                                  {
+                                                    "type": "Variable",
+                                                    "data": {
+                                                      "variable_kind": "Type",
+                                                      "var": 0,
+                                                      "source_name": "a"
+                                                    }
+                                                  },
+                                                  {
+                                                    "type": "Variable",
+                                                    "data": {
+                                                      "variable_kind": "Type",
+                                                      "var": 2,
+                                                      "source_name": "e"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ],
+                                          "return_type": {
+                                            "type": "ConstructorAlias",
+                                            "data": {
+                                              "constructor_kind": "Type",
+                                              "canonical_value": {
+                                                "module_name": [
+                                                  null,
+                                                  [
+                                                    "Task"
+                                                  ]
+                                                ],
+                                                "value": "VoidEffect"
+                                              },
+                                              "source_value": {
+                                                "module_name": null,
+                                                "value": "VoidEffect"
+                                              },
+                                              "alias_variables": [],
+                                              "aliased_type": {
+                                                "type": "Call",
+                                                "data": {
+                                                  "function": {
+                                                    "type": "PrimConstructor",
+                                                    "data": "Effect"
+                                                  },
+                                                  "arguments": [
+                                                    {
+                                                      "type": "PrimConstructor",
+                                                      "data": "Unit"
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "arguments": [
+                                    {
+                                      "type": "Variable",
+                                      "data": {
+                                        "variable_kind": "Type",
+                                        "var": 0,
+                                        "source_name": "a"
+                                      }
+                                    },
+                                    {
+                                      "type": "Variable",
+                                      "data": {
+                                        "variable_kind": "Type",
+                                        "var": 2,
+                                        "source_name": "e"
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ],
+                            "return_type": {
+                              "type": "ConstructorAlias",
+                              "data": {
+                                "constructor_kind": "Type",
+                                "canonical_value": {
+                                  "module_name": [
+                                    null,
+                                    [
+                                      "Task"
+                                    ]
+                                  ],
+                                  "value": "VoidEffect"
+                                },
+                                "source_value": {
+                                  "module_name": null,
+                                  "value": "VoidEffect"
+                                },
+                                "alias_variables": [],
+                                "aliased_type": {
+                                  "type": "Call",
+                                  "data": {
+                                    "function": {
+                                      "type": "PrimConstructor",
+                                      "data": "Effect"
+                                    },
+                                    "arguments": [
+                                      {
+                                        "type": "PrimConstructor",
+                                        "data": "Unit"
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ],
+                      "return_type": {
+                        "type": "Call",
+                        "data": {
+                          "function": {
+                            "type": "Constructor",
+                            "data": {
+                              "constructor_kind": {
+                                "Function": {
+                                  "parameters": [
+                                    "Type",
+                                    "Type"
+                                  ]
+                                }
+                              },
+                              "canonical_value": {
+                                "module_name": [
+                                  null,
+                                  [
+                                    "Task"
+                                  ]
+                                ],
+                                "value": "Task"
+                              },
+                              "source_value": {
+                                "module_name": null,
+                                "value": "Task"
+                              }
+                            }
+                          },
+                          "arguments": [
+                            {
+                              "type": "Variable",
+                              "data": {
+                                "variable_kind": "Type",
+                                "var": 0,
+                                "source_name": "a"
+                              }
+                            },
+                            {
+                              "type": "Variable",
+                              "data": {
+                                "variable_kind": "Type",
+                                "var": 2,
+                                "source_name": "e"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "constructor": "Task"
+                }
+              },
+              "arguments": [
+                {
+                  "Expression": {
+                    "expression": "Function",
+                    "data": {
+                      "span": {
+                        "start_offset": 289,
+                        "end_offset": 321
+                      },
+                      "function_type": {
+                        "type": "Function",
+                        "data": {
+                          "parameters": [
+                            {
+                              "type": "Call",
+                              "data": {
+                                "function": {
+                                  "type": "ConstructorAlias",
+                                  "data": {
+                                    "constructor_kind": {
+                                      "Function": {
+                                        "parameters": [
+                                          "Type",
+                                          "Type"
+                                        ]
+                                      }
+                                    },
+                                    "canonical_value": {
+                                      "module_name": [
+                                        null,
+                                        [
+                                          "Task"
+                                        ]
+                                      ],
+                                      "value": "Callback"
+                                    },
+                                    "source_value": {
+                                      "module_name": null,
+                                      "value": "Callback"
+                                    },
+                                    "alias_variables": [
+                                      0,
+                                      2
+                                    ],
+                                    "aliased_type": {
+                                      "type": "Function",
+                                      "data": {
+                                        "parameters": [
+                                          {
+                                            "type": "Call",
+                                            "data": {
+                                              "function": {
+                                                "type": "Constructor",
+                                                "data": {
+                                                  "constructor_kind": {
+                                                    "Function": {
+                                                      "parameters": [
+                                                        "Type",
+                                                        "Type"
+                                                      ]
+                                                    }
+                                                  },
+                                                  "canonical_value": {
+                                                    "module_name": [
+                                                      null,
+                                                      [
+                                                        "Task"
+                                                      ]
+                                                    ],
+                                                    "value": "Result"
+                                                  },
+                                                  "source_value": {
+                                                    "module_name": null,
+                                                    "value": "Result"
+                                                  }
+                                                }
+                                              },
+                                              "arguments": [
+                                                {
+                                                  "type": "Variable",
+                                                  "data": {
+                                                    "variable_kind": "Type",
+                                                    "var": 0,
+                                                    "source_name": "a"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "Variable",
+                                                  "data": {
+                                                    "variable_kind": "Type",
+                                                    "var": 2,
+                                                    "source_name": "e"
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ],
+                                        "return_type": {
+                                          "type": "ConstructorAlias",
+                                          "data": {
+                                            "constructor_kind": "Type",
+                                            "canonical_value": {
+                                              "module_name": [
+                                                null,
+                                                [
+                                                  "Task"
+                                                ]
+                                              ],
+                                              "value": "VoidEffect"
+                                            },
+                                            "source_value": {
+                                              "module_name": null,
+                                              "value": "VoidEffect"
+                                            },
+                                            "alias_variables": [],
+                                            "aliased_type": {
+                                              "type": "Call",
+                                              "data": {
+                                                "function": {
+                                                  "type": "PrimConstructor",
+                                                  "data": "Effect"
+                                                },
+                                                "arguments": [
+                                                  {
+                                                    "type": "PrimConstructor",
+                                                    "data": "Unit"
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "arguments": [
+                                  {
+                                    "type": "Variable",
+                                    "data": {
+                                      "variable_kind": "Type",
+                                      "var": 0,
+                                      "source_name": "a"
+                                    }
+                                  },
+                                  {
+                                    "type": "Variable",
+                                    "data": {
+                                      "variable_kind": "Type",
+                                      "var": 2,
+                                      "source_name": "e"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ],
+                          "return_type": {
+                            "type": "ConstructorAlias",
+                            "data": {
+                              "constructor_kind": "Type",
+                              "canonical_value": {
+                                "module_name": [
+                                  null,
+                                  [
+                                    "Task"
+                                  ]
+                                ],
+                                "value": "VoidEffect"
+                              },
+                              "source_value": {
+                                "module_name": null,
+                                "value": "VoidEffect"
+                              },
+                              "alias_variables": [],
+                              "aliased_type": {
+                                "type": "Call",
+                                "data": {
+                                  "function": {
+                                    "type": "PrimConstructor",
+                                    "data": "Effect"
+                                  },
+                                  "arguments": [
+                                    {
+                                      "type": "PrimConstructor",
+                                      "data": "Unit"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "binders": [
+                        [
+                          {
+                            "Variable": {
+                              "span": {
+                                "start_offset": 293,
+                                "end_offset": 301
+                              },
+                              "name": "callback"
+                            }
+                          },
+                          {
+                            "type": "Function",
+                            "data": {
+                              "parameters": [
+                                {
+                                  "type": "Call",
+                                  "data": {
+                                    "function": {
+                                      "type": "Constructor",
+                                      "data": {
+                                        "constructor_kind": {
+                                          "Function": {
+                                            "parameters": [
+                                              "Type",
+                                              "Type"
+                                            ]
+                                          }
+                                        },
+                                        "canonical_value": {
+                                          "module_name": [
+                                            null,
+                                            [
+                                              "Task"
+                                            ]
+                                          ],
+                                          "value": "Result"
+                                        },
+                                        "source_value": {
+                                          "module_name": null,
+                                          "value": "Result"
+                                        }
+                                      }
+                                    },
+                                    "arguments": [
+                                      {
+                                        "type": "Variable",
+                                        "data": {
+                                          "variable_kind": "Type",
+                                          "var": 0,
+                                          "source_name": "a"
+                                        }
+                                      },
+                                      {
+                                        "type": "Variable",
+                                        "data": {
+                                          "variable_kind": "Type",
+                                          "var": 2,
+                                          "source_name": "e"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ],
+                              "return_type": {
+                                "type": "ConstructorAlias",
+                                "data": {
+                                  "constructor_kind": "Type",
+                                  "canonical_value": {
+                                    "module_name": [
+                                      null,
+                                      [
+                                        "Task"
+                                      ]
+                                    ],
+                                    "value": "VoidEffect"
+                                  },
+                                  "source_value": {
+                                    "module_name": null,
+                                    "value": "VoidEffect"
+                                  },
+                                  "alias_variables": [],
+                                  "aliased_type": {
+                                    "type": "Call",
+                                    "data": {
+                                      "function": {
+                                        "type": "PrimConstructor",
+                                        "data": "Effect"
+                                      },
+                                      "arguments": [
+                                        {
+                                          "type": "PrimConstructor",
+                                          "data": "Unit"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      ],
+                      "body": {
+                        "expression": "Call",
+                        "data": {
+                          "span": {
+                            "start_offset": 306,
+                            "end_offset": 321
+                          },
+                          "call_type": {
+                            "type": "ConstructorAlias",
+                            "data": {
+                              "constructor_kind": "Type",
+                              "canonical_value": {
+                                "module_name": [
+                                  null,
+                                  [
+                                    "Task"
+                                  ]
+                                ],
+                                "value": "VoidEffect"
+                              },
+                              "source_value": {
+                                "module_name": null,
+                                "value": "VoidEffect"
+                              },
+                              "alias_variables": [],
+                              "aliased_type": {
+                                "type": "Call",
+                                "data": {
+                                  "function": {
+                                    "type": "PrimConstructor",
+                                    "data": "Effect"
+                                  },
+                                  "arguments": [
+                                    {
+                                      "type": "PrimConstructor",
+                                      "data": "Unit"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          },
+                          "function": {
+                            "expression": "LocalVariable",
+                            "data": {
+                              "span": {
+                                "start_offset": 306,
+                                "end_offset": 314
+                              },
+                              "variable_type": {
+                                "type": "Function",
+                                "data": {
+                                  "parameters": [
+                                    {
+                                      "type": "Call",
+                                      "data": {
+                                        "function": {
+                                          "type": "Constructor",
+                                          "data": {
+                                            "constructor_kind": {
+                                              "Function": {
+                                                "parameters": [
+                                                  "Type",
+                                                  "Type"
+                                                ]
+                                              }
+                                            },
+                                            "canonical_value": {
+                                              "module_name": [
+                                                null,
+                                                [
+                                                  "Task"
+                                                ]
+                                              ],
+                                              "value": "Result"
+                                            },
+                                            "source_value": {
+                                              "module_name": null,
+                                              "value": "Result"
+                                            }
+                                          }
+                                        },
+                                        "arguments": [
+                                          {
+                                            "type": "Variable",
+                                            "data": {
+                                              "variable_kind": "Type",
+                                              "var": 0,
+                                              "source_name": "a"
+                                            }
+                                          },
+                                          {
+                                            "type": "Variable",
+                                            "data": {
+                                              "variable_kind": "Type",
+                                              "var": 2,
+                                              "source_name": "e"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "return_type": {
+                                    "type": "ConstructorAlias",
+                                    "data": {
+                                      "constructor_kind": "Type",
+                                      "canonical_value": {
+                                        "module_name": [
+                                          null,
+                                          [
+                                            "Task"
+                                          ]
+                                        ],
+                                        "value": "VoidEffect"
+                                      },
+                                      "source_value": {
+                                        "module_name": null,
+                                        "value": "VoidEffect"
+                                      },
+                                      "alias_variables": [],
+                                      "aliased_type": {
+                                        "type": "Call",
+                                        "data": {
+                                          "function": {
+                                            "type": "PrimConstructor",
+                                            "data": "Effect"
+                                          },
+                                          "arguments": [
+                                            {
+                                              "type": "PrimConstructor",
+                                              "data": "Unit"
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "variable": "callback"
+                            }
+                          },
+                          "arguments": [
+                            {
+                              "Expression": {
+                                "expression": "Call",
+                                "data": {
+                                  "span": {
+                                    "start_offset": 315,
+                                    "end_offset": 320
+                                  },
+                                  "call_type": {
+                                    "type": "Call",
+                                    "data": {
+                                      "function": {
+                                        "type": "Constructor",
+                                        "data": {
+                                          "constructor_kind": {
+                                            "Function": {
+                                              "parameters": [
+                                                "Type",
+                                                "Type"
+                                              ]
+                                            }
+                                          },
+                                          "canonical_value": {
+                                            "module_name": [
+                                              null,
+                                              [
+                                                "Task"
+                                              ]
+                                            ],
+                                            "value": "Result"
+                                          },
+                                          "source_value": {
+                                            "module_name": null,
+                                            "value": "Result"
+                                          }
+                                        }
+                                      },
+                                      "arguments": [
+                                        {
+                                          "type": "Variable",
+                                          "data": {
+                                            "variable_kind": "Type",
+                                            "var": 0,
+                                            "source_name": "a"
+                                          }
+                                        },
+                                        {
+                                          "type": "Variable",
+                                          "data": {
+                                            "variable_kind": "Type",
+                                            "var": 2,
+                                            "source_name": "e"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "function": {
+                                    "expression": "LocalConstructor",
+                                    "data": {
+                                      "span": {
+                                        "start_offset": 315,
+                                        "end_offset": 317
+                                      },
+                                      "constructor_type": {
+                                        "type": "Function",
+                                        "data": {
+                                          "parameters": [
+                                            {
+                                              "type": "Variable",
+                                              "data": {
+                                                "variable_kind": "Type",
+                                                "var": 0,
+                                                "source_name": "a"
+                                              }
+                                            }
+                                          ],
+                                          "return_type": {
+                                            "type": "Call",
+                                            "data": {
+                                              "function": {
+                                                "type": "Constructor",
+                                                "data": {
+                                                  "constructor_kind": {
+                                                    "Function": {
+                                                      "parameters": [
+                                                        "Type",
+                                                        "Type"
+                                                      ]
+                                                    }
+                                                  },
+                                                  "canonical_value": {
+                                                    "module_name": [
+                                                      null,
+                                                      [
+                                                        "Task"
+                                                      ]
+                                                    ],
+                                                    "value": "Result"
+                                                  },
+                                                  "source_value": {
+                                                    "module_name": null,
+                                                    "value": "Result"
+                                                  }
+                                                }
+                                              },
+                                              "arguments": [
+                                                {
+                                                  "type": "Variable",
+                                                  "data": {
+                                                    "variable_kind": "Type",
+                                                    "var": 0,
+                                                    "source_name": "a"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "Variable",
+                                                  "data": {
+                                                    "variable_kind": "Type",
+                                                    "var": 2,
+                                                    "source_name": "e"
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "constructor": "Ok"
+                                    }
+                                  },
+                                  "arguments": [
+                                    {
+                                      "Expression": {
+                                        "expression": "LocalVariable",
+                                        "data": {
+                                          "span": {
+                                            "start_offset": 318,
+                                            "end_offset": 319
+                                          },
+                                          "variable_type": {
+                                            "type": "Variable",
+                                            "data": {
+                                              "variable_kind": "Type",
+                                              "var": 0,
+                                              "source_name": "a"
+                                            }
+                                          },
+                                          "variable": "a"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "values_toposort": [
+    "succeed"
+  ]
+}

@@ -61,7 +61,7 @@
                   "value": "WhyTho"
                 },
                 "alias_variables": [
-                  0
+                  1
                 ],
                 "aliased_type": {
                   "type": "PrimConstructor",
@@ -514,7 +514,7 @@
                     "value": "WhyTho"
                   },
                   "alias_variables": [
-                    0
+                    1
                   ],
                   "aliased_type": {
                     "type": "PrimConstructor",
@@ -568,7 +568,7 @@
                               "value": "WhyTho"
                             },
                             "alias_variables": [
-                              0
+                              1
                             ],
                             "aliased_type": {
                               "type": "PrimConstructor",
@@ -612,7 +612,7 @@
                             "value": "WhyTho"
                           },
                           "alias_variables": [
-                            0
+                            1
                           ],
                           "aliased_type": {
                             "type": "PrimConstructor",
@@ -670,7 +670,7 @@
                             "value": "WhyTho"
                           },
                           "alias_variables": [
-                            0
+                            1
                           ],
                           "aliased_type": {
                             "type": "PrimConstructor",

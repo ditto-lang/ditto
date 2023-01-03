@@ -121,6 +121,11 @@ impl Substitution {
                 for t in tail {
                     arguments.push(self.apply_rec(t.clone(), depth));
                 }
+                let alias_variables = alias_variables
+                    .into_iter()
+                    .map(|var| self.apply_var(var))
+                    .collect::<Vec<_>>();
+
                 let mut subst = self.0.clone();
                 subst.extend(
                     alias_variables
@@ -185,7 +190,10 @@ impl Substitution {
                 constructor_kind,
                 canonical_value,
                 source_value,
-                alias_variables,
+                alias_variables: alias_variables
+                    .into_iter()
+                    .map(|var| self.apply_var(var))
+                    .collect(),
                 aliased_type: Box::new(self.apply_rec(aliased_type, depth)),
             },
             Type::Constructor {
@@ -472,6 +480,13 @@ impl Substitution {
                 expression: Box::new(self.apply_expression(expression)),
                 rest: Box::new(self.apply_effect(rest)),
             },
+        }
+    }
+
+    fn apply_var(&self, var: usize) -> usize {
+        match self.0.get(&var) {
+            Some(Type::Variable { var, .. }) => self.apply_var(*var),
+            _ => var,
         }
     }
 }
