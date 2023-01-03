@@ -17,6 +17,8 @@ semver = { version = "1.0", features = ["serde"] }
 regex = "1.7"
 lazy_static = "1.4"
 validated_newtype = "0.1"
+reqwest = "0.11"
+sha256 = "1.1"
 
 [dev-dependencies]
 similar-asserts = "1.4"

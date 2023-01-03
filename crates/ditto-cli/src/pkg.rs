@@ -26,7 +26,7 @@ pub async fn check_packages_up_to_date(
 ) -> Result<()> {
     debug!("Checking if packages are up to date");
 
-    let available_packages = config.resolve_packages()?.clone();
+    let available_packages = config.resolve_packages().await?.clone();
     let want_hash = hash_packages_inputs(&config.dependencies, &available_packages);
     debug!("Current hash is: {}", want_hash);
 
