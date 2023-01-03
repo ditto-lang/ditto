@@ -4,10 +4,8 @@ use ditto_ast::{
     Expression, FullyQualifiedName, FullyQualifiedProperName, Name, Pattern, ProperName,
     QualifiedName, QualifiedProperName, Span, Type,
 };
-use std::{
-    collections::{HashMap, HashSet},
-    default::Default,
-};
+use indexmap::IndexSet;
+use std::{collections::HashMap, default::Default};
 
 #[derive(Default, Clone)]
 pub struct Env {
@@ -32,7 +30,7 @@ impl Env {
             signature: ast_type,
         }
     }
-    fn free_type_variables(&self) -> HashSet<usize> {
+    fn free_type_variables(&self) -> IndexSet<usize> {
         self.constructors
             .values()
             .map(|env_constructor| env_constructor.get_scheme().free_type_variables())

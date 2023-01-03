@@ -11,8 +11,8 @@ pub use substitution::*;
 use crate::result::{Result, TypeError};
 use ditto_ast::{Kind, Name, QualifiedProperName, Row, Span, Type};
 use ditto_cst as cst;
+use indexmap::IndexSet;
 use non_empty_vec::NonEmpty;
-use std::collections::HashSet;
 
 #[cfg(test)]
 pub fn kindcheck(
@@ -377,13 +377,13 @@ fn occurs_check(span: Span, var: usize, kind: &Kind) -> Result<()> {
     Ok(())
 }
 
-pub fn kind_variables(kind: &Kind) -> HashSet<usize> {
-    let mut accum = HashSet::new();
+pub fn kind_variables(kind: &Kind) -> IndexSet<usize> {
+    let mut accum = IndexSet::new();
     kind_variables_rec(kind, &mut accum);
     accum
 }
 
-fn kind_variables_rec(kind: &Kind, accum: &mut HashSet<usize>) {
+fn kind_variables_rec(kind: &Kind, accum: &mut IndexSet<usize>) {
     match kind {
         Kind::Variable(var) => {
             accum.insert(*var);

@@ -1,6 +1,7 @@
 use super::{common::type_variables, Substitution};
 use crate::supply::Supply;
 use ditto_ast::Type;
+use indexmap::IndexSet;
 use std::collections::HashSet;
 
 /// A polymorphic type.
@@ -9,7 +10,7 @@ use std::collections::HashSet;
 #[derive(Debug, Clone)]
 pub struct Scheme {
     /// The "quantifier".
-    pub forall: HashSet<usize>,
+    pub forall: IndexSet<usize>,
     /// The enclosed type.
     pub signature: Type,
 }
