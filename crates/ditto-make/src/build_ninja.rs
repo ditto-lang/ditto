@@ -220,10 +220,15 @@ fn prepare_build_graph(
 
         // Check ditto version requirement
         if let Some(required_ditto_version) = config.required_ditto_version {
-            if !required_ditto_version.matches(ditto_version) {
+            let version = semver::Version {
+                pre: Default::default(),
+                build: Default::default(),
+                ..ditto_version.clone()
+            };
+            if !required_ditto_version.matches(&version) {
                 bail!(
                     "ditto version requirement not met for {}: current version = {}, wanted = {}",
-                    package_name.map_or("current_package".into(), |package_name| format!(
+                    package_name.map_or("current package".into(), |package_name| format!(
                         "{:?}",
                         package_name
                     )),
