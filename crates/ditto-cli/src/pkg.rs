@@ -5,7 +5,7 @@ use crate::{
 };
 use console::{Emoji, Style};
 use ditto_config::{
-    read_config, Config, Dependencies, GithubPackageSpec, PackageName,
+    read_config, Config, Dependencies, GithubPackageSpec, PackageName, PackageSetExtension,
     PackageSetPackages as Packages, PackageSpec, CONFIG_FILE_NAME,
 };
 use indicatif::MultiProgress;
@@ -26,7 +26,7 @@ pub async fn check_packages_up_to_date(
 ) -> Result<()> {
     debug!("Checking if packages are up to date");
 
-    let available_packages = config.resolve_packages().await?.clone();
+    let available_packages = resolve_packages(config).await?;
     let want_hash = hash_packages_inputs(&config.dependencies, &available_packages);
     debug!("Current hash is: {}", want_hash);
 
@@ -90,6 +90,69 @@ pub async fn check_packages_up_to_date(
     );
     fs::write(hash_file, want_hash.to_string().as_bytes()).into_diagnostic()?;
     Ok(())
+}
+
+async fn resolve_packages(config: &Config) -> Result<Packages> {
+    let mut packages = Packages::new();
+    for extension in config.package_set.extends.iter() {
+        match extension {
+            PackageSetExtension::Path { path } => {
+                let contents = std::fs::read_to_string(path)
+                    .into_diagnostic()
+                    .wrap_err(format!("error reading packages at {:?}", path.as_os_str()))?;
+
+                let more_packages: Packages = toml::from_str(&contents).into_diagnostic()?;
+                packages.extend(more_packages);
+            }
+            PackageSetExtension::Url { url, sha256 } => {
+                let more_packages = fetch_packages(url, sha256).await?;
+                packages.extend(more_packages);
+            }
+        }
+    }
+    packages.extend(config.package_set.packages.clone());
+    return Ok(packages);
+
+    async fn fetch_packages(url: &str, sha256: &str) -> Result<Packages> {
+        let mut cached = get_package_set_cache_dir()?;
+        cached.push(sha256);
+        cached.set_extension("toml");
+        if cached.exists() {
+            let cached_contents = fs::read_to_string(&cached).into_diagnostic()?;
+            return toml::from_str(&cached_contents).into_diagnostic();
+        }
+
+        let response = reqwest::get(url).await.into_diagnostic()?;
+        if !response.status().is_success() {
+            return Err(miette::miette!("{} {}", response.status(), url));
+        }
+        let contents = response.bytes().await.into_diagnostic()?;
+        let got_sha256 = sha256::digest(contents.as_ref());
+        if got_sha256 != sha256 {
+            return Err(miette::miette!(
+                "sha256 mismatch for {}, expected {:?} but got {:?}",
+                url,
+                sha256,
+                got_sha256
+            ));
+        }
+        let packages: Packages = toml::from_slice(&contents).into_diagnostic()?;
+
+        // Because we fetched these packages from a remote, it's not allowed to contain
+        // path references!
+        let any_paths = packages
+            .iter()
+            .any(|(_, pkg)| matches!(pkg, PackageSpec::Path { .. }));
+        if any_paths {
+            return Err(miette::miette!(
+                "{url} cannot contain packages specified by path"
+            ));
+        }
+
+        // All good, save to cache.
+        fs::write(cached, contents).into_diagnostic()?;
+        Ok(packages)
+    }
 }
 
 fn hash_packages_inputs(dependencies: &Dependencies, packages: &Packages) -> u64 {
@@ -347,7 +410,26 @@ async fn fetch_cached_github_archive(
     Ok(zip_archive)
 }
 
-pub fn get_github_cache_dir() -> Result<PathBuf> {
+fn get_package_set_cache_dir() -> Result<PathBuf> {
+    let mut cache_dir = get_ditto_cache_dir()?;
+    cache_dir.push("package-sets");
+    if !cache_dir.exists() {
+        debug!(
+            "Package set cache directory doesn't exist, creating {:?}",
+            cache_dir
+        );
+        std::fs::create_dir_all(&cache_dir)
+            .into_diagnostic()
+            .wrap_err(format!(
+                "error initializing package set cache dir at {:?}",
+                cache_dir
+            ))?;
+    }
+
+    Ok(cache_dir)
+}
+
+fn get_github_cache_dir() -> Result<PathBuf> {
     let mut cache_dir = get_ditto_cache_dir()?;
     cache_dir.push("github");
     if !cache_dir.exists() {
