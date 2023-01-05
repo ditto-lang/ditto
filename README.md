@@ -3,6 +3,9 @@
 <p align="center">
   A small, pure functional language that targets other languages.
   <br><br>
+  <a href="https://github.com/ditto-lang/ditto/releases/latest">
+  <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/ditto-lang/ditto">
+  </a>
   <a href="https://github.com/ditto-lang/ditto/actions/workflows/ci.yaml">
     <img src="https://github.com/ditto-lang/ditto/actions/workflows/ci.yaml/badge.svg?branch=main" alt="CI status">
   </a>
