@@ -15,6 +15,7 @@ type LalrpopParseError = lalrpop_util::ParseError<usize, lexer::Token, lexer::Er
 pub(crate) type Result<T> = std::result::Result<T, ParseError>;
 
 #[derive(Debug)]
+#[allow(missing_docs)]
 pub enum ParseError {
     InvalidToken { span: Span },
     UnexpectedToken { span: Span, expected: Vec<String> },
@@ -202,12 +203,21 @@ impl ImportLine {
 /// Parse [Module] header and imports.
 ///
 /// Useful for build planning.
-pub fn parse_header_and_imports(input: &str) -> Result<(Header, Vec<ImportLine>)> {
-    // TODO: actually optimise this to not parse the entire module!
-    let Module {
-        header, imports, ..
-    } = Module::parse(input)?;
+pub fn partial_parse_header_and_imports(input: &str) -> Result<(Header, Vec<ImportLine>)> {
+    let lexer = lexer::Lexer::new(input);
+    let parser = ditto::PartialHeaderAndImportsParser::new();
+    let (header, imports) = parser.parse(lexer)?;
     Ok((header, imports))
+}
+
+/// Parse a [Module] header.
+///
+/// Useful for build planning.
+pub fn partial_parse_header(input: &str) -> Result<Header> {
+    let lexer = lexer::Lexer::new(input);
+    let parser = ditto::PartialHeaderParser::new();
+    let header = parser.parse(lexer)?;
+    Ok(header)
 }
 
 impl TypeDeclaration {

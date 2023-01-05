@@ -1,0 +1,241 @@
+< initialize
+
+> initialize
+{
+  "capabilities": {
+    "documentFormattingProvider": true,
+    "semanticTokensProvider": {
+      "full": true,
+      "legend": {
+        "tokenModifiers": [],
+        "tokenTypes": [
+          "comment",
+          "keyword",
+          "namespace",
+          "type",
+          "typeParameter",
+          "enumMember",
+          "string",
+          "number",
+          "macro"
+        ]
+      },
+      "range": false,
+      "workDoneProgress": false
+    },
+    "textDocumentSync": 2
+  },
+  "serverInfo": {
+    "name": "ditto",
+    "version": "test"
+  }
+}
+
+< textDocument/didOpen
+{
+  "textDocument": {
+    "languageId": "ditto",
+    "text": "module Example exports (\nfive\n\n)\n\n\n   -- comment\nfive:Int = 5\n",
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 0
+  }
+}
+
+< textDocument/formatting
+{
+  "options": {
+    "insertFinalNewline": true,
+    "insertSpaces": false,
+    "tabSize": 4,
+    "trimFinalNewlines": true,
+    "trimTrailingWhitespace": true
+  },
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto"
+  }
+}
+
+> textDocument/formatting
+[
+  {
+    "newText": "    ",
+    "range": {
+      "end": {
+        "character": 0,
+        "line": 1
+      },
+      "start": {
+        "character": 0,
+        "line": 1
+      }
+    }
+  },
+  {
+    "newText": ",",
+    "range": {
+      "end": {
+        "character": 4,
+        "line": 1
+      },
+      "start": {
+        "character": 4,
+        "line": 1
+      }
+    }
+  },
+  {
+    "newText": "",
+    "range": {
+      "end": {
+        "character": 0,
+        "line": 3
+      },
+      "start": {
+        "character": 0,
+        "line": 2
+      }
+    }
+  },
+  {
+    "newText": "",
+    "range": {
+      "end": {
+        "character": 3,
+        "line": 6
+      },
+      "start": {
+        "character": 0,
+        "line": 6
+      }
+    }
+  },
+  {
+    "newText": " ",
+    "range": {
+      "end": {
+        "character": 5,
+        "line": 7
+      },
+      "start": {
+        "character": 5,
+        "line": 7
+      }
+    }
+  }
+]
+
+< textDocument/didChange
+{
+  "contentChanges": [
+    {
+      "range": {
+        "end": {
+          "character": 5,
+          "line": 7
+        },
+        "start": {
+          "character": 5,
+          "line": 7
+        }
+      },
+      "text": " "
+    }
+  ],
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 1
+  }
+}
+
+< textDocument/didChange
+{
+  "contentChanges": [
+    {
+      "range": {
+        "end": {
+          "character": 3,
+          "line": 6
+        },
+        "start": {
+          "character": 0,
+          "line": 6
+        }
+      },
+      "text": ""
+    }
+  ],
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 2
+  }
+}
+
+< textDocument/didChange
+{
+  "contentChanges": [
+    {
+      "range": {
+        "end": {
+          "character": 0,
+          "line": 3
+        },
+        "start": {
+          "character": 0,
+          "line": 2
+        }
+      },
+      "text": ""
+    }
+  ],
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 3
+  }
+}
+
+< textDocument/didChange
+{
+  "contentChanges": [
+    {
+      "range": {
+        "end": {
+          "character": 4,
+          "line": 1
+        },
+        "start": {
+          "character": 4,
+          "line": 1
+        }
+      },
+      "text": ","
+    }
+  ],
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 4
+  }
+}
+
+< textDocument/didChange
+{
+  "contentChanges": [
+    {
+      "range": {
+        "end": {
+          "character": 0,
+          "line": 1
+        },
+        "start": {
+          "character": 0,
+          "line": 1
+        }
+      },
+      "text": "    "
+    }
+  ],
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 5
+  }
+}
+

@@ -1,0 +1,5 @@
+module B exports (five)
+
+import C
+
+five = C.five

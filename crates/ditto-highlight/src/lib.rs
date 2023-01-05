@@ -7,6 +7,7 @@ pub struct Tags<'a> {
     pub end: &'a str,
 }
 
+#[derive(Debug)]
 pub struct Query(tree_sitter::Query);
 
 pub fn highlight<'a>(

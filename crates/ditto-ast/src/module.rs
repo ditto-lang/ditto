@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 /// A ditto module.
 ///
 /// A module captures three namespaces: types, constructors and values.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub struct Module {
     /// The name of the module, e.g. `Some.Module`.
     ///
@@ -39,7 +39,7 @@ pub struct Module {
 pub type ModuleTypes = IndexMap<ProperName, ModuleType>;
 
 /// A type defined by a module.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub enum ModuleType {
     /// A type introduced by an ordinary type declaration.
     Type {
@@ -123,7 +123,7 @@ pub type ModuleConstructors = IndexMap<ProperName, ModuleConstructor>;
 pub type ModuleValues = IndexMap<Name, ModuleValue>;
 
 /// A value defined by a module.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ModuleValue {
     /// Documentation comments (if any).
     pub doc_comments: Vec<String>,
@@ -149,7 +149,7 @@ impl Module {
 }
 
 /// A single constructor, e.g. the `Ok` constructor for `Result`.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ModuleConstructor {
     /// Documentation comments (if any).
     pub doc_comments: Vec<String>,
@@ -184,7 +184,7 @@ impl ModuleConstructor {
 }
 
 /// Everything that a module can expose.
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ModuleExports {
     /// Exposed type constructors.
     pub types: ModuleExportsTypes,
@@ -198,7 +198,7 @@ pub struct ModuleExports {
 pub type ModuleExportsTypes = IndexMap<ProperName, ModuleExportsType>;
 
 /// A single exposed type.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum ModuleExportsType {
     /// An exported type introduced by an ordinary type declaration.
     Type {
@@ -252,7 +252,7 @@ impl ModuleExportsType {
 pub type ModuleExportsConstructors = IndexMap<ProperName, ModuleExportsConstructor>;
 
 /// A single exposed constructor.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ModuleExportsConstructor {
     /// Documentation comments (if any).
     pub doc_comments: Vec<String>,
@@ -270,7 +270,7 @@ pub struct ModuleExportsConstructor {
 pub type ModuleExportsValues = IndexMap<Name, ModuleExportsValue>;
 
 /// A single exposed value.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ModuleExportsValue {
     /// Documentation comments (if any).
     pub doc_comments: Vec<String>,

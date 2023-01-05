@@ -18,7 +18,7 @@ mod r#type;
 pub use expression::*;
 pub use module::*;
 pub use name::*;
-pub use parser::parse_header_and_imports;
+pub use parser::{partial_parse_header, partial_parse_header_and_imports, ParseError};
 pub use r#type::*;
 pub use syntax::*;
 pub use token::*;

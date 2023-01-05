@@ -4,7 +4,8 @@
 
 Shout-outs to:
 
-- [`rust-analyzer`](https://github.com/rust-analyzer/rust-analyzer) for sharing the [`lsp-server`](https://github.com/rust-analyzer/lsp-server) crate
-- [`gluon-lang`](https://github.com/gluon-lang) for sharing the [`lsp-types`](https://github.com/gluon-lang/lsp-types) crate
+- [`gluon-lang`](https://github.com/gluon-lang) for [`lsp-types`](https://github.com/gluon-lang/lsp-types)
+- [@ebkladeron](https://github.com/ebkalderon) for [`tower-lsp`](thttps://github.com/ebkalderon/tower-lsp)
+- [`salsa-rs`](https://github.com/salsa-rs) for [`salsa`](https://github.com/salsa-rs/salsa)
 
 [lsp]: https://microsoft.github.io/language-server-protocol/

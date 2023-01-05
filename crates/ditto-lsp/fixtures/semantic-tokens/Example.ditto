@@ -1,0 +1,5 @@
+module Example exports (..)
+
+
+-- comment
+example: String = "example"

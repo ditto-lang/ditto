@@ -1,0 +1,78 @@
+< initialize
+
+> initialize
+{
+  "capabilities": {
+    "definitionProvider": true,
+    "documentFormattingProvider": true,
+    "hoverProvider": true,
+    "semanticTokensProvider": {
+      "full": true,
+      "legend": {
+        "tokenModifiers": [],
+        "tokenTypes": [
+          "comment",
+          "keyword",
+          "namespace",
+          "type",
+          "typeParameter",
+          "enumMember",
+          "string",
+          "number",
+          "macro"
+        ]
+      },
+      "range": false,
+      "workDoneProgress": false
+    },
+    "textDocumentSync": 2
+  },
+  "serverInfo": {
+    "name": "ditto",
+    "version": "test"
+  }
+}
+
+[
+    (
+        "/crates/ditto-lsp/fixtures/diagnostics-0/ditto-src/A.ditto",
+        Document(
+            Id {
+                value: 1,
+            },
+        ),
+    ),
+]
+
+[
+    (
+        (
+            None,
+            ModuleName(
+                NonEmpty(
+                    [
+                        ProperName(
+                            "A",
+                        ),
+                    ],
+                ),
+            ),
+        ),
+        Document(
+            Id {
+                value: 1,
+            },
+        ),
+    ),
+]
+
+< textDocument/didOpen
+{
+  "textDocument": {
+    "languageId": "ditto",
+    "text": "module A exports (five)\n\nfive : String = 5\n\n",
+    "uri": "/crates/ditto-lsp/fixtures/diagnostics-0/ditto-src/A.ditto",
+    "version": 0
+  }
+}
+

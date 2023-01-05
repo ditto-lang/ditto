@@ -14,7 +14,7 @@ use non_empty_vec::NonEmpty;
 use std::collections::HashMap;
 
 /// The available module scope. Maybe `Includes` would be a better name...
-#[derive(Default, Clone)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct Everything {
     /// Available packages.
     pub packages: HashMap<PackageName, Modules>,

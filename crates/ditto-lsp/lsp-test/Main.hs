@@ -1,4 +1,5 @@
 {-# LANGUAGE BlockArguments #-}
+{-# LANGUAGE DisambiguateRecordFields #-}
 {-# LANGUAGE ImportQualifiedPost #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -7,7 +8,7 @@
 {-# OPTIONS_GHC -Weverything -fno-warn-missing-import-lists -fno-warn-incomplete-uni-patterns -fno-warn-missing-safe-haskell-mode -fno-warn-all-missed-specialisations -fno-warn-unsafe #-}
 
 {-
-ghcid --command='stack repl cst-generator'
+ghcid --command='stack repl ditto-lsp-test'
 -}
 
 module Main (main) where
@@ -23,26 +24,33 @@ main :: IO ()
 main =
   getArgs >>= \case
     [] -> die "missing arguments"
-    [lspExe] -> test lspExe
+    [lspExe] -> do
+      putStrLn lspExe
+      test lspExe
     _ -> die "too many arguments"
 
 test :: String -> IO ()
 test lspExe = do
-  testNotAProject lspExe
+  testSemanticTokens lspExe
+  testFormatting lspExe
+  testDiagnostics0 lspExe
+  testDiagnostics1 lspExe
 
-testNotAProject :: String -> IO ()
-testNotAProject lspExe =
-  runSession lspExe "crates/ditto-lsp/fixtures/not-a-project" do
+testSemanticTokens :: String -> IO ()
+testSemanticTokens lspExe =
+  runSession lspExe "crates/ditto-lsp/fixtures/semantic-tokens" do
     example <- Lsp.openDoc "Example.ditto" "ditto"
-
-    -- semantic tokens
     Just LspTypes.SemanticTokens {} <- Lsp.getSemanticTokens example
+    pure ()
 
-    -- formatting
+testFormatting :: String -> IO ()
+testFormatting lspExe =
+  runSession lspExe "crates/ditto-lsp/fixtures/formatting" do
+    example <- Lsp.openDoc "Example.ditto" "ditto"
     Lsp.formatDoc
       example
       LspTypes.FormattingOptions
-        { -- FIXME: these options are currently ignored
+        { -- NOTE: these options are currently ignored
           LspTypes._tabSize = 4,
           LspTypes._insertSpaces = False,
           LspTypes._trimTrailingWhitespace = Just True,
@@ -50,6 +58,34 @@ testNotAProject lspExe =
           LspTypes._trimFinalNewlines = Just True
         }
 
+    pure ()
+
+testDiagnostics0 :: String -> IO ()
+testDiagnostics0 lspExe =
+  runSession lspExe "crates/ditto-lsp/fixtures/diagnostics-0" do
+    _ <- Lsp.openDoc "ditto-src/A.ditto" "ditto"
+    [ LspTypes.Diagnostic
+        { _source =
+            Just "ditto",
+          _severity = Just LspTypes.DsError,
+          _message = "types don't unify \nexpected String\ngot Int"
+        }
+      ] <-
+      Lsp.waitForDiagnostics
+    pure ()
+
+testDiagnostics1 :: String -> IO ()
+testDiagnostics1 lspExe =
+  runSession lspExe "crates/ditto-lsp/fixtures/diagnostics-1" do
+    _ <- Lsp.openDoc "ditto-src/A.ditto" "ditto"
+    [ LspTypes.Diagnostic
+        { _source =
+            Just "ditto",
+          _severity = Just LspTypes.DsError,
+          _message = "types don't unify \nexpected String\ngot Int"
+        }
+      ] <-
+      Lsp.waitForDiagnostics
     pure ()
 
 runSession :: String -> FilePath -> Lsp.Session a -> IO a
@@ -65,6 +101,7 @@ runSession lspExe rootDir session = do
         }
     sessionConfig =
       Lsp.defaultConfig
-        { Lsp.logStdErr = True,
+        { Lsp.messageTimeout = 5,
+          Lsp.logStdErr = True,
           Lsp.logMessages = False
         }

@@ -1,0 +1,8 @@
+module Example exports (
+five
+
+)
+
+
+   -- comment
+five:Int = 5

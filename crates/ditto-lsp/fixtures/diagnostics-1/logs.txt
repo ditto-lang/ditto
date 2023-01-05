@@ -1,0 +1,140 @@
+< initialize
+
+> initialize
+{
+  "capabilities": {
+    "definitionProvider": true,
+    "documentFormattingProvider": true,
+    "hoverProvider": true,
+    "semanticTokensProvider": {
+      "full": true,
+      "legend": {
+        "tokenModifiers": [],
+        "tokenTypes": [
+          "comment",
+          "keyword",
+          "namespace",
+          "type",
+          "typeParameter",
+          "enumMember",
+          "string",
+          "number",
+          "macro"
+        ]
+      },
+      "range": false,
+      "workDoneProgress": false
+    },
+    "textDocumentSync": 2
+  },
+  "serverInfo": {
+    "name": "ditto",
+    "version": "test"
+  }
+}
+
+[
+    (
+        "/crates/ditto-lsp/fixtures/diagnostics-1/.ditto/packages/core/ditto-src/B.ditto",
+        Document(
+            Id {
+                value: 2,
+            },
+        ),
+    ),
+    (
+        "/crates/ditto-lsp/fixtures/diagnostics-1/.ditto/packages/core/ditto-src/C.ditto",
+        Document(
+            Id {
+                value: 3,
+            },
+        ),
+    ),
+    (
+        "/crates/ditto-lsp/fixtures/diagnostics-1/ditto-src/A.ditto",
+        Document(
+            Id {
+                value: 1,
+            },
+        ),
+    ),
+]
+
+[
+    (
+        (
+            None,
+            ModuleName(
+                NonEmpty(
+                    [
+                        ProperName(
+                            "A",
+                        ),
+                    ],
+                ),
+            ),
+        ),
+        Document(
+            Id {
+                value: 1,
+            },
+        ),
+    ),
+    (
+        (
+            Some(
+                PackageName(
+                    "core",
+                ),
+            ),
+            ModuleName(
+                NonEmpty(
+                    [
+                        ProperName(
+                            "B",
+                        ),
+                    ],
+                ),
+            ),
+        ),
+        Document(
+            Id {
+                value: 2,
+            },
+        ),
+    ),
+    (
+        (
+            Some(
+                PackageName(
+                    "core",
+                ),
+            ),
+            ModuleName(
+                NonEmpty(
+                    [
+                        ProperName(
+                            "C",
+                        ),
+                    ],
+                ),
+            ),
+        ),
+        Document(
+            Id {
+                value: 3,
+            },
+        ),
+    ),
+]
+
+< textDocument/didOpen
+{
+  "textDocument": {
+    "languageId": "ditto",
+    "text": "module A exports (five)\n\nimport (core) B\n\nfive : String = B.five\n",
+    "uri": "/crates/ditto-lsp/fixtures/diagnostics-1/ditto-src/A.ditto",
+    "version": 0
+  }
+}
+

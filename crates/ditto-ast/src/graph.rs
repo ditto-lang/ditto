@@ -10,7 +10,7 @@ use std::{
 /// Strongly connected component.
 ///
 /// <https://en.wikipedia.org/wiki/Strongly_connected_component>
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Eq)]
 #[serde(untagged)]
 pub enum Scc<Node> {
     /// A single vertex that is not in any cycle.
