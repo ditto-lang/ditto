@@ -77,3 +77,7 @@ jobs:
           files: |
             ${{ matrix.asset_name }}.zip
             ${{ matrix.asset_name }}.sha256
+
+          # Create a draft release.
+          # Need to go and write release notes and publish manually!
+          draft: true
