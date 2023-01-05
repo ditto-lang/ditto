@@ -1,4 +1,4 @@
 
-  × ditto version requirement not met for current_package: current version =
+  × ditto version requirement not met for current package: current version =
   │ 0.0.0-test, wanted = ^1.0.0
 
