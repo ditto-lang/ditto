@@ -1,3 +1,4 @@
+use crate::Version;
 use clap::{ArgMatches, Command};
 use miette::Result;
 
@@ -12,6 +13,7 @@ fn verify_cmd() {
     command("lsp").debug_assert();
 }
 
-pub fn run(_matches: &ArgMatches) -> Result<()> {
-    ditto_lsp::main()
+pub async fn run(_matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
+    ditto_lsp::main(ditto_version.render_short()).await;
+    Ok(())
 }

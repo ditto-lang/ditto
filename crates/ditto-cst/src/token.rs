@@ -18,6 +18,11 @@ impl Span {
             end_offset: self.end_offset.max(other.end_offset),
         }
     }
+
+    /// Returns `true` if the given `offset` falls within this [Span].
+    pub fn contains(&self, offset: usize) -> bool {
+        offset >= self.start_offset && offset < self.end_offset
+    }
 }
 
 /// A syntactic element.

@@ -1,0 +1,5 @@
+module A exports (five)
+
+import (core) B
+
+five : String = B.five

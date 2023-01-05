@@ -1,5 +1,7 @@
 use ditto_tree_sitter as tree_sitter;
-use lsp_types::{SemanticTokenType, SemanticTokens, SemanticTokensLegend};
+use tower_lsp::lsp_types::{
+    SemanticToken, SemanticTokenType, SemanticTokens, SemanticTokensLegend,
+};
 
 pub fn legend() -> SemanticTokensLegend {
     SemanticTokensLegend {
@@ -62,8 +64,12 @@ impl std::convert::TryFrom<ditto_highlight::TokenType> for TokenType {
     }
 }
 
-pub fn get_tokens(tree: &tree_sitter::Tree, source: &str) -> SemanticTokens {
-    let tokens = ditto_highlight::get_tokens(source, tree, &ditto_highlight::init_query());
+pub fn get_tokens(
+    tree: &tree_sitter::Tree,
+    source: &str,
+    query: &ditto_highlight::Query,
+) -> SemanticTokens {
+    let tokens = ditto_highlight::get_tokens(source, tree, query);
     let mut tokens_builder = TokensBuilder::new();
     for token in tokens {
         if let Ok(token_type) = token.token_type.try_into() {
@@ -72,7 +78,7 @@ pub fn get_tokens(tree: &tree_sitter::Tree, source: &str) -> SemanticTokens {
     }
     SemanticTokens {
         result_id: None,
-        data: tokens_builder.into_tokens(),
+        data: tokens_builder.into_tokens().unwrap_or_default(),
     }
 }
 
@@ -102,19 +108,19 @@ impl TokensBuilder {
         })
     }
 
-    fn into_tokens(mut self) -> Vec<lsp_types::SemanticToken> {
+    fn into_tokens(mut self) -> Option<Vec<SemanticToken>> {
         let mut tokens = Vec::new();
         self.0.sort_by_key(|node| (node.start_line, node.start_col));
         let mut current_line = 0;
         let mut current_col = 0;
         for node in self.0 {
-            let delta_line: u32 = (node.start_line - current_line).try_into().unwrap();
+            let delta_line: u32 = (node.start_line - current_line).try_into().ok()?;
             let delta_start: u32 = if delta_line > 0 {
-                node.start_col.try_into().unwrap()
+                node.start_col.try_into().ok()?
             } else {
-                (node.start_col - current_col).try_into().unwrap()
+                (node.start_col - current_col).try_into().ok()?
             };
-            tokens.push(lsp_types::SemanticToken {
+            tokens.push(SemanticToken {
                 delta_line,
                 delta_start,
                 token_type: node.token_type as u32,
@@ -124,6 +130,6 @@ impl TokensBuilder {
             current_line = node.start_line;
             current_col = node.start_col;
         }
-        tokens
+        Some(tokens)
     }
 }

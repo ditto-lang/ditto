@@ -639,6 +639,6 @@ impl Build {
 
 fn read_module_header_and_imports(path: &Path) -> Result<(cst::Header, Vec<cst::ImportLine>)> {
     let contents = std::fs::read_to_string(path).into_diagnostic()?;
-    cst::parse_header_and_imports(&contents)
+    cst::partial_parse_header_and_imports(&contents)
         .map_err(|err| err.into_report(&path.to_string_lossy(), contents).into())
 }

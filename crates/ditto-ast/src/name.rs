@@ -52,7 +52,7 @@ impl From<cst::ProperName> for ProperName {
 }
 
 /// A package name consists of lower case letters, numbers and hyphens. It must start with a letter.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct PackageName(pub String);
 
 impl fmt::Display for PackageName {
@@ -70,7 +70,7 @@ impl From<cst::PackageName> for PackageName {
 /// A [ModuleName] is a non-empty collection of [ProperName]s.
 ///
 /// In the source these are joined with a dot.
-#[derive(Debug, Clone, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct ModuleName(pub NonEmpty<ProperName>);
 
 impl ModuleName {

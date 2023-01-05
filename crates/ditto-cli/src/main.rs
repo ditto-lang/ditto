@@ -49,7 +49,7 @@ async fn run(mut cmd: Command, matches: &ArgMatches, version: &Version) -> Resul
     } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_MAKE) {
         make::run(matches, version).await
     } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_LSP) {
-        lsp::run(matches)
+        lsp::run(matches, version).await
     } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_NINJA) {
         ninja::run(matches).await
     } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_FMT) {

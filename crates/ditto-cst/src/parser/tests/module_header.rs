@@ -71,4 +71,9 @@ fn it_parses_module_headers() {
             ExportPattern::AbstractType("Bar")
         ]
     );
+    assert_module_header!(
+        "-- comment\nmodule Foo exports (..)",
+        module_name = "Foo",
+        exports = crate::Exports::Everything(_)
+    );
 }

@@ -13,8 +13,16 @@ pub Module: cst::Module = {
   <header: Header> <imports: ImportLine*> <declarations: Declaration*> => cst::Module { header, imports, declarations, trailing_comments: Vec::new() }
 }
 
+pub PartialHeaderAndImports: (cst::Header, Vec<cst::ImportLine>) = {
+  <header: Header> <imports: PartialImportLine*> ! => (header, imports.into_iter().flat_map(|line| line).collect())
+}
+
 pub Header: cst::Header = {
   <module_keyword: ModuleKeyword> <module_name: ModuleName> <exports_keyword: ExportsKeyword> <exports: Exports> => cst::Header { module_keyword, module_name, exports_keyword, exports },
+}
+
+pub PartialHeader: cst::Header = {
+  <module_keyword: ModuleKeyword> <module_name: ModuleName> <exports_keyword: ExportsKeyword> <exports: Exports> ! => cst::Header { module_keyword, module_name, exports_keyword, exports },
 }
 
 Exports: cst::Exports = {
@@ -29,6 +37,11 @@ Export: cst::Export = {
 
 pub ImportLine: cst::ImportLine = {
   <import_keyword: ImportKeyword> <package: Parens<PackageName>?> <module_name: ModuleName> <alias: (AsKeyword ProperName)?> <imports: ImportList?> => cst::ImportLine { import_keyword, package, module_name, alias, imports }
+}
+
+pub PartialImportLine: Option<cst::ImportLine> = {
+  <import_keyword: ImportKeyword> <package: Parens<PackageName>?> <module_name: ModuleName> <alias: (AsKeyword ProperName)?> <imports: ImportList?> => Some(cst::ImportLine { import_keyword, package, module_name, alias, imports }),
+  ! => None
 }
 
 ImportList: cst::ImportList = {

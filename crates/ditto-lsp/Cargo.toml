@@ -8,20 +8,24 @@ license = "BSD-3-Clause"
 doctest = false
 
 [dependencies]
-lsp-server = "0.6"
-lsp-types = "0.93"
-serde = "1.0"
-serde_json = "1.0"
-log = "0.4"
-tracing = "0.1"
-miette = { version = "5.5" }
-url = "2.3"
+salsa = { package = "salsa-2022", git = "https://github.com/salsa-rs/salsa", rev = "20c7834ff34fd00a41b59bec61f3d5c85ea3abd4" }
+tower-lsp = "0.18"
+ropey = "1.5"
+dashmap = "5.4"
+tokio = { version = "1.22", features = ["full"] }
 ditto-cst = { path = "../ditto-cst" }
+ditto-ast = { path = "../ditto-ast" }
+ditto-checker = { path = "../ditto-checker" }
+ditto-config = { path = "../ditto-config" }
+ditto-make = { path = "../ditto-make" }
 ditto-fmt = { path = "../ditto-fmt" }
 ditto-tree-sitter = { path = "../ditto-tree-sitter" }
 ditto-highlight = { path = "../ditto-highlight" }
-ropey = "1.5"
-#salsa = "xx"
+similar = "2.2"
+miette = { version = "5.5", features = ["fancy"] }
+serde = "1.0"
+serde_json = "1.0"
+log = { version = "0.4", features = ["std"] }
 
 [dev-dependencies]
-log = { version = "0.4", features = ["std"] }
+assert_cmd = "2.0"

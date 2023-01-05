@@ -6,7 +6,7 @@ use non_empty_vec::NonEmpty;
 use serde::{Deserialize, Serialize};
 
 /// The real business value.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(tag = "expression", content = "data")]
 pub enum Expression {
     /// Everyone's favourite: the humble function
@@ -551,7 +551,7 @@ impl Expression {
 /// ```ditto
 /// some_function(argument)
 /// ```
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum Argument {
     /// A standard expression argument.
     /// Could be a variable, could be another function call.
@@ -574,7 +574,7 @@ impl Argument {
 }
 
 /// A pattern to be matched.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum Pattern {
     /// A local constructor pattern.
     LocalConstructor {
@@ -611,7 +611,7 @@ pub enum Pattern {
 }
 
 /// A chain of Effect statements.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum Effect {
     /// `do { name <- expression; rest }`
     Bind {
@@ -646,7 +646,7 @@ pub enum Effect {
 }
 
 /// A value declaration that appears within a `let` expression.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct LetValueDeclaration {
     /// The pattern containing names to be bound.
     pub pattern: Pattern,

@@ -1,0 +1,3 @@
+module C exports (five)
+
+five : Int = 5

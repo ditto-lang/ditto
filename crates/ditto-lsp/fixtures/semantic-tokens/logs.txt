@@ -1,0 +1,91 @@
+< initialize
+
+> initialize
+{
+  "capabilities": {
+    "documentFormattingProvider": true,
+    "semanticTokensProvider": {
+      "full": true,
+      "legend": {
+        "tokenModifiers": [],
+        "tokenTypes": [
+          "comment",
+          "keyword",
+          "namespace",
+          "type",
+          "typeParameter",
+          "enumMember",
+          "string",
+          "number",
+          "macro"
+        ]
+      },
+      "range": false,
+      "workDoneProgress": false
+    },
+    "textDocumentSync": 2
+  },
+  "serverInfo": {
+    "name": "ditto",
+    "version": "test"
+  }
+}
+
+< textDocument/didOpen
+{
+  "textDocument": {
+    "languageId": "ditto",
+    "text": "module Example exports (..)\n\n\n-- comment\nexample: String = \"example\"\n",
+    "uri": "/crates/ditto-lsp/fixtures/semantic-tokens/Example.ditto",
+    "version": 0
+  }
+}
+
+< textDocument/semanticTokens/full
+{
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/semantic-tokens/Example.ditto"
+  }
+}
+
+> textDocument/semanticTokens/full
+{
+  "data": [
+    0,
+    0,
+    6,
+    1,
+    0,
+    0,
+    7,
+    7,
+    2,
+    0,
+    0,
+    8,
+    7,
+    1,
+    0,
+    0,
+    9,
+    2,
+    8,
+    0,
+    3,
+    0,
+    10,
+    0,
+    0,
+    1,
+    9,
+    6,
+    3,
+    0,
+    0,
+    9,
+    9,
+    6,
+    0
+  ]
+}
+
