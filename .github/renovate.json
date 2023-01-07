@@ -1,5 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>ditto-lang/.github:renovate-config"],
+  "extends": ["local>ditto-lang/.github:renovate-config", ":automergeAll"],
   "ignorePaths": ["crates/ditto-cli/fixtures/**"]
 }
