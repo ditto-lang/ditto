@@ -1,9 +1,9 @@
 
   × duplicate top-level name
    ╭─[duplicate_value_declaration.ditto:1:1]
- 1 │ module Test exports (..); a : Bool = true; a : Int = 5;
-   ·                           ┬                ┬
-   ·                           │                ╰── can't be redefined here
-   ·                           ╰── previously defined here
+ 1 │ module Test exports (..) a : Bool = true a : Int = 5
+   ·                          ┬               ┬
+   ·                          │               ╰── can't be redefined here
+   ·                          ╰── previously defined here
    ╰────
 

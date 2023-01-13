@@ -1,10 +1,10 @@
 
   × unknown constructor
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
  3 │ -- TODO error should mention that the module isn't imported
- 4 │ bang = NotImported.Constructor;
+ 4 │ bang = NotImported.Constructor
    ·        ───────────┬───────────
    ·                   ╰── not in scope
  5 │ 

@@ -1,7 +1,7 @@
 
   × unknown type export
    ╭─[unknown_type_export.ditto:1:1]
- 1 │ module Test exports (Huh);
+ 1 │ module Test exports (Huh)
    ·                      ─┬─
    ·                       ╰── this type isn't defined?
    ╰────

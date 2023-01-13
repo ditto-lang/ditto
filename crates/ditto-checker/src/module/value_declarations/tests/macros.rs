@@ -44,7 +44,7 @@ macro_rules! assert_value_declaration_error {
 
 macro_rules! parse_value_declaration {
     ($decl:expr) => {{
-        let parse_result = ditto_cst::ValueDeclaration::parse(&format!("{};", $decl));
+        let parse_result = ditto_cst::ValueDeclaration::parse($decl);
         assert!(
             matches!(parse_result, Ok(_)),
             "{:#?}",

@@ -1,8 +1,8 @@
-module Test exports (..);
+module Test exports (..)
 
 import Maybe (
     Maybe, 
     Maybe
-);
+)
 
-maybe_fives : Array(Maybe(Int)) = [];
+maybe_fives : Array(Maybe(Int)) = []

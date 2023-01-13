@@ -1,4 +1,4 @@
-module Test exports (..);
+module Test exports (..)
 
-import Foo (yes);
-import Bar (yes);
+import Foo (yes)
+import Bar (yes)

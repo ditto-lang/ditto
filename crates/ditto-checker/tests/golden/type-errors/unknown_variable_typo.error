@@ -2,9 +2,9 @@
   × unknown variable
    ╭─[golden:2:1]
  2 │ 
- 3 │ five = 5;
+ 3 │ five = 5
  4 │ 
- 5 │ suggest = fide;
+ 5 │ suggest = fide
    ·           ──┬─
    ·             ╰── not in scope
    ╰────

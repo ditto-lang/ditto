@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-my_fn = fn (n : Int) -> n;
+my_fn = fn (n : Int) -> n
 
-five = my_fn(5.0);
+five = my_fn(5.0)

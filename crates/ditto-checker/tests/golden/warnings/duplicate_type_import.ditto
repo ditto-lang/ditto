@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-import Data.Stuff (Five, Five, five_ctor);
+import Data.Stuff (Five, Five, five_ctor)
 
-my_five : Five = five_ctor;
+my_five : Five = five_ctor

@@ -1,67 +1,67 @@
-module Test exports (..);
+module Test exports (..)
 
-import Data.Stuff (Five(..));
+import Data.Stuff (Five(..))
 
-type Maybe(a) = Just(a) | Nothing;
+type Maybe(a) = Just(a) | Nothing
 
-type ManyFields(a, b, c, d) = ManyFields(a, b, c, d);
+type ManyFields(a, b, c, d) = ManyFields(a, b, c, d)
 
 with_default = fn (maybe: Maybe(a), default: a): a ->
     match maybe with
     | Just(a) -> a
     | Nothing -> default
-    end;
+    end
 
 mk_five = fn (five) ->
     match five with
     | Five -> 5
-    end;
+    end
 
 many_fields_to_array = fn (mf : ManyFields(a, a, a, a)): Array(a) -> 
     match mf with
     | ManyFields(a, b, c, d) -> [a, b, c, d]
-    end;
+    end
 
 is_just = fn (maybe): Bool ->
     match maybe with
     | Just(_) -> true
     | Nothing -> false
-    end;
+    end
 
 function_arms = fn (maybe: Maybe(Int)) ->
     match maybe with
     | Just(a) -> fn (b, c) -> [a, b, c]
     | Nothing -> fn (b, c) -> [1, b, c]
-    end;
+    end
 
 very_function_arms = fn (maybe: Maybe(Int)) ->
     match maybe with
     | Just(a) -> fn (b) -> fn (c) -> fn (d) -> [a, b, c]
     | Nothing -> fn (b) -> fn (c) -> fn (d) -> [1, b, c]
-    end;
+    end
 
 effect_arms = fn (maybe) ->
     match maybe with
     | Just(a) -> do { return a }
     | Nothing -> do { return 5 }
-    end;
+    end
 
 type ABC =
     | A
     | B
-    | C;
+    | C
 
 to_string = fn (abc) ->
     match abc with
     | A -> "A"
     | B -> "C"
     | C -> "C"
-    end;
+    end
 
-id = fn (a) -> a;
+id = fn (a) -> a
 
 complex_matched_expresion = fn (x) ->
     match id(id(id(id(id(id(x)))))) with
     | Just(y) -> [y]
     | Nothing -> [2]
-    end;
+    end

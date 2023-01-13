@@ -3,18 +3,18 @@ module Test exports (
   Maybe(..), 
   Result(..), 
   Private,
-);
+)
 
-type A = A;
+type A = A
 
-type Maybe(a) = Just(a) | Nothing;
+type Maybe(a) = Just(a) | Nothing
 
-type Result(a, e) = Ok(a) | Err(e);
+type Result(a, e) = Ok(a) | Err(e)
 
-type Private = Private;
+type Private = Private
 
-type Internal(a, b, c) = Internal(a, b);
+type Internal(a, b, c) = Internal(a, b)
 
-nothing = Nothing;
+nothing = Nothing
 
-just_five = Just(5);
+just_five = Just(5)

@@ -219,8 +219,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 68,
-          "end_offset": 74
+          "start_offset": 66,
+          "end_offset": 72
         },
         "kind": {
           "Function": {
@@ -280,15 +280,15 @@
     "none": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 137,
-        "end_offset": 141
+        "start_offset": 133,
+        "end_offset": 137
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 144,
-            "end_offset": 177
+            "start_offset": 140,
+            "end_offset": 173
           },
           "function_type": {
             "type": "Function",
@@ -384,8 +384,8 @@
             "expression": "ImportedConstructor",
             "data": {
               "span": {
-                "start_offset": 164,
-                "end_offset": 177
+                "start_offset": 160,
+                "end_offset": 173
               },
               "constructor_type": {
                 "type": "Call",
@@ -487,15 +487,15 @@
     "some": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 91,
-        "end_offset": 95
+        "start_offset": 88,
+        "end_offset": 92
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 98,
-            "end_offset": 135
+            "start_offset": 95,
+            "end_offset": 132
           },
           "function_type": {
             "type": "Function",
@@ -554,8 +554,8 @@
               {
                 "Variable": {
                   "span": {
-                    "start_offset": 102,
-                    "end_offset": 103
+                    "start_offset": 99,
+                    "end_offset": 100
                   },
                   "name": "a"
                 }
@@ -574,8 +574,8 @@
             "expression": "Call",
             "data": {
               "span": {
-                "start_offset": 122,
-                "end_offset": 135
+                "start_offset": 119,
+                "end_offset": 132
               },
               "call_type": {
                 "type": "Call",
@@ -618,8 +618,8 @@
                 "expression": "ImportedConstructor",
                 "data": {
                   "span": {
-                    "start_offset": 122,
-                    "end_offset": 132
+                    "start_offset": 119,
+                    "end_offset": 129
                   },
                   "constructor_type": {
                     "type": "Function",
@@ -690,8 +690,8 @@
                     "expression": "LocalVariable",
                     "data": {
                       "span": {
-                        "start_offset": 133,
-                        "end_offset": 134
+                        "start_offset": 130,
+                        "end_offset": 131
                       },
                       "variable_type": {
                         "type": "Variable",

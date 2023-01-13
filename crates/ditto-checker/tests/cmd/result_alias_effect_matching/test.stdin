@@ -1,8 +1,8 @@
-module Test exports (..);
+module Test exports (..)
 
-import Result;
+import Result
 
-type alias Result = Result.Result(Int, String);
+type alias Result = Result.Result(Int, String)
 
 match_my_result = fn (eff: Effect(Result)): Effect(Bool) -> do {
     res <- eff;
@@ -10,4 +10,4 @@ match_my_result = fn (eff: Effect(Result)): Effect(Bool) -> do {
     | Result.Ok(_) -> true
     | Result.Err(_) -> false
     end
-};
+}

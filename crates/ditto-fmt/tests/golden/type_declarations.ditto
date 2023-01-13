@@ -1,11 +1,11 @@
-module Type.Declarations exports (..);
+module Type.Declarations exports (..)
 
 
 -- Documentation lorem ipsum whatever
-type Dunno;
+type Dunno
 
 type Maybe(a) =
     -- comment
     | Just(a)
     -- comment
-    | Nothing;
+    | Nothing

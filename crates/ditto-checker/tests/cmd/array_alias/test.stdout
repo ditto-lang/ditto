@@ -111,8 +111,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 38,
-          "end_offset": 41
+          "start_offset": 37,
+          "end_offset": 40
         },
         "kind": {
           "Function": {
@@ -151,15 +151,15 @@
     "fives": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 58,
-        "end_offset": 63
+        "start_offset": 56,
+        "end_offset": 61
       },
       "expression": {
         "expression": "Array",
         "data": {
           "span": {
-            "start_offset": 77,
-            "end_offset": 86
+            "start_offset": 75,
+            "end_offset": 84
           },
           "element_type": {
             "type": "PrimConstructor",
@@ -170,8 +170,8 @@
               "expression": "Int",
               "data": {
                 "span": {
-                  "start_offset": 78,
-                  "end_offset": 79
+                  "start_offset": 76,
+                  "end_offset": 77
                 },
                 "value": "5",
                 "value_type": {
@@ -184,8 +184,8 @@
               "expression": "Int",
               "data": {
                 "span": {
-                  "start_offset": 81,
-                  "end_offset": 82
+                  "start_offset": 79,
+                  "end_offset": 80
                 },
                 "value": "5",
                 "value_type": {
@@ -198,8 +198,8 @@
               "expression": "Int",
               "data": {
                 "span": {
-                  "start_offset": 84,
-                  "end_offset": 85
+                  "start_offset": 82,
+                  "end_offset": 83
                 },
                 "value": "5",
                 "value_type": {

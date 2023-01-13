@@ -2,10 +2,10 @@
   × constructor `A` imported multiple times
    ╭─[rebound_import_constructors.ditto:2:1]
  2 │ 
- 3 │ import Foo (Foo(..));
+ 3 │ import Foo (Foo(..))
    ·                ──┬─
    ·                  ╰── first imported here
- 4 │ import Bar (Bar(..));
+ 4 │ import Bar (Bar(..))
    ·                ──┬─
    ·                  ╰── imported again here
    ╰────

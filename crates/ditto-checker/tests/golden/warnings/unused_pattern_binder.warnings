@@ -8,5 +8,5 @@
    ·          ┬
    ·          ╰── this isn't used
  8 │   | None -> 5.0
- 9 │   end;
+ 9 │   end
    ╰────

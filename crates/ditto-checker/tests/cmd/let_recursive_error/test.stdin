@@ -1,8 +1,8 @@
-module Test exports (..);
+module Test exports (..)
 
 bang = 
     let
-        a = b;
-        b = a;
+        a = b
+        b = a
     in 
-    unit;
+    unit

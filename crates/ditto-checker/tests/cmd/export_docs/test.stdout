@@ -95,8 +95,8 @@
           "my type `A`"
         ],
         "type_name_span": {
-          "start_offset": 97,
-          "end_offset": 98
+          "start_offset": 96,
+          "end_offset": 97
         },
         "kind": "Type"
       }
@@ -110,8 +110,8 @@
       ],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 171,
-        "end_offset": 174
+        "start_offset": 170,
+        "end_offset": 173
       },
       "fields": [],
       "return_type": {
@@ -142,15 +142,15 @@
         "This function takes anything and returns an `A`."
       ],
       "name_span": {
-        "start_offset": 229,
-        "end_offset": 242
+        "start_offset": 227,
+        "end_offset": 240
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 245,
-            "end_offset": 261
+            "start_offset": 243,
+            "end_offset": 259
           },
           "function_type": {
             "type": "Function",
@@ -191,8 +191,8 @@
               {
                 "Unused": {
                   "span": {
-                    "start_offset": 249,
-                    "end_offset": 250
+                    "start_offset": 247,
+                    "end_offset": 248
                   },
                   "unused_name": "_"
                 }
@@ -211,8 +211,8 @@
             "expression": "LocalConstructor",
             "data": {
               "span": {
-                "start_offset": 258,
-                "end_offset": 261
+                "start_offset": 256,
+                "end_offset": 259
               },
               "constructor_type": {
                 "type": "Constructor",

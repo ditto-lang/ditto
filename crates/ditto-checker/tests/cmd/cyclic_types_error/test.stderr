@@ -2,10 +2,10 @@
   × kinds don't unify
    ╭─[cyclic_types_error.ditto:2:1]
  2 │ 
- 3 │ type A = A(B);
+ 3 │ type A = A(B)
    ·            ┬
    ·            ╰── here
- 4 │ type B(c) = B(A, c);
+ 4 │ type B(c) = B(A, c)
    ╰────
   help: expected Type
         got ($1) -> Type

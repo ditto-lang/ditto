@@ -1,6 +1,6 @@
-module Test exports (..);
+module Test exports (..)
 
-import (wut) Huh (nah);
+import (wut) Huh (nah)
 
 
-five : Float = 5.0;
+five : Float = 5.0

@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-five = 5;
+five = 5
 
-suggest = fide;
+suggest = fide

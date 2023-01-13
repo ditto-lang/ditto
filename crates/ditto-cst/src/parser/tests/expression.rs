@@ -565,10 +565,10 @@ fn it_parses_record_updates() {
 
 #[test]
 fn it_parses_let_expressions() {
-    assert_parses!("let five = 5; in five", Expression::Let { .. });
+    assert_parses!("let five = 5 in five", Expression::Let { .. });
     assert_parses!(
-        "let five = 5; ten: Int = 10; in add(five, ten)",
+        "let five = 5 ten: Int = 10 in add(five, ten)",
         Expression::Let { .. }
     );
-    assert_parses!("let Wrapped(x) = wrapped; in x", Expression::Let { .. });
+    assert_parses!("let Wrapped(x) = wrapped in x", Expression::Let { .. });
 }

@@ -1,7 +1,7 @@
-module Test exports (..);
+module Test exports (..)
 
 type Maybe(a) =
     | Just(a)
-    | Nothing;
+    | Nothing
 
-from_just = fn (Just(a)) -> a;
+from_just = fn (Just(a)) -> a

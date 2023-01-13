@@ -2,7 +2,7 @@
   × wrong number of arguments
    ╭─[self_referencing_function_error.ditto:2:1]
  2 │ 
- 3 │ spin = fn () -> spin(2);
+ 3 │ spin = fn () -> spin(2)
    ·                 ──┬─
    ·                   ╰── this expects no arguments
    ╰────

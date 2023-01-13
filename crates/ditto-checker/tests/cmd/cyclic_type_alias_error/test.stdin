@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-type alias Foo = Foo;
+type alias Foo = Foo
 
-wut : Foo = unit;
+wut : Foo = unit

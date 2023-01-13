@@ -1,9 +1,9 @@
 
   × expression isn't callable
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
- 3 │ huh = 5 |> 5;
+ 3 │ huh = 5 |> 5
    ·            ┬
    ·            ╰── can't call this
    ╰────

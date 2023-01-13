@@ -1,12 +1,12 @@
 
   × duplicate imports for module `Stf`
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
- 3 │ import (test-stuff) Data.Stuff as Stf;
+ 3 │ import (test-stuff) Data.Stuff as Stf
    ·                                   ─┬─
    ·                                    ╰── previous import
- 4 │ import Data.Stuff as Stf;
+ 4 │ import Data.Stuff as Stf
    ·                      ─┬─
    ·                       ╰── imported again here
    ╰────

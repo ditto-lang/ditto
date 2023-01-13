@@ -361,8 +361,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 38,
-          "end_offset": 39
+          "start_offset": 37,
+          "end_offset": 38
         },
         "kind": {
           "Function": {
@@ -399,8 +399,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 66,
-          "end_offset": 67
+          "start_offset": 64,
+          "end_offset": 65
         },
         "kind": {
           "Function": {
@@ -480,8 +480,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 90,
-          "end_offset": 94
+          "start_offset": 87,
+          "end_offset": 91
         },
         "kind": "Type",
         "aliased_type": {
@@ -594,15 +594,15 @@
     "fives": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 106,
-        "end_offset": 111
+        "start_offset": 102,
+        "end_offset": 107
       },
       "expression": {
         "expression": "Array",
         "data": {
           "span": {
-            "start_offset": 121,
-            "end_offset": 130
+            "start_offset": 117,
+            "end_offset": 126
           },
           "element_type": {
             "type": "PrimConstructor",
@@ -613,8 +613,8 @@
               "expression": "Int",
               "data": {
                 "span": {
-                  "start_offset": 122,
-                  "end_offset": 123
+                  "start_offset": 118,
+                  "end_offset": 119
                 },
                 "value": "5",
                 "value_type": {
@@ -627,8 +627,8 @@
               "expression": "Int",
               "data": {
                 "span": {
-                  "start_offset": 125,
-                  "end_offset": 126
+                  "start_offset": 121,
+                  "end_offset": 122
                 },
                 "value": "5",
                 "value_type": {
@@ -641,8 +641,8 @@
               "expression": "Int",
               "data": {
                 "span": {
-                  "start_offset": 128,
-                  "end_offset": 129
+                  "start_offset": 124,
+                  "end_offset": 125
                 },
                 "value": "5",
                 "value_type": {

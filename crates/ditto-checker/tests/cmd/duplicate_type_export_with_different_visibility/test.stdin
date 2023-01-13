@@ -1,5 +1,5 @@
-module Test exports (A, A(..));
+module Test exports (A, A(..))
 
-type A = A;
+type A = A
 
 -- NOTE: possibly deserves a different warning as the type visibility differs between the duplicates?

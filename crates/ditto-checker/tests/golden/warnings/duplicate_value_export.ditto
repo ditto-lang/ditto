@@ -2,7 +2,7 @@ module Test exports (
     foo, 
     bar,
     foo,
-);
+)
 
-foo = unit;
-bar = unit;
+foo = unit
+bar = unit

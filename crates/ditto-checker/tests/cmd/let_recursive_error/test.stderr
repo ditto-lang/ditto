@@ -2,9 +2,9 @@
   × unknown variable
    ╭─[let_recursive_error.ditto:4:1]
  4 │     let
- 5 │         a = b;
+ 5 │         a = b
    ·             ┬
    ·             ╰── not in scope
- 6 │         b = a;
+ 6 │         b = a
    ╰────
 

@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-type ExtensibleProps(r) = ExtensibleProps({ r | foo: Int });
+type ExtensibleProps(r) = ExtensibleProps({ r | foo: Int })
 
-type BadExtension = Bad(ExtensibleProps(Int));
+type BadExtension = Bad(ExtensibleProps(Int))

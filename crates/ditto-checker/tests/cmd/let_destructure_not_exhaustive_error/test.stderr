@@ -2,7 +2,7 @@
   × match not exhaustive
     ╭─[let_destructure_not_exhaustive_error.ditto:8:1]
   8 │     let
-  9 │         Some(five) = option_five;
+  9 │         Some(five) = option_five
     ·         ─────┬────
     ·              ╰── this match expression
  10 │     in

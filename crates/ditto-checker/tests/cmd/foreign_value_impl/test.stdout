@@ -22,15 +22,15 @@
     "id_int": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 61,
-        "end_offset": 67
+        "start_offset": 59,
+        "end_offset": 65
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 70,
-            "end_offset": 86
+            "start_offset": 68,
+            "end_offset": 84
           },
           "function_type": {
             "type": "Function",
@@ -52,8 +52,8 @@
               {
                 "Variable": {
                   "span": {
-                    "start_offset": 74,
-                    "end_offset": 75
+                    "start_offset": 72,
+                    "end_offset": 73
                   },
                   "name": "n"
                 }
@@ -68,8 +68,8 @@
             "expression": "LocalVariable",
             "data": {
               "span": {
-                "start_offset": 85,
-                "end_offset": 86
+                "start_offset": 83,
+                "end_offset": 84
               },
               "variable_type": {
                 "type": "PrimConstructor",
@@ -84,15 +84,15 @@
     "probably_five": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 89,
-        "end_offset": 102
+        "start_offset": 86,
+        "end_offset": 99
       },
       "expression": {
         "expression": "Call",
         "data": {
           "span": {
-            "start_offset": 105,
-            "end_offset": 120
+            "start_offset": 102,
+            "end_offset": 117
           },
           "call_type": {
             "type": "PrimConstructor",
@@ -102,8 +102,8 @@
             "expression": "LocalVariable",
             "data": {
               "span": {
-                "start_offset": 105,
-                "end_offset": 111
+                "start_offset": 102,
+                "end_offset": 108
               },
               "variable_type": {
                 "type": "Function",
@@ -129,8 +129,8 @@
                 "expression": "ForeignVariable",
                 "data": {
                   "span": {
-                    "start_offset": 112,
-                    "end_offset": 119
+                    "start_offset": 109,
+                    "end_offset": 116
                   },
                   "variable_type": {
                     "type": "PrimConstructor",

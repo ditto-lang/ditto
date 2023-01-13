@@ -1,6 +1,6 @@
-module Test exports (..);
+module Test exports (..)
 
 
-type Five = Five;
+type Five = Five
 
-suggest = Fide;
+suggest = Fide

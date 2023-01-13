@@ -65,15 +65,15 @@
     "maybe_fives": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 73,
-        "end_offset": 84
+        "start_offset": 71,
+        "end_offset": 82
       },
       "expression": {
         "expression": "Array",
         "data": {
           "span": {
-            "start_offset": 108,
-            "end_offset": 120
+            "start_offset": 106,
+            "end_offset": 118
           },
           "element_type": {
             "type": "Call",
@@ -116,8 +116,8 @@
               "expression": "Call",
               "data": {
                 "span": {
-                  "start_offset": 109,
-                  "end_offset": 119
+                  "start_offset": 107,
+                  "end_offset": 117
                 },
                 "call_type": {
                   "type": "Call",
@@ -159,8 +159,8 @@
                   "expression": "ImportedConstructor",
                   "data": {
                     "span": {
-                      "start_offset": 109,
-                      "end_offset": 113
+                      "start_offset": 107,
+                      "end_offset": 111
                     },
                     "constructor_type": {
                       "type": "Function",
@@ -226,8 +226,8 @@
                       "expression": "True",
                       "data": {
                         "span": {
-                          "start_offset": 114,
-                          "end_offset": 118
+                          "start_offset": 112,
+                          "end_offset": 116
                         },
                         "value_type": {
                           "type": "PrimConstructor",

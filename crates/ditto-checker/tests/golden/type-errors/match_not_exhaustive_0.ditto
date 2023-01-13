@@ -1,8 +1,8 @@
-module Test exports (..);
+module Test exports (..)
 
-type Maybe(a) = Just(a) | Nothing;
+type Maybe(a) = Just(a) | Nothing
 
 unwrap = fn (maybe: Maybe(Int)): Int ->
   match maybe with
   | Just(n) -> n
-  end;
+  end

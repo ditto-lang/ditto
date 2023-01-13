@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-import Dep;
+import Dep
 
-five = 5;
+five = 5

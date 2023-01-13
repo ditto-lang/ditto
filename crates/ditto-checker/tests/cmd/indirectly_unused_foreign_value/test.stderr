@@ -2,7 +2,7 @@
   ⚠ unused top-level value
    ╭─[indirectly_unused_foreign_value.ditto:4:1]
  4 │ 
- 5 │ unused = unused_impl;
+ 5 │ unused = unused_impl
    · ───┬──
    ·    ╰── this isn't referenced or exported
  6 │ 

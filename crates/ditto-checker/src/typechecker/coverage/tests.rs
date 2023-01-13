@@ -4,41 +4,41 @@ use macros::assert_not_covered;
 fn it_errors_for_non_exhaustive_patterns() {
     assert_not_covered!(
         r#"
-        module Test exports (..);
-        type Foo = A | B;
-        test = fn (x: Foo) -> match x with | A -> 5 end;
+        module Test exports (..)
+        type Foo = A | B
+        test = fn (x: Foo) -> match x with | A -> 5 end
         "#,
         &["B"]
     );
     assert_not_covered!(
         r#"
-        module Test exports (..);
-        type Maybe(a) = Just(a) | None;
-        test = fn (x: Maybe(a)) -> match x with | Just(a) -> a end;
+        module Test exports (..)
+        type Maybe(a) = Just(a) | None
+        test = fn (x: Maybe(a)) -> match x with | Just(a) -> a end
         "#,
         &["None"]
     );
     assert_not_covered!(
         r#"
-        module Test exports (..);
-        type Maybe(a) = Just(a) | None;
-        test = fn (x: Maybe(Int)) -> match x with | None -> 2 end;
+        module Test exports (..)
+        type Maybe(a) = Just(a) | None
+        test = fn (x: Maybe(Int)) -> match x with | None -> 2 end
         "#,
         &["Just(_)"]
     );
     assert_not_covered!(
         r#"
-        module Test exports (..);
-        type Maybe(a) = Just(a) | None;
-        test = fn (x) -> match x with | Just(None) -> 2 end;
+        module Test exports (..)
+        type Maybe(a) = Just(a) | None
+        test = fn (x) -> match x with | Just(None) -> 2 end
         "#,
         &["None", "Just(Just(_))"]
     );
     assert_not_covered!(
         r#"
-        module Test exports (..);
-        type Maybe(a) = Just(a) | None;
-        test = fn (x) -> match x with | Just(Just(Just(None))) -> 2 end;
+        module Test exports (..)
+        type Maybe(a) = Just(a) | None
+        test = fn (x) -> match x with | Just(Just(Just(None))) -> 2 end
         "#,
         &[
             "None",
@@ -49,28 +49,28 @@ fn it_errors_for_non_exhaustive_patterns() {
     );
     assert_not_covered!(
         r#"
-        module Test exports (..);
-        type Maybe(a) = Just(a) | None;
-        type Result(a, e) = Ok(a) | Err(e);
-        test = fn (x: Result(Maybe(Maybe(Int)), String)) -> match x with | Err(str) -> str end;
+        module Test exports (..)
+        type Maybe(a) = Just(a) | None
+        type Result(a, e) = Ok(a) | Err(e)
+        test = fn (x: Result(Maybe(Maybe(Int)), String)) -> match x with | Err(str) -> str end
         "#,
         &["Ok(_)"]
     );
     assert_not_covered!(
         r#"
-        module Test exports (..);
-        type Maybe(a) = Just(a) | None;
-        type Result(a, e) = Ok(a) | Err(e);
-        test = fn (x: Result(Maybe(Maybe(Int)), String)) -> match x with | Ok(Just(None)) -> "noice" end;
+        module Test exports (..)
+        type Maybe(a) = Just(a) | None
+        type Result(a, e) = Ok(a) | Err(e)
+        test = fn (x: Result(Maybe(Maybe(Int)), String)) -> match x with | Ok(Just(None)) -> "noice" end
         "#,
         &["Err(_)", "Ok(None)", "Ok(Just(Just(_)))"]
     );
     assert_not_covered!(
         r#"
-        module Test exports (..);
-        type Maybe(a) = Just(a) | None;
-        type A = A(Maybe(Maybe(Int)));
-        test = fn (a: A) -> match a with | A(Just(Just(n))) -> "yeh?" end;
+        module Test exports (..)
+        type Maybe(a) = Just(a) | None
+        type A = A(Maybe(Maybe(Int)))
+        test = fn (a: A) -> match a with | A(Just(Just(n))) -> "yeh?" end
         "#,
         &["A(None)", "A(Just(None))"]
     );
@@ -82,14 +82,14 @@ fn it_errors_for_non_exhaustive_patterns() {
     // Would be nice if we could qualify only when needed?
     assert_not_covered!(
         r#"
-        module Test exports (..);
-        import (test-stuff) Data.Stuff as A;
-        import Data.Stuff as B;
+        module Test exports (..)
+        import (test-stuff) Data.Stuff as A
+        import Data.Stuff as B
 
         option_of_option = fn (oo) ->
           match oo with
           | A.Some(B.None) -> unit
-          end;
+          end
         "#,
         &["None", "Some(Some(_))"],
         &mk_everything()
@@ -102,9 +102,9 @@ fn mk_everything() -> crate::Everything {
             module Data.Stuff exports (
                 Five(..),
                 Option(..),
-            );
-            type Option(a) = Some(a) | None;
-            type Five = Five;
+            )
+            type Option(a) = Some(a) | None
+            type Five = Five
         "#,
     );
 

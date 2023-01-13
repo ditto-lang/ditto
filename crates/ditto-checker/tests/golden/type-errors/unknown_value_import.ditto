@@ -1,3 +1,3 @@
-module Test exports (..);
+module Test exports (..)
 
-import Data.Stuff (nope);
+import Data.Stuff (nope)

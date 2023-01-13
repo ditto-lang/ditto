@@ -2,9 +2,9 @@
   × types don't unify
    ╭─[golden:2:1]
  2 │ 
- 3 │ my_fn = fn (n : Int) -> n;
+ 3 │ my_fn = fn (n : Int) -> n
  4 │ 
- 5 │ five = my_fn(5.0);
+ 5 │ five = my_fn(5.0)
    ·              ─┬─
    ·               ╰── here
    ╰────

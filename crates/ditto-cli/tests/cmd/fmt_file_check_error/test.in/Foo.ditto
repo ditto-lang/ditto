@@ -1,1 +1,1 @@
-module Foo     exports(..);
+module Foo     exports(..)

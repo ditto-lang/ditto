@@ -1,7 +1,7 @@
 
   ⚠ duplicate type export
    ╭─[duplicate_type_export_with_different_visibility.ditto:1:1]
- 1 │ module Test exports (A, A(..));
+ 1 │ module Test exports (A, A(..))
    ·                      ┬  ┬
    ·                      │  ╰── already exported
    ·                      ╰── previously exported here

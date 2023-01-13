@@ -1,15 +1,15 @@
-module Test exports (..);
+module Test exports (..)
 
-type Html(msg);
+type Html(msg)
 
-type Attr = Attr(String, String);
+type Attr = Attr(String, String)
 
-foreign h : (String, Array(Attr)) -> Html(msg);
+foreign h : (String, Array(Attr)) -> Html(msg)
 
-div = fn (attrs: Array(Attr)): Html(msg) -> h("div", attrs);
+div = fn (attrs: Array(Attr)): Html(msg) -> h("div", attrs)
 
-span = fn (attrs: Array(Attr)): Html(msg) -> h("span", attrs);
+span = fn (attrs: Array(Attr)): Html(msg) -> h("span", attrs)
 
-foreign array_map_impl : ((a) -> b, Array(a)) -> Array(b);
+foreign array_map_impl : ((a) -> b, Array(a)) -> Array(b)
 
-array_map = array_map_impl;
+array_map = array_map_impl

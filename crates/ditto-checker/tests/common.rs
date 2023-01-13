@@ -7,14 +7,14 @@ pub fn mk_everything() -> ditto_checker::Everything {
                 Abstract,
                 five, five_string, five_ctor,
                 id
-            );
-            type Maybe(a) = Just(a) | Nothing;
-            type Five = Five;
-            type Abstract = Abstract;
-            five : Int = 5;
-            five_string = "five";
-            five_ctor = Five;
-            id = fn (a) -> a;
+            )
+            type Maybe(a) = Just(a) | Nothing
+            type Five = Five
+            type Abstract = Abstract
+            five : Int = 5
+            five_string = "five"
+            five_ctor = Five
+            id = fn (a) -> a
         "#;
         let cst_module = ditto_cst::Module::parse(source).unwrap();
         let (ast_module, _warnings) =
@@ -24,13 +24,13 @@ pub fn mk_everything() -> ditto_checker::Everything {
 
     let more_stuff = {
         let source = r#"
-            module More.Stuff exports (..);
+            module More.Stuff exports (..)
 
             -- NOTE using `Nada` rather than `Nothing` to make the 
             -- duplicate imported type constructor test deterministic
             -- (this is a behaviour we might want to fix in the future, 
             -- possibly by using the `indexmap` crate more)
-            type Kinda(a) = Just(a) | Nada;
+            type Kinda(a) = Just(a) | Nada
         "#;
         let cst_module = ditto_cst::Module::parse(source).unwrap();
         let (ast_module, _warnings) =

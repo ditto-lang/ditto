@@ -306,8 +306,6 @@ pub struct LetValueDeclaration {
     pub equals: Equals,
     /// The value definition itself.
     pub expression: Expression,
-    /// `;`
-    pub semicolon: Semicolon,
 }
 
 /// `: String`

@@ -1,8 +1,8 @@
-module Test exports (..);
+module Test exports (..)
 
 
-const = fn (a) -> fn (b) -> a;
+const = fn (a) -> fn (b) -> a
 
-type E = Error(String);
+type E = Error(String)
 
-unwrap_error = fn (Error(msg)) -> msg;
+unwrap_error = fn (Error(msg)) -> msg

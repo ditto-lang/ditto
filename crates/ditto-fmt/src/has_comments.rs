@@ -475,13 +475,11 @@ impl HasComments for LetValueDeclaration {
             type_annotation,
             equals,
             expression,
-            semicolon,
         } = self;
         pattern.has_comments()
             || type_annotation.has_comments()
             || equals.0.has_comments()
             || expression.has_comments()
-            || semicolon.0.has_comments()
     }
     fn has_leading_comments(&self) -> bool {
         let LetValueDeclaration { pattern, .. } = self;

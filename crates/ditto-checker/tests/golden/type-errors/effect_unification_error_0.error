@@ -1,14 +1,14 @@
 
   × types don't unify
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
  3 │ not_an_effect = do {
  4 │     huh <- 5;
    ·            ┬
    ·            ╰── here
  5 │     return unit
- 6 │ };
+ 6 │ }
    ╰────
   help: expected Effect($1)
         got Int

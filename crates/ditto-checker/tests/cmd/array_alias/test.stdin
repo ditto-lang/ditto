@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-type alias Vec(a) = Array(a);
+type alias Vec(a) = Array(a)
 
-fives : Vec(Int) = [5, 5, 5];
+fives : Vec(Int) = [5, 5, 5]

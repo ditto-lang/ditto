@@ -2,7 +2,7 @@
   ⚠ unused type constructors
    ╭─[unused_type_constructors.ditto:2:1]
  2 │ 
- 3 │ type A = A;
+ 3 │ type A = A
    ·      ┬
    ·      ╰── type is never constructed
    ╰────

@@ -1,9 +1,9 @@
-module Test exports (..);
+module Test exports (..)
 
-type Maybe(a) = Just(a) | Nothing;
+type Maybe(a) = Just(a) | Nothing
 
 nah = fn (dunno : a): Int -> 
   match dunno with
   | Just(n) -> unit
   | Nothing -> unit
-  end;
+  end

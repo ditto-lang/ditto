@@ -2,7 +2,7 @@
   × module not found
    ╭─[module_not_found.ditto:2:1]
  2 │ 
- 3 │ import Huh (nah);
+ 3 │ import Huh (nah)
    ·        ─┬─
    ·         ╰── not found
  4 │ 

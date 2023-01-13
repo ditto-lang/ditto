@@ -7,7 +7,7 @@
  15 │ │       bar = 5.0, 
  16 │ │       baz = unit, 
  17 │ │       huh = [] 
- 18 │ ├─▶ };
+ 18 │ ├─▶ }
     · ╰──── here
     ╰────
   help: expected HasFooBarBaz(#{})

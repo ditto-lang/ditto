@@ -1,8 +1,8 @@
-module Test.Imports exports (..);
+module Test.Imports exports (..)
 
-import (test-stuff) Data.Stuff (id) ;
-import Data.Stuff as S;
+import (test-stuff) Data.Stuff (id) 
+import Data.Stuff as S
 
-my_five = id(S.five);
-another_five = id(S.five);
-five_type = S.Five;
+my_five = id(S.five)
+another_five = id(S.five)
+five_type = S.Five

@@ -1,4 +1,4 @@
-module Match exports (..);
+module Match exports (..)
 
 
 octopus =
@@ -24,7 +24,7 @@ octopus =
             "octopus"
         else
             "octopus"
-    end;
+    end
 
 -- it's a classic
 map_maybe = fn (f, maybe) ->
@@ -32,7 +32,7 @@ map_maybe = fn (f, maybe) ->
     match maybe with
     | Just(a) -> f(a)
     | Nothing -> Nothing
-    end;
+    end
 
 all_the_args = fn () ->
     match not_sure with
@@ -49,7 +49,7 @@ all_the_args = fn () ->
             d,
         ),
     ) -> unit
-    end;
+    end
 
 nested = fn () ->
     match x with
@@ -59,7 +59,7 @@ nested = fn () ->
         | Inner1 -> unit
         end
     | Outer1 -> unit
-    end;
+    end
 
 multi_line_expr = fn () ->
     match
@@ -67,4 +67,4 @@ multi_line_expr = fn () ->
         |> y
     with
     | z -> unit
-    end;
+    end

@@ -22,15 +22,15 @@
     "five": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 48,
-        "end_offset": 52
+        "start_offset": 46,
+        "end_offset": 50
       },
       "expression": {
         "expression": "ImportedVariable",
         "data": {
           "span": {
-            "start_offset": 55,
-            "end_offset": 64
+            "start_offset": 53,
+            "end_offset": 62
           },
           "variable_type": {
             "type": "PrimConstructor",

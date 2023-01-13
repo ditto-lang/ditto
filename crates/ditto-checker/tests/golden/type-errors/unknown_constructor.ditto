@@ -1,3 +1,3 @@
-module Test exports (..);
+module Test exports (..)
 
-bang = Nada;
+bang = Nada

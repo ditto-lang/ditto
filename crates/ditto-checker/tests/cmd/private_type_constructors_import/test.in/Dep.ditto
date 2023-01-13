@@ -1,5 +1,5 @@
-module Dep exports (Abstract, abstract_value);
+module Dep exports (Abstract, abstract_value)
 
-type Abstract = Abstract(Int, Bool, Unit);
+type Abstract = Abstract(Int, Bool, Unit)
 
-abstract_value = Abstract(5, true, unit);
+abstract_value = Abstract(5, true, unit)

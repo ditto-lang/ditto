@@ -1,8 +1,8 @@
-module Test exports (..);
+module Test exports (..)
 
-type Pair(a, b) = Pair(a, b);
+type Pair(a, b) = Pair(a, b)
 
 nope = fn (pair: Pair(a, a)): Array(a) ->
   match pair with
   | Pair(a, a) -> [a, a]
-  end;
+  end

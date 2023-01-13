@@ -8,5 +8,5 @@
    ·     ─────┬────
    ·          ╰── this expects 1 argument
  8 │   | Nothing -> unit
- 9 │   end;
+ 9 │   end
    ╰────

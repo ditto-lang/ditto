@@ -2,10 +2,10 @@
   × duplicate imports for module `X`
    ╭─[duplicate_import_alias.ditto:2:1]
  2 │ 
- 3 │ import Foo as X;
+ 3 │ import Foo as X
    ·               ┬
    ·               ╰── previous import
- 4 │ import Bar as X;
+ 4 │ import Bar as X
    ·               ┬
    ·               ╰── imported again here
    ╰────

@@ -2,10 +2,10 @@
   × duplicate constructor
    ╭─[duplicate_type_constructor.ditto:2:1]
  2 │ 
- 3 │ type A = A;
+ 3 │ type A = A
    ·          ┬
    ·          ╰── previously defined here
- 4 │ type B = A;
+ 4 │ type B = A
    ·          ┬
    ·          ╰── can't be redefined here
    ╰────

@@ -1,7 +1,7 @@
-module Test exports (probably_five);
+module Test exports (probably_five)
 
-foreign ffi_int: Int;
+foreign ffi_int: Int
 
-id_int = fn (n: Int) -> n;
+id_int = fn (n: Int) -> n
 
-probably_five = id_int(ffi_int);
+probably_five = id_int(ffi_int)

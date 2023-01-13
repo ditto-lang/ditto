@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-my_fn = fn (x: Int, y: Int, z: Int) -> 5;
+my_fn = fn (x: Int, y: Int, z: Int) -> 5
 
-five = my_fn(10);
+five = my_fn(10)

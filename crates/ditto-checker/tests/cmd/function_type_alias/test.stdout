@@ -21,8 +21,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 40,
-          "end_offset": 48
+          "start_offset": 39,
+          "end_offset": 47
         },
         "kind": {
           "Function": {
@@ -65,15 +65,15 @@
     "five": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 65,
-        "end_offset": 69
+        "start_offset": 63,
+        "end_offset": 67
       },
       "expression": {
         "expression": "Call",
         "data": {
           "span": {
-            "start_offset": 72,
-            "end_offset": 88
+            "start_offset": 70,
+            "end_offset": 86
           },
           "call_type": {
             "type": "PrimConstructor",
@@ -83,8 +83,8 @@
             "expression": "ForeignVariable",
             "data": {
               "span": {
-                "start_offset": 72,
-                "end_offset": 85
+                "start_offset": 70,
+                "end_offset": 83
               },
               "variable_type": {
                 "type": "Call",
@@ -149,8 +149,8 @@
                 "expression": "Int",
                 "data": {
                   "span": {
-                    "start_offset": 86,
-                    "end_offset": 87
+                    "start_offset": 84,
+                    "end_offset": 85
                   },
                   "value": "5",
                   "value_type": {

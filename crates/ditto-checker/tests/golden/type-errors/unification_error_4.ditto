@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-identity_int = fn (n: Int): Int -> n;
+identity_int = fn (n: Int): Int -> n
 
-huh = "nope" |> identity_int;
+huh = "nope" |> identity_int

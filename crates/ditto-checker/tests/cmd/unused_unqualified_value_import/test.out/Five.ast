@@ -54,8 +54,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 32,
-          "end_offset": 36
+          "start_offset": 31,
+          "end_offset": 35
         },
         "kind": "Type"
       }
@@ -66,8 +66,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 39,
-        "end_offset": 43
+        "start_offset": 38,
+        "end_offset": 42
       },
       "fields": [],
       "return_type": {
@@ -96,15 +96,15 @@
     "five": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 46,
-        "end_offset": 50
+        "start_offset": 44,
+        "end_offset": 48
       },
       "expression": {
         "expression": "Int",
         "data": {
           "span": {
-            "start_offset": 53,
-            "end_offset": 54
+            "start_offset": 51,
+            "end_offset": 52
           },
           "value": "5",
           "value_type": {

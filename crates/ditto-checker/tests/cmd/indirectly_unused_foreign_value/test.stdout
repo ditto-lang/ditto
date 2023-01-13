@@ -22,15 +22,15 @@
     "unused": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 50,
-        "end_offset": 56
+        "start_offset": 48,
+        "end_offset": 54
       },
       "expression": {
         "expression": "ForeignVariable",
         "data": {
           "span": {
-            "start_offset": 59,
-            "end_offset": 70
+            "start_offset": 57,
+            "end_offset": 68
           },
           "variable_type": {
             "type": "Function",
@@ -54,15 +54,15 @@
     "five": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 29,
-        "end_offset": 33
+        "start_offset": 28,
+        "end_offset": 32
       },
       "expression": {
         "expression": "Float",
         "data": {
           "span": {
-            "start_offset": 44,
-            "end_offset": 47
+            "start_offset": 43,
+            "end_offset": 46
           },
           "value": "5.0",
           "value_type": {

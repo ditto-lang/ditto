@@ -2,8 +2,8 @@ module Test exports (
     A, 
     A, 
     a,
-);
+)
 
-type A = A;
+type A = A
 
-a = A;
+a = A

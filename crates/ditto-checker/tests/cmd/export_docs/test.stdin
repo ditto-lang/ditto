@@ -1,14 +1,14 @@
 module Test exports (
     anything_to_a,
     A(..),
-);
+)
 
 -- Documentation for
 -- my type `A`
 type A = 
     -- Documentation for the only constructor
     -- of type `A`
-    MkA;
+    MkA
 
 -- This function takes anything and returns an `A`.
-anything_to_a = fn (_): A -> MkA;
+anything_to_a = fn (_): A -> MkA

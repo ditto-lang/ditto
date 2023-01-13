@@ -1,4 +1,4 @@
-module Test exports (..);
+module Test exports (..)
 
 result = fn (c0, c1, c2, c3, c4) ->
   if
@@ -15,7 +15,7 @@ result = fn (c0, c1, c2, c3, c4) ->
     else
       2
   else
-    3;
+    3
 
 -- This will get rewritten to 0 :chef-kiss:
 rewritten =
@@ -33,4 +33,4 @@ rewritten =
     else
       2
   else
-    3;
+    3

@@ -1,16 +1,16 @@
-module Newtypes exports (..);
+module Newtypes exports (..)
 
 
-type Wrapped(a) = Wrapped(a);
+type Wrapped(a) = Wrapped(a)
 
-unwrap = fn (Wrapped(a)) -> a;
+unwrap = fn (Wrapped(a)) -> a
 
-is_wrapped_int = fn (Wrapped(_): Wrapped(Int)) -> true;
+is_wrapped_int = fn (Wrapped(_): Wrapped(Int)) -> true
 
-never = fn (Never.Spin(never): Never.Never) -> never;
+never = fn (Never.Spin(never): Never.Never) -> never
 
 both_are_nothing = fn (
     -- testing
     Maybe.Nothing,
     Maybe.Nothing: Maybe(a),
-): Bool -> true;
+): Bool -> true

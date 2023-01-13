@@ -9,7 +9,7 @@
  4 │     Foo(..),
    ·     ─┬─
    ·      ╰── already exported
- 5 │ );
+ 5 │ )
  6 │ 
- 7 │ type Foo = Foo;
+ 7 │ type Foo = Foo
    ╰────

@@ -125,8 +125,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 38,
-          "end_offset": 44
+          "start_offset": 37,
+          "end_offset": 43
         },
         "kind": {
           "Function": {
@@ -166,15 +166,15 @@
     "foo": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 70,
-        "end_offset": 73
+        "start_offset": 68,
+        "end_offset": 71
       },
       "expression": {
         "expression": "Record",
         "data": {
           "span": {
-            "start_offset": 105,
-            "end_offset": 128
+            "start_offset": 103,
+            "end_offset": 126
           },
           "record_type": {
             "type": "Call",
@@ -252,8 +252,8 @@
               "expression": "Int",
               "data": {
                 "span": {
-                  "start_offset": 113,
-                  "end_offset": 114
+                  "start_offset": 111,
+                  "end_offset": 112
                 },
                 "value": "5",
                 "value_type": {
@@ -266,8 +266,8 @@
               "expression": "True",
               "data": {
                 "span": {
-                  "start_offset": 122,
-                  "end_offset": 126
+                  "start_offset": 120,
+                  "end_offset": 124
                 },
                 "value_type": {
                   "type": "PrimConstructor",

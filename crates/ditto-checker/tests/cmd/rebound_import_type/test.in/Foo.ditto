@@ -1,3 +1,3 @@
-module Foo exports (..);
+module Foo exports (..)
 
-type A(a) = A;
+type A(a) = A

@@ -7,7 +7,7 @@
  8 │   | Bar -> unit
    ·     ─┬─
    ·      ╰── here
- 9 │   end;
+ 9 │   end
    ╰────
   help: expected Foo
         got Bar

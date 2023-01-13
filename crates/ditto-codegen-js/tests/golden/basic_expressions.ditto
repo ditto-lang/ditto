@@ -1,27 +1,27 @@
-module Test exports (fives, curry);
+module Test exports (fives, curry)
 
 five : Int = 
   -- this comment should get removed
-  5;
+  5
 
-floaty_five: Float = 5.0;
+floaty_five: Float = 5.0
 
-not_quite_five: Float = 5_____.0_____1_____;
+not_quite_five: Float = 5_____.0_____1_____
 
-fifth_string = "A";
+fifth_string = "A"
 
-identity = fn (a: a) -> a;
+identity = fn (a: a) -> a
 
-curry = fn (f) -> fn (a) -> fn (b) -> f(a, b);
-uncurry = fn (f) -> fn (a, b) -> f(a)(b);
+curry = fn (f) -> fn (a) -> fn (b) -> f(a, b)
+uncurry = fn (f) -> fn (a, b) -> f(a)(b)
 
-always = fn (a) -> fn (_b) -> a;
-select = fn (c, x, y) -> if c then x else y;
+always = fn (a) -> fn (_b) -> a
+select = fn (c, x, y) -> if c then x else y
  
 -- REVIEW `return undefined` is redundant
-denied = fn (a) -> unit;
+denied = fn (a) -> unit
 
-empty_array = [];
+empty_array = []
 
 fives = [
   5,
@@ -32,4 +32,4 @@ fives = [
   (fn (a, _b) -> a)(5, unit),
   uncurry(always)(five, fifth_string),
   always(identity)(false)(five),
-];
+]

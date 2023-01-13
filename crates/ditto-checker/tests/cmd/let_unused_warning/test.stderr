@@ -2,7 +2,7 @@
   ⚠ unused let binder
    ╭─[let_unused_warning.ditto:2:1]
  2 │ 
- 3 │ why = let fives : Array(Int) = [5]; in unit;
+ 3 │ why = let fives : Array(Int) = [5] in unit
    ·           ──┬──
    ·             ╰── this isn't used
    ╰────

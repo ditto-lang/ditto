@@ -41,15 +41,15 @@
         "implemented elsewhere"
       ],
       "name_span": {
-        "start_offset": 92,
-        "end_offset": 99
+        "start_offset": 91,
+        "end_offset": 98
       },
       "expression": {
         "expression": "ForeignVariable",
         "data": {
           "span": {
-            "start_offset": 102,
-            "end_offset": 114
+            "start_offset": 101,
+            "end_offset": 113
           },
           "variable_type": {
             "type": "Function",

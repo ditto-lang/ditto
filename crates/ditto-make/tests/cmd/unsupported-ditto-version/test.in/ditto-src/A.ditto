@@ -1,5 +1,5 @@
-module A exports (..);
+module A exports (..)
 
-import B;
+import B
 
-type A = A;
+type A = A

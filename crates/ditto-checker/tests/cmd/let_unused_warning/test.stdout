@@ -22,22 +22,22 @@
     "why": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 27,
-        "end_offset": 30
+        "start_offset": 26,
+        "end_offset": 29
       },
       "expression": {
         "expression": "Let",
         "data": {
           "span": {
-            "start_offset": 33,
-            "end_offset": 70
+            "start_offset": 32,
+            "end_offset": 68
           },
           "declaration": {
             "pattern": {
               "Variable": {
                 "span": {
-                  "start_offset": 37,
-                  "end_offset": 42
+                  "start_offset": 36,
+                  "end_offset": 41
                 },
                 "name": "fives"
               }
@@ -61,8 +61,8 @@
               "expression": "Array",
               "data": {
                 "span": {
-                  "start_offset": 58,
-                  "end_offset": 61
+                  "start_offset": 57,
+                  "end_offset": 60
                 },
                 "element_type": {
                   "type": "PrimConstructor",
@@ -73,8 +73,8 @@
                     "expression": "Int",
                     "data": {
                       "span": {
-                        "start_offset": 59,
-                        "end_offset": 60
+                        "start_offset": 58,
+                        "end_offset": 59
                       },
                       "value": "5",
                       "value_type": {
@@ -106,8 +106,8 @@
             "expression": "Unit",
             "data": {
               "span": {
-                "start_offset": 66,
-                "end_offset": 70
+                "start_offset": 64,
+                "end_offset": 68
               },
               "value_type": {
                 "type": "PrimConstructor",

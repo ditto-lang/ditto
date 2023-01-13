@@ -52,13 +52,13 @@ macro_rules! assert_foreign_value_declaration {
 
 #[test]
 fn it_parses_value_declarations() {
-    assert_value_declaration!("five : Int = 5;", ValueDeclaration { .. });
+    assert_value_declaration!("five : Int = 5", ValueDeclaration { .. });
 }
 
 #[test]
 fn it_parses_type_declarations() {
     assert_type_declaration!(
-        "type MyUnit = MyUnit;",
+        "type MyUnit = MyUnit",
         TypeDeclaration::WithConstructors {
             type_variables: None,
             head_constructor: Constructor {
@@ -72,14 +72,14 @@ fn it_parses_type_declarations() {
           && tail_constructors.is_empty()
     );
     assert_type_declaration!(
-        "type Identity(a) = | Identity(a);",
+        "type Identity(a) = | Identity(a)",
         TypeDeclaration::WithConstructors {
             type_variables: Some(_),
             ..
         }
     );
     assert_type_declaration!(
-        "type Maybe(a) = Just(a) | Nothing;",
+        "type Maybe(a) = Just(a) | Nothing",
         TypeDeclaration::WithConstructors {
             type_variables: Some(_),
             head_constructor: Constructor {
@@ -91,16 +91,16 @@ fn it_parses_type_declarations() {
         } if tail_constructors.len() == 1
     );
     assert_type_declaration!(
-        "type Result(a, b) = Ok(a) | Err(b);",
+        "type Result(a, b) = Ok(a) | Err(b)",
         TypeDeclaration::WithConstructors {
             type_variables: Some(_),
             ref tail_constructors,
             ..
         } if tail_constructors.len() == 1
     );
-    assert_type_declaration!("type Unknown;", TypeDeclaration::WithoutConstructors { .. });
+    assert_type_declaration!("type Unknown", TypeDeclaration::WithoutConstructors { .. });
     assert_type_declaration!(
-        "type Foo(a, b);",
+        "type Foo(a, b)",
         TypeDeclaration::WithoutConstructors { .. }
     );
 }
@@ -108,14 +108,14 @@ fn it_parses_type_declarations() {
 #[test]
 fn it_parses_type_alias_declarations() {
     assert_type_alias_declaration!(
-        "type alias Ints = Array(Int);",
+        "type alias Ints = Array(Int)",
         TypeAliasDeclaration {
             type_variables: None,
             ..
         }
     );
     assert_type_alias_declaration!(
-        "type alias A(a) = Array(a);",
+        "type alias A(a) = Array(a)",
         TypeAliasDeclaration {
             type_variables: Some(_),
             ..
@@ -125,9 +125,9 @@ fn it_parses_type_alias_declarations() {
 
 #[test]
 fn it_parses_foreign_value_declarations() {
-    assert_foreign_value_declaration!("foreign five : Int;", ForeignValueDeclaration { .. });
+    assert_foreign_value_declaration!("foreign five : Int", ForeignValueDeclaration { .. });
     assert_foreign_value_declaration!(
-        "foreign map_impl : ((a) -> b, Array(a)) -> Array(b);",
+        "foreign map_impl : ((a) -> b, Array(a)) -> Array(b)",
         ForeignValueDeclaration { .. }
     );
 }

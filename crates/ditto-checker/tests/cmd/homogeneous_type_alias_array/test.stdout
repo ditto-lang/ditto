@@ -153,8 +153,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 84,
-          "end_offset": 87
+          "start_offset": 81,
+          "end_offset": 84
         },
         "kind": "Type",
         "aliased_type": {
@@ -168,8 +168,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 61,
-          "end_offset": 64
+          "start_offset": 59,
+          "end_offset": 62
         },
         "kind": "Type",
         "aliased_type": {
@@ -183,8 +183,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 38,
-          "end_offset": 41
+          "start_offset": 37,
+          "end_offset": 40
         },
         "kind": "Type",
         "aliased_type": {
@@ -200,15 +200,15 @@
     "baz": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 134,
-        "end_offset": 137
+        "start_offset": 128,
+        "end_offset": 131
       },
       "expression": {
         "expression": "True",
         "data": {
           "span": {
-            "start_offset": 146,
-            "end_offset": 150
+            "start_offset": 140,
+            "end_offset": 144
           },
           "value_type": {
             "type": "ConstructorAlias",
@@ -240,15 +240,15 @@
     "bar": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 115,
-        "end_offset": 118
+        "start_offset": 110,
+        "end_offset": 113
       },
       "expression": {
         "expression": "False",
         "data": {
           "span": {
-            "start_offset": 127,
-            "end_offset": 132
+            "start_offset": 122,
+            "end_offset": 127
           },
           "value_type": {
             "type": "ConstructorAlias",
@@ -280,15 +280,15 @@
     "foo": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 97,
-        "end_offset": 100
+        "start_offset": 93,
+        "end_offset": 96
       },
       "expression": {
         "expression": "True",
         "data": {
           "span": {
-            "start_offset": 109,
-            "end_offset": 113
+            "start_offset": 105,
+            "end_offset": 109
           },
           "value_type": {
             "type": "ConstructorAlias",
@@ -320,15 +320,15 @@
     "bools": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 153,
-        "end_offset": 158
+        "start_offset": 146,
+        "end_offset": 151
       },
       "expression": {
         "expression": "Array",
         "data": {
           "span": {
-            "start_offset": 175,
-            "end_offset": 190
+            "start_offset": 168,
+            "end_offset": 183
           },
           "element_type": {
             "type": "PrimConstructor",
@@ -339,8 +339,8 @@
               "expression": "LocalVariable",
               "data": {
                 "span": {
-                  "start_offset": 176,
-                  "end_offset": 179
+                  "start_offset": 169,
+                  "end_offset": 172
                 },
                 "variable_type": {
                   "type": "PrimConstructor",
@@ -353,8 +353,8 @@
               "expression": "LocalVariable",
               "data": {
                 "span": {
-                  "start_offset": 181,
-                  "end_offset": 184
+                  "start_offset": 174,
+                  "end_offset": 177
                 },
                 "variable_type": {
                   "type": "PrimConstructor",
@@ -367,8 +367,8 @@
               "expression": "LocalVariable",
               "data": {
                 "span": {
-                  "start_offset": 186,
-                  "end_offset": 189
+                  "start_offset": 179,
+                  "end_offset": 182
                 },
                 "variable_type": {
                   "type": "PrimConstructor",

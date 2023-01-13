@@ -1,6 +1,6 @@
-module C exports (..);
+module C exports (..)
 
-import A;
-import B;
+import A
+import B
 
-type C = C(B.B, A.A);
+type C = C(B.B, A.A)

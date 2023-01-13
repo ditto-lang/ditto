@@ -1,17 +1,17 @@
 module Task exports (
     Task,
     succeed,
-);
+)
 
 
-type alias VoidEffect = Effect(Unit);
+type alias VoidEffect = Effect(Unit)
 
 type Result(a, e) =
     | Ok(a)
-    | Err(e);
+    | Err(e)
 
-type alias Callback(a, e) = (Result(a, e)) -> VoidEffect;
+type alias Callback(a, e) = (Result(a, e)) -> VoidEffect
 
-type Task(a, e) = Task((Callback(a, e)) -> VoidEffect);
+type Task(a, e) = Task((Callback(a, e)) -> VoidEffect)
 
-succeed = fn (a): Task(a, e) -> Task(fn (callback) -> callback(Ok(a)));
+succeed = fn (a): Task(a, e) -> Task(fn (callback) -> callback(Ok(a)))

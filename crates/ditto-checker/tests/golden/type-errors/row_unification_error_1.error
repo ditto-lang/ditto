@@ -2,9 +2,9 @@
   × kinds don't unify
    ╭─[golden:2:1]
  2 │ 
- 3 │ type ExtensibleProps(r) = ExtensibleProps({ r | foo: Int });
+ 3 │ type ExtensibleProps(r) = ExtensibleProps({ r | foo: Int })
  4 │ 
- 5 │ type BadExtension = Bad(ExtensibleProps(Int));
+ 5 │ type BadExtension = Bad(ExtensibleProps(Int))
    ·                                         ─┬─
    ·                                          ╰── here
    ╰────

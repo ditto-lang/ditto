@@ -2899,7 +2899,7 @@ dependencies = [
 [[package]]
 name = "tree-sitter-ditto"
 version = "0.0.1"
-source = "git+https://github.com/ditto-lang/tree-sitter-ditto?rev=9522591cb90540632d758a0e589e43b47a43b4d7#9522591cb90540632d758a0e589e43b47a43b4d7"
+source = "git+https://github.com/ditto-lang/tree-sitter-ditto?rev=8ef1dd94a722c846cf5f3538bc610cdda8a57a74#8ef1dd94a722c846cf5f3538bc610cdda8a57a74"
 dependencies = [
  "cc",
  "tree-sitter",

@@ -1,4 +1,4 @@
-module Test exports (A(..));
+module Test exports (A(..))
 
-type A = A;
-type B = B;
+type A = A
+type B = B

@@ -1,4 +1,4 @@
-module Test exports (..);
+module Test exports (..)
 
 nah = fn (x : { foo: Int, bar: Int, baz: Float }) ->
-    [x.foo, x.bar, x.baz];
+    [x.foo, x.bar, x.baz]

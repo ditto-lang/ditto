@@ -22,15 +22,15 @@
     "yes": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 26,
-        "end_offset": 29
+        "start_offset": 25,
+        "end_offset": 28
       },
       "expression": {
         "expression": "True",
         "data": {
           "span": {
-            "start_offset": 32,
-            "end_offset": 36
+            "start_offset": 31,
+            "end_offset": 35
           },
           "value_type": {
             "type": "PrimConstructor",

@@ -22,15 +22,15 @@
     "five": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 40,
-        "end_offset": 44
+        "start_offset": 38,
+        "end_offset": 42
       },
       "expression": {
         "expression": "Int",
         "data": {
           "span": {
-            "start_offset": 47,
-            "end_offset": 48
+            "start_offset": 45,
+            "end_offset": 46
           },
           "value": "5",
           "value_type": {

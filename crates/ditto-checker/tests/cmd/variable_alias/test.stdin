@@ -1,7 +1,7 @@
-module Test exports (..);
+module Test exports (..)
 
-type alias WhyTho(a) = a;
+type alias WhyTho(a) = a
 
-identity = fn (a: WhyTho(a)) -> a;
+identity = fn (a: WhyTho(a)) -> a
 
-five : Float = identity(5.0);
+five : Float = identity(5.0)

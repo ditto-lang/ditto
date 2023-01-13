@@ -2,9 +2,9 @@
   × wrong number of arguments
    ╭─[golden:2:1]
  2 │ 
- 3 │ my_fn = fn () -> 5;
+ 3 │ my_fn = fn () -> 5
  4 │ 
- 5 │ five = my_fn(5);
+ 5 │ five = my_fn(5)
    ·        ──┬──
    ·          ╰── this expects no arguments
    ╰────

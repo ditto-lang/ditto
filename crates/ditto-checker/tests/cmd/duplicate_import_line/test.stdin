@@ -1,6 +1,6 @@
-module Test exports (..);
+module Test exports (..)
 
-import Dep;
-import Dep;
+import Dep
+import Dep
 
-dep_five = Dep.five;
+dep_five = Dep.five

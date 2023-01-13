@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-import Foo as F (five);
+import Foo as F (five)
 
-another_five : Int = F.identity(five);
+another_five : Int = F.identity(five)

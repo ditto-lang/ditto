@@ -132,8 +132,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 33,
-          "end_offset": 38
+          "start_offset": 32,
+          "end_offset": 37
         },
         "kind": {
           "Function": {
@@ -150,8 +150,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 44,
-        "end_offset": 48
+        "start_offset": 43,
+        "end_offset": 47
       },
       "fields": [
         {
@@ -209,8 +209,8 @@
       "doc_comments": [],
       "doc_position": 1,
       "constructor_name_span": {
-        "start_offset": 54,
-        "end_offset": 61
+        "start_offset": 53,
+        "end_offset": 60
       },
       "fields": [],
       "return_type": {

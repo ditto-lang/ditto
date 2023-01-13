@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-identity_int = fn (n : Int) -> n;
+identity_int = fn (n : Int) -> n
 
-huh  = identity_int(5)();
+huh  = identity_int(5)()

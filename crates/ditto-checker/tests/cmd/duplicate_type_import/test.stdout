@@ -65,15 +65,15 @@
     "maybe_fives": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 68,
-        "end_offset": 79
+        "start_offset": 66,
+        "end_offset": 77
       },
       "expression": {
         "expression": "Array",
         "data": {
           "span": {
-            "start_offset": 102,
-            "end_offset": 104
+            "start_offset": 100,
+            "end_offset": 102
           },
           "element_type": {
             "type": "Call",

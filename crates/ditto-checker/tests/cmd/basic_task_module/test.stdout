@@ -96,8 +96,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 94,
-          "end_offset": 100
+          "start_offset": 92,
+          "end_offset": 98
         },
         "kind": {
           "Function": {
@@ -113,8 +113,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 61,
-          "end_offset": 71
+          "start_offset": 60,
+          "end_offset": 70
         },
         "kind": "Type",
         "aliased_type": {
@@ -139,8 +139,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 147,
-          "end_offset": 155
+          "start_offset": 144,
+          "end_offset": 152
         },
         "kind": {
           "Function": {
@@ -251,8 +251,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 200,
-          "end_offset": 204
+          "start_offset": 196,
+          "end_offset": 200
         },
         "kind": {
           "Function": {
@@ -270,8 +270,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 115,
-        "end_offset": 117
+        "start_offset": 113,
+        "end_offset": 115
       },
       "fields": [
         {
@@ -338,8 +338,8 @@
       "doc_comments": [],
       "doc_position": 1,
       "constructor_name_span": {
-        "start_offset": 127,
-        "end_offset": 130
+        "start_offset": 125,
+        "end_offset": 128
       },
       "fields": [
         {
@@ -406,8 +406,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 213,
-        "end_offset": 217
+        "start_offset": 209,
+        "end_offset": 213
       },
       "fields": [
         {
@@ -653,15 +653,15 @@
     "succeed": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 252,
-        "end_offset": 259
+        "start_offset": 247,
+        "end_offset": 254
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 262,
-            "end_offset": 322
+            "start_offset": 257,
+            "end_offset": 317
           },
           "function_type": {
             "type": "Function",
@@ -732,8 +732,8 @@
               {
                 "Variable": {
                   "span": {
-                    "start_offset": 266,
-                    "end_offset": 267
+                    "start_offset": 261,
+                    "end_offset": 262
                   },
                   "name": "a"
                 }
@@ -752,8 +752,8 @@
             "expression": "Call",
             "data": {
               "span": {
-                "start_offset": 284,
-                "end_offset": 322
+                "start_offset": 279,
+                "end_offset": 317
               },
               "call_type": {
                 "type": "Call",
@@ -808,8 +808,8 @@
                 "expression": "LocalConstructor",
                 "data": {
                   "span": {
-                    "start_offset": 284,
-                    "end_offset": 288
+                    "start_offset": 279,
+                    "end_offset": 283
                   },
                   "constructor_type": {
                     "type": "Function",
@@ -1062,8 +1062,8 @@
                     "expression": "Function",
                     "data": {
                       "span": {
-                        "start_offset": 289,
-                        "end_offset": 321
+                        "start_offset": 284,
+                        "end_offset": 316
                       },
                       "function_type": {
                         "type": "Function",
@@ -1256,8 +1256,8 @@
                           {
                             "Variable": {
                               "span": {
-                                "start_offset": 293,
-                                "end_offset": 301
+                                "start_offset": 288,
+                                "end_offset": 296
                               },
                               "name": "callback"
                             }
@@ -1359,8 +1359,8 @@
                         "expression": "Call",
                         "data": {
                           "span": {
-                            "start_offset": 306,
-                            "end_offset": 321
+                            "start_offset": 301,
+                            "end_offset": 316
                           },
                           "call_type": {
                             "type": "ConstructorAlias",
@@ -1401,8 +1401,8 @@
                             "expression": "LocalVariable",
                             "data": {
                               "span": {
-                                "start_offset": 306,
-                                "end_offset": 314
+                                "start_offset": 301,
+                                "end_offset": 309
                               },
                               "variable_type": {
                                 "type": "Function",
@@ -1504,8 +1504,8 @@
                                 "expression": "Call",
                                 "data": {
                                   "span": {
-                                    "start_offset": 315,
-                                    "end_offset": 320
+                                    "start_offset": 310,
+                                    "end_offset": 315
                                   },
                                   "call_type": {
                                     "type": "Call",
@@ -1560,8 +1560,8 @@
                                     "expression": "LocalConstructor",
                                     "data": {
                                       "span": {
-                                        "start_offset": 315,
-                                        "end_offset": 317
+                                        "start_offset": 310,
+                                        "end_offset": 312
                                       },
                                       "constructor_type": {
                                         "type": "Function",
@@ -1636,8 +1636,8 @@
                                         "expression": "LocalVariable",
                                         "data": {
                                           "span": {
-                                            "start_offset": 318,
-                                            "end_offset": 319
+                                            "start_offset": 313,
+                                            "end_offset": 314
                                           },
                                           "variable_type": {
                                             "type": "Variable",

@@ -1,9 +1,9 @@
-module Test exports (..);
+module Test exports (..)
 
-type Maybe(a) = Just(a) | Nothing;
+type Maybe(a) = Just(a) | Nothing
 
 nah = fn (maybe_foo : Maybe(Int)) -> 
   match maybe_foo with
   | Just(a, b) -> unit
   | Nothing -> unit
-  end;
+  end

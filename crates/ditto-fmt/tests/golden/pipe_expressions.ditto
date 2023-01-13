@@ -1,4 +1,4 @@
-module Pipe exports (..);
+module Pipe exports (..)
 
 
 long_pipe =
@@ -17,4 +17,4 @@ long_pipe =
         a
         |> b
     )
-    |> done;
+    |> done

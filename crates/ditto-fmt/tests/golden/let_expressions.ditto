@@ -1,19 +1,19 @@
-module Let exports (..);
+module Let exports (..)
 
 
 fives =
     let
-        five = 5;  -- comment
+        five = 5  -- comment
     in
-    [five, five, five];
+    [five, five, five]
 
 mk_ints = fn (i: Int) ->
     let
         -- comment
-        five = 5;  -- comment
+        five = 5  -- comment
 
         -- comment
-        six = 6;
+        six = 6
 
         ints = [
             -- comment
@@ -22,31 +22,31 @@ mk_ints = fn (i: Int) ->
             i,  -- comment
             i,
             i,
-        ];
+        ]
     in
     -- comment
     {
         -- comment
         ints = [ints],
-    };
+    }
 
 funky_fives = [
     let
-        five = 5;
+        five = 5
     in
     five,
     5,
-];
+]
 
 many_lets =
     -- y tho - maybe we should have a lint for this?
     let
-        one = 1;
+        one = 1
     in
     let
-        two = 2;
+        two = 2
     in
     let
-        three = 3;
+        three = 3
     in
-    [one, two, three];
+    [one, two, three]

@@ -109,8 +109,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 53,
-          "end_offset": 58
+          "start_offset": 51,
+          "end_offset": 56
         },
         "kind": "Type",
         "aliased_type": {
@@ -158,15 +158,15 @@
     "just_int": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 80,
-        "end_offset": 88
+        "start_offset": 77,
+        "end_offset": 85
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 91,
-            "end_offset": 126
+            "start_offset": 88,
+            "end_offset": 123
           },
           "function_type": {
             "type": "Function",
@@ -220,8 +220,8 @@
               {
                 "Variable": {
                   "span": {
-                    "start_offset": 95,
-                    "end_offset": 96
+                    "start_offset": 92,
+                    "end_offset": 93
                   },
                   "name": "i"
                 }
@@ -236,8 +236,8 @@
             "expression": "Call",
             "data": {
               "span": {
-                "start_offset": 113,
-                "end_offset": 126
+                "start_offset": 110,
+                "end_offset": 123
               },
               "call_type": {
                 "type": "Call",
@@ -279,8 +279,8 @@
                 "expression": "ImportedConstructor",
                 "data": {
                   "span": {
-                    "start_offset": 113,
-                    "end_offset": 123
+                    "start_offset": 110,
+                    "end_offset": 120
                   },
                   "constructor_type": {
                     "type": "Function",
@@ -346,8 +346,8 @@
                     "expression": "LocalVariable",
                     "data": {
                       "span": {
-                        "start_offset": 124,
-                        "end_offset": 125
+                        "start_offset": 121,
+                        "end_offset": 122
                       },
                       "variable_type": {
                         "type": "PrimConstructor",
