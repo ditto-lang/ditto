@@ -280,8 +280,8 @@ enum RawToken {
     #[regex(r"\d[\d_]*(?:\.\d[\d_]*)?", callback = |lex| lex.slice().parse())]
     Number(String),
 
-    // TODO: improve this regex
-    #[regex(r#""[^"]*""#, callback = |lex| lex.slice().parse())]
+    // Regex credit: https://stackoverflow.com/a/10786066
+    #[regex(r#""([^"\\]*(\\.[^"\\]*)*)""#, callback = |lex| lex.slice().parse())]
     String(String),
 
     #[regex(r"\r?\n")]

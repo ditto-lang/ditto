@@ -1,0 +1,10 @@
+module Test exports (..)
+
+
+escapes = "\t\n"
+
+multi_line = "
+test
+"
+
+escaped_quotes = "\"\""
