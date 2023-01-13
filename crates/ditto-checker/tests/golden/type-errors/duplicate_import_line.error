@@ -1,12 +1,12 @@
 
   × duplicate import
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
- 3 │ import Data.Stuff (id);
+ 3 │ import Data.Stuff (id)
    · ────────┬────────
    ·         ╰── previous import
- 4 │ import Data.Stuff;
+ 4 │ import Data.Stuff
    · ────────┬────────
    ·         ╰── duplicated here
    ╰────

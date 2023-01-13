@@ -7,5 +7,5 @@
  8 │   | Nothing(a) -> unit
    ·     ─────┬────
    ·          ╰── this expects no arguments
- 9 │   end;
+ 9 │   end
    ╰────

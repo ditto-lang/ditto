@@ -1,8 +1,8 @@
 
   ⚠ unused type declaration
    ╭─[unused_type_declaration.ditto:3:1]
- 3 │ type A = A;
- 4 │ type B = B;
+ 3 │ type A = A
+ 4 │ type B = B
    ·      ┬
    ·      ╰── this isn't referenced or exported
    ╰────

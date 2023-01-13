@@ -5,10 +5,7 @@ use super::{
     name::{gen_name, gen_proper_name},
     r#type::gen_type,
     syntax::gen_parens_list1,
-    token::{
-        gen_alias_keyword, gen_equals, gen_foreign_keyword, gen_pipe, gen_semicolon,
-        gen_type_keyword,
-    },
+    token::{gen_alias_keyword, gen_equals, gen_foreign_keyword, gen_pipe, gen_type_keyword},
 };
 use ditto_cst::{
     Constructor, Declaration, ForeignValueDeclaration, Pipe, TypeAliasDeclaration, TypeDeclaration,
@@ -40,8 +37,6 @@ fn gen_value_declaration(decl: ValueDeclaration) -> PrintItems {
         decl.expression,
         equals_has_trailing_comment,
     ));
-
-    items.extend(gen_semicolon(decl.semicolon));
     items
 }
 
@@ -53,7 +48,6 @@ fn gen_type_alias(type_alias: TypeAliasDeclaration) -> PrintItems {
         type_variables,
         equals,
         aliased_type,
-        semicolon,
     } = type_alias;
     let mut items = PrintItems::new();
     items.extend(gen_type_keyword(type_keyword));
@@ -71,7 +65,6 @@ fn gen_type_alias(type_alias: TypeAliasDeclaration) -> PrintItems {
         gen_type(aliased_type),
         aliased_type_has_leading_comments,
     ));
-    items.extend(gen_semicolon(semicolon));
     items
 }
 
@@ -82,7 +75,6 @@ fn gen_type_declaration(type_declaration: TypeDeclaration) -> PrintItems {
             type_keyword,
             type_name,
             type_variables,
-            semicolon,
         } => {
             let mut items = PrintItems::new();
             items.extend(gen_type_keyword(type_keyword));
@@ -91,7 +83,6 @@ fn gen_type_declaration(type_declaration: TypeDeclaration) -> PrintItems {
             if let Some(type_variables) = type_variables {
                 items.extend(gen_parens_list1(type_variables, gen_name, false));
             }
-            items.extend(gen_semicolon(semicolon));
             items
         }
         TypeDeclaration::WithConstructors {
@@ -101,7 +92,6 @@ fn gen_type_declaration(type_declaration: TypeDeclaration) -> PrintItems {
             equals,
             head_constructor,
             tail_constructors,
-            semicolon,
         } => {
             let mut items = PrintItems::new();
             items.extend(gen_type_keyword(type_keyword));
@@ -153,7 +143,6 @@ fn gen_type_declaration(type_declaration: TypeDeclaration) -> PrintItems {
 
             items.extend(ir_helpers::with_indent(constructor_items));
 
-            items.extend(gen_semicolon(semicolon));
             items
         }
     }
@@ -178,7 +167,6 @@ fn gen_foreign_value_declaration(decl: ForeignValueDeclaration) -> PrintItems {
     items.extend(space());
     items.extend(gen_name(decl.name));
     items.extend(gen_type_annotation(decl.type_annotation));
-    items.extend(gen_semicolon(decl.semicolon));
     items
 }
 
@@ -202,19 +190,19 @@ mod tests {
 
         #[test]
         fn it_formats_type_declarations() {
-            assert_fmt!("type Unknown;");
-            assert_fmt!("-- comment\ntype Unknown;  -- comment");
-            assert_fmt!("type Huh(\n\t-- comment\n\ta,\n);");
-            assert_fmt!("type Unit = Unit;");
+            assert_fmt!("type Unknown");
+            assert_fmt!("-- comment\ntype Unknown  -- comment");
+            assert_fmt!("type Huh(\n\t-- comment\n\ta,\n)");
+            assert_fmt!("type Unit = Unit");
             assert_fmt!(
-                "type Unit = Loooooooooooooooooooooooooooooooooooooooooong;",
-                "type Unit =\n\tLoooooooooooooooooooooooooooooooooooooooooong;",
+                "type Unit = Loooooooooooooooooooooooooooooooooooooooooong",
+                "type Unit =\n\tLoooooooooooooooooooooooooooooooooooooooooong",
                 20
             );
-            assert_fmt!("type Unit =\n\t-- comment\n\tUnit;");
-            assert_fmt!("type Unit = | Unit;", "type Unit = Unit;");
-            assert_fmt!("type AB = A | B;", "type AB =\n\t| A\n\t| B;");
-            assert_fmt!("type Maybe(a) =\n\t-- comment\n\t| Just(a)\n\t-- comment\n\t| Nothing;");
+            assert_fmt!("type Unit =\n\t-- comment\n\tUnit");
+            assert_fmt!("type Unit = | Unit", "type Unit = Unit");
+            assert_fmt!("type AB = A | B", "type AB =\n\t| A\n\t| B");
+            assert_fmt!("type Maybe(a) =\n\t-- comment\n\t| Just(a)\n\t-- comment\n\t| Nothing");
         }
     }
 
@@ -236,24 +224,24 @@ mod tests {
 
         #[test]
         fn it_formats_value_declarations() {
-            assert_fmt!("foo = 5;");
-            assert_fmt!("foo: Int = 5;");
-            assert_fmt!("foo: Int = 5;", "foo: Int =\n\t5;", 5);
-            assert_fmt!("foo: Int =  -- comment\n\t5;");
-            assert_fmt!("foo: Int =\n\t-- comment\n\t5;");
-            assert_fmt!("f: (a, b) -> c =\n\t-- comment\n\t[1, 2, 3, 4, 5];");
-            assert_fmt!("f: Dunno =  -- comment\n\t-- comment\n\tbody;");
+            assert_fmt!("foo = 5");
+            assert_fmt!("foo: Int = 5");
+            assert_fmt!("foo: Int = 5", "foo: Int =\n\t5", 5);
+            assert_fmt!("foo: Int =  -- comment\n\t5");
+            assert_fmt!("foo: Int =\n\t-- comment\n\t5");
+            assert_fmt!("f: (a, b) -> c =\n\t-- comment\n\t[1, 2, 3, 4, 5]");
+            assert_fmt!("f: Dunno =  -- comment\n\t-- comment\n\tbody");
             assert_fmt!(
-                "x = xxxxxxxxxxxxxxxxxxxxxxxxxx;",
-                "x =\n\txxxxxxxxxxxxxxxxxxxxxxxxxx;",
+                "x = xxxxxxxxxxxxxxxxxxxxxxxxxx",
+                "x =\n\txxxxxxxxxxxxxxxxxxxxxxxxxx",
                 10
             );
-            assert_fmt!("to_string = fn (dunno: Unknown): Maybe(String) -> to_string_impl(\n\tdunno,\n\tJust,\n\tNothing,\n);");
-            assert_fmt!("xs: Array(Int) = [\n\t-- comment\n\t1,\n];");
-            assert_fmt!("xs: Array(Int) =  -- comment\n\t-- comment\n\t[5];");
+            assert_fmt!("to_string = fn (dunno: Unknown): Maybe(String) -> to_string_impl(\n\tdunno,\n\tJust,\n\tNothing,\n)");
+            assert_fmt!("xs: Array(Int) = [\n\t-- comment\n\t1,\n]");
+            assert_fmt!("xs: Array(Int) =  -- comment\n\t-- comment\n\t[5]");
             assert_fmt!(
-                "whytho = looooong(looooong(loooooong(loooooong(5))));",
-                "whytho =\n\tlooooong(\n\t\tlooooong(\n\t\t\tloooooong(\n\t\t\t\tloooooong(\n\t\t\t\t\t5,\n\t\t\t\t),\n\t\t\t),\n\t\t),\n\t);",
+                "whytho = looooong(looooong(loooooong(loooooong(5))))",
+                "whytho =\n\tlooooong(\n\t\tlooooong(\n\t\t\tloooooong(\n\t\t\t\tloooooong(\n\t\t\t\t\t5,\n\t\t\t\t),\n\t\t\t),\n\t\t),\n\t)",
                 5
             );
         }
@@ -277,9 +265,9 @@ mod tests {
 
         #[test]
         fn it_formats_foreign_value_declarations() {
-            assert_fmt!("foreign foo: Int;");
-            assert_fmt!("foreign  --comment\n foo: Int;");
-            assert_fmt!("foreign foo: (\n\t-- comment a,\n) -> b;");
+            assert_fmt!("foreign foo: Int");
+            assert_fmt!("foreign  --comment\n foo: Int");
+            assert_fmt!("foreign foo: (\n\t-- comment a,\n) -> b");
         }
     }
 }

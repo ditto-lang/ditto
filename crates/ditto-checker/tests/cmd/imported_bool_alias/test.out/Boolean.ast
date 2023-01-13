@@ -58,8 +58,8 @@
           "It's like `Bool` but longer..."
         ],
         "type_name_span": {
-          "start_offset": 89,
-          "end_offset": 96
+          "start_offset": 88,
+          "end_offset": 95
         },
         "kind": "Type",
         "aliased_type": {
@@ -75,15 +75,15 @@
     "example": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 106,
-        "end_offset": 113
+        "start_offset": 104,
+        "end_offset": 111
       },
       "expression": {
         "expression": "False",
         "data": {
           "span": {
-            "start_offset": 126,
-            "end_offset": 131
+            "start_offset": 124,
+            "end_offset": 129
           },
           "value_type": {
             "type": "ConstructorAlias",

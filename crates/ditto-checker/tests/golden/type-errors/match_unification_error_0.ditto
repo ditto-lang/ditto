@@ -1,9 +1,9 @@
-module Test exports (..);
+module Test exports (..)
 
-type Foo = Foo;
-type Bar = Bar;
+type Foo = Foo
+type Bar = Bar
 
 nah = 
   match Foo with
   | Bar -> unit
-  end;
+  end

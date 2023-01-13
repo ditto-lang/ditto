@@ -1,7 +1,7 @@
-module Test exports (a, c);
+module Test exports (a, c)
 
-a : Bool = true;
-b : Int = 5;
+a : Bool = true
+b : Int = 5
 
 
-c = fn (b) -> b; -- not referencing `b` above, that is still unused
+c = fn (b) -> b -- not referencing `b` above, that is still unused

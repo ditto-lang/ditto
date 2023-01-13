@@ -18,10 +18,12 @@ pub fn kindcheck_foreign_value_declarations(
         foreign_keyword,
         name,
         type_annotation,
-        semicolon,
     } in foreign_value_declarations
     {
-        let span = foreign_keyword.0.get_span().merge(&semicolon.0.get_span());
+        let span = foreign_keyword
+            .0
+            .get_span()
+            .merge(&type_annotation.get_span());
         let mut state = kindchecker::State::default();
         let foreign_type = typechecker::pre_ast::check_type_annotation(
             env_types,

@@ -1,6 +1,6 @@
-module Test exports (..); -- `..` shouldn't expose example_impl !
+module Test exports (..) -- `..` shouldn't expose example_impl !
 
 -- implemented elsewhere
-example = example_impl;
+example = example_impl
 
-foreign example_impl : (Int, Float) -> Unit;
+foreign example_impl : (Int, Float) -> Unit

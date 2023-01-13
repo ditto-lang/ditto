@@ -1,13 +1,13 @@
-module Test exports (..);
+module Test exports (..)
 
-import (a) A;
-import (a) B;
-import (a) C;
+import (a) A
+import (a) B
+import (a) C
 
-import (b-c) A;
-import (b-c) B;
-import (b-c) C;
+import (b-c) A
+import (b-c) B
+import (b-c) C
 
-import A;
-import B;
-import C;
+import A
+import B
+import C

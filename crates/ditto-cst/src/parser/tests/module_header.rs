@@ -45,17 +45,17 @@ enum ExportPattern<'a> {
 #[test]
 fn it_parses_module_headers() {
     assert_module_header!(
-        "module Foo exports (..);",
+        "module Foo exports (..)",
         module_name = "Foo",
         exports = crate::Exports::Everything(_)
     );
     assert_module_header!(
-        "module Bar.Baz exports (foo);",
+        "module Bar.Baz exports (foo)",
         module_name = "Bar.Baz",
         export_list = [ExportPattern::Value("foo")]
     );
     assert_module_header!(
-        "module Bar.Baz exports (foo, Foo,);",
+        "module Bar.Baz exports (foo, Foo,)",
         module_name = "Bar.Baz",
         export_list = [
             ExportPattern::Value("foo"),
@@ -63,7 +63,7 @@ fn it_parses_module_headers() {
         ]
     );
     assert_module_header!(
-        "module Bar.Baz exports (foo, Foo(..), Bar);",
+        "module Bar.Baz exports (foo, Foo(..), Bar)",
         module_name = "Bar.Baz",
         export_list = [
             ExportPattern::Value("foo"),

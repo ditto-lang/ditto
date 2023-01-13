@@ -1,11 +1,11 @@
-module Test exports (..);
+module Test exports (..)
 
-type Maybe(a) = Just(a) | Nothing;
-type Foo = Foo;
-type Bar = Bar;
+type Maybe(a) = Just(a) | Nothing
+type Foo = Foo
+type Bar = Bar
 
 nah = fn (maybe_foo : Maybe(Foo)) ->
   match maybe_foo with
   | Just(Bar) -> unit
   | Nothing -> unit
-  end;
+  end

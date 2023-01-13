@@ -109,15 +109,15 @@
     "abc_to_bool": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 84,
-        "end_offset": 95
+        "start_offset": 80,
+        "end_offset": 91
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 98,
-            "end_offset": 203
+            "start_offset": 94,
+            "end_offset": 199
           },
           "function_type": {
             "type": "Function",
@@ -207,8 +207,8 @@
               {
                 "Variable": {
                   "span": {
-                    "start_offset": 102,
-                    "end_offset": 105
+                    "start_offset": 98,
+                    "end_offset": 101
                   },
                   "name": "abc"
                 }
@@ -259,8 +259,8 @@
             "expression": "Match",
             "data": {
               "span": {
-                "start_offset": 115,
-                "end_offset": 203
+                "start_offset": 111,
+                "end_offset": 199
               },
               "match_type": {
                 "type": "Call",
@@ -302,8 +302,8 @@
                 "expression": "LocalVariable",
                 "data": {
                   "span": {
-                    "start_offset": 121,
-                    "end_offset": 124
+                    "start_offset": 117,
+                    "end_offset": 120
                   },
                   "variable_type": {
                     "type": "Call",
@@ -353,8 +353,8 @@
                   {
                     "ImportedConstructor": {
                       "span": {
-                        "start_offset": 136,
-                        "end_offset": 150
+                        "start_offset": 132,
+                        "end_offset": 146
                       },
                       "constructor": {
                         "module_name": [
@@ -369,8 +369,8 @@
                         {
                           "Variable": {
                             "span": {
-                              "start_offset": 142,
-                              "end_offset": 146
+                              "start_offset": 138,
+                              "end_offset": 142
                             },
                             "name": "bool"
                           }
@@ -378,8 +378,8 @@
                         {
                           "Unused": {
                             "span": {
-                              "start_offset": 148,
-                              "end_offset": 149
+                              "start_offset": 144,
+                              "end_offset": 145
                             },
                             "unused_name": "_"
                           }
@@ -391,8 +391,8 @@
                     "expression": "Call",
                     "data": {
                       "span": {
-                        "start_offset": 154,
-                        "end_offset": 170
+                        "start_offset": 150,
+                        "end_offset": 166
                       },
                       "call_type": {
                         "type": "Call",
@@ -434,8 +434,8 @@
                         "expression": "ImportedConstructor",
                         "data": {
                           "span": {
-                            "start_offset": 154,
-                            "end_offset": 164
+                            "start_offset": 150,
+                            "end_offset": 160
                           },
                           "constructor_type": {
                             "type": "Function",
@@ -501,8 +501,8 @@
                             "expression": "LocalVariable",
                             "data": {
                               "span": {
-                                "start_offset": 165,
-                                "end_offset": 169
+                                "start_offset": 161,
+                                "end_offset": 165
                               },
                               "variable_type": {
                                 "type": "PrimConstructor",
@@ -520,8 +520,8 @@
                   {
                     "Unused": {
                       "span": {
-                        "start_offset": 177,
-                        "end_offset": 178
+                        "start_offset": 173,
+                        "end_offset": 174
                       },
                       "unused_name": "_"
                     }
@@ -530,8 +530,8 @@
                     "expression": "ImportedConstructor",
                     "data": {
                       "span": {
-                        "start_offset": 182,
-                        "end_offset": 195
+                        "start_offset": 178,
+                        "end_offset": 191
                       },
                       "constructor_type": {
                         "type": "Call",
@@ -590,15 +590,15 @@
     "zero": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 55,
-        "end_offset": 59
+        "start_offset": 52,
+        "end_offset": 56
       },
       "expression": {
         "expression": "Call",
         "data": {
           "span": {
-            "start_offset": 62,
-            "end_offset": 81
+            "start_offset": 59,
+            "end_offset": 78
           },
           "call_type": {
             "type": "PrimConstructor",
@@ -608,8 +608,8 @@
             "expression": "ImportedVariable",
             "data": {
               "span": {
-                "start_offset": 62,
-                "end_offset": 74
+                "start_offset": 59,
+                "end_offset": 71
               },
               "variable_type": {
                 "type": "Function",
@@ -679,8 +679,8 @@
                 "expression": "ImportedConstructor",
                 "data": {
                   "span": {
-                    "start_offset": 75,
-                    "end_offset": 80
+                    "start_offset": 72,
+                    "end_offset": 77
                   },
                   "constructor_type": {
                     "type": "Call",

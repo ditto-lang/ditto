@@ -216,8 +216,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 49,
-          "end_offset": 53
+          "start_offset": 47,
+          "end_offset": 51
         },
         "kind": "Type"
       }
@@ -226,8 +226,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 32,
-          "end_offset": 36
+          "start_offset": 31,
+          "end_offset": 35
         },
         "kind": {
           "Function": {
@@ -246,8 +246,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 56,
-        "end_offset": 60
+        "start_offset": 54,
+        "end_offset": 58
       },
       "fields": [
         {
@@ -285,15 +285,15 @@
     "div": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 79,
-        "end_offset": 82
+        "start_offset": 76,
+        "end_offset": 79
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 85,
-            "end_offset": 188
+            "start_offset": 82,
+            "end_offset": 185
           },
           "function_type": {
             "type": "Function",
@@ -436,8 +436,8 @@
               {
                 "Variable": {
                   "span": {
-                    "start_offset": 94,
-                    "end_offset": 99
+                    "start_offset": 91,
+                    "end_offset": 96
                   },
                   "name": "attrs"
                 }
@@ -477,8 +477,8 @@
               {
                 "Variable": {
                   "span": {
-                    "start_offset": 119,
-                    "end_offset": 127
+                    "start_offset": 116,
+                    "end_offset": 124
                   },
                   "name": "children"
                 }
@@ -544,8 +544,8 @@
             "expression": "Call",
             "data": {
               "span": {
-                "start_offset": 163,
-                "end_offset": 188
+                "start_offset": 160,
+                "end_offset": 185
               },
               "call_type": {
                 "type": "Call",
@@ -595,8 +595,8 @@
                 "expression": "ForeignVariable",
                 "data": {
                   "span": {
-                    "start_offset": 163,
-                    "end_offset": 164
+                    "start_offset": 160,
+                    "end_offset": 161
                   },
                   "variable_type": {
                     "type": "Function",
@@ -747,8 +747,8 @@
                     "expression": "String",
                     "data": {
                       "span": {
-                        "start_offset": 165,
-                        "end_offset": 170
+                        "start_offset": 162,
+                        "end_offset": 167
                       },
                       "value": "div",
                       "value_type": {
@@ -763,8 +763,8 @@
                     "expression": "LocalVariable",
                     "data": {
                       "span": {
-                        "start_offset": 172,
-                        "end_offset": 177
+                        "start_offset": 169,
+                        "end_offset": 174
                       },
                       "variable_type": {
                         "type": "Call",
@@ -805,8 +805,8 @@
                     "expression": "LocalVariable",
                     "data": {
                       "span": {
-                        "start_offset": 179,
-                        "end_offset": 187
+                        "start_offset": 176,
+                        "end_offset": 184
                       },
                       "variable_type": {
                         "type": "Call",

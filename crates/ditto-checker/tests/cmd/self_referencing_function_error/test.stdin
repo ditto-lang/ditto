@@ -1,3 +1,3 @@
-module Test exports (..);
+module Test exports (..)
 
-spin = fn () -> spin(2);
+spin = fn () -> spin(2)

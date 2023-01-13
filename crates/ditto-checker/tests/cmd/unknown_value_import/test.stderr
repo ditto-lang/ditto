@@ -2,7 +2,7 @@
   × unknown value import
    ╭─[unknown_value_import.ditto:2:1]
  2 │ 
- 3 │ import Dep (nah);
+ 3 │ import Dep (nah)
    ·             ─┬─
    ·              ╰── this value isn't exposed?
    ╰────

@@ -1,6 +1,6 @@
-module Test exports (..);
+module Test exports (..)
 
 -- TODO error should mention that the module isn't imported
-bang = NotImported.variable;
+bang = NotImported.variable
 
 -- TODO we also want to split out a "module doesn't export that" error at some point too

@@ -1,8 +1,8 @@
-module Test exports (..);
+module Test exports (..)
 
-type ABC = A | B | C;
+type ABC = A | B | C
 
 y_tho = fn (abc: ABC) ->
   match abc with
   | A -> 0
-  end;
+  end

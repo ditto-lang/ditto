@@ -1,20 +1,20 @@
-module Value.Declarations exports (..);
+module Value.Declarations exports (..)
 
 
 my_really_long_value_name: (oooooooooooooooooooooooooooooooooooooooong) -> Int =
-    test();
+    test()
 
 inline_fives =
     -- fives
-    [5, 5, 5, 5, 5];
+    [5, 5, 5, 5, 5]
 
 hanging_fives = [
     --fives
     5,
     5,
-];
+]
 
-foreign some_npm_function: (Int) -> Int;
+foreign some_npm_function: (Int) -> Int
 
 update_fields = fn (r) ->
     -- updates a bunch of things
@@ -23,4 +23,4 @@ update_fields = fn (r) ->
         r |
             foo = 2,
             bar = { Stuff.r | baz = r.baz },
-    };
+    }

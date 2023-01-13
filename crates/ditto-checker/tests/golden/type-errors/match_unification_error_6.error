@@ -8,7 +8,7 @@
    ·     ───┬───
    ·        ╰── here
  8 │   | Nothing -> unit
- 9 │   end;
+ 9 │   end
    ╰────
   help: expected a
         got Maybe($2)

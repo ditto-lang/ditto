@@ -9,7 +9,7 @@
  4 │     foo,
    ·     ─┬─
    ·      ╰── already exported
- 5 │ );
+ 5 │ )
  6 │ 
- 7 │ foo = unit;
+ 7 │ foo = unit
    ╰────

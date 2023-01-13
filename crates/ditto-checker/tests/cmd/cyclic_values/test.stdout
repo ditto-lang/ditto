@@ -38,15 +38,15 @@
     "a": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 27,
-        "end_offset": 28
+        "start_offset": 26,
+        "end_offset": 27
       },
       "expression": {
         "expression": "LocalVariable",
         "data": {
           "span": {
-            "start_offset": 31,
-            "end_offset": 32
+            "start_offset": 30,
+            "end_offset": 31
           },
           "variable_type": {
             "type": "Variable",
@@ -63,15 +63,15 @@
     "b": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 34,
-        "end_offset": 35
+        "start_offset": 32,
+        "end_offset": 33
       },
       "expression": {
         "expression": "LocalVariable",
         "data": {
           "span": {
-            "start_offset": 38,
-            "end_offset": 39
+            "start_offset": 36,
+            "end_offset": 37
           },
           "variable_type": {
             "type": "Variable",

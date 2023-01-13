@@ -248,8 +248,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 31,
-          "end_offset": 34
+          "start_offset": 30,
+          "end_offset": 33
         },
         "kind": {
           "Function": {
@@ -266,8 +266,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 40,
-        "end_offset": 41
+        "start_offset": 39,
+        "end_offset": 40
       },
       "fields": [],
       "return_type": {
@@ -316,8 +316,8 @@
       "doc_comments": [],
       "doc_position": 1,
       "constructor_name_span": {
-        "start_offset": 44,
-        "end_offset": 45
+        "start_offset": 43,
+        "end_offset": 44
       },
       "fields": [
         {
@@ -371,8 +371,8 @@
       "doc_comments": [],
       "doc_position": 2,
       "constructor_name_span": {
-        "start_offset": 53,
-        "end_offset": 54
+        "start_offset": 52,
+        "end_offset": 53
       },
       "fields": [
         {
@@ -435,15 +435,15 @@
     "n_params": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 66,
-        "end_offset": 74
+        "start_offset": 64,
+        "end_offset": 72
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 77,
-            "end_offset": 169
+            "start_offset": 75,
+            "end_offset": 167
           },
           "function_type": {
             "type": "Function",
@@ -501,8 +501,8 @@
               {
                 "Variable": {
                   "span": {
-                    "start_offset": 81,
-                    "end_offset": 84
+                    "start_offset": 79,
+                    "end_offset": 82
                   },
                   "name": "abc"
                 }
@@ -553,8 +553,8 @@
             "expression": "Match",
             "data": {
               "span": {
-                "start_offset": 99,
-                "end_offset": 169
+                "start_offset": 97,
+                "end_offset": 167
               },
               "match_type": {
                 "type": "PrimConstructor",
@@ -564,8 +564,8 @@
                 "expression": "LocalVariable",
                 "data": {
                   "span": {
-                    "start_offset": 105,
-                    "end_offset": 108
+                    "start_offset": 103,
+                    "end_offset": 106
                   },
                   "variable_type": {
                     "type": "Call",
@@ -615,8 +615,8 @@
                   {
                     "LocalConstructor": {
                       "span": {
-                        "start_offset": 120,
-                        "end_offset": 121
+                        "start_offset": 118,
+                        "end_offset": 119
                       },
                       "constructor": "A",
                       "arguments": []
@@ -626,8 +626,8 @@
                     "expression": "Int",
                     "data": {
                       "span": {
-                        "start_offset": 125,
-                        "end_offset": 126
+                        "start_offset": 123,
+                        "end_offset": 124
                       },
                       "value": "0",
                       "value_type": {
@@ -641,16 +641,16 @@
                   {
                     "LocalConstructor": {
                       "span": {
-                        "start_offset": 133,
-                        "end_offset": 137
+                        "start_offset": 131,
+                        "end_offset": 135
                       },
                       "constructor": "B",
                       "arguments": [
                         {
                           "Unused": {
                             "span": {
-                              "start_offset": 135,
-                              "end_offset": 136
+                              "start_offset": 133,
+                              "end_offset": 134
                             },
                             "unused_name": "_"
                           }
@@ -662,8 +662,8 @@
                     "expression": "Int",
                     "data": {
                       "span": {
-                        "start_offset": 141,
-                        "end_offset": 142
+                        "start_offset": 139,
+                        "end_offset": 140
                       },
                       "value": "1",
                       "value_type": {
@@ -677,16 +677,16 @@
                   {
                     "LocalConstructor": {
                       "span": {
-                        "start_offset": 149,
-                        "end_offset": 156
+                        "start_offset": 147,
+                        "end_offset": 154
                       },
                       "constructor": "C",
                       "arguments": [
                         {
                           "Unused": {
                             "span": {
-                              "start_offset": 151,
-                              "end_offset": 152
+                              "start_offset": 149,
+                              "end_offset": 150
                             },
                             "unused_name": "_"
                           }
@@ -694,8 +694,8 @@
                         {
                           "Unused": {
                             "span": {
-                              "start_offset": 154,
-                              "end_offset": 155
+                              "start_offset": 152,
+                              "end_offset": 153
                             },
                             "unused_name": "_"
                           }
@@ -707,8 +707,8 @@
                     "expression": "Int",
                     "data": {
                       "span": {
-                        "start_offset": 160,
-                        "end_offset": 161
+                        "start_offset": 158,
+                        "end_offset": 159
                       },
                       "value": "2",
                       "value_type": {

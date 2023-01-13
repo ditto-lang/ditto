@@ -1,6 +1,6 @@
-module Test exports (..);
+module Test exports (..)
 
 not_an_effect = do {
     huh <- 5;
     return unit
-};
+}

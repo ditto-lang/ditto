@@ -1,16 +1,16 @@
-module Test exports (..);
+module Test exports (..)
 
-type Wrapper(a) = Wrapper(a);
+type Wrapper(a) = Wrapper(a)
 
-unwrap = fn (Wrapper(a)) -> a;
+unwrap = fn (Wrapper(a)) -> a
 
-unwrap_int = fn (Wrapper(i): Wrapper(Int)): Int -> i;
+unwrap_int = fn (Wrapper(i): Wrapper(Int)): Int -> i
 
-five = unwrap_int(Wrapper(5));
+five = unwrap_int(Wrapper(5))
 
-type Triple(a, b, c) = Triple(a, b, c);
+type Triple(a, b, c) = Triple(a, b, c)
 
-wrappers_to_triple = fn (Wrapper(a), wrapped_b, Wrapper(c)) -> Triple(a, unwrap(wrapped_b), c);
+wrappers_to_triple = fn (Wrapper(a), wrapped_b, Wrapper(c)) -> Triple(a, unwrap(wrapped_b), c)
 
 curried_wrappers_to_triple =
-    fn (Wrapper(a)) -> fn (Wrapper(b)) -> fn (Wrapper(c)) -> Triple(a, b, c);
+    fn (Wrapper(a)) -> fn (Wrapper(b)) -> fn (Wrapper(c)) -> Triple(a, b, c)

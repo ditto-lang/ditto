@@ -73,7 +73,7 @@ macro_rules! assert_type_declaration_error {
 
 macro_rules! parse_type_declaration {
     ($decl:expr) => {{
-        let parse_result = ditto_cst::TypeDeclaration::parse(&format!("{};", $decl));
+        let parse_result = ditto_cst::TypeDeclaration::parse($decl);
         assert!(
             matches!(parse_result, Ok(_)),
             "{:#?}",
@@ -85,7 +85,7 @@ macro_rules! parse_type_declaration {
 
 macro_rules! parse_type_alias_declaration {
     ($decl:expr) => {{
-        let parse_result = ditto_cst::TypeAliasDeclaration::parse(&format!("{};", $decl));
+        let parse_result = ditto_cst::TypeAliasDeclaration::parse($decl);
         assert!(
             matches!(parse_result, Ok(_)),
             "{:#?}",

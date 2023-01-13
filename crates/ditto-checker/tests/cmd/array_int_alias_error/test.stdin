@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-type alias Ints = Array(Int);
+type alias Ints = Array(Int)
 
-oops : Ints = [true, false];
+oops : Ints = [true, false]

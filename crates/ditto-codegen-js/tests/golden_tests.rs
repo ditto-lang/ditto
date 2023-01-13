@@ -62,13 +62,13 @@ fn prettier(text: &str) -> String {
 
 fn mk_everything() -> checker::Everything {
     let source = r#"
-            module Data.Stuff exports (..);
-            type Maybe(a) = Just(a) | Nothing;
-            type Five = Five;
-            five : Int = 5;
-            five_string = "five" ;
+            module Data.Stuff exports (..)
+            type Maybe(a) = Just(a) | Nothing
+            type Five = Five
+            five : Int = 5
+            five_string = "five"
 
-            id = fn (a) -> a;
+            id = fn (a) -> a
         "#;
     let cst_module = cst::Module::parse(source).unwrap();
     let (ast_module, _warnings) =

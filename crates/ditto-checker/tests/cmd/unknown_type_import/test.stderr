@@ -2,7 +2,7 @@
   × unknown type import
    ╭─[unknown_type_import.ditto:2:1]
  2 │ 
- 3 │ import Dep (Huh);
+ 3 │ import Dep (Huh)
    ·             ─┬─
    ·              ╰── this type isn't exposed?
    ╰────

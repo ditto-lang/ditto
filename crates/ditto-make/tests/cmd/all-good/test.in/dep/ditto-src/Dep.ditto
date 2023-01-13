@@ -1,7 +1,7 @@
-module Dep exports (..);
+module Dep exports (..)
 
-import Util (identity);
+import Util (identity)
 
-type Dep = Dep;
+type Dep = Dep
 
-dep : Dep = identity(Dep);
+dep : Dep = identity(Dep)

@@ -14,7 +14,7 @@ pub Module: cst::Module = {
 }
 
 pub Header: cst::Header = {
-  <module_keyword: ModuleKeyword> <module_name: ModuleName> <exports_keyword: ExportsKeyword> <exports: Exports> <semicolon: Semicolon> => cst::Header { module_keyword, module_name, exports_keyword, exports, semicolon },
+  <module_keyword: ModuleKeyword> <module_name: ModuleName> <exports_keyword: ExportsKeyword> <exports: Exports> => cst::Header { module_keyword, module_name, exports_keyword, exports },
 }
 
 Exports: cst::Exports = {
@@ -28,7 +28,7 @@ Export: cst::Export = {
 }
 
 pub ImportLine: cst::ImportLine = {
-  <import_keyword: ImportKeyword> <package: Parens<PackageName>?> <module_name: ModuleName> <alias: (AsKeyword ProperName)?> <imports: ImportList?> <semicolon: Semicolon> => cst::ImportLine { import_keyword, package, module_name, alias, imports, semicolon }
+  <import_keyword: ImportKeyword> <package: Parens<PackageName>?> <module_name: ModuleName> <alias: (AsKeyword ProperName)?> <imports: ImportList?> => cst::ImportLine { import_keyword, package, module_name, alias, imports }
 }
 
 ImportList: cst::ImportList = {
@@ -50,12 +50,12 @@ Declaration: cst::Declaration = {
 }
 
 pub TypeDeclaration: cst::TypeDeclaration = {
-  <type_keyword: TypeKeyword> <type_name: ProperName> <type_variables: ParensList1<Name>?> <equals: Equals> <head_constructor: HeadConstructor> <tail_constructors: TailConstructor*> <semicolon: Semicolon> => cst::TypeDeclaration::WithConstructors { type_keyword, type_name, type_variables, equals, head_constructor, tail_constructors, semicolon },
-  <type_keyword: TypeKeyword> <type_name: ProperName> <type_variables: ParensList1<Name>?> <semicolon: Semicolon> => cst::TypeDeclaration::WithoutConstructors { type_keyword, type_name, type_variables, semicolon },
+  <type_keyword: TypeKeyword> <type_name: ProperName> <type_variables: ParensList1<Name>?> <equals: Equals> <head_constructor: HeadConstructor> <tail_constructors: TailConstructor*> => cst::TypeDeclaration::WithConstructors { type_keyword, type_name, type_variables, equals, head_constructor, tail_constructors },
+  <type_keyword: TypeKeyword> <type_name: ProperName> <type_variables: ParensList1<Name>?> => cst::TypeDeclaration::WithoutConstructors { type_keyword, type_name, type_variables },
 }
 
 pub TypeAliasDeclaration: cst::TypeAliasDeclaration = {
-  <type_keyword: TypeKeyword> <alias_keyword: AliasKeyword> <type_name: ProperName> <type_variables: ParensList1<Name>?> <equals: Equals> <aliased_type: Type> <semicolon: Semicolon> => cst::TypeAliasDeclaration { type_keyword, alias_keyword, type_name, type_variables, equals, aliased_type, semicolon },
+  <type_keyword: TypeKeyword> <alias_keyword: AliasKeyword> <type_name: ProperName> <type_variables: ParensList1<Name>?> <equals: Equals> <aliased_type: Type> => cst::TypeAliasDeclaration { type_keyword, alias_keyword, type_name, type_variables, equals, aliased_type },
 }
 
 HeadConstructor: cst::Constructor<Option<cst::Pipe>> = {
@@ -67,11 +67,11 @@ TailConstructor: cst::Constructor = {
 }
 
 pub ValueDeclaration: cst::ValueDeclaration = {
-  <name: Name> <type_annotation: TypeAnnotation?> <equals: Equals> <expression: Expression> <semicolon: Semicolon> => cst::ValueDeclaration { name, type_annotation, equals, expression, semicolon }
+  <name: Name> <type_annotation: TypeAnnotation?> <equals: Equals> <expression: Expression> => cst::ValueDeclaration { name, type_annotation, equals, expression }
 }
 
 pub ForeignValueDeclaration: cst::ForeignValueDeclaration = {
-  <foreign_keyword: ForeignKeyword> <name: Name> <type_annotation: TypeAnnotation> <semicolon: Semicolon> => cst::ForeignValueDeclaration { foreign_keyword, name, type_annotation, semicolon }
+  <foreign_keyword: ForeignKeyword> <name: Name> <type_annotation: TypeAnnotation> => cst::ForeignValueDeclaration { foreign_keyword, name, type_annotation }
 }
 
 // TYPES
@@ -198,7 +198,7 @@ Pattern: cst::Pattern = {
 }
 
 pub LetValueDeclaration: cst::LetValueDeclaration = {
-  <pattern: Pattern> <type_annotation: TypeAnnotation?> <equals: Equals> <expression: Expression> <semicolon: Semicolon> => cst::LetValueDeclaration { pattern, type_annotation, equals, expression, semicolon }
+  <pattern: Pattern> <type_annotation: TypeAnnotation?> <equals: Equals> <expression: Expression> => cst::LetValueDeclaration { pattern, type_annotation, equals, expression }
 }
 
 Effect: cst::Effect = {

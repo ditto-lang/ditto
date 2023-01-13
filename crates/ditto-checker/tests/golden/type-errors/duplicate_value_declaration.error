@@ -1,14 +1,14 @@
 
   × duplicate top-level name
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
- 3 │ five = 5;
+ 3 │ five = 5
    · ──┬─
    ·   ╰── previously defined here
  4 │ 
  5 │ 
- 6 │ five = 5;
+ 6 │ five = 5
    · ──┬─
    ·   ╰── can't be redefined here
    ╰────

@@ -1,7 +1,7 @@
-module Test exports (..);
+module Test exports (..)
 
-type Wrapper(a) = Wrapped(a);
+type Wrapper(a) = Wrapped(a)
 
-wrapped_five = Wrapped(5);
+wrapped_five = Wrapped(5)
 
-fives = let Wrapped(five) = wrapped_five; in [five, five];
+fives = let Wrapped(five) = wrapped_five in [five, five]

@@ -1,9 +1,9 @@
 
   × module not found
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
- 3 │ import (test-stuff) Missing.Module;
+ 3 │ import (test-stuff) Missing.Module
    ·                     ───────┬──────
    ·                            ╰── `test-stuff` doesn't expose this module?
    ╰────

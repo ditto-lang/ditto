@@ -78,8 +78,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 31,
-          "end_offset": 32
+          "start_offset": 30,
+          "end_offset": 31
         },
         "kind": {
           "Function": {
@@ -98,8 +98,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 38,
-        "end_offset": 39
+        "start_offset": 37,
+        "end_offset": 38
       },
       "fields": [],
       "return_type": {

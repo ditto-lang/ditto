@@ -1,24 +1,24 @@
-module Effect exports (..);
+module Effect exports (..)
 
 
 get_name = do {
     return "jane"
-};
+}
 
 get_names = do {
     name <- get_name;
     another_name <- get_name;
     return [name, another_name]
-};
+}
 
 effect_map = fn (effect_a: Effect(a), f: (a) -> b): Effect(b) -> do {
     a <- effect_a;
     return f(a)
-};
+}
 
 main: Effect(Unit) = do {
     effect_map(get_name, fn (name) -> unit)
-};
+}
 
 bind_comments = do {
     -- comment
@@ -33,14 +33,14 @@ bind_comments = do {
     whatever <-  -- comment
         do_whatever();
     return 5
-};
+}
 
 nested = do {
     five <- do {
         return 5
     };
     return 5
-};
+}
 
 if_then_else_effects = do {
     yey_or_ney <-
@@ -56,7 +56,7 @@ if_then_else_effects = do {
         do_if_true()
     else
         do_if_false()
-};
+}
 
 let_binds = do {
     let five = 5;
@@ -66,4 +66,4 @@ let_binds = do {
     -- comment
     let Wrapped(unwrapped): Wrapper(Int) = wrapped;
     return unit
-};
+}

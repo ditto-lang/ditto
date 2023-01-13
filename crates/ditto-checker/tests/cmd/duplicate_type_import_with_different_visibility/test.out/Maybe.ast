@@ -169,8 +169,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 113,
-          "end_offset": 120
+          "start_offset": 111,
+          "end_offset": 118
         },
         "kind": "Type"
       }
@@ -179,8 +179,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 77,
-          "end_offset": 82
+          "start_offset": 76,
+          "end_offset": 81
         },
         "kind": {
           "Function": {
@@ -197,8 +197,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 123,
-        "end_offset": 130
+        "start_offset": 121,
+        "end_offset": 128
       },
       "fields": [],
       "return_type": {
@@ -226,8 +226,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 88,
-        "end_offset": 92
+        "start_offset": 87,
+        "end_offset": 91
       },
       "fields": [
         {
@@ -285,8 +285,8 @@
       "doc_comments": [],
       "doc_position": 1,
       "constructor_name_span": {
-        "start_offset": 98,
-        "end_offset": 105
+        "start_offset": 97,
+        "end_offset": 104
       },
       "fields": [],
       "return_type": {
@@ -336,15 +336,15 @@
     "mk_private": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 133,
-        "end_offset": 143
+        "start_offset": 130,
+        "end_offset": 140
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 146,
-            "end_offset": 162
+            "start_offset": 143,
+            "end_offset": 159
           },
           "function_type": {
             "type": "Function",
@@ -376,8 +376,8 @@
             "expression": "LocalConstructor",
             "data": {
               "span": {
-                "start_offset": 155,
-                "end_offset": 162
+                "start_offset": 152,
+                "end_offset": 159
               },
               "constructor_type": {
                 "type": "Constructor",

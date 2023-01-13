@@ -5,7 +5,7 @@
  4 │     | A 
    ·       ┬
    ·       ╰── previously defined here
- 5 │     | A;
+ 5 │     | A
    ·       ┬
    ·       ╰── can't be redefined here
    ╰────

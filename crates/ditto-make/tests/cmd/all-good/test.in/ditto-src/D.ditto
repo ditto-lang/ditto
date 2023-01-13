@@ -1,6 +1,6 @@
-module D exports (..);
+module D exports (..)
 
-import C (C);
-import (dep) Dep;
+import C (C)
+import (dep) Dep
 
-type D = D(Dep.Dep, C);
+type D = D(Dep.Dep, C)

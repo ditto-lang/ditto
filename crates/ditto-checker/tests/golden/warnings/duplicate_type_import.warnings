@@ -1,12 +1,12 @@
 
   ⚠ duplicate type import
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
- 3 │ import Data.Stuff (Five, Five, five_ctor);
+ 3 │ import Data.Stuff (Five, Five, five_ctor)
    ·                    ──┬─  ──┬─
    ·                      │     ╰── already imported
    ·                      ╰── previously imported here
  4 │ 
- 5 │ my_five : Five = five_ctor;
+ 5 │ my_five : Five = five_ctor
    ╰────

@@ -1,6 +1,6 @@
-module Test exports (..);
+module Test exports (..)
 
-forever = fn () -> forever();
+forever = fn () -> forever()
 
-cycle_a = fn () -> cycle_b();
-cycle_b = fn () -> cycle_a();
+cycle_a = fn () -> cycle_b()
+cycle_b = fn () -> cycle_a()

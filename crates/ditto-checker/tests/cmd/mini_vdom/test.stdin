@@ -1,12 +1,12 @@
-module Test exports (..);
+module Test exports (..)
 
-type Html(msg);
+type Html(msg)
 
-type Attr = Attr(String, String);
+type Attr = Attr(String, String)
 
 div = fn (
     attrs: Array(Attr), 
     children: Array(Html(msg)),
-): Html(msg) -> h("div", attrs, children);
+): Html(msg) -> h("div", attrs, children)
 
-foreign h : (String, Array(Attr), Array(Html(msg))) -> Html(msg);
+foreign h : (String, Array(Attr), Array(Html(msg))) -> Html(msg)

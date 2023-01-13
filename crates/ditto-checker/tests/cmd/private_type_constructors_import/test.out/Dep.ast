@@ -44,8 +44,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 53,
-          "end_offset": 61
+          "start_offset": 52,
+          "end_offset": 60
         },
         "kind": "Type"
       }
@@ -56,8 +56,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 64,
-        "end_offset": 72
+        "start_offset": 63,
+        "end_offset": 71
       },
       "fields": [
         {
@@ -99,15 +99,15 @@
     "abstract_value": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 92,
-        "end_offset": 106
+        "start_offset": 90,
+        "end_offset": 104
       },
       "expression": {
         "expression": "Call",
         "data": {
           "span": {
-            "start_offset": 109,
-            "end_offset": 132
+            "start_offset": 107,
+            "end_offset": 130
           },
           "call_type": {
             "type": "Constructor",
@@ -132,8 +132,8 @@
             "expression": "LocalConstructor",
             "data": {
               "span": {
-                "start_offset": 109,
-                "end_offset": 117
+                "start_offset": 107,
+                "end_offset": 115
               },
               "constructor_type": {
                 "type": "Function",
@@ -182,8 +182,8 @@
                 "expression": "Int",
                 "data": {
                   "span": {
-                    "start_offset": 118,
-                    "end_offset": 119
+                    "start_offset": 116,
+                    "end_offset": 117
                   },
                   "value": "5",
                   "value_type": {
@@ -198,8 +198,8 @@
                 "expression": "True",
                 "data": {
                   "span": {
-                    "start_offset": 121,
-                    "end_offset": 125
+                    "start_offset": 119,
+                    "end_offset": 123
                   },
                   "value_type": {
                     "type": "PrimConstructor",
@@ -213,8 +213,8 @@
                 "expression": "Unit",
                 "data": {
                   "span": {
-                    "start_offset": 127,
-                    "end_offset": 131
+                    "start_offset": 125,
+                    "end_offset": 129
                   },
                   "value_type": {
                     "type": "PrimConstructor",

@@ -869,7 +869,7 @@ mod test_macros {
         }};
         ($source:expr, $want:expr, $rewrites:expr) => {{
             let cst_module = ditto_cst::Module::parse(&format!(
-                "module Test exports (..); type A = A; type BC = B | C; expr = {};",
+                "module Test exports (..) type A = A type BC = B | C expr = {}",
                 $source
             ))
             .unwrap();

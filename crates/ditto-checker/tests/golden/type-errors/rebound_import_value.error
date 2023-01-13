@@ -1,17 +1,17 @@
 
   × value `id` imported multiple times
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
  3 │ import Data.Stuff (
  4 │     id
    ·     ─┬
    ·      ╰── first imported here
- 5 │ );
+ 5 │ )
  6 │ 
  7 │ import (test-stuff) Data.Stuff as S (
  8 │     id
    ·     ─┬
    ·      ╰── imported again here
- 9 │ );
+ 9 │ )
    ╰────

@@ -1,25 +1,25 @@
-module Test exports (..);
+module Test exports (..)
 
-empty_object : {} = {};
+empty_object : {} = {}
 
-just_object_things = { yep = true, huh = unit, why = fn () -> {} };
+just_object_things = { yep = true, huh = unit, why = fn () -> {} }
 
-very_nested = { a = { b = { c = { d = [] }}}};
+very_nested = { a = { b = { c = { d = [] }}}}
 
-d = very_nested.a.b.c.d;
+d = very_nested.a.b.c.d
 
-get_foo = fn (x : { r | foo: a }) -> x.foo;
-mk_has_foo = fn (a) -> { foo = a };
-foo = mk_has_foo(true).foo;
+get_foo = fn (x : { r | foo: a }) -> x.foo
+mk_has_foo = fn (a) -> { foo = a }
+foo = mk_has_foo(true).foo
 
-pure_object = fn () -> {};
-do_object = do { return {} };
+pure_object = fn () -> {}
+do_object = do { return {} }
 
-update_foo_bar = fn (r) -> { r | foo = 1, bar = 2 };
+update_foo_bar = fn (r) -> { r | foo = 1, bar = 2 }
 
 deep_update = fn (r) -> 
     { r | a = 
         { r.a | b = 
             { r.a.b | c = true } 
         } 
-    };
+    }

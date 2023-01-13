@@ -2,7 +2,7 @@
   × types don't unify
    ╭─[array_int_alias_error.ditto:4:1]
  4 │ 
- 5 │ oops : Ints = [true, false];
+ 5 │ oops : Ints = [true, false]
    ·               ──────┬──────
    ·                     ╰── here
    ╰────

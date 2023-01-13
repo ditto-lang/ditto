@@ -1,7 +1,7 @@
 use crate::{
     AliasKeyword, AsKeyword, Comment, DoubleDot, Equals, ExportsKeyword, Expression,
     ForeignKeyword, ImportKeyword, ModuleKeyword, ModuleName, Name, PackageName, Parens,
-    ParensList1, Pipe, ProperName, Semicolon, Type, TypeAnnotation, TypeKeyword,
+    ParensList1, Pipe, ProperName, Type, TypeAnnotation, TypeKeyword,
 };
 use std::iter;
 
@@ -29,8 +29,6 @@ pub struct Header {
     pub exports_keyword: ExportsKeyword,
     /// `(..)` or `(Foo, Bar(..), baz)`
     pub exports: Exports,
-    /// `;`
-    pub semicolon: Semicolon,
 }
 
 /// `(..)`
@@ -67,8 +65,6 @@ pub struct ImportLine {
     pub alias: Option<(AsKeyword, ProperName)>,
     /// `(..)` or `(Foo, Bar(..), baz)`
     pub imports: Option<ImportList>,
-    /// `;`
-    pub semicolon: Semicolon,
 }
 
 /// A list of things to be imported.
@@ -114,8 +110,6 @@ pub struct ValueDeclaration {
     pub equals: Equals,
     /// The value definition itself.
     pub expression: Expression,
-    /// `;`
-    pub semicolon: Semicolon,
 }
 
 /// Introducing a new type.
@@ -142,8 +136,6 @@ pub enum TypeDeclaration {
         head_constructor: Constructor<Option<Pipe>>,
         /// The remaining type constructors.
         tail_constructors: Vec<Constructor>,
-        /// `;`
-        semicolon: Semicolon,
     },
     /// Types may also be introduced _without_ constructors, if they are to be
     /// constructed via the FFI.
@@ -158,8 +150,6 @@ pub enum TypeDeclaration {
         type_name: ProperName,
         /// Optional parameters for this type.
         type_variables: Option<ParensList1<Name>>,
-        /// `;`
-        semicolon: Semicolon,
     },
 }
 
@@ -239,8 +229,6 @@ pub struct TypeAliasDeclaration {
     pub equals: Equals,
     /// The type being aliased.
     pub aliased_type: Type,
-    /// `;`
-    pub semicolon: Semicolon,
 }
 
 /// A foreign value import.
@@ -256,6 +244,4 @@ pub struct ForeignValueDeclaration {
     pub name: Name,
     /// The type of the value being imported.
     pub type_annotation: TypeAnnotation,
-    /// `;`
-    pub semicolon: Semicolon,
 }

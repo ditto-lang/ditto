@@ -139,8 +139,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 54,
-          "end_offset": 60
+          "start_offset": 52,
+          "end_offset": 58
         },
         "kind": "Type",
         "aliased_type": {
@@ -193,15 +193,15 @@
     "match_my_result": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 92,
-        "end_offset": 107
+        "start_offset": 89,
+        "end_offset": 104
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 110,
-            "end_offset": 219
+            "start_offset": 107,
+            "end_offset": 216
           },
           "function_type": {
             "type": "Function",
@@ -280,8 +280,8 @@
               {
                 "Variable": {
                   "span": {
-                    "start_offset": 114,
-                    "end_offset": 117
+                    "start_offset": 111,
+                    "end_offset": 114
                   },
                   "name": "res"
                 }
@@ -353,8 +353,8 @@
             "expression": "Match",
             "data": {
               "span": {
-                "start_offset": 141,
-                "end_offset": 219
+                "start_offset": 138,
+                "end_offset": 216
               },
               "match_type": {
                 "type": "PrimConstructor",
@@ -364,8 +364,8 @@
                 "expression": "LocalVariable",
                 "data": {
                   "span": {
-                    "start_offset": 147,
-                    "end_offset": 150
+                    "start_offset": 144,
+                    "end_offset": 147
                   },
                   "variable_type": {
                     "type": "ConstructorAlias",
@@ -436,8 +436,8 @@
                   {
                     "ImportedConstructor": {
                       "span": {
-                        "start_offset": 162,
-                        "end_offset": 174
+                        "start_offset": 159,
+                        "end_offset": 171
                       },
                       "constructor": {
                         "module_name": [
@@ -452,8 +452,8 @@
                         {
                           "Unused": {
                             "span": {
-                              "start_offset": 172,
-                              "end_offset": 173
+                              "start_offset": 169,
+                              "end_offset": 170
                             },
                             "unused_name": "_"
                           }
@@ -465,8 +465,8 @@
                     "expression": "True",
                     "data": {
                       "span": {
-                        "start_offset": 178,
-                        "end_offset": 182
+                        "start_offset": 175,
+                        "end_offset": 179
                       },
                       "value_type": {
                         "type": "PrimConstructor",
@@ -479,8 +479,8 @@
                   {
                     "ImportedConstructor": {
                       "span": {
-                        "start_offset": 189,
-                        "end_offset": 202
+                        "start_offset": 186,
+                        "end_offset": 199
                       },
                       "constructor": {
                         "module_name": [
@@ -495,8 +495,8 @@
                         {
                           "Unused": {
                             "span": {
-                              "start_offset": 200,
-                              "end_offset": 201
+                              "start_offset": 197,
+                              "end_offset": 198
                             },
                             "unused_name": "_"
                           }
@@ -508,8 +508,8 @@
                     "expression": "False",
                     "data": {
                       "span": {
-                        "start_offset": 206,
-                        "end_offset": 211
+                        "start_offset": 203,
+                        "end_offset": 208
                       },
                       "value_type": {
                         "type": "PrimConstructor",

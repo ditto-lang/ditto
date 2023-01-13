@@ -1,7 +1,7 @@
-module Test exports (..);
+module Test exports (..)
 
-type alias A = Float;
-type alias B = A;
-type alias C = B;
+type alias A = Float
+type alias B = A
+type alias C = B
 
-five : C = 5.0;
+five : C = 5.0

@@ -1,1 +1,1 @@
-module VanillaPkg exports (..);
+module VanillaPkg exports (..)

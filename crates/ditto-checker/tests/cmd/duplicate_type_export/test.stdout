@@ -44,8 +44,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 54,
-          "end_offset": 55
+          "start_offset": 53,
+          "end_offset": 54
         },
         "kind": "Type"
       }
@@ -56,8 +56,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 58,
-        "end_offset": 59
+        "start_offset": 57,
+        "end_offset": 58
       },
       "fields": [],
       "return_type": {
@@ -86,15 +86,15 @@
     "a": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 62,
-        "end_offset": 63
+        "start_offset": 60,
+        "end_offset": 61
       },
       "expression": {
         "expression": "LocalConstructor",
         "data": {
           "span": {
-            "start_offset": 66,
-            "end_offset": 67
+            "start_offset": 64,
+            "end_offset": 65
           },
           "constructor_type": {
             "type": "Constructor",

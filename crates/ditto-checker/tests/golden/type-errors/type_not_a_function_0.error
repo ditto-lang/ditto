@@ -1,9 +1,9 @@
 
   × type isn't callable
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
- 3 │ huh : Bool(Int) = True;
+ 3 │ huh : Bool(Int) = True
    ·       ──┬─
    ·         ╰── this type takes no parameters
    ╰────

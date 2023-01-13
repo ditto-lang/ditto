@@ -8,7 +8,7 @@
     ·     ────┬───
     ·         ╰── unreachable
   9 │   | None -> 5.0
- 10 │   end;
+ 10 │   end
     ╰────
 
 
@@ -20,5 +20,5 @@
   9 │   | None -> 5.0
     ·     ──┬─
     ·       ╰── unreachable
- 10 │   end;
+ 10 │   end
     ╰────

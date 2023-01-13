@@ -8,5 +8,5 @@
    ·          ┬  ┬
    ·          │  ╰── name can't be reused here
    ·          ╰── previous variable
- 8 │   end;
+ 8 │   end
    ╰────

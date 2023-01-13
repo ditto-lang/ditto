@@ -33,15 +33,15 @@
     "fives": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 53,
-        "end_offset": 58
+        "start_offset": 51,
+        "end_offset": 56
       },
       "expression": {
         "expression": "Array",
         "data": {
           "span": {
-            "start_offset": 61,
-            "end_offset": 79
+            "start_offset": 59,
+            "end_offset": 77
           },
           "element_type": {
             "type": "PrimConstructor",
@@ -52,8 +52,8 @@
               "expression": "ImportedVariable",
               "data": {
                 "span": {
-                  "start_offset": 62,
-                  "end_offset": 66
+                  "start_offset": 60,
+                  "end_offset": 64
                 },
                 "variable_type": {
                   "type": "PrimConstructor",
@@ -74,8 +74,8 @@
               "expression": "ImportedVariable",
               "data": {
                 "span": {
-                  "start_offset": 68,
-                  "end_offset": 72
+                  "start_offset": 66,
+                  "end_offset": 70
                 },
                 "variable_type": {
                   "type": "PrimConstructor",
@@ -96,8 +96,8 @@
               "expression": "ImportedVariable",
               "data": {
                 "span": {
-                  "start_offset": 74,
-                  "end_offset": 78
+                  "start_offset": 72,
+                  "end_offset": 76
                 },
                 "variable_type": {
                   "type": "PrimConstructor",

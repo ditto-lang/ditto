@@ -8,7 +8,7 @@ use crate::{parse_header_and_imports, Module};
 
 #[test]
 fn it_captures_trailing_module_comments() {
-    let module = Module::parse("module Test exports (..);\n\n-- comment\n--comment").unwrap();
+    let module = Module::parse("module Test exports (..)\n\n-- comment\n--comment").unwrap();
     assert_eq!(module.trailing_comments.len(), 2)
 }
 
@@ -16,9 +16,9 @@ fn it_captures_trailing_module_comments() {
 fn it_parses_header_and_imports() {
     parse_header_and_imports(
         r#"
-        module Test exports (..); 
-        import Foo;
-        foo = 2;
+        module Test exports (..)
+        import Foo
+        foo = 2
         "#,
     )
     .unwrap();

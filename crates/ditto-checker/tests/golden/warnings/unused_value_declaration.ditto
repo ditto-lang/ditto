@@ -1,4 +1,4 @@
-module Test exports (yes);
+module Test exports (yes)
 
-yes = true;
-no = false;
+yes = true
+no = false

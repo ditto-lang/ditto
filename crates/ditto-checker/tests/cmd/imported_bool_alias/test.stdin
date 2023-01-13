@@ -1,7 +1,7 @@
-module Test exports (..);
+module Test exports (..)
 
-import Boolean (Boolean);
+import Boolean (Boolean)
 
-my_boolean : Boolean = true;
+my_boolean : Boolean = true
 
-five = if Boolean.example then 5 else 5;
+five = if Boolean.example then 5 else 5

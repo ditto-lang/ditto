@@ -1,4 +1,4 @@
-module Test exports (..);
+module Test exports (..)
 
-import (test-stuff) Data.Stuff as Stf;
-import Data.Stuff as Stf;
+import (test-stuff) Data.Stuff as Stf
+import Data.Stuff as Stf

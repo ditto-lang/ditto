@@ -1,3 +1,3 @@
-module Test exports (five, five);
+module Test exports (five, five)
 
-five = 5;
+five = 5

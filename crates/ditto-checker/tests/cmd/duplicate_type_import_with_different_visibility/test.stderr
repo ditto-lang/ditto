@@ -8,6 +8,6 @@
  5 │     Maybe(..),
    ·     ──┬──
    ·       ╰── already imported
- 6 │ );
+ 6 │ )
    ╰────
 

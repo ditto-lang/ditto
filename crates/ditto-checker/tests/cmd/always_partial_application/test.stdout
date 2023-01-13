@@ -97,15 +97,15 @@
     "always": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 27,
-        "end_offset": 33
+        "start_offset": 26,
+        "end_offset": 32
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 36,
-            "end_offset": 58
+            "start_offset": 35,
+            "end_offset": 57
           },
           "function_type": {
             "type": "Function",
@@ -150,8 +150,8 @@
               {
                 "Variable": {
                   "span": {
-                    "start_offset": 40,
-                    "end_offset": 41
+                    "start_offset": 39,
+                    "end_offset": 40
                   },
                   "name": "a"
                 }
@@ -170,8 +170,8 @@
             "expression": "Function",
             "data": {
               "span": {
-                "start_offset": 46,
-                "end_offset": 58
+                "start_offset": 45,
+                "end_offset": 57
               },
               "function_type": {
                 "type": "Function",
@@ -201,8 +201,8 @@
                   {
                     "Unused": {
                       "span": {
-                        "start_offset": 50,
-                        "end_offset": 52
+                        "start_offset": 49,
+                        "end_offset": 51
                       },
                       "unused_name": "_b"
                     }
@@ -221,8 +221,8 @@
                 "expression": "LocalVariable",
                 "data": {
                   "span": {
-                    "start_offset": 57,
-                    "end_offset": 58
+                    "start_offset": 56,
+                    "end_offset": 57
                   },
                   "variable_type": {
                     "type": "Variable",
@@ -243,15 +243,15 @@
     "always_five": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 90,
-        "end_offset": 101
+        "start_offset": 87,
+        "end_offset": 98
       },
       "expression": {
         "expression": "Call",
         "data": {
           "span": {
-            "start_offset": 116,
-            "end_offset": 125
+            "start_offset": 113,
+            "end_offset": 122
           },
           "call_type": {
             "type": "Function",
@@ -278,8 +278,8 @@
             "expression": "LocalVariable",
             "data": {
               "span": {
-                "start_offset": 116,
-                "end_offset": 122
+                "start_offset": 113,
+                "end_offset": 119
               },
               "variable_type": {
                 "type": "Function",
@@ -322,8 +322,8 @@
                 "expression": "Int",
                 "data": {
                   "span": {
-                    "start_offset": 123,
-                    "end_offset": 124
+                    "start_offset": 120,
+                    "end_offset": 121
                   },
                   "value": "5",
                   "value_type": {
@@ -340,15 +340,15 @@
     "another_five": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 127,
-        "end_offset": 139
+        "start_offset": 123,
+        "end_offset": 135
       },
       "expression": {
         "expression": "Call",
         "data": {
           "span": {
-            "start_offset": 147,
-            "end_offset": 164
+            "start_offset": 143,
+            "end_offset": 160
           },
           "call_type": {
             "type": "PrimConstructor",
@@ -358,8 +358,8 @@
             "expression": "LocalVariable",
             "data": {
               "span": {
-                "start_offset": 147,
-                "end_offset": 158
+                "start_offset": 143,
+                "end_offset": 154
               },
               "variable_type": {
                 "type": "Function",
@@ -385,8 +385,8 @@
                 "expression": "Unit",
                 "data": {
                   "span": {
-                    "start_offset": 159,
-                    "end_offset": 163
+                    "start_offset": 155,
+                    "end_offset": 159
                   },
                   "value_type": {
                     "type": "PrimConstructor",
@@ -402,15 +402,15 @@
     "five": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 60,
-        "end_offset": 64
+        "start_offset": 58,
+        "end_offset": 62
       },
       "expression": {
         "expression": "Call",
         "data": {
           "span": {
-            "start_offset": 72,
-            "end_offset": 87
+            "start_offset": 70,
+            "end_offset": 85
           },
           "call_type": {
             "type": "PrimConstructor",
@@ -420,8 +420,8 @@
             "expression": "Call",
             "data": {
               "span": {
-                "start_offset": 72,
-                "end_offset": 81
+                "start_offset": 70,
+                "end_offset": 79
               },
               "call_type": {
                 "type": "Function",
@@ -442,8 +442,8 @@
                 "expression": "LocalVariable",
                 "data": {
                   "span": {
-                    "start_offset": 72,
-                    "end_offset": 78
+                    "start_offset": 70,
+                    "end_offset": 76
                   },
                   "variable_type": {
                     "type": "Function",
@@ -480,8 +480,8 @@
                     "expression": "Int",
                     "data": {
                       "span": {
-                        "start_offset": 79,
-                        "end_offset": 80
+                        "start_offset": 77,
+                        "end_offset": 78
                       },
                       "value": "5",
                       "value_type": {
@@ -500,8 +500,8 @@
                 "expression": "True",
                 "data": {
                   "span": {
-                    "start_offset": 82,
-                    "end_offset": 86
+                    "start_offset": 80,
+                    "end_offset": 84
                   },
                   "value_type": {
                     "type": "PrimConstructor",

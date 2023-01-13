@@ -14,27 +14,27 @@ module Test exports (
     -- ## Footer
     --
     -- Some trailing documentation
-);
+)
 
-import (core) Maybe;
+import (core) Maybe
 
-import (some-pkg) A;
+import (some-pkg) A
 -- Alphabetical order
-import (some-pkg) B;
-import (some-pkg) C;
+import (some-pkg) B
+import (some-pkg) C
 
-import Bar as B;
+import Bar as B
 import Foo (
     a,
     b,
     c,
-);
+)
 
 
-foreign string_eq: (String, String) -> Bool;
+foreign string_eq: (String, String) -> Bool
 
 -- FFI implementation for integer equality.
-foreign int_eq: (Int, Int) -> Bool;
+foreign int_eq: (Int, Int) -> Bool
 
 
 -- trailing

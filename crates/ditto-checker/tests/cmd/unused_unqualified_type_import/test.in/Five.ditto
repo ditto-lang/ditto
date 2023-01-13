@@ -1,5 +1,5 @@
-module Five exports (..);
+module Five exports (..)
 
-type Five = Five;
+type Five = Five
 
-five = 5;
+five = 5

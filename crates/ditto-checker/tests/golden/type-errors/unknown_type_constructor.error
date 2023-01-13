@@ -1,9 +1,9 @@
 
   × unknown type constructor
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
- 3 │ wut = fn (eh: NotReal) -> unit;
+ 3 │ wut = fn (eh: NotReal) -> unit
    ·               ───┬───
    ·                  ╰── not in scope
    ╰────

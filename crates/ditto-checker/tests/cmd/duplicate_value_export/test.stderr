@@ -1,7 +1,7 @@
 
   ⚠ duplicate value export
    ╭─[duplicate_value_export.ditto:1:1]
- 1 │ module Test exports (five, five);
+ 1 │ module Test exports (five, five)
    ·                      ──┬─  ──┬─
    ·                        │     ╰── already exported
    ·                        ╰── previously exported here

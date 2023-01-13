@@ -198,8 +198,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 38,
-          "end_offset": 44
+          "start_offset": 37,
+          "end_offset": 43
         },
         "kind": {
           "Function": {
@@ -227,15 +227,15 @@
     "identity": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 54,
-        "end_offset": 62
+        "start_offset": 52,
+        "end_offset": 60
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 65,
-            "end_offset": 87
+            "start_offset": 63,
+            "end_offset": 85
           },
           "function_type": {
             "type": "Function",
@@ -351,8 +351,8 @@
               {
                 "Variable": {
                   "span": {
-                    "start_offset": 69,
-                    "end_offset": 70
+                    "start_offset": 67,
+                    "end_offset": 68
                   },
                   "name": "a"
                 }
@@ -414,8 +414,8 @@
             "expression": "LocalVariable",
             "data": {
               "span": {
-                "start_offset": 86,
-                "end_offset": 87
+                "start_offset": 84,
+                "end_offset": 85
               },
               "variable_type": {
                 "type": "Call",
@@ -477,15 +477,15 @@
     "five": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 90,
-        "end_offset": 94
+        "start_offset": 87,
+        "end_offset": 91
       },
       "expression": {
         "expression": "Call",
         "data": {
           "span": {
-            "start_offset": 105,
-            "end_offset": 118
+            "start_offset": 102,
+            "end_offset": 115
           },
           "call_type": {
             "type": "Call",
@@ -534,8 +534,8 @@
             "expression": "LocalVariable",
             "data": {
               "span": {
-                "start_offset": 105,
-                "end_offset": 113
+                "start_offset": 102,
+                "end_offset": 110
               },
               "variable_type": {
                 "type": "Function",
@@ -639,8 +639,8 @@
                 "expression": "Float",
                 "data": {
                   "span": {
-                    "start_offset": 114,
-                    "end_offset": 117
+                    "start_offset": 111,
+                    "end_offset": 114
                   },
                   "value": "5.0",
                   "value_type": {

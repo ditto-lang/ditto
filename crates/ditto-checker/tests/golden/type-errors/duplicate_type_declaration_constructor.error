@@ -1,12 +1,12 @@
 
   × duplicate constructor
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
- 3 │ type SomeType = A; 
+ 3 │ type SomeType = A 
    ·                 ┬
    ·                 ╰── previously defined here
- 4 │ type SomeOtherType = A  | B;
+ 4 │ type SomeOtherType = A  | B
    ·                      ┬
    ·                      ╰── can't be redefined here
    ╰────

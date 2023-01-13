@@ -1,4 +1,4 @@
-module Test exports (Foo);
+module Test exports (Foo)
 
-type Foo;
-type Bar;
+type Foo
+type Bar

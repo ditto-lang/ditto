@@ -161,8 +161,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 54,
-          "end_offset": 60
+          "start_offset": 52,
+          "end_offset": 58
         },
         "kind": "Type",
         "aliased_type": {
@@ -215,15 +215,15 @@
     "match_my_result": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 92,
-        "end_offset": 107
+        "start_offset": 89,
+        "end_offset": 104
       },
       "expression": {
         "expression": "Function",
         "data": {
           "span": {
-            "start_offset": 110,
-            "end_offset": 264
+            "start_offset": 107,
+            "end_offset": 261
           },
           "function_type": {
             "type": "Function",
@@ -324,8 +324,8 @@
               {
                 "Variable": {
                   "span": {
-                    "start_offset": 114,
-                    "end_offset": 117
+                    "start_offset": 111,
+                    "end_offset": 114
                   },
                   "name": "eff"
                 }
@@ -408,8 +408,8 @@
             "expression": "Effect",
             "data": {
               "span": {
-                "start_offset": 152,
-                "end_offset": 264
+                "start_offset": 149,
+                "end_offset": 261
               },
               "effect_type": {
                 "type": "Call",
@@ -437,8 +437,8 @@
                     "expression": "LocalVariable",
                     "data": {
                       "span": {
-                        "start_offset": 168,
-                        "end_offset": 171
+                        "start_offset": 165,
+                        "end_offset": 168
                       },
                       "variable_type": {
                         "type": "Call",
@@ -521,8 +521,8 @@
                         "expression": "Match",
                         "data": {
                           "span": {
-                            "start_offset": 184,
-                            "end_offset": 262
+                            "start_offset": 181,
+                            "end_offset": 259
                           },
                           "match_type": {
                             "type": "PrimConstructor",
@@ -532,8 +532,8 @@
                             "expression": "LocalVariable",
                             "data": {
                               "span": {
-                                "start_offset": 190,
-                                "end_offset": 193
+                                "start_offset": 187,
+                                "end_offset": 190
                               },
                               "variable_type": {
                                 "type": "Variable",
@@ -551,8 +551,8 @@
                               {
                                 "ImportedConstructor": {
                                   "span": {
-                                    "start_offset": 205,
-                                    "end_offset": 217
+                                    "start_offset": 202,
+                                    "end_offset": 214
                                   },
                                   "constructor": {
                                     "module_name": [
@@ -567,8 +567,8 @@
                                     {
                                       "Unused": {
                                         "span": {
-                                          "start_offset": 215,
-                                          "end_offset": 216
+                                          "start_offset": 212,
+                                          "end_offset": 213
                                         },
                                         "unused_name": "_"
                                       }
@@ -580,8 +580,8 @@
                                 "expression": "True",
                                 "data": {
                                   "span": {
-                                    "start_offset": 221,
-                                    "end_offset": 225
+                                    "start_offset": 218,
+                                    "end_offset": 222
                                   },
                                   "value_type": {
                                     "type": "PrimConstructor",
@@ -594,8 +594,8 @@
                               {
                                 "ImportedConstructor": {
                                   "span": {
-                                    "start_offset": 232,
-                                    "end_offset": 245
+                                    "start_offset": 229,
+                                    "end_offset": 242
                                   },
                                   "constructor": {
                                     "module_name": [
@@ -610,8 +610,8 @@
                                     {
                                       "Unused": {
                                         "span": {
-                                          "start_offset": 243,
-                                          "end_offset": 244
+                                          "start_offset": 240,
+                                          "end_offset": 241
                                         },
                                         "unused_name": "_"
                                       }
@@ -623,8 +623,8 @@
                                 "expression": "False",
                                 "data": {
                                   "span": {
-                                    "start_offset": 249,
-                                    "end_offset": 254
+                                    "start_offset": 246,
+                                    "end_offset": 251
                                   },
                                   "value_type": {
                                     "type": "PrimConstructor",

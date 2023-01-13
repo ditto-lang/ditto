@@ -22,15 +22,15 @@
     "another_five": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 52,
-        "end_offset": 64
+        "start_offset": 50,
+        "end_offset": 62
       },
       "expression": {
         "expression": "Call",
         "data": {
           "span": {
-            "start_offset": 73,
-            "end_offset": 89
+            "start_offset": 71,
+            "end_offset": 87
           },
           "call_type": {
             "type": "PrimConstructor",
@@ -40,8 +40,8 @@
             "expression": "ImportedVariable",
             "data": {
               "span": {
-                "start_offset": 73,
-                "end_offset": 83
+                "start_offset": 71,
+                "end_offset": 81
               },
               "variable_type": {
                 "type": "Function",
@@ -75,8 +75,8 @@
                 "expression": "ImportedVariable",
                 "data": {
                   "span": {
-                    "start_offset": 84,
-                    "end_offset": 88
+                    "start_offset": 82,
+                    "end_offset": 86
                   },
                   "variable_type": {
                     "type": "PrimConstructor",

@@ -128,8 +128,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 32,
-          "end_offset": 33
+          "start_offset": 31,
+          "end_offset": 32
         },
         "kind": "Type"
       }
@@ -138,8 +138,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 48,
-          "end_offset": 49
+          "start_offset": 46,
+          "end_offset": 47
         },
         "kind": "Type"
       }
@@ -150,8 +150,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 36,
-        "end_offset": 37
+        "start_offset": 35,
+        "end_offset": 36
       },
       "fields": [
         {
@@ -199,8 +199,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 52,
-        "end_offset": 53
+        "start_offset": 50,
+        "end_offset": 51
       },
       "fields": [
         {

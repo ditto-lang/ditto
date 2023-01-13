@@ -1,13 +1,13 @@
-module Test exports (..);
+module Test exports (..)
 
-import Dep;
-import Maybe;
+import Dep
+import Maybe
 
 
-zero = Dep.n_params(Dep.A);
+zero = Dep.n_params(Dep.A)
 
 abc_to_bool = fn (abc) -> 
     match abc with
     | Dep.C(bool, _) -> Maybe.Just(bool)
     | _ -> Maybe.Nothing
-    end;
+    end

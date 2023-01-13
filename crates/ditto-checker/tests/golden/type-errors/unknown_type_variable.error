@@ -1,9 +1,9 @@
 
   × unknown type variable
    ╭─[golden:1:1]
- 1 │ module Test exports (..);
+ 1 │ module Test exports (..)
  2 │ 
- 3 │ type Foo = Foo(a);
+ 3 │ type Foo = Foo(a)
    ·                ┬
    ·                ╰── not in scope
    ╰────

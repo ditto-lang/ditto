@@ -45,8 +45,8 @@
       "Type": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 38,
-          "end_offset": 39
+          "start_offset": 37,
+          "end_offset": 38
         },
         "kind": "Type"
       }
@@ -57,8 +57,8 @@
       "doc_comments": [],
       "doc_position": 0,
       "constructor_name_span": {
-        "start_offset": 42,
-        "end_offset": 43
+        "start_offset": 41,
+        "end_offset": 42
       },
       "fields": [],
       "return_type": {

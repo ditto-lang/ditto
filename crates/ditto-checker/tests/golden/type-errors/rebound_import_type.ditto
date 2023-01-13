@@ -1,9 +1,9 @@
-module Test exports (..);
+module Test exports (..)
 
 import Data.Stuff (
     Five
-);
+)
 
 import (test-stuff) Data.Stuff as S (
     Five
-);
+)

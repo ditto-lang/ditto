@@ -1,19 +1,19 @@
-module Test exports (..);
+module Test exports (..)
 
-identity = fn (a) -> a;
+identity = fn (a) -> a
 
-with_parens = 5 |> identity;
-without_parens = 5 |> identity();
+with_parens = 5 |> identity
+without_parens = 5 |> identity()
 
-five = 5 |> (fn (n) -> n);
-inline_function = 5 |> (fn (n) -> [4, n]);
+five = 5 |> (fn (n) -> n)
+inline_function = 5 |> (fn (n) -> [4, n])
 
-tagged_identity = fn (a, tag) -> a;
+tagged_identity = fn (a, tag) -> a
 
 -- these two should look the same in the generated code!
-want = tagged_identity(tagged_identity(tagged_identity(5, "1"), "2"), "3");
+want = tagged_identity(tagged_identity(tagged_identity(5, "1"), "2"), "3")
 got_ = 
     5 
     |> tagged_identity("1") 
     |> tagged_identity("2") 
-    |> tagged_identity("3");
+    |> tagged_identity("3")

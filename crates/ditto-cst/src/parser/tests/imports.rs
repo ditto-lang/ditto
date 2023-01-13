@@ -81,32 +81,32 @@ enum ImportPattern<'a> {
 #[test]
 fn it_parses_imports() {
     assert_import!(
-        "import Foo;",
+        "import Foo",
         package_name = None,
         module_name = "Foo",
         alias = None
     );
     assert_import!(
-        "import Some.Module;",
+        "import Some.Module",
         package_name = None,
         module_name = "Some.Module",
         alias = None
     );
     assert_import!(
-        "import (some-package) Some.Module as SM;",
+        "import (some-package) Some.Module as SM",
         package_name = Some("some-package"),
         module_name = "Some.Module",
         alias = Some("SM")
     );
     assert_import!(
-        "import WithImports (foo);",
+        "import WithImports (foo)",
         package_name = None,
         module_name = "WithImports",
         alias = None,
         import_list = [ImportPattern::Value("foo")]
     );
     assert_import!(
-        "import (pkg) WithImports (foo, Foo,);",
+        "import (pkg) WithImports (foo, Foo,)",
         package_name = Some("pkg"),
         module_name = "WithImports",
         alias = None,
@@ -116,7 +116,7 @@ fn it_parses_imports() {
         ]
     );
     assert_import!(
-        "import WithImports as With (foo, Foo(..), Bar,);",
+        "import WithImports as With (foo, Foo(..), Bar,)",
         package_name = None,
         module_name = "WithImports",
         alias = Some("With"),

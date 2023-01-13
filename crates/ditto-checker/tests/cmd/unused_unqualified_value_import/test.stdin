@@ -1,5 +1,5 @@
-module Test exports (..);
+module Test exports (..)
 
-import Five (five);
+import Five (five)
 
-five = Five.Five;
+five = Five.Five

@@ -2,7 +2,7 @@ module Test exports (
     Foo(..), 
     Bar(..),
     Foo(..),
-);
+)
 
-type Foo = Foo;
-type Bar = Bar;
+type Foo = Foo
+type Bar = Bar

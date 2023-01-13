@@ -578,8 +578,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 38,
-          "end_offset": 44
+          "start_offset": 37,
+          "end_offset": 43
         },
         "kind": {
           "Function": {
@@ -611,8 +611,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 81,
-          "end_offset": 90
+          "start_offset": 79,
+          "end_offset": 88
         },
         "kind": {
           "Function": {
@@ -693,8 +693,8 @@
       "Alias": {
         "doc_comments": [],
         "type_name_span": {
-          "start_offset": 137,
-          "end_offset": 149
+          "start_offset": 134,
+          "end_offset": 146
         },
         "kind": {
           "Function": {
@@ -826,15 +826,15 @@
     "foo_bar_baz": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 270,
-        "end_offset": 281
+        "start_offset": 264,
+        "end_offset": 275
       },
       "expression": {
         "expression": "Record",
         "data": {
           "span": {
-            "start_offset": 303,
-            "end_offset": 337
+            "start_offset": 297,
+            "end_offset": 331
           },
           "record_type": {
             "type": "Call",
@@ -995,8 +995,8 @@
               "expression": "Int",
               "data": {
                 "span": {
-                  "start_offset": 311,
-                  "end_offset": 312
+                  "start_offset": 305,
+                  "end_offset": 306
                 },
                 "value": "5",
                 "value_type": {
@@ -1009,8 +1009,8 @@
               "expression": "Float",
               "data": {
                 "span": {
-                  "start_offset": 320,
-                  "end_offset": 323
+                  "start_offset": 314,
+                  "end_offset": 317
                 },
                 "value": "5.0",
                 "value_type": {
@@ -1023,8 +1023,8 @@
               "expression": "Unit",
               "data": {
                 "span": {
-                  "start_offset": 331,
-                  "end_offset": 335
+                  "start_offset": 325,
+                  "end_offset": 329
                 },
                 "value_type": {
                   "type": "PrimConstructor",
@@ -1039,15 +1039,15 @@
     "foo_bar": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 220,
-        "end_offset": 227
+        "start_offset": 215,
+        "end_offset": 222
       },
       "expression": {
         "expression": "Record",
         "data": {
           "span": {
-            "start_offset": 245,
-            "end_offset": 267
+            "start_offset": 240,
+            "end_offset": 262
           },
           "record_type": {
             "type": "Call",
@@ -1159,8 +1159,8 @@
               "expression": "Int",
               "data": {
                 "span": {
-                  "start_offset": 253,
-                  "end_offset": 254
+                  "start_offset": 248,
+                  "end_offset": 249
                 },
                 "value": "5",
                 "value_type": {
@@ -1173,8 +1173,8 @@
               "expression": "Float",
               "data": {
                 "span": {
-                  "start_offset": 262,
-                  "end_offset": 265
+                  "start_offset": 257,
+                  "end_offset": 260
                 },
                 "value": "5.0",
                 "value_type": {
@@ -1190,15 +1190,15 @@
     "foo": {
       "doc_comments": [],
       "name_span": {
-        "start_offset": 187,
-        "end_offset": 190
+        "start_offset": 183,
+        "end_offset": 186
       },
       "expression": {
         "expression": "Record",
         "data": {
           "span": {
-            "start_offset": 206,
-            "end_offset": 217
+            "start_offset": 202,
+            "end_offset": 213
           },
           "record_type": {
             "type": "Call",
@@ -1261,8 +1261,8 @@
               "expression": "Int",
               "data": {
                 "span": {
-                  "start_offset": 214,
-                  "end_offset": 215
+                  "start_offset": 210,
+                  "end_offset": 211
                 },
                 "value": "5",
                 "value_type": {

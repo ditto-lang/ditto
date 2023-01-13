@@ -5,7 +5,7 @@ use super::{
     syntax::{gen_parens, gen_parens_list1},
     token::{
         gen_as_keyword, gen_close_paren, gen_double_dot, gen_exports_keyword, gen_import_keyword,
-        gen_module_keyword, gen_open_paren, gen_semicolon,
+        gen_module_keyword, gen_open_paren,
     },
 };
 use ditto_cst::{Everything, Export, Exports, Header, Import, ImportLine, ImportList, Module};
@@ -86,7 +86,6 @@ fn gen_module_header(header: Header) -> PrintItems {
     items.extend(gen_exports_keyword(header.exports_keyword));
     items.extend(space());
     items.extend(gen_exports(header.exports));
-    items.extend(gen_semicolon(header.semicolon));
     items
 }
 
@@ -136,7 +135,6 @@ fn gen_import_line(import_line: ImportLine) -> PrintItems {
         items.extend(space());
         items.extend(gen_import_list(import_list));
     }
-    items.extend(gen_semicolon(import_line.semicolon));
     items
 }
 
@@ -177,47 +175,47 @@ mod tests {
 
         #[test]
         fn it_formats_module_headers() {
-            assert_fmt!("module Test exports (..);");
-            assert_fmt!("module Foo.Bar.Baz exports (..);");
-            assert_fmt!("module T exports (foo);", "module T exports (\n\tfoo,\n);");
+            assert_fmt!("module Test exports (..)");
+            assert_fmt!("module Foo.Bar.Baz exports (..)");
+            assert_fmt!("module T exports (foo)", "module T exports (\n\tfoo,\n)");
             assert_fmt!(
-                "module T exports (foo,bar,baz);",
-                "module T exports (\n\tfoo,\n\tbar,\n\tbaz,\n);"
+                "module T exports (foo,bar,baz)",
+                "module T exports (\n\tfoo,\n\tbar,\n\tbaz,\n)"
             );
-            assert_fmt!("module T exports (Foo);", "module T exports (\n\tFoo,\n);");
+            assert_fmt!("module T exports (Foo)", "module T exports (\n\tFoo,\n)");
             assert_fmt!(
-                "module T exports (Foo,Bar,Baz);",
-                "module T exports (\n\tFoo,\n\tBar,\n\tBaz,\n);"
+                "module T exports (Foo,Bar,Baz)",
+                "module T exports (\n\tFoo,\n\tBar,\n\tBaz,\n)"
             );
             assert_fmt!(
-                "module T exports (Foo,Bar(..),    Baz);",
-                "module T exports (\n\tFoo,\n\tBar(..),\n\tBaz,\n);"
-            );
-
-            assert_fmt!("module T exports (foo,);", "module T exports (\n\tfoo,\n);");
-            assert_fmt!("-- comment\nmodule Test exports (..);");
-            assert_fmt!("module  -- comment\n Test exports (..);");
-            assert_fmt!("module Test  -- comment\n exports (..);");
-            assert_fmt!("module Test exports  -- comment\n (..);");
-            assert_fmt!("module  -- comment\n Test exports  -- comment\n (..);");
-            assert_fmt!("module A.B.C exports (  -- comment\n\t..\n);");
-            assert_fmt!("module  -- comment\n A.B.C  -- comment\n exports (..);");
-
-            assert_fmt!(
-                "module Test exports ( --comment\nfoo);",
-                "module Test exports (  --comment\n\tfoo,\n);"
+                "module T exports (Foo,Bar(..),    Baz)",
+                "module T exports (\n\tFoo,\n\tBar(..),\n\tBaz,\n)"
             );
 
-            assert_fmt!("module Test exports (\n\t--comment\n\tfoo,\n);");
+            assert_fmt!("module T exports (foo,)", "module T exports (\n\tfoo,\n)");
+            assert_fmt!("-- comment\nmodule Test exports (..)");
+            assert_fmt!("module  -- comment\n Test exports (..)");
+            assert_fmt!("module Test  -- comment\n exports (..)");
+            assert_fmt!("module Test exports  -- comment\n (..)");
+            assert_fmt!("module  -- comment\n Test exports  -- comment\n (..)");
+            assert_fmt!("module A.B.C exports (  -- comment\n\t..\n)");
+            assert_fmt!("module  -- comment\n A.B.C  -- comment\n exports (..)");
 
-            assert_fmt!("module Test exports (\n\tfoo,\n\t-- comment\n\tbar,\n);");
             assert_fmt!(
-                "module T exports (foo,  -- comment\n);",
-                "module T exports (\n\tfoo,  -- comment\n);"
+                "module Test exports ( --comment\nfoo)",
+                "module Test exports (  --comment\n\tfoo,\n)"
+            );
+
+            assert_fmt!("module Test exports (\n\t--comment\n\tfoo,\n)");
+
+            assert_fmt!("module Test exports (\n\tfoo,\n\t-- comment\n\tbar,\n)");
+            assert_fmt!(
+                "module T exports (foo,  -- comment\n)",
+                "module T exports (\n\tfoo,  -- comment\n)"
             );
             assert_fmt!(
-                "module T exports (foo,\n  -- comment\n);",
-                "module T exports (\n\tfoo,\n\t-- comment\n);"
+                "module T exports (foo,\n  -- comment\n)",
+                "module T exports (\n\tfoo,\n\t-- comment\n)"
             );
         }
     }
@@ -239,18 +237,18 @@ mod tests {
 
         #[test]
         fn it_formats_import_lines() {
-            assert_fmt!("import Foo;");
-            assert_fmt!("import Foo.Bar.Baz;");
-            assert_fmt!("import Foo as F;");
-            assert_fmt!("import (pkg) Foo;");
-            assert_fmt!("import (pkg) Foo as F;");
-            assert_fmt!("import (foo-bar) Foo as F;");
-            assert_fmt!("import Foo (\n\tfoo,\n);");
-            assert_fmt!("import Foo (\n\tfoo,\n\tbar,\n);");
-            assert_fmt!("import Foo (\n\tfoo,\n\tBar(..),\n);");
-            assert_fmt!("import (pkg) Foo (\n\tfoo,\n\tBar(..),\n);");
-            assert_fmt!("import  -- comment\n (pkg) Foo;");
-            assert_fmt!("import Foo (\n\tBar(  -- comment\n\t\t..\n\t),\n);");
+            assert_fmt!("import Foo");
+            assert_fmt!("import Foo.Bar.Baz");
+            assert_fmt!("import Foo as F");
+            assert_fmt!("import (pkg) Foo");
+            assert_fmt!("import (pkg) Foo as F");
+            assert_fmt!("import (foo-bar) Foo as F");
+            assert_fmt!("import Foo (\n\tfoo,\n)");
+            assert_fmt!("import Foo (\n\tfoo,\n\tbar,\n)");
+            assert_fmt!("import Foo (\n\tfoo,\n\tBar(..),\n)");
+            assert_fmt!("import (pkg) Foo (\n\tfoo,\n\tBar(..),\n)");
+            assert_fmt!("import  -- comment\n (pkg) Foo");
+            assert_fmt!("import Foo (\n\tBar(  -- comment\n\t\t..\n\t),\n)");
         }
     }
 }

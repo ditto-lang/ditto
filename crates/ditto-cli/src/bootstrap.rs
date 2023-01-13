@@ -269,7 +269,7 @@ fn write_empty_ditto_module(config: &config::Config, project_dir: &Path) -> Resu
     module_path.push(&module_name);
     module_path.set_extension("ditto");
 
-    let module_contents = format!("module {} exports (..);", module_name);
+    let module_contents = format!("module {} exports (..)", module_name);
     write_ditto_module(module_path, module_contents)
 }
 

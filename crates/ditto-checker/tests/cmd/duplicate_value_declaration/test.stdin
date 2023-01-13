@@ -1,1 +1,1 @@
-module Test exports (..); a : Bool = true; a : Int = 5;
+module Test exports (..) a : Bool = true a : Int = 5

@@ -595,8 +595,6 @@ fn gen_let_value_declaration(decl: LetValueDeclaration) -> PrintItems {
         decl.expression,
         equals_has_trailing_comment,
     ));
-
-    items.extend(gen_semicolon(decl.semicolon));
     items
 }
 
