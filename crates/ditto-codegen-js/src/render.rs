@@ -203,7 +203,7 @@ impl Render for Expression {
             }
             Self::String(inner_string) => {
                 accum.push('"');
-                accum.push_str(inner_string);
+                accum.push_str(&inner_string.replace('\n', "\\n"));
                 accum.push('"');
             }
             Self::True => {
