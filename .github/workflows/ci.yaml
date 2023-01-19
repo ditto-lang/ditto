@@ -79,9 +79,9 @@ jobs:
       - name: Install required NPM packages
         run: npm install --omit optional --ignore-scripts
 
-      - name: Setup Ninja 🥷
-        id: setup-ninja
-        uses: ditto-lang/actions/setup-ninja@main
+      - name: Install Ninja 🥷
+        id: install-ninja
+        uses: ditto-lang/actions/install-ninja@main
         with:
           release-version: v1.10.2
           platform: ${{matrix.ninja-platform}}
@@ -104,7 +104,7 @@ jobs:
           args: run --workspace
         env:
           DITTO_BUILD_GIT_DESCRIBE: "0.0.0-test"
-          DITTO_NINJA: ${{steps.setup-ninja.outputs.which}}
+          DITTO_NINJA: ${{steps.install-ninja.outputs.which}}
 
       - name: Install cargo-llvm-cov
         # Only run tests with coverage if running on Linux
@@ -120,7 +120,7 @@ jobs:
           args: --lcov --output-path lcov.info nextest --workspace
         env:
           DITTO_BUILD_GIT_DESCRIBE: "0.0.0-test"
-          DITTO_NINJA: ${{steps.setup-ninja.outputs.which}}
+          DITTO_NINJA: ${{steps.install-ninja.outputs.which}}
 
       - name: Upload coverage results to codecov.io 📡
         if: matrix.os == 'ubuntu-latest'
