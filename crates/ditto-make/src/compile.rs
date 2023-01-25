@@ -2,7 +2,7 @@ use clap::{arg, Arg, ArgMatches, Command};
 use ditto_ast as ast;
 use ditto_checker as checker;
 use ditto_codegen_js as js;
-use ditto_config::read_config;
+use ditto_config::{read_config, PackageManager};
 use ditto_cst as cst;
 use miette::{miette, IntoDiagnostic, NamedSource, Report, Result};
 use std::{
@@ -40,7 +40,12 @@ pub fn command(name: impl Into<clap::builder::Str>) -> Command {
         .subcommand(
             Command::new(SUBCOMMAND_PACKAGE_JSON)
                 .arg(arg_input())
-                .arg(arg_output()),
+                .arg(arg_output())
+                .arg(
+                    arg!(--"package-manager" <PKG_MANAGER>)
+                        .value_parser(["npm", "pnpm"])
+                        .required(true),
+                ),
         );
 
     fn arg_input() -> Arg {
@@ -81,9 +86,15 @@ pub fn run(matches: &ArgMatches) -> Result<()> {
         let outputs = matches.get_many("outputs").unwrap().cloned().collect();
         run_js(inputs, outputs)
     } else if let Some(matches) = matches.subcommand_matches(SUBCOMMAND_PACKAGE_JSON) {
+        let package_manager_string = matches.get_one::<String>("package-manager").unwrap();
+        let package_manager = match package_manager_string.as_str() {
+            "npm" => PackageManager::Npm,
+            "pnpm" => PackageManager::Pnpm,
+            _ => unreachable!(),
+        };
         let input = matches.get_one::<String>("input").unwrap();
         let output = matches.get_one::<String>("output").unwrap();
-        run_package_json(input, output)
+        run_package_json(package_manager, input, output)
     } else {
         unreachable!()
     }
@@ -343,20 +354,29 @@ fn run_js(inputs: Vec<String>, outputs: Vec<String>) -> Result<()> {
 }
 
 /// Generates a `package.json` from a `ditto.toml` input.
-fn run_package_json(input: &str, output: &str) -> Result<()> {
+fn run_package_json(package_manager: PackageManager, input: &str, output: &str) -> Result<()> {
     use serde_json::{json, Map, Value};
 
     let config = read_config(input)?;
+    let dependencies = config
+        .dependencies
+        .into_iter()
+        .map(|name| {
+            (
+                name.into_string(),
+                match package_manager {
+                    PackageManager::Npm => String::from("*"),
+                    PackageManager::Pnpm => String::from("workspace:*"),
+                },
+            )
+        })
+        .collect::<HashMap<_, _>>();
 
     // https://stackoverflow.com/a/68558580/17263155
     let value = json!({
         "name": config.name.into_string(),
         "type": "module",
-        "dependencies": config
-            .dependencies
-            .into_iter()
-            .map(|name| (name.into_string(), String::from("*")))
-            .collect::<HashMap<_, _>>(),
+        "dependencies": dependencies
     });
 
     let mut object = if let Value::Object(object) = value {

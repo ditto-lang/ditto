@@ -159,6 +159,26 @@ pub struct CodegenJsConfig {
     /// package is built as a dependency.
     #[serde(rename = "package-json")]
     pub package_json_additions: Option<serde_json::Map<String, serde_json::Value>>,
+    /// Package manager being used. This affects the format of generated `package.json` files.
+    #[serde(rename = "package-manager", default)]
+    pub package_manager: PackageManager,
+}
+
+/// Flavours of JavaScript package management.
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub enum PackageManager {
+    /// The standard package manager shipped with NodeJS.
+    #[serde(rename = "npm")]
+    Npm,
+    /// https://pnpm.io/
+    #[serde(rename = "pnpm")]
+    Pnpm,
+}
+
+impl Default for PackageManager {
+    fn default() -> Self {
+        Self::Npm
+    }
 }
 
 impl Default for CodegenJsConfig {
@@ -167,6 +187,7 @@ impl Default for CodegenJsConfig {
             dist_dir: default_js_dist_dir(),
             packages_dir: default_js_packages_dir(),
             package_json_additions: None,
+            package_manager: PackageManager::Npm,
         }
     }
 }

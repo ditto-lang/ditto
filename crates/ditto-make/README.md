@@ -56,12 +56,13 @@ Options:
 <!-- prettier-ignore-start -->
 ```console
 $ ditto compile package-json --help
-Usage: ditto compile package-json -i <input> -o <output>
+Usage: ditto compile package-json -i <input> -o <output> --package-manager <PKG_MANAGER>
 
 Options:
-  -i <input>       
-  -o <output>      
-  -h, --help       Print help information
+  -i <input>                           
+  -o <output>                          
+      --package-manager <PKG_MANAGER>  [possible values: npm, pnpm]
+  -h, --help                           Print help information
 
 ```
 <!-- prettier-ignore-end -->
