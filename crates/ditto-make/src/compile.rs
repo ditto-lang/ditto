@@ -89,7 +89,7 @@ pub fn run(matches: &ArgMatches) -> Result<()> {
     }
 }
 
-#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize, bincode::Encode, bincode::Decode)]
 pub struct WarningsBundle {
     pub name: String,
     pub source: String,
@@ -218,15 +218,15 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
         let path = Path::new(&output);
         match full_extension(path) {
             Some(common::EXTENSION_AST) => {
-                let file = File::create(path).into_diagnostic()?;
-                common::serialize(file, &(&ditto_input_name, &ast))?;
+                let mut file = File::create(path).into_diagnostic()?;
+                common::serialize(&mut file, &(&ditto_input_name, &ast))?;
             }
             Some(common::EXTENSION_AST_EXPORTS) => {
-                let file = File::create(path).into_diagnostic()?;
-                common::serialize(file, &(&ast.module_name, &ast.exports))?;
+                let mut file = File::create(path).into_diagnostic()?;
+                common::serialize(&mut file, &(&ast.module_name, &ast.exports))?;
             }
             Some(common::EXTENSION_CHECKER_WARNINGS) => {
-                let file = File::create(path).into_diagnostic()?;
+                let mut file = File::create(path).into_diagnostic()?;
                 let warnings_bundle = if warnings.is_empty() {
                     None
                 } else {
@@ -236,7 +236,7 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
                         warnings: warnings.clone(),
                     })
                 };
-                common::serialize(file, &warnings_bundle)?;
+                common::serialize(&mut file, &warnings_bundle)?;
                 print_warnings = false;
             }
             other => panic!("unexpected output extension: {:#?}", other),

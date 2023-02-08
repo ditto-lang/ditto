@@ -23,22 +23,26 @@ pub fn module_name_to_file_stem(module_name: ModuleName) -> PathBuf {
 }
 
 /// Serialize a value using a JSON if this is a debug build, and CBOR otherwise.
-pub fn serialize<W: Write, T: Serialize>(writer: W, value: &T) -> Result<()> {
+pub fn serialize<W: Write, T: Serialize + bincode::Encode>(
+    writer: &mut W,
+    value: &T,
+) -> Result<()> {
     if cfg!(debug_assertions) {
         serde_json::to_writer_pretty(writer, value).into_diagnostic()
     } else {
-        ciborium::ser::into_writer(value, writer).into_diagnostic()
+        bincode::encode_into_std_write(value, writer, bincode::config::standard())
+            .map(|_| ())
+            .into_diagnostic()
     }
 }
 
-/// Deserialize a value using a JSON if this is a debug build, and CBOR otherwise.
-pub fn deserialize<T: DeserializeOwned>(path: &Path) -> Result<T> {
+pub fn deserialize<T: DeserializeOwned + bincode::Decode>(path: &Path) -> Result<T> {
     let file = File::open(path).into_diagnostic()?;
     let reader = BufReader::new(file);
 
     if cfg!(debug_assertions) {
         serde_json::from_reader(reader).into_diagnostic()
     } else {
-        ciborium::de::from_reader(reader).into_diagnostic()
+        bincode::decode_from_reader(reader, bincode::config::standard()).into_diagnostic()
     }
 }

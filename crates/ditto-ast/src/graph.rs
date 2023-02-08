@@ -1,5 +1,6 @@
 //! A convenient graph API, based largely on Haskell's [`Data.Graph`](https://hackage.haskell.org/package/containers-0.6.5.1/docs/Data-Graph.html) module, and built on [`petgraph`](https://crates.io/crates/petgraph).
 
+use bincode::{Decode, Encode};
 use petgraph::{algo::kosaraju_scc, graph::NodeIndex, Graph}; // REVIEW or tarjan?
 use serde::{Deserialize, Serialize};
 use std::{
@@ -10,7 +11,7 @@ use std::{
 /// Strongly connected component.
 ///
 /// <https://en.wikipedia.org/wiki/Strongly_connected_component>
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Encode, Decode)]
 #[serde(untagged)]
 pub enum Scc<Node> {
     /// A single vertex that is not in any cycle.

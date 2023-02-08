@@ -1,11 +1,12 @@
 use crate::{FullyQualifiedProperName, Kind, Name, ProperName, QualifiedProperName};
+use bincode::{Decode, Encode};
 use indexmap::IndexMap;
 use non_empty_vec::NonEmpty;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
 /// The type of expressions.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, Encode, Decode, PartialEq, Eq)]
 #[serde(tag = "type", content = "data")]
 pub enum Type {
     /// A `Call` type invokes a parameterized type.
@@ -21,6 +22,7 @@ pub enum Type {
         /// Type being called.
         function: Box<Self>,
         /// The non-empty arguments list.
+        #[bincode(with_serde)]
         arguments: NonEmpty<Self>,
     },
     /// The type of functions.
@@ -79,6 +81,7 @@ pub enum Type {
         /// Should be either `Kind::Type` or `Kind::Row`.
         kind: Kind,
         /// The labelled types.
+        #[bincode(with_serde)]
         row: Row,
     },
     /// An _open_ record type.
@@ -94,6 +97,7 @@ pub enum Type {
         /// Optional name for the type `var`.
         source_name: Option<Name>,
         /// The labelled types.
+        #[bincode(with_serde)]
         row: Row,
     },
 }
@@ -102,7 +106,7 @@ pub enum Type {
 pub type Row = IndexMap<Name, Type>;
 
 /// Ditto's primitive types.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, Encode, Decode, PartialEq, Eq)]
 pub enum PrimType {
     /// `do { return 5 } : Effect(Int)`
     Effect,

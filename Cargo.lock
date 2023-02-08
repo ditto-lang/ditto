@@ -154,6 +154,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3a8241f3ebb85c056b509d4327ad0358fbbba6ffb340bf388f26350aeda225b1"
 
 [[package]]
+name = "bincode"
+version = "2.0.0-rc.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7bb50c5a2ef4b9b1e7ae73e3a73b52ea24b20312d629f9c4df28260b7ad2c3c4"
+dependencies = [
+ "bincode_derive",
+ "serde",
+]
+
+[[package]]
+name = "bincode_derive"
+version = "2.0.0-rc.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0a45a23389446d2dd25dc8e73a7a3b3c43522b630cac068927f0649d43d719d2"
+dependencies = [
+ "virtue",
+]
+
+[[package]]
 name = "bit-set"
 version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -629,6 +648,7 @@ dependencies = [
 name = "ditto-ast"
 version = "0.0.1"
 dependencies = [
+ "bincode",
  "ditto-cst",
  "indexmap",
  "non-empty-vec",
@@ -640,6 +660,7 @@ dependencies = [
 name = "ditto-checker"
 version = "0.0.1"
 dependencies = [
+ "bincode",
  "datatest-stable",
  "ditto-ast",
  "ditto-cst",
@@ -739,6 +760,7 @@ dependencies = [
 name = "ditto-cst"
 version = "0.0.1"
 dependencies = [
+ "bincode",
  "datatest-stable",
  "itertools",
  "lalrpop",
@@ -793,6 +815,7 @@ dependencies = [
 name = "ditto-make"
 version = "0.0.1"
 dependencies = [
+ "bincode",
  "ciborium",
  "clap 4.0.26",
  "ditto-ast",
@@ -3020,6 +3043,12 @@ name = "version_check"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
+
+[[package]]
+name = "virtue"
+version = "0.0.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7b60dcd6a64dd45abf9bd426970c9843726da7fc08f44cd6fcebf68c21220a63"
 
 [[package]]
 name = "wait-timeout"
