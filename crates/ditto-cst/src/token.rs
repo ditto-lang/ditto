@@ -1,7 +1,8 @@
+use bincode::{Decode, Encode};
 use serde::{Deserialize, Serialize};
 
 /// A source span.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Encode, Decode, PartialEq, Eq, Hash)]
 pub struct Span {
     /// The start byte offset.
     pub start_offset: usize,

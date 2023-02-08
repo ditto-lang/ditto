@@ -1,10 +1,13 @@
+use bincode::{Decode, Encode};
 use ditto_cst as cst;
 use non_empty_vec::NonEmpty;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
 /// A "name" begins with a lower case letter.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize, Encode, Decode,
+)]
 pub struct Name(pub String);
 
 impl fmt::Display for Name {
@@ -20,7 +23,9 @@ impl From<cst::Name> for Name {
 }
 
 /// An "unused name" begins with a single underscore.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize, Encode, Decode,
+)]
 pub struct UnusedName(pub String);
 
 impl fmt::Display for UnusedName {
@@ -36,7 +41,9 @@ impl From<cst::UnusedName> for UnusedName {
 }
 
 /// A "proper name" begins with an upper case letter.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize, Encode, Decode,
+)]
 pub struct ProperName(pub String);
 
 impl fmt::Display for ProperName {
@@ -52,7 +59,7 @@ impl From<cst::ProperName> for ProperName {
 }
 
 /// A package name consists of lower case letters, numbers and hyphens. It must start with a letter.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Encode, Decode)]
 pub struct PackageName(pub String);
 
 impl fmt::Display for PackageName {
@@ -70,8 +77,8 @@ impl From<cst::PackageName> for PackageName {
 /// A [ModuleName] is a non-empty collection of [ProperName]s.
 ///
 /// In the source these are joined with a dot.
-#[derive(Debug, Clone, Eq, Serialize, Deserialize)]
-pub struct ModuleName(pub NonEmpty<ProperName>);
+#[derive(Debug, Clone, Eq, Serialize, Deserialize, Encode, Decode)]
+pub struct ModuleName(#[bincode(with_serde)] pub NonEmpty<ProperName>);
 
 impl ModuleName {
     /// Convert a module name to a string, joining the component [ProperName]s with the given `separator`.
@@ -134,7 +141,7 @@ impl From<cst::QualifiedProperName> for ModuleName {
 }
 
 /// Something is "qualified" if it can have an initial module name.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Encode, Decode)]
 pub struct Qualified<Value> {
     /// The optional qualifier.
     pub module_name: Option<ProperName>,
@@ -187,7 +194,7 @@ where
 pub type FullyQualifiedModuleName = (Option<PackageName>, ModuleName);
 
 /// The canonical name for an identifier.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Encode, Decode)]
 pub struct FullyQualified<Value> {
     /// The package and module to which it belongs.
     pub module_name: FullyQualifiedModuleName,

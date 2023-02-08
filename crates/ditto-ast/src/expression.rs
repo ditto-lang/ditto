@@ -1,12 +1,13 @@
 use crate::{
     FullyQualifiedName, FullyQualifiedProperName, Name, ProperName, Span, Type, UnusedName,
 };
+use bincode::{Decode, Encode};
 use indexmap::IndexMap;
 use non_empty_vec::NonEmpty;
 use serde::{Deserialize, Serialize};
 
 /// The real business value.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Encode, Decode)]
 #[serde(tag = "expression", content = "data")]
 pub enum Expression {
     /// Everyone's favourite: the humble function
@@ -81,6 +82,7 @@ pub enum Expression {
         expression: Box<Self>,
 
         /// Patterns to be matched against and their corresponding expressions.
+        #[bincode(with_serde)]
         arms: NonEmpty<(Pattern, Self)>,
     },
     /// A value constructor local to the current module, e.g. `Just` and `Ok`.
@@ -226,6 +228,7 @@ pub enum Expression {
         /// The expression being updated.
         target: Box<Self>,
         /// The record updates.
+        #[bincode(with_serde)]
         fields: IndexMap<Name, Self>,
     },
     /// An array literal.
@@ -251,6 +254,7 @@ pub enum Expression {
         record_type: Type,
 
         /// Record fields.
+        #[bincode(with_serde)]
         fields: IndexMap<Name, Self>,
     },
     /// `true`
@@ -551,7 +555,7 @@ impl Expression {
 /// ```ditto
 /// some_function(argument)
 /// ```
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Encode, Decode)]
 pub enum Argument {
     /// A standard expression argument.
     /// Could be a variable, could be another function call.
@@ -574,7 +578,7 @@ impl Argument {
 }
 
 /// A pattern to be matched.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Encode, Decode)]
 pub enum Pattern {
     /// A local constructor pattern.
     LocalConstructor {
@@ -611,7 +615,7 @@ pub enum Pattern {
 }
 
 /// A chain of Effect statements.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Encode, Decode)]
 pub enum Effect {
     /// `do { name <- expression; rest }`
     Bind {
@@ -646,7 +650,7 @@ pub enum Effect {
 }
 
 /// A value declaration that appears within a `let` expression.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Encode, Decode)]
 pub struct LetValueDeclaration {
     /// The pattern containing names to be bound.
     pub pattern: Pattern,

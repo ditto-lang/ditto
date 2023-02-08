@@ -1,10 +1,11 @@
+use bincode::{Decode, Encode};
 use non_empty_vec::NonEmpty;
 use serde::{Deserialize, Serialize};
 
 /// The kind of types.
 ///
 /// Note that there is currently no source representation for kinds.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Encode, Decode)]
 pub enum Kind {
     /// Also known as `*` to functional programming folk.
     Type,
@@ -20,6 +21,7 @@ pub enum Kind {
     /// Also note that the "return kind" can only be `Kind::Type` at the moment.
     Function {
         /// The kinds of the arguments this type expects.
+        #[bincode(with_serde)]
         parameters: NonEmpty<Self>,
     },
     /// A series of labelled types. Used for records.

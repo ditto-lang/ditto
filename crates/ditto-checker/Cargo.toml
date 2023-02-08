@@ -18,6 +18,7 @@ thiserror = "1.0"
 simsearch = "0.2"
 indexmap = "1.9"
 serde_json = "1.0"
+bincode = "2.0.0-rc.2"
 
 [dev-dependencies]
 similar-asserts = "1.4"
