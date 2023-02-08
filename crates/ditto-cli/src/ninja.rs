@@ -2,7 +2,6 @@ use crate::{common, spinner::Spinner};
 use clap::{arg, ArgMatches, Command};
 use console::Emoji;
 use futures_util::StreamExt;
-use log::debug;
 use miette::{miette, IntoDiagnostic, Result, WrapErr};
 use std::{
     env,
@@ -10,6 +9,7 @@ use std::{
     path::{Path, PathBuf},
     process,
 };
+use tracing::debug;
 
 pub fn command(name: impl Into<clap::builder::Str>) -> Command {
     Command::new(name)

@@ -9,7 +9,6 @@ use ditto_config::{
     PackageSetPackages as Packages, PackageSpec, CONFIG_FILE_NAME,
 };
 use indicatif::MultiProgress;
-use log::{debug, warn};
 use miette::{miette, IntoDiagnostic, Result, WrapErr};
 use std::{
     collections::{hash_map::DefaultHasher, HashSet},
@@ -19,6 +18,7 @@ use std::{
     io::BufReader,
     path::{Path, PathBuf},
 };
+use tracing::{debug, warn};
 
 pub async fn check_packages_up_to_date(
     config: &Config,

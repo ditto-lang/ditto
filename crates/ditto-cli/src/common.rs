@@ -1,6 +1,6 @@
-use log::debug;
 use miette::{miette, IntoDiagnostic, Result, WrapErr};
 use std::path::PathBuf;
+use tracing::debug;
 
 pub fn get_ditto_cache_dir() -> Result<PathBuf> {
     let cache_dir = if let Ok(cache_dir) = std::env::var("DITTO_CACHE_DIR") {

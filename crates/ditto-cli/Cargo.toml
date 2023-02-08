@@ -18,9 +18,11 @@ ditto-fmt = { path = "../ditto-fmt" }
 clap = "4.0"
 chrono = "0.4"
 miette = { version = "5.5", features = ["fancy"] }
-log = "0.4"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+tracing-appender = "0.2"
+tracing-flame = "0.2"
 toml = "0.5"
-flexi_logger = "0.24"
 # https://github.com/notify-rs/notify/issues/249
 notify = "5.0.0"
 clearscreen = "1.0"

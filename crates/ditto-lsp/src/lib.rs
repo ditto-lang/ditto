@@ -4,11 +4,11 @@
 mod semantic_tokens;
 
 use ditto_tree_sitter as tree_sitter;
-use log::debug;
 use miette::IntoDiagnostic;
 use ropey::Rope;
 use serde_json as json;
 use std::collections::HashMap;
+use tracing::debug;
 use url::Url;
 
 /// Run the language server.
