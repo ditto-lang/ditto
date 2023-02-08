@@ -128,7 +128,7 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
         let path = Path::new(&input);
         match full_extension(path) {
             Some(common::EXTENSION_DITTO) => {
-                let mut file = File::open(path).into_diagnostic()?;
+                let mut file = std::io::BufReader::new(File::open(path).into_diagnostic()?);
                 let mut contents = String::new();
                 file.read_to_string(&mut contents).into_diagnostic()?;
                 ditto_input = Some((path.to_string_lossy().into_owned(), contents));
@@ -188,14 +188,17 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
         match full_extension(path) {
             Some(common::EXTENSION_AST) => {
                 let file = File::create(path).into_diagnostic()?;
-                common::serialize(file, &(&ditto_input_name, &ast))?;
+                let writer = std::io::BufWriter::new(file);
+                common::serialize(writer, &(&ditto_input_name, &ast))?;
             }
             Some(common::EXTENSION_AST_EXPORTS) => {
                 let file = File::create(path).into_diagnostic()?;
-                common::serialize(file, &(&ast.module_name, &ast.exports))?;
+                let writer = std::io::BufWriter::new(file);
+                common::serialize(writer, &(&ast.module_name, &ast.exports))?;
             }
             Some(common::EXTENSION_CHECKER_WARNINGS) => {
                 let file = File::create(path).into_diagnostic()?;
+                let writer = std::io::BufWriter::new(file);
                 let warnings_bundle = if warnings.is_empty() {
                     None
                 } else {
@@ -205,7 +208,7 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
                         warnings: warnings.clone(),
                     })
                 };
-                common::serialize(file, &warnings_bundle)?;
+                common::serialize(writer, &warnings_bundle)?;
                 print_warnings = false;
             }
             other => panic!("unexpected output extension: {:#?}", other),
@@ -321,7 +324,7 @@ fn run_js(inputs: Vec<String>, outputs: Vec<String>) -> Result<()> {
 
     let js = generate_javascript(&codegen_config, ast);
 
-    let mut js_file = File::create(&js_output_path).into_diagnostic()?;
+    let mut js_file = std::io::BufWriter::new(File::create(&js_output_path).into_diagnostic()?);
     js_file.write_all(js.as_bytes()).into_diagnostic()?;
 
     Ok(())
@@ -363,7 +366,8 @@ fn run_package_json(input: &str, output: &str) -> Result<()> {
     }
 
     let file = File::create(output).into_diagnostic()?;
-    return serde_json::to_writer(file, &object).into_diagnostic();
+    let writer = std::io::BufWriter::new(file);
+    return serde_json::to_writer(writer, &object).into_diagnostic();
 
     type Object = Map<String, Value>;
     fn merge_objects(mut lhs: Object, mut rhs: Object) -> Object {
