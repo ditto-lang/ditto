@@ -13,6 +13,8 @@ use clap::{
     ArgMatches, Command,
 };
 use miette::{IntoDiagnostic, Result};
+use tracing_flame::FlameLayer;
+use tracing_subscriber::{prelude::*, registry::Registry};
 use version::Version;
 
 static SUBCOMMAND_BOOTSTRAP: &str = "bootstrap";
@@ -105,40 +107,57 @@ async fn try_main() -> Result<()> {
     let mut cmd = command(&version_short, &version_long);
     let matches = cmd.get_matches_mut();
 
-    if let Ok(logs_dir) = std::env::var("DITTO_LOG_DIR") {
+    let mut guards = Vec::new();
+    let flame_layer = if let Ok(trace_dir) = std::env::var("DITTO_TRACE_DIR") {
+        let trace_dir = std::path::PathBuf::from(trace_dir);
+        if !trace_dir.exists() {
+            std::fs::create_dir_all(&trace_dir).into_diagnostic()?;
+        }
         let args = std::env::args().collect::<Vec<_>>();
+        let mut trace_file = trace_dir;
+        trace_file.push(calculate_hash(&args).to_string());
+        let (flame_layer, guard) = FlameLayer::with_file(trace_file).into_diagnostic()?;
+        guards.push(
+            // NOTE: using `Result` as a quick and easy `Either`
+            Err(guard),
+        );
+        Some(flame_layer.with_file_and_line(false))
+    } else {
+        None
+    };
 
-        let subcommand_name = matches.subcommand_name();
-        // TODO: make the log level configurable via an env var?
-        flexi_logger::Logger::try_with_str("debug")
-            .into_diagnostic()?
-            .format_for_files(flexi_logger::default_format)
-            .use_utc()
-            .log_to_file(
-                flexi_logger::FileSpec::default()
-                    .directory(logs_dir)
-                    .o_discriminant(subcommand_name.and_then(|subcmd| {
-                        if subcmd == make::COMPILE_SUBCOMMAND {
-                            // Need a discriminant for `_make` calls as there will
-                            // be lots of them happening within less than a second
-                            // (because ninja)
-                            // (and the flexi_logger timestamp doesn't have millisecond precision?)
-                            Some(calculate_hash(&args).to_string())
-                        } else {
-                            None
-                        }
-                    }))
-                    .basename(
-                        subcommand_name
-                            .map_or(String::from("ditto"), |subcmd| format!("ditto_{}", subcmd)),
-                    ),
-            )
-            .start()
-            .into_diagnostic()?;
+    let fmt_layer = if let Ok(log_dir) = std::env::var("DITTO_LOG_DIR") {
+        let log_dir = std::path::PathBuf::from(log_dir);
+        if !log_dir.exists() {
+            std::fs::create_dir_all(&log_dir).into_diagnostic()?;
+        }
+        let mut log_file = log_dir;
+        let subcommand = matches
+            .subcommand_name()
+            .map_or(String::from("ditto"), |subcmd| format!("ditto_{}", subcmd));
 
-        log::debug!("{}", std::env::args().collect::<Vec<_>>().join(" "));
-        log::debug!("{:?}", version);
-    }
+        log_file.push(subcommand);
+        log_file.set_extension(chrono::offset::Utc::now().to_rfc3339());
+
+        let log_file = std::fs::File::create(log_file).into_diagnostic()?;
+        let (non_blocking, guard) = tracing_appender::non_blocking(log_file);
+        guards.push(
+            // NOTE: using `Result` as a quick and easy `Either`
+            Ok(guard),
+        );
+
+        let mut fmt_layer = tracing_subscriber::fmt::Layer::new().with_writer(non_blocking);
+        fmt_layer.set_ansi(false);
+        Some(fmt_layer)
+    } else {
+        None
+    };
+
+    let subscriber = Registry::default().with(fmt_layer).with(flame_layer);
+    tracing::subscriber::set_global_default(subscriber).into_diagnostic()?;
+
+    tracing::debug!("{}", std::env::args().collect::<Vec<_>>().join(" "));
+    tracing::debug!("{:?}", version);
 
     run(cmd, &matches, &version).await
 }

@@ -4,7 +4,6 @@ use console::Style;
 use ditto_config::{read_config, Config, PackageName, CONFIG_FILE_NAME};
 use ditto_make::{self as make, BuildNinja, GetWarnings, PackageSources, Sources};
 use fs2::FileExt;
-use log::{debug, trace};
 use miette::{IntoDiagnostic, Result, WrapErr};
 use notify::Watcher;
 use std::{
@@ -16,6 +15,7 @@ use std::{
     process::{self, ExitStatus, Stdio},
     time::Instant,
 };
+use tracing::{debug, trace};
 
 pub static COMPILE_SUBCOMMAND: &str = "compile";
 
@@ -192,7 +192,7 @@ async fn run_watch(
                 true // return that a new run was started
             }
             other => {
-                log::trace!("Ignoring notify event: {:?}", other);
+                trace!("Ignoring notify event: {:?}", other);
 
                 false // return that no new run was started
             }
@@ -580,6 +580,7 @@ async fn make(
     }
 }
 
+#[tracing::instrument(skip_all)]
 fn generate_build_ninja(
     config_path: &Path,
     config: &Config,

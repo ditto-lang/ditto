@@ -10,7 +10,6 @@ use std::{
     fs::File,
     io::{Read, Write},
     path::{Path, PathBuf},
-    time::SystemTime,
 };
 
 use crate::common;
@@ -97,6 +96,7 @@ pub struct WarningsBundle {
     pub warnings: Vec<checker::WarningReport>,
 }
 
+#[tracing::instrument(skip_all)]
 fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result<()> {
     let mut ditto_input = None;
     let mut everything = checker::Everything::default();
@@ -171,44 +171,13 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
 
     let (ditto_input_name, ditto_input_source) = ditto_input.unwrap();
 
-    let cst = if log::log_enabled!(log::Level::Info) {
-        log_time(
-            || {
-                cst::Module::parse(&ditto_input_source).map_err(|err| {
-                    log::error!("{:#?}", err);
-                    err.into_report(&ditto_input_name, ditto_input_source.clone())
-                })
-            },
-            format!("{} parsed in", ditto_input_name),
-        )
-    } else {
-        cst::Module::parse(&ditto_input_source).map_err(|err| {
-            log::error!("{:#?}", err);
-            err.into_report(&ditto_input_name, ditto_input_source.clone())
-        })
-    }?;
-
-    let (ast, warnings) = if log::log_enabled!(log::Level::Info) {
-        log_time(
-            || {
-                checker::check_module(&everything, cst).map_err(|err| {
-                    log::error!("{:#?}", err);
-                    err.into_report(&ditto_input_name, ditto_input_source.clone())
-                })
-            },
-            format!("{} checked in", ditto_input_name),
-        )
-    } else {
-        checker::check_module(&everything, cst).map_err(|err| {
-            log::error!("{:#?}", err);
-            err.into_report(&ditto_input_name, ditto_input_source.clone())
-        })
-    }?;
+    let cst = parse_cst(&ditto_input_source, &ditto_input_name)?;
+    let (ast, warnings) = check_module(everything, cst, &ditto_input_name, &ditto_input_source)?;
 
     let warnings = warnings
         .into_iter()
         .map(|warning| {
-            log::warn!("{:#?}", warning);
+            tracing::warn!("{:#?}", warning);
             warning.into_report()
         })
         .collect::<Vec<_>>();
@@ -256,7 +225,30 @@ fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result
 
     Ok(())
 }
+#[tracing::instrument(level = "trace", skip(source))]
+fn parse_cst(source: &str, source_name: &str) -> Result<cst::Module> {
+    let module = cst::Module::parse(source).map_err(|err| {
+        tracing::error!("{:#?}", err);
+        err.into_report(source_name, source.to_owned())
+    })?;
+    Ok(module)
+}
 
+#[tracing::instrument(level = "trace", skip(everything, cst, source))]
+fn check_module(
+    everything: checker::Everything,
+    cst: cst::Module,
+    source_name: &str,
+    source: &str,
+) -> Result<(ast::Module, checker::Warnings)> {
+    let (module, warnings) = checker::check_module(&everything, cst).map_err(|err| {
+        tracing::error!("{:#?}", err);
+        err.into_report(source_name, source.to_owned())
+    })?;
+    Ok((module, warnings))
+}
+
+#[tracing::instrument(skip_all)]
 fn run_js(inputs: Vec<String>, outputs: Vec<String>) -> Result<()> {
     let mut ditto_input_path = None;
     let mut ast = None;
@@ -327,14 +319,7 @@ fn run_js(inputs: Vec<String>, outputs: Vec<String>) -> Result<()> {
         }),
     };
 
-    let js = if log::log_enabled!(log::Level::Info) {
-        log_time(
-            || js::codegen(&codegen_config, ast),
-            format!("{} generated in", js_output_path.to_string_lossy()),
-        )
-    } else {
-        js::codegen(&codegen_config, ast)
-    };
+    let js = generate_javascript(&codegen_config, ast);
 
     let mut js_file = File::create(&js_output_path).into_diagnostic()?;
     js_file.write_all(js.as_bytes()).into_diagnostic()?;
@@ -342,7 +327,13 @@ fn run_js(inputs: Vec<String>, outputs: Vec<String>) -> Result<()> {
     Ok(())
 }
 
+#[tracing::instrument(skip_all)]
+fn generate_javascript(config: &js::Config, ast: ast::Module) -> String {
+    js::codegen(config, ast)
+}
+
 /// Generates a `package.json` from a `ditto.toml` input.
+#[tracing::instrument(skip_all)]
 fn run_package_json(input: &str, output: &str) -> Result<()> {
     use serde_json::{json, Map, Value};
 
@@ -420,14 +411,4 @@ fn full_extension(path: &Path) -> Option<&str> {
         .and_then(|file_name| file_name.to_str())
         .and_then(|str| str.split_once('.'))
         .map(|parts| parts.1)
-}
-
-fn log_time<T, Action: FnOnce() -> T>(action: Action, prefix: String) -> T {
-    let start = SystemTime::now();
-    let out = action();
-    let end = SystemTime::now();
-    if let Ok(duration) = end.duration_since(start) {
-        log::info!("{} {:?}", prefix, duration)
-    }
-    out
 }
