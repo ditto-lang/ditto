@@ -510,7 +510,7 @@ impl Rule {
         let ditto = ditto_bin.to_string_lossy();
         Self {
             name: RULE_NAME_PACKAGE_JSON.to_string(),
-            command: format!("{ditto} {compile} {package_json} -{i} ${{in}} -{o} ${{out}}"),
+            command: format!("{ditto} {compile} {package_json} -{i} ${{in}} -{o} ${{out}} --package-manager ${{package-manager}}"),
         }
     }
 
@@ -590,10 +590,13 @@ impl Build {
             outputs,
             rule_name: String::from(RULE_NAME_PACKAGE_JSON),
             inputs,
-            variables: HashMap::from_iter(vec![(
-                String::from("description"),
-                format!("Generating package.json for {}", package_name.as_str()),
-            )]),
+            variables: HashMap::from_iter(vec![
+                (String::from("package-manager"), "pnpm".to_string()),
+                (
+                    String::from("description"),
+                    format!("Generating package.json for {}", package_name.as_str()),
+                ),
+            ]),
         }
     }
 

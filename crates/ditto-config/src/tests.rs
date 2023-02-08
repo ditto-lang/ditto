@@ -153,6 +153,39 @@ mod successes {
             }
         );
     }
+
+    #[test]
+    fn it_parses_js_package_manager() {
+        use crate::PackageManager::*;
+        assert_parses!(
+            r#"
+            name = "test"
+            targets = []
+            [codegen-js]
+            package-manager = "pnpm"
+        "#,
+            Config {
+                codegen_js_config: CodegenJsConfig {
+                    package_manager: Pnpm,
+                    ..
+                },
+                ..
+            }
+        );
+        assert_parses!(
+            r#"
+            name = "test"
+            targets = []
+        "#,
+            Config {
+                codegen_js_config: CodegenJsConfig {
+                    package_manager: Npm, // default
+                    ..
+                },
+                ..
+            }
+        );
+    }
 }
 
 mod errors {

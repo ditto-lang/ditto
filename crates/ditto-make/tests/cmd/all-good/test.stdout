@@ -7,7 +7,7 @@ rule js
   command = ditto compile js -i ${in} -o ${out}
 
 rule package_json
-  command = ditto compile package-json -i ${in} -o ${out}
+  command = ditto compile package-json -i ${in} -o ${out} --package-manager ${package-manager}
 
 build builddir/A.ast builddir/A.ast-exports builddir/A.checker-warnings: ast ./ditto-src/A.ditto
   description = Checking A
@@ -53,5 +53,6 @@ build packages/dep/Util.js: js builddir/dep/Util.ast
 
 build packages/dep/package.json: package_json dep/ditto.toml
   description = Generating package.json for dep
+  package-manager = pnpm
 
 
