@@ -86,6 +86,7 @@ pkgs.mkShell {
     pkgs.cargo-audit
     pkgs.cargo-outdated
     cargo-benchcmp
+    pkgs.inferno
 
     # Haskell stuff
     stack
