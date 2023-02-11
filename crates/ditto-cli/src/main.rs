@@ -137,7 +137,11 @@ async fn try_main() -> Result<()> {
             .map_or(String::from("ditto"), |subcmd| format!("ditto_{}", subcmd));
 
         log_file.push(subcommand);
-        log_file.set_extension(chrono::offset::Utc::now().to_rfc3339());
+        log_file.set_extension(
+            time::OffsetDateTime::now_utc()
+                .format(&time::format_description::well_known::Rfc3339)
+                .unwrap(),
+        );
 
         let log_file = std::fs::File::create(log_file).into_diagnostic()?;
         let (non_blocking, guard) = tracing_appender::non_blocking(log_file);

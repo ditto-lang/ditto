@@ -16,7 +16,7 @@ ditto-cst = { path = "../ditto-cst" }
 ditto-config = { path = "../ditto-config" }
 ditto-fmt = { path = "../ditto-fmt" }
 clap = "4.0"
-chrono = "0.4"
+time = { version = "0.3", features = ["serde-human-readable"] }
 miette = { version = "5.5", features = ["fancy"] }
 tracing = "0.1"
 tracing-subscriber = "0.3"
@@ -59,4 +59,4 @@ assert_fs = "1.0"
 similar-asserts = "1.4"
 
 [build-dependencies]
-chrono = "0.4"
+time = "0.3"

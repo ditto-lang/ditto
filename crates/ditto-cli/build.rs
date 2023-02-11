@@ -34,8 +34,11 @@ fn main() {
     });
     println!("cargo:rustc-env=GIT_DIRTY={}", git_dirty);
 
-    let build_time =
-        env::var("DITTO_BUILD_TIME").unwrap_or_else(|_| chrono::offset::Utc::now().to_rfc3339());
+    let build_time = env::var("DITTO_BUILD_TIME").unwrap_or_else(|_| {
+        time::OffsetDateTime::now_utc()
+            .format(&time::format_description::well_known::Rfc3339)
+            .unwrap()
+    });
 
     println!("cargo:rustc-env=BUILD_TIME={}", build_time);
 
