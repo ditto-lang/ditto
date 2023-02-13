@@ -9,7 +9,7 @@ doctest = false
 
 [dependencies]
 ditto-tree-sitter = { path = "../ditto-tree-sitter" }
-ropey = "1.5"
+ropey = "1.6"
 
 [dev-dependencies]
 similar-asserts = "1.4"
