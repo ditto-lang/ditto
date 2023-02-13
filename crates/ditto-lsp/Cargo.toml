@@ -12,7 +12,7 @@ salsa = { package = "salsa-2022", git = "https://github.com/salsa-rs/salsa", rev
 tower-lsp = "0.18"
 ropey = "1.5"
 dashmap = "5.4"
-tokio = { version = "1.22", features = ["full"] }
+tokio = { version = "1.25", features = ["full"] }
 ditto-cst = { path = "../ditto-cst" }
 ditto-ast = { path = "../ditto-ast" }
 ditto-checker = { path = "../ditto-checker" }
