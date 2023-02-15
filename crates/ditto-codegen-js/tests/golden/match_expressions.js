@@ -8,6 +8,20 @@ function ManyFields($0, $1, $2, $3) {
   return ["ManyFields", $0, $1, $2, $3];
 }
 const Nothing = ["Nothing"];
+function nested_pattern(m) {
+  if (
+    m[0] === "Just" &&
+    m[1][0] === "Just" &&
+    m[1][1][0] === "Just" &&
+    m[1][1][1][0] === "Just"
+  ) {
+    return true;
+  }
+  if (m[0] === "Nothing") {
+    return false;
+  }
+  return false;
+}
 function id(a) {
   return a;
 }
@@ -113,6 +127,7 @@ export {
   is_just,
   many_fields_to_array,
   mk_five,
+  nested_pattern,
   to_string,
   very_function_arms,
   with_default,
