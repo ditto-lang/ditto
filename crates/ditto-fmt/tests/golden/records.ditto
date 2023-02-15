@@ -4,6 +4,6 @@ module Records exports (..)
 items = [
     { key = "a", value = unit },
     { key = "b", value = unit },
-    {key = "c", value = unit },
+    { key = "c", value = unit },
     { key = "d", value = unit },
 ]

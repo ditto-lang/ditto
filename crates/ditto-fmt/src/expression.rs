@@ -345,7 +345,7 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
             items.extend(gen_open_brace(open_brace));
 
             let gen_separated_values_result =
-                gen_comma_sep1(updates, gen_record_field, force_use_new_lines);
+                gen_comma_sep1(updates, gen_record_field, true, force_use_new_lines);
 
             let is_multiple_lines = gen_separated_values_result.is_multi_line_condition_ref;
 
@@ -371,9 +371,7 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
                     items.extend(gen_expression(target, true));
                     items.extend(space());
                     items.extend(gen_pipe(pipe));
-                    items.extend(space());
                     items.extend(element_items.into());
-                    items.extend(space());
                     items.extend(gen_close_brace(close_brace));
                     items
                 },

@@ -64,7 +64,7 @@ pub fn gen_type(t: Type) -> PrintItems {
             let force_use_new_lines =
                 open_brace.0.has_comments() || var.has_comments() || pipe.0.has_comments();
             let gen_separated_values_result =
-                gen_comma_sep1(fields, gen_record_type_field, force_use_new_lines);
+                gen_comma_sep1(fields, gen_record_type_field, true, force_use_new_lines);
 
             let fields = gen_separated_values_result.items.into_rc_path();
             items.push_condition(conditions::if_true_or(
@@ -73,6 +73,7 @@ pub fn gen_type(t: Type) -> PrintItems {
                     .is_multi_line_condition_ref
                     .create_resolver(),
                 {
+                    // multi-line
                     let mut items = gen_open_brace(open_brace.clone());
                     items.push_signal(Signal::NewLine);
                     items.extend(ir_helpers::with_indent({
@@ -86,14 +87,13 @@ pub fn gen_type(t: Type) -> PrintItems {
                     items
                 },
                 {
+                    // single-line
                     let mut items = gen_open_brace(open_brace);
                     items.push_signal(Signal::SpaceOrNewLine);
                     items.extend(gen_name(var));
                     items.extend(space());
                     items.extend(gen_pipe(pipe));
-                    items.extend(space());
                     items.extend(fields.into());
-                    items.extend(space());
                     items.extend(gen_close_brace(close_brace));
                     items
                 },
