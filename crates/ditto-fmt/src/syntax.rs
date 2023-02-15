@@ -1,6 +1,5 @@
 use super::{
     has_comments::HasComments,
-    helpers::space,
     token::{
         gen_close_brace, gen_close_bracket, gen_close_paren, gen_comma, gen_open_brace,
         gen_open_bracket, gen_open_paren,
@@ -91,6 +90,7 @@ where
     let gen_separated_values_result = gen_comma_sep1(
         parens.value,
         gen_element,
+        false,
         force_use_new_lines || parens_have_inner_comments,
     );
     let element_items = gen_separated_values_result.items;
@@ -113,7 +113,7 @@ where
     items.extend(gen_open_bracket(brackets.open_bracket));
     if let Some(elements) = brackets.value {
         let gen_separated_values_result =
-            gen_comma_sep1(elements, gen_element, brackets_have_inner_comments);
+            gen_comma_sep1(elements, gen_element, false, brackets_have_inner_comments);
         let element_items = gen_separated_values_result.items;
         items.extend(element_items);
     }
@@ -132,21 +132,9 @@ where
     items.extend(gen_open_brace(braces.open_brace));
     if let Some(elements) = braces.value {
         let gen_separated_values_result =
-            gen_comma_sep1(elements, gen_element, braces_have_inner_comments);
-
-        let is_multiple_lines = gen_separated_values_result.is_multi_line_condition_ref;
-        items.push_condition(conditions::if_false(
-            "spaceAfterOpenBrace",
-            is_multiple_lines.create_resolver(),
-            space(),
-        ));
+            gen_comma_sep1(elements, gen_element, true, braces_have_inner_comments);
         let element_items = gen_separated_values_result.items;
         items.extend(element_items);
-        items.push_condition(conditions::if_false(
-            "spaceBeforeCloseBrace",
-            is_multiple_lines.create_resolver(),
-            space(),
-        ));
     }
     items.extend(gen_close_brace(braces.close_brace));
     items
@@ -155,6 +143,7 @@ where
 pub fn gen_comma_sep1<T: HasComments, GenElement>(
     comma_sep1: CommaSep1<T>,
     gen_element: GenElement,
+    single_line_pad: bool,
     force_use_new_lines: bool,
 ) -> ir_helpers::GenSeparatedValuesResult
 where
@@ -205,8 +194,8 @@ where
             prefer_hanging: false,
             force_use_new_lines,
             allow_blank_lines: false,
-            single_line_space_at_start: false,
-            single_line_space_at_end: false,
+            single_line_space_at_start: single_line_pad,
+            single_line_space_at_end: single_line_pad,
             single_line_separator: ", ".into(),
             indent_width: 4,
             multi_line_options: ir_helpers::MultiLineOptions {
