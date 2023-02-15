@@ -468,52 +468,21 @@ impl LanguageServer for Backend {
 
 fn fmt(cst_module: cst::Module, rope: &Rope) -> Vec<TextEdit> {
     let before = rope.bytes().collect::<Vec<_>>();
-    let after = ditto_fmt::format_module(cst_module).as_bytes().to_owned();
-    let diffs = similar::capture_diff_slices(similar::Algorithm::Myers, &before, &after);
-    diffs
+    let edits = ditto_fmt::format_module_edits(cst_module, &before);
+    edits
         .into_iter()
-        .filter_map(|diff| match diff {
-            similar::DiffOp::Equal { .. } => None,
-            similar::DiffOp::Delete {
-                old_index, old_len, ..
-            } => {
-                let start = offset_to_position(old_index, rope)?;
-                let end = offset_to_position(old_index + old_len, rope)?;
+        .filter_map(
+            |ditto_fmt::Edit {
+                 from,
+                 to,
+                 text: new_text,
+             }| {
+                let start = offset_to_position(from, rope)?;
+                let end = offset_to_position(to, rope)?;
                 let range = Range { start, end };
-                let new_text = "".to_string();
-                let edit = TextEdit { range, new_text };
-                Some(edit)
-            }
-            similar::DiffOp::Insert {
-                old_index,
-                new_index,
-                new_len,
-            } => {
-                let start = offset_to_position(old_index, rope)?;
-                let end = start;
-                let range = Range { start, end };
-                let new_text = std::str::from_utf8(&after[new_index..new_index + new_len])
-                    .ok()?
-                    .to_string();
-                let edit = TextEdit { range, new_text };
-                Some(edit)
-            }
-            similar::DiffOp::Replace {
-                old_index,
-                old_len,
-                new_index,
-                new_len,
-            } => {
-                let start = offset_to_position(old_index, rope)?;
-                let end = offset_to_position(old_index + old_len, rope)?;
-                let range = Range { start, end };
-                let new_text = std::str::from_utf8(&after[new_index..new_index + new_len])
-                    .ok()?
-                    .to_string();
-                let edit = TextEdit { range, new_text };
-                Some(edit)
-            }
-        })
+                Some(TextEdit { range, new_text })
+            },
+        )
         .collect()
 }
 

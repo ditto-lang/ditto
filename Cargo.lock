@@ -739,6 +739,7 @@ dependencies = [
  "datatest-stable",
  "ditto-cst",
  "dprint-core",
+ "similar",
  "similar-asserts",
 ]
 
@@ -772,7 +773,6 @@ dependencies = [
  "salsa-2022",
  "serde",
  "serde_json",
- "similar",
  "tokio",
  "tower-lsp",
 ]

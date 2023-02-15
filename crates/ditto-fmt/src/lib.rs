@@ -31,6 +31,67 @@ pub fn format_module(module: ditto_cst::Module) -> String {
     )
 }
 
+/// Describes a text edit.
+#[allow(missing_docs)]
+pub struct Edit {
+    pub from: usize,
+    pub to: usize,
+    pub text: String,
+}
+
+/// Returns the edits that must be made to `source` in order to make it pretty.
+pub fn format_module_edits(module: ditto_cst::Module, source: &[u8]) -> Vec<Edit> {
+    let formatted = format_module(module).as_bytes().to_owned();
+    let diffs = similar::capture_diff_slices(similar::Algorithm::Myers, source, &formatted);
+    diffs
+        .into_iter()
+        .filter_map(|diff| match diff {
+            similar::DiffOp::Equal { .. } => None,
+            similar::DiffOp::Delete {
+                old_index, old_len, ..
+            } => {
+                let edit = Edit {
+                    from: old_index,
+                    to: old_index + old_len,
+                    text: String::new(),
+                };
+                Some(edit)
+            }
+            similar::DiffOp::Insert {
+                old_index,
+                new_index,
+                new_len,
+            } => {
+                let text = std::str::from_utf8(&formatted[new_index..new_index + new_len])
+                    .ok()?
+                    .to_string();
+                let edit = Edit {
+                    from: old_index,
+                    to: old_index,
+                    text,
+                };
+                Some(edit)
+            }
+            similar::DiffOp::Replace {
+                old_index,
+                old_len,
+                new_index,
+                new_len,
+            } => {
+                let text = std::str::from_utf8(&formatted[new_index..new_index + new_len])
+                    .ok()?
+                    .to_string();
+                let edit = Edit {
+                    from: old_index,
+                    to: old_index + old_len,
+                    text,
+                };
+                Some(edit)
+            }
+        })
+        .collect()
+}
+
 #[cfg(test)]
 mod test_macros {
     macro_rules! assert_fmt {
