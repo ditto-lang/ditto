@@ -65,3 +65,10 @@ complex_matched_expresion = fn (x) ->
     | Just(y) -> [y]
     | Nothing -> [2]
     end
+
+nested_pattern = fn (m) ->
+    match m with
+    | Just(Just(Just(Just(_)))) -> true
+    | Nothing -> false
+    | _ -> false
+    end

@@ -756,10 +756,10 @@ fn convert_pattern(
         let condition =
             conditions
                 .iter()
-                .fold(condition.clone(), |rhs, lhs| Expression::Operator {
+                .fold(condition.clone(), |lhs, rhs| Expression::Operator {
                     op: Operator::And,
-                    lhs: Box::new(lhs.clone()),
-                    rhs: Box::new(rhs),
+                    lhs: Box::new(lhs),
+                    rhs: Box::new(rhs.clone()),
                 });
         (Some(condition), assignments)
     } else {
