@@ -347,12 +347,12 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
             let gen_separated_values_result =
                 gen_comma_sep1(updates, gen_record_field, true, force_use_new_lines);
 
-            let is_multiple_lines = gen_separated_values_result.is_multi_line_condition_ref;
-
             let element_items = gen_separated_values_result.items.into_rc_path();
             items.push_condition(conditions::if_true_or(
-                "dunnoYet",
-                is_multiple_lines.create_resolver(),
+                "multiLineRecordUpdate",
+                gen_separated_values_result
+                    .is_multi_line_condition_ref
+                    .create_resolver(),
                 {
                     let mut items: PrintItems = Signal::NewLine.into();
                     items.extend(ir_helpers::with_indent({
@@ -360,6 +360,7 @@ pub fn gen_expression(expr: Expression, _needs_parens: bool) -> PrintItems {
                         items.extend(gen_expression(target.clone(), true));
                         items.extend(space());
                         items.extend(gen_pipe(pipe.clone()));
+                        items.push_signal(Signal::ExpectNewLine);
                         items.extend(element_items.into());
                         items
                     }));
@@ -799,5 +800,11 @@ mod tests {
         assert_fmt!("{\n\tr |\n\t\t-- comment\n\t\tfoo = 2,\n}");
         assert_fmt!("{  --comment\n\tr |\n\t\t-- comment\n\t\tfoo = 2,\n}");
         assert_fmt!("{\n\tr |\n\t\tfoo = 2,\n\t-- comment\n}");
+
+        assert_fmt!(
+            "{ foo = { foo | bar = do_something_with(foo.bar) }, baz = true }",
+            "{\n\tfoo = {\n\t\tfoo |\n\t\t\tbar = do_something_with(foo.bar),\n\t},\n\tbaz = true,\n}",
+            50
+        );
     }
 }
