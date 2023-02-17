@@ -11,11 +11,11 @@ pub async fn main() {
 }
 
 #[derive(Debug)]
-struct Backend(super::Backend);
+struct Backend(super::Server);
 
 impl Backend {
     fn new(version: String, client: Client) -> Self {
-        Self(super::Backend::new(version, client))
+        Self(super::Server::new(version, client))
     }
 }
 
@@ -32,25 +32,15 @@ impl LanguageServer for Backend {
 
     async fn initialized(&self, params: InitializedParams) {
         self.0.initialized(params).await;
-        if !self.0.db_documents.is_empty() {
-            let mut initial_db_documents = self
-                .0
-                .db_documents
-                .iter()
-                .map(|item| (fix_uri(item.key().as_str()), item.value().to_owned()))
-                .collect::<Vec<_>>();
-            initial_db_documents.sort();
-            log::info!("{initial_db_documents:#?}");
-        }
-        let db = self.0.db.lock().await;
-        if !db.documents.is_empty() {
-            let mut initial_db_documents = db
+        let backend = self.0.backend.lock().await;
+        if !backend.documents.is_empty() {
+            let mut initial_documents = backend
                 .documents
                 .iter()
-                .map(|item| (item.key().to_owned(), item.value().to_owned()))
+                .map(|(uri, (_, document))| (fix_uri(uri.as_str()), document))
                 .collect::<Vec<_>>();
-            initial_db_documents.sort();
-            log::info!("{initial_db_documents:#?}");
+            initial_documents.sort();
+            log::info!("{initial_documents:#?}");
         }
     }
 

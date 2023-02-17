@@ -768,6 +768,7 @@ dependencies = [
  "ditto-make",
  "ditto-tree-sitter",
  "log",
+ "lsp-document",
  "miette",
  "ropey",
  "salsa-2022",
@@ -1551,6 +1552,15 @@ dependencies = [
  "quote",
  "regex-syntax",
  "syn",
+]
+
+[[package]]
+name = "lsp-document"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "43590d4fd929e822de2ab109b9422467f1c547fe543be27e522b043c457dcb37"
+dependencies = [
+ "lsp-types",
 ]
 
 [[package]]

@@ -13,6 +13,8 @@ ghcid --command='stack repl ditto-lsp-test'
 
 module Main (main) where
 
+import "base" Control.Monad.IO.Class (liftIO)
+import "text" Data.Text.IO qualified as TextIO
 import "lsp-test" Language.LSP.Test qualified as Lsp
 import "lsp-types" Language.LSP.Types as LspTypes
 import "base" System.Environment (getArgs)
@@ -57,6 +59,8 @@ testFormatting lspExe =
           LspTypes._insertFinalNewline = Just True,
           LspTypes._trimFinalNewlines = Just True
         }
+    contents <- Lsp.documentContents example
+    -- liftIO (TextIO.putStrLn contents)
 
     pure ()
 

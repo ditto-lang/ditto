@@ -32,11 +32,12 @@ pub fn format_module(module: ditto_cst::Module) -> String {
 }
 
 /// Describes a text edit.
+#[derive(Debug)]
 #[allow(missing_docs)]
-pub struct Edit {
+pub struct Edit<T = Vec<u8>> {
     pub from: usize,
     pub to: usize,
-    pub text: String,
+    pub replacement: T,
 }
 
 /// Returns the edits that must be made to `source` in order to make it pretty.
@@ -53,7 +54,7 @@ pub fn format_module_edits(module: ditto_cst::Module, source: &[u8]) -> Vec<Edit
                 let edit = Edit {
                     from: old_index,
                     to: old_index + old_len,
-                    text: String::new(),
+                    replacement: vec![],
                 };
                 Some(edit)
             }
@@ -62,13 +63,11 @@ pub fn format_module_edits(module: ditto_cst::Module, source: &[u8]) -> Vec<Edit
                 new_index,
                 new_len,
             } => {
-                let text = std::str::from_utf8(&formatted[new_index..new_index + new_len])
-                    .ok()?
-                    .to_string();
+                let replacement = formatted[new_index..new_index + new_len].to_owned();
                 let edit = Edit {
                     from: old_index,
                     to: old_index,
-                    text,
+                    replacement,
                 };
                 Some(edit)
             }
@@ -78,13 +77,11 @@ pub fn format_module_edits(module: ditto_cst::Module, source: &[u8]) -> Vec<Edit
                 new_index,
                 new_len,
             } => {
-                let text = std::str::from_utf8(&formatted[new_index..new_index + new_len])
-                    .ok()?
-                    .to_string();
+                let replacement = formatted[new_index..new_index + new_len].to_owned();
                 let edit = Edit {
                     from: old_index,
                     to: old_index + old_len,
-                    text,
+                    replacement,
                 };
                 Some(edit)
             }

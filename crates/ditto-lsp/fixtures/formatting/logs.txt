@@ -35,7 +35,7 @@
 {
   "textDocument": {
     "languageId": "ditto",
-    "text": "module Example exports (\nfive\n\n)\n\n\n   -- comment\nfive:Int = 5\n",
+    "text": "module Example exports (\nfive\n\n)\n\n\n   -- comment\nfive:Int = 5\n\n\nemoji_shrug = \"🤷\"             -- comment\nascii_shrug = \"¯\\\\_(ツ)_/¯\"    -- comment\n\n\n",
     "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
     "version": 0
   }
@@ -74,25 +74,12 @@
     "newText": ",",
     "range": {
       "end": {
-        "character": 4,
-        "line": 1
-      },
-      "start": {
-        "character": 4,
-        "line": 1
-      }
-    }
-  },
-  {
-    "newText": "",
-    "range": {
-      "end": {
-        "character": 0,
-        "line": 3
-      },
-      "start": {
         "character": 0,
         "line": 2
+      },
+      "start": {
+        "character": 4,
+        "line": 1
       }
     }
   },
@@ -121,8 +108,260 @@
         "line": 7
       }
     }
+  },
+  {
+    "newText": "",
+    "range": {
+      "end": {
+        "character": 0,
+        "line": 8
+      },
+      "start": {
+        "character": 12,
+        "line": 7
+      }
+    }
+  },
+  {
+    "newText": "",
+    "range": {
+      "end": {
+        "character": 21,
+        "line": 10
+      },
+      "start": {
+        "character": 18,
+        "line": 10
+      }
+    }
+  },
+  {
+    "newText": "",
+    "range": {
+      "end": {
+        "character": 31,
+        "line": 10
+      },
+      "start": {
+        "character": 23,
+        "line": 10
+      }
+    }
+  },
+  {
+    "newText": "\n",
+    "range": {
+      "end": {
+        "character": 0,
+        "line": 11
+      },
+      "start": {
+        "character": 0,
+        "line": 11
+      }
+    }
+  },
+  {
+    "newText": "",
+    "range": {
+      "end": {
+        "character": 27,
+        "line": 11
+      },
+      "start": {
+        "character": 26,
+        "line": 11
+      }
+    }
+  },
+  {
+    "newText": "",
+    "range": {
+      "end": {
+        "character": 30,
+        "line": 11
+      },
+      "start": {
+        "character": 29,
+        "line": 11
+      }
+    }
+  },
+  {
+    "newText": "",
+    "range": {
+      "end": {
+        "character": 0,
+        "line": 13
+      },
+      "start": {
+        "character": 40,
+        "line": 11
+      }
+    }
   }
 ]
+
+< textDocument/didChange
+{
+  "contentChanges": [
+    {
+      "range": {
+        "end": {
+          "character": 0,
+          "line": 13
+        },
+        "start": {
+          "character": 40,
+          "line": 11
+        }
+      },
+      "text": ""
+    }
+  ],
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 1
+  }
+}
+
+< textDocument/didChange
+{
+  "contentChanges": [
+    {
+      "range": {
+        "end": {
+          "character": 30,
+          "line": 11
+        },
+        "start": {
+          "character": 29,
+          "line": 11
+        }
+      },
+      "text": ""
+    }
+  ],
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 2
+  }
+}
+
+< textDocument/didChange
+{
+  "contentChanges": [
+    {
+      "range": {
+        "end": {
+          "character": 27,
+          "line": 11
+        },
+        "start": {
+          "character": 26,
+          "line": 11
+        }
+      },
+      "text": ""
+    }
+  ],
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 3
+  }
+}
+
+< textDocument/didChange
+{
+  "contentChanges": [
+    {
+      "range": {
+        "end": {
+          "character": 0,
+          "line": 11
+        },
+        "start": {
+          "character": 0,
+          "line": 11
+        }
+      },
+      "text": "\n"
+    }
+  ],
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 4
+  }
+}
+
+< textDocument/didChange
+{
+  "contentChanges": [
+    {
+      "range": {
+        "end": {
+          "character": 31,
+          "line": 10
+        },
+        "start": {
+          "character": 23,
+          "line": 10
+        }
+      },
+      "text": ""
+    }
+  ],
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 5
+  }
+}
+
+< textDocument/didChange
+{
+  "contentChanges": [
+    {
+      "range": {
+        "end": {
+          "character": 21,
+          "line": 10
+        },
+        "start": {
+          "character": 18,
+          "line": 10
+        }
+      },
+      "text": ""
+    }
+  ],
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 6
+  }
+}
+
+< textDocument/didChange
+{
+  "contentChanges": [
+    {
+      "range": {
+        "end": {
+          "character": 0,
+          "line": 8
+        },
+        "start": {
+          "character": 12,
+          "line": 7
+        }
+      },
+      "text": ""
+    }
+  ],
+  "textDocument": {
+    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
+    "version": 7
+  }
+}
 
 < textDocument/didChange
 {
@@ -143,7 +382,7 @@
   ],
   "textDocument": {
     "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
-    "version": 1
+    "version": 8
   }
 }
 
@@ -166,7 +405,7 @@
   ],
   "textDocument": {
     "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
-    "version": 2
+    "version": 9
   }
 }
 
@@ -176,31 +415,8 @@
     {
       "range": {
         "end": {
-          "character": 0,
-          "line": 3
-        },
-        "start": {
           "character": 0,
           "line": 2
-        }
-      },
-      "text": ""
-    }
-  ],
-  "textDocument": {
-    "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
-    "version": 3
-  }
-}
-
-< textDocument/didChange
-{
-  "contentChanges": [
-    {
-      "range": {
-        "end": {
-          "character": 4,
-          "line": 1
         },
         "start": {
           "character": 4,
@@ -212,7 +428,7 @@
   ],
   "textDocument": {
     "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
-    "version": 4
+    "version": 10
   }
 }
 
@@ -235,7 +451,7 @@
   ],
   "textDocument": {
     "uri": "/crates/ditto-lsp/fixtures/formatting/Example.ditto",
-    "version": 5
+    "version": 11
   }
 }
 

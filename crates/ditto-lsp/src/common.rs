@@ -9,12 +9,7 @@ pub(crate) fn parse_error_into_lsp_diagnostic(
     uri: &Url,
     rope: &Rope,
 ) -> Option<Diagnostic> {
-    let span = match err {
-        cst::ParseError::InvalidToken { span }
-        | cst::ParseError::UnexpectedToken { span, .. }
-        | cst::ParseError::ExtraToken { span }
-        | cst::ParseError::UnexpectedEOF { span, .. } => span,
-    };
+    let span = parse_error_span(&err);
     let source = rope.to_string();
     let report = miette::Report::from(err.into_report("lsp", source));
     report_into_lsp_diagnostic(report, DiagnosticSeverity::ERROR, span, uri, rope)
@@ -25,9 +20,97 @@ pub(crate) fn type_error_into_lsp_diagnostic(
     uri: &Url,
     rope: &Rope,
 ) -> Option<Diagnostic> {
-    use ditto_checker::TypeError::*;
+    let span = type_error_span(&err);
+    let source = rope.to_string();
+    let report = miette::Report::from(err.into_report(uri, source));
+    report_into_lsp_diagnostic(report, DiagnosticSeverity::ERROR, span, uri, rope)
+}
 
-    let span = match err {
+pub(crate) fn warning_into_lsp_diagnostic(
+    warning: ditto_checker::Warning,
+    uri: &Url,
+    rope: &Rope,
+) -> Option<Diagnostic> {
+    let span = warning_span(&warning);
+    let report = miette::Report::from(warning.into_report());
+    report_into_lsp_diagnostic(report, DiagnosticSeverity::WARNING, span, uri, rope)
+}
+
+pub(crate) fn report_into_lsp_diagnostic(
+    report: miette::Report,
+    severity: DiagnosticSeverity,
+    span: Span,
+    uri: &Url,
+    rope: &Rope,
+) -> Option<Diagnostic> {
+    let message = if let Some(help) = report.help() {
+        format!("{} \n{}", report, help)
+    } else {
+        report.to_string()
+    };
+    let indexed_text = lsp_document::IndexedText::new(rope.to_string());
+    let start = offset_to_position(span.start_offset, &indexed_text)?;
+    let end = offset_to_position(span.end_offset, &indexed_text)?;
+    let range = Range { start, end };
+    let related_information = report.labels().map(|labels| {
+        labels
+            .filter_map(|label| {
+                let message = label.label()?;
+                let start = offset_to_position(label.offset(), &indexed_text)?;
+                let end = offset_to_position(label.offset() + label.len(), &indexed_text)?;
+                Some(DiagnosticRelatedInformation {
+                    message: message.to_string(),
+                    location: Location {
+                        uri: uri.clone(),
+                        range: Range { start, end },
+                    },
+                })
+            })
+            .collect()
+    });
+    Some(Diagnostic {
+        message,
+        range,
+        source: Some("ditto".to_string()),
+        severity: Some(severity),
+        related_information,
+        ..Diagnostic::default()
+    })
+}
+
+pub(crate) fn position_to_offset(position: Position, rope: &Rope) -> Option<usize> {
+    // LSP uses UTF16-encoded strings while Rust’s strings are UTF8-encoded!
+    use lsp_document::{Pos, TextAdapter};
+    let indexed_text = lsp_document::IndexedText::new(rope.to_string());
+    let Pos { col, line } = indexed_text.lsp_pos_to_pos(&position)?;
+    let line = line.try_into().ok()?;
+    let offset = rope.try_line_to_byte(line).ok()?;
+    let col: usize = col.try_into().ok()?;
+    Some(offset + col)
+}
+
+pub(crate) fn offset_to_position(
+    offset: usize,
+    indexed_text: &lsp_document::IndexedText<String>,
+) -> Option<Position> {
+    // LSP uses UTF16-encoded strings while Rust’s strings are UTF8-encoded!
+    use lsp_document::{TextAdapter, TextMap};
+    let pos = indexed_text.offset_to_pos(offset)?;
+    indexed_text.pos_to_lsp_pos(&pos)
+}
+
+fn parse_error_span(err: &cst::ParseError) -> Span {
+    match err {
+        cst::ParseError::InvalidToken { span }
+        | cst::ParseError::UnexpectedToken { span, .. }
+        | cst::ParseError::ExtraToken { span }
+        | cst::ParseError::UnexpectedEOF { span, .. } => *span,
+    }
+}
+
+fn type_error_span(err: &ditto_checker::TypeError) -> Span {
+    use ditto_checker::TypeError::*;
+    match err {
         UnknownVariable { span, .. }
         | UnknownTypeVariable { span, .. }
         | UnknownConstructor { span, .. }
@@ -99,21 +182,13 @@ pub(crate) fn type_error_into_lsp_diagnostic(
         }
         | RefutableFunctionBinder {
             match_span: span, ..
-        } => span,
-    };
-    let source = rope.to_string();
-    let report = miette::Report::from(err.into_report(uri, source));
-    report_into_lsp_diagnostic(report, DiagnosticSeverity::ERROR, span, uri, rope)
+        } => *span,
+    }
 }
 
-pub(crate) fn warning_into_lsp_diagnostic(
-    warning: ditto_checker::Warning,
-    uri: &Url,
-    rope: &Rope,
-) -> Option<Diagnostic> {
+fn warning_span(warning: &ditto_checker::Warning) -> Span {
     use ditto_checker::Warning::*;
-
-    let span = match warning {
+    match warning {
         DuplicateValueExport {
             duplicate_export: span,
             ..
@@ -139,61 +214,6 @@ pub(crate) fn warning_into_lsp_diagnostic(
         | UnusedTypeDeclaration { span, .. }
         | UnusedTypeConstructors { span, .. }
         | UnusedImport { span, .. }
-        | RedundantMatchPattern { span, .. } => span,
-    };
-    let report = miette::Report::from(warning.into_report());
-    report_into_lsp_diagnostic(report, DiagnosticSeverity::WARNING, span, uri, rope)
-}
-
-pub(crate) fn report_into_lsp_diagnostic(
-    report: miette::Report,
-    severity: DiagnosticSeverity,
-    span: Span,
-    uri: &Url,
-    rope: &Rope,
-) -> Option<Diagnostic> {
-    let message = if let Some(help) = report.help() {
-        format!("{} \n{}", report, help)
-    } else {
-        report.to_string()
-    };
-    let start = offset_to_position(span.start_offset, rope)?;
-    let end = offset_to_position(span.end_offset, rope)?;
-    let range = Range { start, end };
-    let related_information = report.labels().map(|labels| {
-        labels
-            .filter_map(|label| {
-                let message = label.label()?;
-                let start = offset_to_position(label.offset(), rope)?;
-                let end = offset_to_position(label.offset() + label.len(), rope)?;
-                Some(DiagnosticRelatedInformation {
-                    message: message.to_string(),
-                    location: Location {
-                        uri: uri.clone(),
-                        range: Range { start, end },
-                    },
-                })
-            })
-            .collect()
-    });
-    Some(Diagnostic {
-        message,
-        range,
-        source: Some("ditto".to_string()),
-        severity: Some(severity),
-        related_information,
-        ..Diagnostic::default()
-    })
-}
-
-pub(crate) fn position_to_offset(position: Position, rope: &Rope) -> Option<usize> {
-    let line = rope.try_line_to_char(position.line as usize).ok()?;
-    Some(line + position.character as usize)
-}
-
-pub(crate) fn offset_to_position(offset: usize, rope: &Rope) -> Option<Position> {
-    let line = rope.try_char_to_line(offset).ok()?;
-    let first_char = rope.try_line_to_char(line).ok()?;
-    let column = offset - first_char;
-    Some(Position::new(line as u32, column as u32))
+        | RedundantMatchPattern { span, .. } => *span,
+    }
 }

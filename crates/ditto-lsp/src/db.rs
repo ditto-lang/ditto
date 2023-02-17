@@ -1,10 +1,9 @@
 use crate::common::{
     parse_error_into_lsp_diagnostic, type_error_into_lsp_diagnostic, warning_into_lsp_diagnostic,
 };
-use dashmap::DashMap;
 use ditto_ast::{self as ast, FullyQualifiedModuleName};
 use ditto_checker as checker;
-use ditto_cst::{self as cst};
+use ditto_cst as cst;
 use ropey::Rope;
 use tower_lsp::lsp_types::{Diagnostic as LspDiagnostic, Url};
 
@@ -25,8 +24,10 @@ pub trait Db: salsa::DbWithJar<Jar> {
 #[derive(Default)]
 pub struct Database {
     storage: salsa::Storage<Self>,
-    pub documents: DashMap<FullyQualifiedModuleName, Document>,
+    documents: Documents,
 }
+
+pub type Documents = dashmap::DashMap<FullyQualifiedModuleName, Document>;
 
 impl std::fmt::Debug for Database {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -47,8 +48,28 @@ impl salsa::ParallelDatabase for Database {
 
 impl Db for Database {
     fn get_document(&self, key: &FullyQualifiedModuleName) -> Option<Document> {
-        self.storage.runtime().report_untracked_read();
-        self.documents.get(key).as_deref().copied()
+        self.storage.runtime().report_untracked_read(); // do we need to do this?
+        Some(self.documents.get(key)?.to_owned())
+    }
+}
+
+impl Database {
+    pub(crate) fn insert_document(&mut self, key: FullyQualifiedModuleName, value: Document) {
+        self.documents.insert(key, value);
+    }
+
+    pub(crate) fn update_document(&mut self, key: FullyQualifiedModuleName, value: Document) {
+        for item in self.documents.iter() {
+            let document = item.value();
+            if document.uri(self) == value.uri(self) {
+                let current_key = item.key();
+                if *current_key != key {
+                    self.documents.remove(current_key);
+                    self.documents.insert(key, *document);
+                    return;
+                }
+            }
+        }
     }
 }
 
@@ -176,22 +197,23 @@ fn prepare_checking_environment(
     let mut everything = checker::Everything::default();
     for (import_package, import_module_name) in imports.imports(db) {
         // FIXME: lots of cloning below...
-        let key = (
-            import_package.as_ref().or(package.as_ref()).cloned(),
-            import_module_name.clone(),
-        );
+        let package_name: Option<ast::PackageName> =
+            import_package.as_ref().or(package.as_ref()).cloned();
+        let module_name: ast::ModuleName = import_module_name.clone();
+        let key: FullyQualifiedModuleName = (package_name, module_name);
+
         if let Some(document) = db.get_document(&key) {
-            if let Some(ast::Module { exports, .. }) = parse_and_check(db, document, key.0) {
+            if let Some(module) = parse_and_check(db, document, key.0) {
                 if let Some(ref package_name) = import_package {
                     if let Some(packages) = everything.packages.get_mut(package_name) {
-                        packages.insert(key.1, exports);
+                        packages.insert(key.1, module.exports);
                     } else {
                         let mut packages = std::collections::HashMap::new();
-                        packages.insert(key.1, exports);
+                        packages.insert(key.1, module.exports);
                         everything.packages.insert(package_name.clone(), packages);
                     }
                 } else {
-                    everything.modules.insert(key.1, exports);
+                    everything.modules.insert(key.1, module.exports);
                 }
             }
         }
