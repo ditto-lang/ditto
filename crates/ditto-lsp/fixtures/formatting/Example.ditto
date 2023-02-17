@@ -6,3 +6,9 @@ five
 
    -- comment
 five:Int = 5
+
+
+emoji_shrug = "🤷"             -- comment
+ascii_shrug = "¯\\_(ツ)_/¯"    -- comment
+
+

@@ -1,7 +1,7 @@
-use crate::{common::offset_to_position, db::Database, locate::Located};
+use crate::{common::offset_to_position, db, db::Db, locate::Located};
 use tower_lsp::lsp_types::{GotoDefinitionResponse, Location, Range};
 
-pub fn goto_definition(db: &Database, located: Located) -> Option<GotoDefinitionResponse> {
+pub fn goto_definition(db: &db::Database, located: Located) -> Option<GotoDefinitionResponse> {
     match located {
         Located::ValueDeclarationName { .. } => None,
         Located::LocalVariable { .. } => None, // TODO
@@ -13,15 +13,16 @@ pub fn goto_definition(db: &Database, located: Located) -> Option<GotoDefinition
                 },
             ..
         } => {
-            let document = db.documents.get(&key)?;
+            let document = db.get_document(&key)?;
             let uri = document.uri(db);
             let rope = document.rope(db);
-            let module = crate::db::parse_and_check(db, *document, key.0)?;
+            let indexed_text = lsp_document::IndexedText::new(rope.to_string());
+            let module = crate::db::parse_and_check(db, document, key.0)?;
             for (name, module_value) in module.values {
                 if name == value {
                     let span = module_value.name_span;
-                    let start = offset_to_position(span.start_offset, rope)?;
-                    let end = offset_to_position(span.end_offset, rope)?;
+                    let start = offset_to_position(span.start_offset, &indexed_text)?;
+                    let end = offset_to_position(span.end_offset, &indexed_text)?;
                     let range = Range { start, end };
                     return Some(GotoDefinitionResponse::Scalar(Location {
                         uri: uri.clone(),

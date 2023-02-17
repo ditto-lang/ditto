@@ -3,6 +3,7 @@ use ropey::Rope;
 use tower_lsp::lsp_types::{Hover, HoverContents, LanguageString, MarkedString, Range};
 
 pub fn hover(located: Located, rope: &Rope) -> Option<Hover> {
+    let indexed_text = lsp_document::IndexedText::new(rope.to_string());
     match located {
         Located::ValueDeclarationName { name, module_value } => {
             let mut lines = vec![
@@ -21,8 +22,9 @@ pub fn hover(located: Located, rope: &Rope) -> Option<Hover> {
             Some(Hover {
                 contents: HoverContents::Array(lines),
                 range: (|| {
-                    let start = offset_to_position(module_value.name_span.start_offset, rope)?;
-                    let end = offset_to_position(module_value.name_span.end_offset, rope)?;
+                    let start =
+                        offset_to_position(module_value.name_span.start_offset, &indexed_text)?;
+                    let end = offset_to_position(module_value.name_span.end_offset, &indexed_text)?;
                     Some(Range { start, end })
                 })(),
             })
@@ -42,8 +44,8 @@ pub fn hover(located: Located, rope: &Rope) -> Option<Hover> {
             Some(Hover {
                 contents: HoverContents::Array(lines),
                 range: (|| {
-                    let start = offset_to_position(span.start_offset, rope)?;
-                    let end = offset_to_position(span.end_offset, rope)?;
+                    let start = offset_to_position(span.start_offset, &indexed_text)?;
+                    let end = offset_to_position(span.end_offset, &indexed_text)?;
                     Some(Range { start, end })
                 })(),
             })
@@ -63,8 +65,8 @@ pub fn hover(located: Located, rope: &Rope) -> Option<Hover> {
             Some(Hover {
                 contents: HoverContents::Array(lines),
                 range: (|| {
-                    let start = offset_to_position(span.start_offset, rope)?;
-                    let end = offset_to_position(span.end_offset, rope)?;
+                    let start = offset_to_position(span.start_offset, &indexed_text)?;
+                    let end = offset_to_position(span.end_offset, &indexed_text)?;
                     Some(Range { start, end })
                 })(),
             })
@@ -84,8 +86,8 @@ pub fn hover(located: Located, rope: &Rope) -> Option<Hover> {
             Some(Hover {
                 contents: HoverContents::Array(lines),
                 range: (|| {
-                    let start = offset_to_position(span.start_offset, rope)?;
-                    let end = offset_to_position(span.end_offset, rope)?;
+                    let start = offset_to_position(span.start_offset, &indexed_text)?;
+                    let end = offset_to_position(span.end_offset, &indexed_text)?;
                     Some(Range { start, end })
                 })(),
             })
@@ -101,8 +103,8 @@ pub fn hover(located: Located, rope: &Rope) -> Option<Hover> {
                 value: value_type.debug_render(),
             })),
             range: (|| {
-                let start = offset_to_position(span.start_offset, rope)?;
-                let end = offset_to_position(span.end_offset, rope)?;
+                let start = offset_to_position(span.start_offset, &indexed_text)?;
+                let end = offset_to_position(span.end_offset, &indexed_text)?;
                 Some(Range { start, end })
             })(),
         }),

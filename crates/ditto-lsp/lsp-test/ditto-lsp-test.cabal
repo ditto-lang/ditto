@@ -6,5 +6,5 @@ build-type: Simple
 
 executable ditto-lsp-test
   main-is: Main.hs
-  build-depends: base, process, lsp-test, lsp-types
+  build-depends: base, text, process, lsp-test, lsp-types
   default-language: Haskell2010

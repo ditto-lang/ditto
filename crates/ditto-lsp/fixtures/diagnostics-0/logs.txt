@@ -44,28 +44,6 @@
     ),
 ]
 
-[
-    (
-        (
-            None,
-            ModuleName(
-                NonEmpty(
-                    [
-                        ProperName(
-                            "A",
-                        ),
-                    ],
-                ),
-            ),
-        ),
-        Document(
-            Id {
-                value: 1,
-            },
-        ),
-    ),
-]
-
 < textDocument/didOpen
 {
   "textDocument": {

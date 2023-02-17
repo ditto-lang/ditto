@@ -1,6 +1,12 @@
 module Value.Declarations exports (..)
 
 
+string_with_escapes = "\n\t\\\" "
+
+emoji_shrug = "🤷"  -- comment
+
+ascii_shrug = "¯\\_(ツ)_/¯"
+
 my_really_long_value_name: (oooooooooooooooooooooooooooooooooooooooong) -> Int =
     test()
 
