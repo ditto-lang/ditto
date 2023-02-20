@@ -29,3 +29,6 @@ harness = false
 [[test]]
 name = "node_execution_tests"
 harness = false
+
+[features]
+wasm-bindgen = ["egg/wasm-bindgen"]
