@@ -1,3 +1,4 @@
+use crate::Var;
 use non_empty_vec::NonEmpty;
 use serde::{Deserialize, Serialize};
 
@@ -9,7 +10,7 @@ pub enum Kind {
     /// Also known as `*` to functional programming folk.
     Type,
     /// A kind variable.
-    Variable(usize),
+    Variable(Var),
     /// The kind of types that need to be applied to other types.
     ///
     /// For example: the kind of `Array` is `(Kind::Type) -> Kind::Type`
@@ -39,7 +40,7 @@ impl Kind {
     /// The caller must decide how to render kind variables via `render_var`.
     pub fn debug_render_with<F>(&self, render_var: F) -> String
     where
-        F: Fn(usize) -> String + Copy,
+        F: Fn(Var) -> String + Copy,
     {
         match self {
             Self::Variable(var) => render_var(*var),

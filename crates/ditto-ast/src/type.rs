@@ -1,4 +1,4 @@
-use crate::{FullyQualifiedProperName, Kind, Name, ProperName, QualifiedProperName};
+use crate::{FullyQualifiedProperName, Kind, Name, ProperName, QualifiedProperName, Var};
 use indexmap::IndexMap;
 use non_empty_vec::NonEmpty;
 use serde::{Deserialize, Serialize};
@@ -55,7 +55,7 @@ pub enum Type {
         /// The type variables (if any) associated with the alias.
         ///
         /// Need to capture this in order to properly substitute `aliased_type`.
-        alias_variables: Vec<usize>,
+        alias_variables: Vec<Var>,
         /// The type that this aliases.
         aliased_type: Box<Self>,
     },
@@ -66,7 +66,7 @@ pub enum Type {
         /// The [Kind] of this type variable.
         variable_kind: Kind,
         /// A numeric identifier assigned to this type.
-        var: usize,
+        var: Var,
         /// Optional name for this type if one was present in the source.
         source_name: Option<Name>,
     },
@@ -90,7 +90,7 @@ pub enum Type {
         /// Should be either `Kind::Type` or `Kind::Row`.
         kind: Kind,
         /// The row type variable.
-        var: usize, // NOTE this should be `Kind::Row`.
+        var: Var, // NOTE this should be `Kind::Row`.
         /// Optional name for the type `var`.
         source_name: Option<Name>,
         /// The labelled types.
@@ -285,7 +285,7 @@ impl Type {
     /// The caller must decide how to render unnamed type variables via `render_var`.
     pub fn debug_render_with<F>(&self, render_var: F) -> String
     where
-        F: Fn(usize, Option<Name>) -> String + Copy,
+        F: Fn(Var, Option<Name>) -> String + Copy,
     {
         let mut output = String::new();
         self.debug_render_rec(render_var, &mut output);
@@ -294,7 +294,7 @@ impl Type {
 
     fn debug_render_rec<F>(&self, render_var: F, output: &mut String)
     where
-        F: Fn(usize, Option<Name>) -> String + Copy,
+        F: Fn(Var, Option<Name>) -> String + Copy,
     {
         match self {
             Self::Variable {

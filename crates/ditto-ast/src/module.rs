@@ -1,4 +1,4 @@
-use crate::{graph::Scc, Expression, Kind, ModuleName, Name, ProperName, Span, Type};
+use crate::{graph::Scc, Expression, Kind, ModuleName, Name, ProperName, Span, Type, Var};
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
@@ -61,7 +61,7 @@ pub enum ModuleType {
         /// The type that this aliases.
         aliased_type: Type,
         /// The type variables (if any) associated with the alias.
-        alias_variables: Vec<usize>,
+        alias_variables: Vec<Var>,
     },
 }
 
