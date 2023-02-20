@@ -189,6 +189,9 @@ impl Backend {
                 let mut rope = rope.clone();
                 if apply_content_changes_to_rope(&mut rope, content_changes).is_err() {
                     // Something went horribly wrong, forget about this document!
+                    if let Some(ref mn) = fully_qualified_module_name {
+                        self.db.remove_document(mn);
+                    }
                     return;
                 }
                 document.set_rope(&mut self.db).to(rope);

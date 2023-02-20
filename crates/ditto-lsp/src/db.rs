@@ -71,6 +71,10 @@ impl Database {
             }
         }
     }
+
+    pub(crate) fn remove_document(&mut self, key: &FullyQualifiedModuleName) {
+        self.documents.remove(key);
+    }
 }
 
 pub type DocumentVersion = Option<i32>;
