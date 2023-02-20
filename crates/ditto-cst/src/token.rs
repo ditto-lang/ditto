@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 /// A source span.
+/// TODO: use stdlib Range here as it's basically the same thing and surely brings some optimizations with it
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct Span {
     /// The start byte offset.
