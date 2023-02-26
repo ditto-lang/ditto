@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use smol_str::SmolStr;
 
 /// A source span.
 /// TODO: use stdlib Range here as it's basically the same thing and surely brings some optimizations with it
@@ -74,10 +75,10 @@ impl<Value> Token<Value> {
 
 /// A string token prefixed with `"--"`.
 #[derive(Debug, Clone, PartialEq)]
-pub struct Comment(pub String);
+pub struct Comment(pub SmolStr);
 
 /// A [String] syntax node.
-pub type StringToken = Token<String>;
+pub type StringToken = Token<SmolStr>;
 
 /// An empty syntax node.
 ///

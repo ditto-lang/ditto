@@ -613,6 +613,7 @@ dependencies = [
  "non-empty-vec",
  "petgraph",
  "serde",
+ "smol_str",
 ]
 
 [[package]]
@@ -729,6 +730,7 @@ dependencies = [
  "regex",
  "serde",
  "similar-asserts",
+ "smol_str",
  "thiserror",
 ]
 
