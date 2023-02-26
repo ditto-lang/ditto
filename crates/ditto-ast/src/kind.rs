@@ -26,38 +26,3 @@ pub enum Kind {
     /// A series of labelled types. Used for records.
     Row,
 }
-
-impl Kind {
-    /// Render the kind as a compact, single-line string.
-    /// Useful for testing and debugging, but not much else...
-    pub fn debug_render(&self) -> String {
-        self.debug_render_with(|var| format!("${}", var))
-    }
-
-    /// Render the kind as a compact, single-line string.
-    /// Useful for testing and debugging, but not much else...
-    ///
-    /// The caller must decide how to render kind variables via `render_var`.
-    pub fn debug_render_with<F>(&self, render_var: F) -> String
-    where
-        F: Fn(Var) -> String + Copy,
-    {
-        match self {
-            Self::Variable(var) => render_var(*var),
-            Self::Type => String::from("Type"),
-            Self::Function { parameters } => {
-                let mut output = String::from("(");
-                let len = parameters.len();
-                parameters.iter().enumerate().for_each(|(i, param)| {
-                    output.push_str(&param.debug_render());
-                    if i + 1 != len.into() {
-                        output.push_str(", ");
-                    }
-                });
-                output.push_str(") -> Type");
-                output
-            }
-            Self::Row => String::from("Row"),
-        }
-    }
-}

@@ -9,6 +9,7 @@ mod module;
 mod name;
 mod pattern;
 mod r#type;
+pub mod utils;
 mod var;
 
 pub use ditto_cst::Span;
