@@ -203,7 +203,7 @@ MatchArm: cst::MatchArm = {
   <pipe: Pipe> <pattern: Pattern> <right_arrow: RightArrow> <expression: Box<Expression>> => cst::MatchArm { pipe, pattern, right_arrow, expression }
 }
 
-Pattern: cst::Pattern = {
+pub Pattern: cst::Pattern = {
   <constructor: QualifiedProperName> <arguments: ParensList1<Box<Pattern>>> => cst::Pattern::Constructor { constructor, arguments },
   <constructor: QualifiedProperName> => cst::Pattern::NullaryConstructor { constructor },
   <name: Name> => cst::Pattern::Variable { name },
