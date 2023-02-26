@@ -1,0 +1,357 @@
+typecheck
+{}
+----
+{}
+
+
+typecheck
+{ foo = true }
+----
+{ foo: Bool }
+
+
+typecheck
+{ foo = true, foo = true }
+----
+----
+
+  × duplicate record field
+   ╭────
+ 1 │ { foo = true, foo = true }
+   ·               ─┬─
+   ·                ╰── here
+   ╰────
+
+----
+----
+
+
+typecheck
+{ foo = {}, bar = [] }
+----
+{ foo: {}, bar: Array($5) }
+
+
+typecheck
+fn (x) -> x.foo
+----
+({ $7 | foo: $6 }) -> $6
+
+
+typecheck
+fn (x: { r | foo: Int }) -> x.foo
+----
+({ r$5 | foo: Int }) -> Int
+
+
+typecheck
+fn (x) -> x.foo.bar
+----
+({ $8 | foo: { $7 | bar: $6 } }) -> $6
+
+
+typecheck
+fn (x) -> [x.foo, x.bar, x.baz]
+----
+({ $11 | foo: $6, bar: $6, baz: $6 }) -> Array($6)
+
+
+typecheck
+fn (x) -> [x.foo, x.bar, x.baz, 10]
+----
+({ $11 | foo: Int, bar: Int, baz: Int }) -> Array(Int)
+
+
+typecheck
+fn (x : { r | foo: Int, bar: Int, baz: Int }) -> [x.foo, x.bar, x.baz]
+----
+({ r$5 | foo: Int, bar: Int, baz: Int }) -> Array(Int)
+
+
+typecheck
+fn (x : { foo: Int, bar: Int, baz: Int }) -> [x.foo, x.bar, x.baz]
+----
+({ foo: Int, bar: Int, baz: Int }) -> Array(Int)
+
+
+typecheck
+(fn (r) -> r.foo)({ foo = 5 })
+----
+Int
+
+
+typecheck
+(fn (r : { r | foo: Bool }) -> r.foo)({ foo = true })
+----
+Bool
+
+
+typecheck
+fn (): { r | foo: Bool } -> { foo = true }
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (): { r | foo: Bool } -> { foo = true }
+   ·                             ───────┬──────
+   ·                                    ╰── here
+   ╰────
+  help: expected { r$5! | foo: Bool }
+        got { foo: Bool }
+
+----
+----
+
+
+typecheck
+(fn (r : { r | foo: Int }) -> r.foo)({ foo = true })
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ (fn (r : { r | foo: Int }) -> r.foo)({ foo = true })
+   ·                                              ──┬─
+   ·                                                ╰── here
+   ╰────
+  help: expected Int
+        got Bool
+
+----
+----
+
+
+typecheck
+fn (): { foo: Bool } -> {}
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (): { foo: Bool } -> {}
+   ·                         ─┬
+   ·                          ╰── this record is missing fields
+   ╰────
+  help: need to add
+        foo: Bool
+
+----
+----
+
+
+typecheck
+fn (): {} -> { foo = true }
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (): {} -> { foo = true }
+   ·                ─┬─
+   ·                 ╰── here
+   ╰────
+  help: `foo` not in {}
+
+----
+----
+
+
+typecheck
+fn (): { foo: (Int) -> { bar: Int }} -> { foo = fn (i) -> { bar = true }  }
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (): { foo: (Int) -> { bar: Int }} -> { foo = fn (i) -> { bar = true }  }
+   ·                                                                   ──┬─
+   ·                                                                     ╰── here
+   ╰────
+  help: expected Int
+        got Bool
+
+----
+----
+
+
+typecheck
+(fn (r : { r | foo: Bool }) -> r.foo)({ foo = true, bar = unit })
+----
+Bool
+
+
+typecheck
+(fn (r) -> r.foo)({})
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ (fn (r) -> r.foo)({})
+   ·                   ─┬
+   ·                    ╰── this record is missing fields
+   ╰────
+  help: need to add
+        foo: $6
+
+----
+----
+
+
+typecheck
+fn (r) -> { r | foo = 2 }
+----
+({ $6 | foo: Int }) -> { $6 | foo: Int }
+
+
+typecheck
+fn (r: { foo : Int }) -> { r | foo = 2 }
+----
+({ foo: Int }) -> { foo: Int }
+
+
+typecheck
+(fn (r) -> { r | foo = 2 })({ foo = 1 })
+----
+{ foo: Int }
+
+
+typecheck
+(fn (r) -> { r | foo = 2 })({ foo = 1, bar = 5 })
+----
+{ foo: Int, bar: Int }
+
+
+typecheck
+fn (r) -> { r | foo = 2 }
+----
+({ $6 | foo: Int }) -> { $6 | foo: Int }
+
+
+typecheck
+(fn (r) -> { r | foo = 2 })({ foo = 1, bar = 5 })
+----
+{ foo: Int, bar: Int }
+
+
+typecheck
+fn (a, b) -> { a | foo = { b | bar = 5 } }
+----
+({ $8 | foo: { $7 | bar: Int } }, { $7 | bar: Int }) -> { $8 | foo: { $7 | bar: Int } }
+
+
+typecheck
+fn (x: { r | foo: Int }) -> { x | foo = true }
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (x: { r | foo: Int }) -> { x | foo = true }
+   ·                                         ──┬─
+   ·                                           ╰── here
+   ╰────
+  help: expected Int
+        got Bool
+
+----
+----
+
+
+typecheck
+(fn (r) -> { r | foo = 2 })({ foo = 1, bar = 5, bar = unit })
+----
+----
+
+  × duplicate record field
+   ╭────
+ 1 │ (fn (r) -> { r | foo = 2 })({ foo = 1, bar = 5, bar = unit })
+   ·                                                 ─┬─
+   ·                                                  ╰── here
+   ╰────
+
+----
+----
+
+
+typecheck
+fn (x: { foo: Int }) -> { x | foo = 5, bar = unit }
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (x: { foo: Int }) -> { x | foo = 5, bar = unit }
+   ·                                        ─┬─
+   ·                                         ╰── here
+   ╰────
+  help: `bar` not in { foo: Int }
+
+----
+----
+
+
+typecheck
+fn (x: { foo: Int }) -> { x.foo | foo = 5, bar = unit }
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (x: { foo: Int }) -> { x.foo | foo = 5, bar = unit }
+   ·                           ──┬──
+   ·                             ╰── here
+   ╰────
+  help: expected { $7 | foo: Int, bar: Unit }
+        got Int
+
+----
+----
+
+
+typecheck
+fn (x: { foo: Int }): Bool -> x.foo
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (x: { foo: Int }): Bool -> x.foo
+   ·                               ┬
+   ·                               ╰── here
+   ╰────
+  help: expected { $5 | foo: Bool }
+        got { foo: Int }
+
+----
+----
+
+
+typecheck
+fn (x: { foo: Int }): { foo: Int } -> { x | foo = 5 }
+----
+({ foo: Int }) -> { foo: Int }
+
+
+typecheck
+fn (x: { r | foo: Int }): { r | foo: Int } -> { x | foo = 5 }
+----
+({ r$5 | foo: Int }) -> { r$5 | foo: Int }
+
+
+typecheck
+fn (r: { x | foo: Unit }) -> { r | foo = unit, bar = 5 }
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (r: { x | foo: Unit }) -> { r | foo = unit, bar = 5 }
+   ·                                                ─┬─
+   ·                                                 ╰── here
+   ╰────
+  help: `bar` not in { x$5! | foo: Unit }
+
+----
+----

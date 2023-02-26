@@ -1,0 +1,79 @@
+typecheck
+fn (f) -> f(f)
+----
+----
+
+  × infinite type
+   ╭────
+ 1 │ fn (f) -> f(f)
+   ·           ──┬─
+   ·             ╰── here
+   ╰────
+  help: try adding type annotations?
+
+----
+----
+
+typecheck
+wut
+----
+----
+
+  × unknown variable
+   ╭────
+ 1 │ wut
+   · ─┬─
+   ·  ╰── not in scope
+   ╰────
+
+----
+----
+
+
+typecheck
+Huh
+----
+----
+
+  × unknown constructor
+   ╭────
+ 1 │ Huh
+   · ─┬─
+   ·  ╰── not in scope
+   ╰────
+
+----
+----
+
+
+typecheck
+fn (x) -> fn (x) -> fn (x) -> fn (x) -> x
+----
+----
+
+  × value shadowed
+   ╭────
+ 1 │ fn (x) -> fn (x) -> fn (x) -> fn (x) -> x
+   ·     ┬         ┬
+   ·     │         ╰── shadowed here
+   ·     ╰── first bound here
+   ╰────
+
+----
+----
+
+
+typecheck
+fn (Huh) -> 5
+----
+----
+
+  × unknown constructor
+   ╭────
+ 1 │ fn (Huh) -> 5
+   ·     ─┬─
+   ·      ╰── not in scope
+   ╰────
+
+----
+----

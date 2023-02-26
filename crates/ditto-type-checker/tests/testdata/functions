@@ -1,0 +1,272 @@
+typecheck
+fn (a: x) -> a
+----
+(x$5) -> x$5
+
+
+typecheck
+fn (): a -> 5
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (): a -> 5
+   ·             ┬
+   ·             ╰── here
+   ╰────
+  help: expected a$5!
+        got Int
+
+----
+----
+
+
+typecheck
+fn (f): Int -> f(true)
+----
+((Bool) -> Int) -> Int
+
+
+typecheck
+fn (a, a, a) -> [a, a, a]
+----
+----
+
+  × value shadowed
+   ╭────
+ 1 │ fn (a, a, a) -> [a, a, a]
+   ·     ┬  ┬
+   ·     │  ╰── shadowed here
+   ·     ╰── first bound here
+   ╰────
+
+----
+----
+
+
+typecheck
+fn (a: some_var, b, c: some_other_var) -> [b, 5]
+----
+----
+(some_var$5, Int, some_other_var$6) -> Array(Int)
+
+  ⚠ warnings
+
+Warning: 
+  ⚠ unused binder
+   ╭────
+ 1 │ fn (a: some_var, b, c: some_other_var) -> [b, 5]
+   ·     ┬
+   ·     ╰── this isn't referenced
+   ╰────
+Warning: 
+  ⚠ unused binder
+   ╭────
+ 1 │ fn (a: some_var, b, c: some_other_var) -> [b, 5]
+   ·                     ┬
+   ·                     ╰── this isn't referenced
+   ╰────
+
+----
+----
+
+
+typecheck
+fn (f) -> [f(true), f(5, true)]
+----
+----
+
+  × wrong number of arguments
+   ╭────
+ 1 │ fn (f) -> [f(true), f(5, true)]
+   ·                     ┬
+   ·                     ╰── this expects 1 arg
+   ╰────
+
+----
+----
+
+
+typecheck
+fn (f) -> [f(true), f(5)]
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (f) -> [f(true), f(5)]
+   ·                       ┬
+   ·                       ╰── here
+   ╰────
+  help: expected Bool
+        got Int
+
+----
+----
+
+
+typecheck
+fn (f) -> g
+----
+----
+
+  × unknown variable
+   ╭────
+ 1 │ fn (f) -> g
+   ·           ┬
+   ·           ╰── not in scope
+   ╰────
+
+----
+----
+
+
+typecheck
+fn (Wrapper(a)) -> a
+----
+(Wrapper($5)) -> $5
+
+
+typecheck
+fn (A) -> B
+----
+----
+
+  × refutable binder
+   ╭────
+ 1 │ fn (A) -> B
+   ·     ┬
+   ·     ╰── not exhaustive
+   ╰────
+  help: missing patterns
+        | B
+        | C
+
+----
+----
+
+
+typecheck
+fn (Just(Just(A))) -> B
+----
+----
+
+  × refutable binder
+   ╭────
+ 1 │ fn (Just(Just(A))) -> B
+   ·     ──────┬──────
+   ·           ╰── not exhaustive
+   ╰────
+  help: missing patterns
+        | Just(Just(B))
+        | Just(Just(C))
+        | Just(Nothing)
+        | Nothing
+
+----
+----
+
+
+typecheck
+fn (Just(A, B, C)) -> B
+----
+----
+
+  × wrong number of arguments
+   ╭────
+ 1 │ fn (Just(A, B, C)) -> B
+   ·     ──┬─
+   ·       ╰── this expects 1 arg
+   ╰────
+
+----
+----
+
+
+typecheck
+fn (Nothing(A, B, C)) -> B
+----
+----
+
+  × wrong number of arguments
+   ╭────
+ 1 │ fn (Nothing(A, B, C)) -> B
+   ·     ───┬───
+   ·        ╰── this expects 0 args
+   ╰────
+
+----
+----
+
+
+typecheck
+fn (Just(A): ABC) -> B
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (Just(A): ABC) -> B
+   ·     ───┬───
+   ·        ╰── here
+   ╰────
+  help: expected ABC
+        got Maybe(ABC)
+
+----
+----
+
+
+typecheck
+fn (): ((Int, Bool) -> Bool) -> fn (x, y: Int) -> 5
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (): ((Int, Bool) -> Bool) -> fn (x, y: Int) -> 5
+   ·                                        ┬
+   ·                                        ╰── here
+   ╰────
+  help: expected Bool
+        got Int
+
+----
+----
+
+
+typecheck
+fn (): ((Int, Bool) -> Bool) -> fn (x, y) -> 5
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (): ((Int, Bool) -> Bool) -> fn (x, y) -> 5
+   ·                                              ┬
+   ·                                              ╰── here
+   ╰────
+  help: expected Bool
+        got Int
+
+----
+----
+
+
+typecheck
+fn (): ((Int, Bool) -> Bool) -> fn (x, y): Int -> 5
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (): ((Int, Bool) -> Bool) -> fn (x, y): Int -> 5
+   ·                                 ─────────┬─────────
+   ·                                          ╰── here
+   ╰────
+  help: expected (Int, Bool) -> Bool
+        got (Int, Bool) -> Int
+
+----
+----

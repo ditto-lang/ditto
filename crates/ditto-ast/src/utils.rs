@@ -114,13 +114,37 @@ impl Type {
                 canonical_value,
                 source_value: _,
                 alias_variables: _,
-                aliased_type: _,
+                aliased_type,
                 constructor_kind: _,
             } => {
-                write!(w, "{canonical_value}")
+                write!(w, "{canonical_value} / ")?;
+                aliased_type.debug_render_to(w)
             }
             Self::PrimConstructor(prim) => {
                 write!(w, "{prim}")
+            }
+
+            Self::Call {
+                function:
+                    box Self::ConstructorAlias {
+                        canonical_value,
+                        source_value: _,
+                        alias_variables: _,
+                        aliased_type,
+                        constructor_kind: _,
+                    },
+                arguments,
+            } => {
+                write!(w, "{canonical_value}(")?;
+                let arguments_len = arguments.len();
+                for (i, arg) in arguments.iter().enumerate() {
+                    arg.debug_render_to(w)?;
+                    if i + 1 != arguments_len {
+                        write!(w, ", ")?;
+                    }
+                }
+                write!(w, ") / ")?;
+                aliased_type.debug_render_to(w)
             }
             Self::Call {
                 function,

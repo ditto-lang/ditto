@@ -1,0 +1,46 @@
+typecheck
+A
+----
+ABC
+
+
+typecheck
+Just
+----
+($5) -> Maybe($5)
+
+
+typecheck
+Nothing
+----
+Maybe($5)
+
+
+typecheck
+Just(Just(Nothing))
+----
+Maybe(Maybe(Maybe($7)))
+
+
+typecheck
+Thruple
+----
+($5, $6, $7) -> Thruple($5, $6, $7)
+
+
+typecheck
+Thruple(1, 1.0, true)
+----
+Thruple(Int, Float, Bool)
+
+
+typecheck
+Thruple(Nothing, Nothing, Nothing)
+----
+Thruple(Maybe($8), Maybe($9), Maybe($10))
+
+
+typecheck
+Wrapper
+----
+($5) -> Wrapper($5)

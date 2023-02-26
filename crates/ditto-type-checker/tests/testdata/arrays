@@ -1,0 +1,82 @@
+typecheck
+[]              
+----
+Array($5)
+
+
+typecheck
+["x"]           
+----
+Array(String)
+
+
+typecheck
+[true, (false)] 
+----
+Array(Bool)
+
+
+typecheck
+[[]]            
+----
+Array(Array($5))
+
+
+typecheck
+[[], [true]]    
+----
+Array(Array(Bool))
+
+
+typecheck
+[5, true]    
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ [5, true]    
+   ·     ──┬─
+   ·       ╰── here
+   ╰────
+  help: expected Int
+        got Bool
+
+----
+----
+
+
+typecheck
+[[5], [true]]    
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ [[5], [true]]    
+   ·        ──┬─
+   ·          ╰── here
+   ╰────
+  help: expected Int
+        got Bool
+
+----
+----
+
+
+typecheck
+fn (x: Int) -> [[], [true], [x]]
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ fn (x: Int) -> [[], [true], [x]]
+   ·                              ┬
+   ·                              ╰── here
+   ╰────
+  help: expected Bool
+        got Int
+
+----
+----

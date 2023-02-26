@@ -1,0 +1,65 @@
+typecheck
+fn (notSnake) -> notSnake
+----
+----
+($5) -> $5
+
+  ⚠ warnings
+
+Warning: 
+  ⚠ dodgy variable
+   ╭────
+ 1 │ fn (notSnake) -> notSnake
+   ·     ────┬───
+   ·         ╰── use snake_case
+   ╰────
+
+----
+----
+
+
+
+typecheck
+fn (not_used) -> 5
+----
+----
+($5) -> Int
+
+  ⚠ warnings
+
+Warning: 
+  ⚠ unused binder
+   ╭────
+ 1 │ fn (not_used) -> 5
+   ·     ────┬───
+   ·         ╰── this isn't referenced
+   ╰────
+
+----
+----
+
+typecheck
+fn (plsNo) -> 5
+----
+----
+($5) -> Int
+
+  ⚠ warnings
+
+Warning: 
+  ⚠ dodgy variable
+   ╭────
+ 1 │ fn (plsNo) -> 5
+   ·     ──┬──
+   ·       ╰── use snake_case
+   ╰────
+Warning: 
+  ⚠ unused binder
+   ╭────
+ 1 │ fn (plsNo) -> 5
+   ·     ──┬──
+   ·       ╰── this isn't referenced
+   ╰────
+
+----
+----

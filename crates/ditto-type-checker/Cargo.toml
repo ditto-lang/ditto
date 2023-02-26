@@ -1,0 +1,27 @@
+[package]
+name = "ditto-type-checker"
+version = "0.0.1"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[lib]
+doctest = false
+
+[dependencies]
+ditto-cst = { path = "../ditto-cst" }
+ditto-ast = { path = "../ditto-ast" }
+ditto-pattern-checker = { path = "../ditto-pattern-checker" }
+nonempty = "0.8"
+smallvec = "1.0"
+smol_str = "0.1"
+halfbrown = "0.1"
+indexmap = "1.9"
+serde = { version = "1.0", features = ["derive"] }
+miette = { version = "5.5", features = ["fancy"] }
+thiserror = "1.0"
+Inflector = "0.11.4"
+tracing = "0.1"
+tinyset = "0.4"
+
+[dev-dependencies]
+datadriven = "0.6"
