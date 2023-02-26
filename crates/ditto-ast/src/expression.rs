@@ -106,6 +106,9 @@ pub enum Expression {
     },
     /// A value local to the current module, e.g. `foo`.
     LocalVariable {
+        /// Where this variable was introduced.
+        introduction: Span,
+
         /// The source span for this expression.
         span: Span,
 
@@ -117,6 +120,9 @@ pub enum Expression {
     },
     /// A foreign value.
     ForeignVariable {
+        /// Where this variable was introduced.
+        introduction: Span,
+
         /// The source span for this expression.
         span: Span,
         /// The type of this variable.
@@ -126,6 +132,9 @@ pub enum Expression {
     },
     /// A value that has been imported
     ImportedVariable {
+        /// Where this variable was introduced.
+        introduction: Span,
+
         /// The source span for this expression.
         span: Span,
 
