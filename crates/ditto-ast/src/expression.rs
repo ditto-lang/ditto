@@ -1,6 +1,4 @@
-use crate::{
-    FullyQualifiedName, FullyQualifiedProperName, Name, ProperName, Span, Type, UnusedName,
-};
+use crate::{FullyQualifiedName, FullyQualifiedProperName, Name, Pattern, ProperName, Span, Type};
 use indexmap::IndexMap;
 use nonempty::NonEmpty;
 use serde::{Deserialize, Serialize};
@@ -545,43 +543,6 @@ impl Expression {
             Self::Unit { span, .. } => *span,
         }
     }
-}
-
-/// A pattern to be matched.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub enum Pattern {
-    /// A local constructor pattern.
-    LocalConstructor {
-        /// The source span for this pattern.
-        span: Span,
-        /// `Just`
-        constructor: ProperName,
-        /// Pattern arguments to the constructor.
-        arguments: Vec<Self>,
-    },
-    /// An imported constructor pattern.
-    ImportedConstructor {
-        /// The source span for this pattern.
-        span: Span,
-        /// `Maybe.Just`
-        constructor: FullyQualifiedProperName,
-        /// Pattern arguments to the constructor.
-        arguments: Vec<Self>,
-    },
-    /// A variable binding pattern.
-    Variable {
-        /// The source span for this pattern.
-        span: Span,
-        /// Name to bind.
-        name: Name,
-    },
-    /// An unused pattern.
-    Unused {
-        /// The source span for this pattern.
-        span: Span,
-        /// The unused name.
-        unused_name: UnusedName,
-    },
 }
 
 /// A chain of Effect statements.

@@ -7,6 +7,7 @@ pub mod graph;
 mod kind;
 mod module;
 mod name;
+mod pattern;
 mod r#type;
 mod var;
 
@@ -15,5 +16,6 @@ pub use expression::*;
 pub use kind::*;
 pub use module::*;
 pub use name::*;
+pub use pattern::*;
 pub use r#type::*;
 pub use var::Var;
