@@ -137,7 +137,7 @@ impl fmt::Display for PrimType {
 impl PrimType {
     /// Return this type as a [ProperName]
     pub fn as_proper_name(&self) -> ProperName {
-        ProperName(self.to_string())
+        ProperName(self.to_string().into())
     }
     /// Return the kind of the given primitive.
     pub fn get_kind(&self) -> Kind {

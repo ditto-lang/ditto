@@ -1,11 +1,12 @@
 use ditto_cst as cst;
 use non_empty_vec::NonEmpty;
 use serde::{Deserialize, Serialize};
+use smol_str::SmolStr;
 use std::fmt;
 
 /// A "name" begins with a lower case letter.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub struct Name(pub String);
+pub struct Name(pub SmolStr);
 
 impl fmt::Display for Name {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -21,7 +22,7 @@ impl From<cst::Name> for Name {
 
 /// An "unused name" begins with a single underscore.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub struct UnusedName(pub String);
+pub struct UnusedName(pub SmolStr);
 
 impl fmt::Display for UnusedName {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -37,7 +38,7 @@ impl From<cst::UnusedName> for UnusedName {
 
 /// A "proper name" begins with an upper case letter.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub struct ProperName(pub String);
+pub struct ProperName(pub SmolStr);
 
 impl fmt::Display for ProperName {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -53,7 +54,7 @@ impl From<cst::ProperName> for ProperName {
 
 /// A package name consists of lower case letters, numbers and hyphens. It must start with a letter.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub struct PackageName(pub String);
+pub struct PackageName(pub SmolStr);
 
 impl fmt::Display for PackageName {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

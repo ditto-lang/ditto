@@ -4,6 +4,7 @@ use crate::{
 use indexmap::IndexMap;
 use non_empty_vec::NonEmpty;
 use serde::{Deserialize, Serialize};
+use smol_str::SmolStr;
 
 /// The real business value.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -166,7 +167,7 @@ pub enum Expression {
         /// The source span for this expression.
         span: Span,
         /// `"string"`
-        value: String,
+        value: SmolStr,
         /// The type of this string literal.
         ///
         /// Generally this will be `PrimType::String`, but it might have been aliased.
@@ -184,7 +185,7 @@ pub enum Expression {
         /// For example, if the integer appears in ditto source as "005" we want to preserve that in the
         /// generated code.
         /// 2. Storing as a string avoids overflow issues.
-        value: String,
+        value: SmolStr,
         /// The type of this integer literal.
         /// Generally this will be `PrimType::Int`, but it might have been aliased.
         value_type: Type,
@@ -201,7 +202,7 @@ pub enum Expression {
         /// For example, if the float appears in ditto source as "5.00" we want to preserve that in the
         /// generated code.
         /// 2. Storing as a string avoids float overflow and precision issues.
-        value: String,
+        value: SmolStr,
         /// The type of this float literal.
         /// Generally this will be `PrimType::Float`, but it might have been aliased.
         value_type: Type,
