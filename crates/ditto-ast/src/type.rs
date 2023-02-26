@@ -166,8 +166,8 @@ impl PrimType {
 
 impl Type {
     /// Return the kind of this `Type`.
-    /// REVIEW this is wrong I think!
     pub fn get_kind(&self) -> Kind {
+        // REVIEW this is wrong I think!?
         match self {
             Self::Variable { variable_kind, .. } => variable_kind.clone(),
             Self::Constructor {
