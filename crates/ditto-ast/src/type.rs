@@ -69,6 +69,9 @@ pub enum Type {
         var: Var,
         /// Optional name for this type if one was present in the source.
         source_name: Option<Name>,
+        /// Is this type user specified? Name is borrowed from Haskell/GHC.
+        /// <https://mail.haskell.org/pipermail/haskell-cafe/2008-June/044622.html>
+        is_rigid: bool,
     },
     /// A _closed_ record type.
     ///
@@ -93,6 +96,9 @@ pub enum Type {
         var: Var, // NOTE this should be `Kind::Row`.
         /// Optional name for the type `var`.
         source_name: Option<Name>,
+        /// Is the variable user specified?
+        /// <https://mail.haskell.org/pipermail/haskell-cafe/2008-June/044622.html>
+        is_rigid: bool,
         /// The labelled types.
         row: Row,
     },
