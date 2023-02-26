@@ -234,7 +234,7 @@ pub enum Expression {
         /// The expression being updated.
         target: Box<Self>,
         /// The record updates.
-        fields: IndexMap<Name, Self>,
+        fields: RecordFields,
     },
     /// An array literal.
     Array {
@@ -259,7 +259,7 @@ pub enum Expression {
         record_type: Type,
 
         /// Record fields.
-        fields: IndexMap<Name, Self>,
+        fields: RecordFields,
     },
     /// `true`
     True {
@@ -286,6 +286,9 @@ pub enum Expression {
         value_type: Type,
     },
 }
+
+/// The type of record fields, for convenience.
+pub type RecordFields = IndexMap<Name, Expression>;
 
 impl Expression {
     /// Return the [Type] of this [Expression].
