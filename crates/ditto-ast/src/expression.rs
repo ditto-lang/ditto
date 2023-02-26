@@ -44,7 +44,7 @@ pub enum Expression {
         function: Box<Self>,
 
         /// Arguments to pass to the function expression.
-        arguments: Vec<Argument>,
+        arguments: Vec<Self>,
     },
     /// A conditional expression.
     ///
@@ -543,33 +543,6 @@ impl Expression {
             Self::True { span, .. } => *span,
             Self::False { span, .. } => *span,
             Self::Unit { span, .. } => *span,
-        }
-    }
-}
-
-/// An "argument" is passed to a function call.
-///
-/// ```ditto
-/// some_function(argument)
-/// ```
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub enum Argument {
-    /// A standard expression argument.
-    /// Could be a variable, could be another function call.
-    Expression(Expression),
-}
-
-impl Argument {
-    /// Return the [Type] of this [Argument].
-    pub fn get_type(&self) -> Type {
-        match self {
-            Self::Expression(expression) => expression.get_type(),
-        }
-    }
-    /// Return the source [Span] for this [Argument].
-    pub fn get_span(&self) -> Span {
-        match self {
-            Self::Expression(expression) => expression.get_span(),
         }
     }
 }
