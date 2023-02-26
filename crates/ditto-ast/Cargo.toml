@@ -11,7 +11,7 @@ doctest = false
 ditto-cst = { path = "../ditto-cst" }
 serde = { version = "1.0", features = ["derive"] }
 petgraph = "0.6"
-non-empty-vec = { version = "0.2", features = ["serde"] }
+nonempty = { version = "0.8", features = ["serialize"] }
 indexmap = { version = "1.9", features = ["serde"] }
 smol_str = "0.1"
 #unindent = "xx"  <-- might come in useful for smart multi-line strings (like Nix)

@@ -1,5 +1,5 @@
 use ditto_cst as cst;
-use non_empty_vec::NonEmpty;
+use nonempty::NonEmpty;
 use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;
 use std::fmt;
@@ -93,7 +93,7 @@ impl From<cst::ModuleName> for ModuleName {
             .map(|(proper_name, _dot)| proper_name.into())
             .collect::<Vec<_>>();
         proper_names.push(module_name.last.into());
-        unsafe { Self(NonEmpty::new_unchecked(proper_names)) }
+        Self(NonEmpty::from_vec(proper_names).unwrap())
     }
 }
 
@@ -105,7 +105,7 @@ impl std::cmp::PartialEq for ModuleName {
 
 impl std::hash::Hash for ModuleName {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.0.as_slice().hash(state);
+        self.0.hash(state);
     }
 }
 
@@ -114,7 +114,7 @@ impl fmt::Display for ModuleName {
         let len = self.0.len();
         for (i, proper_name) in self.0.iter().enumerate() {
             proper_name.fmt(f)?;
-            if i + 1 != len.into() {
+            if i + 1 != len {
                 write!(f, ".")?;
             }
         }
@@ -130,7 +130,7 @@ impl From<cst::QualifiedProperName> for ModuleName {
             .map(|(proper_name, _dot)| proper_name.into())
             .collect::<Vec<_>>();
         proper_names.push(qualified.value.into());
-        unsafe { ModuleName(NonEmpty::new_unchecked(proper_names)) }
+        Self(NonEmpty::from_vec(proper_names).unwrap())
     }
 }
 

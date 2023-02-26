@@ -2,7 +2,7 @@ use crate::{
     FullyQualifiedName, FullyQualifiedProperName, Name, ProperName, Span, Type, UnusedName,
 };
 use indexmap::IndexMap;
-use non_empty_vec::NonEmpty;
+use nonempty::NonEmpty;
 use serde::{Deserialize, Serialize};
 use smol_str::SmolStr;
 
@@ -82,7 +82,7 @@ pub enum Expression {
         expression: Box<Self>,
 
         /// Patterns to be matched against and their corresponding expressions.
-        arms: NonEmpty<(Pattern, Self)>,
+        arms: Box<NonEmpty<(Pattern, Self)>>,
     },
     /// A value constructor local to the current module, e.g. `Just` and `Ok`.
     LocalConstructor {

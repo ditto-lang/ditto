@@ -1,5 +1,5 @@
 use crate::Var;
-use non_empty_vec::NonEmpty;
+use nonempty::NonEmpty;
 use serde::{Deserialize, Serialize};
 
 /// The kind of types.
@@ -21,7 +21,7 @@ pub enum Kind {
     /// Also note that the "return kind" can only be `Kind::Type` at the moment.
     Function {
         /// The kinds of the arguments this type expects.
-        parameters: NonEmpty<Self>,
+        parameters: Box<NonEmpty<Self>>,
     },
     /// A series of labelled types. Used for records.
     Row,

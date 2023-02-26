@@ -1,6 +1,6 @@
 use crate::{FullyQualifiedProperName, Kind, Name, ProperName, QualifiedProperName, Var};
 use indexmap::IndexMap;
-use non_empty_vec::NonEmpty;
+use nonempty::NonEmpty;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
@@ -21,7 +21,7 @@ pub enum Type {
         /// Type being called.
         function: Box<Self>,
         /// The non-empty arguments list.
-        arguments: NonEmpty<Self>,
+        arguments: Box<NonEmpty<Self>>,
     },
     /// The type of functions.
     ///
@@ -139,14 +139,15 @@ impl PrimType {
     pub fn as_proper_name(&self) -> ProperName {
         ProperName(self.to_string().into())
     }
+
     /// Return the kind of the given primitive.
     pub fn get_kind(&self) -> Kind {
         match self {
             Self::Effect => Kind::Function {
-                parameters: NonEmpty::new(Kind::Type),
+                parameters: Box::new(NonEmpty::new(Kind::Type)),
             },
             Self::Array => Kind::Function {
-                parameters: NonEmpty::new(Kind::Type),
+                parameters: Box::new(NonEmpty::new(Kind::Type)),
             },
             Self::Int => Kind::Type,
             Self::Float => Kind::Type,
