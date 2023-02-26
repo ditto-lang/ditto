@@ -1,0 +1,60 @@
+is-exhaustive
+pattern_type=Int
+five
+----
+it's exhaustive boss
+
+
+is-exhaustive
+pattern_type=Int
+five
+again
+----
+Error: redundant clauses
+  again
+
+
+is-exhaustive
+pattern_type=Int
+five
+again
+and_again
+----
+Error: redundant clauses
+  again
+  and_again
+
+
+is-exhaustive
+pattern_type=Int
+_ignore
+----
+it's exhaustive boss
+
+
+is-exhaustive
+pattern_type=Unit
+_ignore
+----
+it's exhaustive boss
+
+
+is-exhaustive
+pattern_type=Float
+n
+----
+it's exhaustive boss
+
+
+is-exhaustive
+pattern_type=Bool
+cond
+----
+it's exhaustive boss
+
+
+is-exhaustive
+pattern_type=String
+_stringy
+----
+it's exhaustive boss

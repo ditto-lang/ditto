@@ -1,0 +1,325 @@
+is-exhaustive
+pattern_type=ABC
+A
+----
+Error: clauses not covered
+  B
+  C
+
+
+is-exhaustive
+pattern_type=ABC
+B
+C
+----
+Error: clauses not covered
+  A
+
+
+is-exhaustive
+pattern_type=ABC
+A
+B
+C
+C
+----
+Error: redundant clauses
+  C
+
+
+is-exhaustive
+pattern_type=Maybe(a)
+Just(_)
+----
+Error: clauses not covered
+  Nothing
+
+
+is-exhaustive
+pattern_type=Maybe(Maybe(Maybe(ABC)))
+Just(Just(Just(A)))
+----
+Error: clauses not covered
+  Just(Just(Just(B)))
+  Just(Just(Just(C)))
+  Just(Just(Nothing))
+  Just(Nothing)
+  Nothing
+
+
+is-exhaustive
+pattern_type=Maybe(a)
+Nothing
+----
+Error: clauses not covered
+  Just(_)
+
+
+is-exhaustive
+pattern_type=Maybe(a)
+Just(_)
+Nothing
+----
+it's exhaustive boss
+
+
+is-exhaustive
+pattern_type=Maybe(a)
+Just(_)
+Nothing
+Nothing
+----
+Error: redundant clauses
+  Nothing
+
+
+is-exhaustive
+pattern_type=Maybe(ABC)
+Just(A)
+----
+Error: clauses not covered
+  Just(B)
+  Just(C)
+  Nothing
+
+
+is-exhaustive
+pattern_type=Maybe(ABC)
+Just(A)
+Just(A)
+----
+Error: clauses not covered
+  Just(B)
+  Just(C)
+  Nothing
+
+
+is-exhaustive
+pattern_type=Thruple(ABC, ABC, ABC)
+Thruple(A, B)
+----
+Error: malformed pattern, expected 3 arguments but got 2
+
+
+is-exhaustive
+pattern_type=Thruple(ABC, ABC, ABC)
+Thruple(A, A, A)
+----
+Error: clauses not covered
+  Thruple(A, A, B)
+  Thruple(A, A, C)
+  Thruple(A, B, A)
+  Thruple(A, B, B)
+  Thruple(A, B, C)
+  Thruple(A, C, A)
+  Thruple(A, C, B)
+  Thruple(A, C, C)
+  Thruple(B, A, A)
+  Thruple(B, A, B)
+  Thruple(B, A, C)
+  Thruple(B, B, A)
+  Thruple(B, B, B)
+  Thruple(B, B, C)
+  Thruple(B, C, A)
+  Thruple(B, C, B)
+  Thruple(B, C, C)
+  Thruple(C, A, A)
+  Thruple(C, A, B)
+  Thruple(C, A, C)
+  Thruple(C, B, A)
+  Thruple(C, B, B)
+  Thruple(C, B, C)
+  Thruple(C, C, A)
+  Thruple(C, C, B)
+  Thruple(C, C, C)
+
+
+is-exhaustive
+pattern_type=Thruple(Maybe(ABC), ABC, ABC)
+Thruple(Just(A), A, A)
+----
+Error: clauses not covered
+  Thruple(Just(A), A, B)
+  Thruple(Just(A), A, C)
+  Thruple(Just(A), B, A)
+  Thruple(Just(A), B, B)
+  Thruple(Just(A), B, C)
+  Thruple(Just(A), C, A)
+  Thruple(Just(A), C, B)
+  Thruple(Just(A), C, C)
+  Thruple(Just(B), A, A)
+  Thruple(Just(B), A, B)
+  Thruple(Just(B), A, C)
+  Thruple(Just(B), B, A)
+  Thruple(Just(B), B, B)
+  Thruple(Just(B), B, C)
+  Thruple(Just(B), C, A)
+  Thruple(Just(B), C, B)
+  Thruple(Just(B), C, C)
+  Thruple(Just(C), A, A)
+  Thruple(Just(C), A, B)
+  Thruple(Just(C), A, C)
+  Thruple(Just(C), B, A)
+  Thruple(Just(C), B, B)
+  Thruple(Just(C), B, C)
+  Thruple(Just(C), C, A)
+  Thruple(Just(C), C, B)
+  Thruple(Just(C), C, C)
+  Thruple(Nothing, A, A)
+  Thruple(Nothing, A, B)
+  Thruple(Nothing, A, C)
+  Thruple(Nothing, B, A)
+  Thruple(Nothing, B, B)
+  Thruple(Nothing, B, C)
+  Thruple(Nothing, C, A)
+  Thruple(Nothing, C, B)
+  Thruple(Nothing, C, C)
+
+
+is-exhaustive
+pattern_type=Thruple(Maybe(ABC), Int, Int)
+Thruple(Just(A), _, _)
+----
+Error: clauses not covered
+  Thruple(Just(B), _, _)
+  Thruple(Just(C), _, _)
+  Thruple(Nothing, _, _)
+
+
+is-exhaustive
+pattern_type=Thruple(Maybe(Thruple(ABC, ABC, ABC)), Maybe(Thruple(ABC, ABC, ABC)), Maybe(Thruple(ABC, ABC, ABC)))
+Thruple(_, _, _)
+----
+it's exhaustive boss
+
+
+is-exhaustive
+pattern_type=Thruple(Maybe(Thruple(ABC, ABC, ABC)), Maybe(Thruple(ABC, ABC, ABC)), Maybe(Thruple(ABC, ABC, ABC)))
+Thruple(Nothing, Nothing, Nothing)
+----
+Error: clauses not covered
+  Thruple(Just(_), Just(_), Just(_))
+  Thruple(Just(_), Just(_), Nothing)
+  Thruple(Just(_), Nothing, Just(_))
+  Thruple(Just(_), Nothing, Nothing)
+  Thruple(Nothing, Just(_), Just(_))
+  Thruple(Nothing, Just(_), Nothing)
+  Thruple(Nothing, Nothing, Just(_))
+
+
+is-exhaustive
+pattern_type=Thruple(Maybe(Thruple(ABC, ABC, ABC)), Maybe(Thruple(ABC, ABC, ABC)), Maybe(Thruple(ABC, ABC, ABC)))
+Thruple(Just(Thruple(A, A, A)), Nothing, Nothing)
+----
+Error: clauses not covered
+  Thruple(Just(Thruple(A, A, A)), Just(_), Just(_))
+  Thruple(Just(Thruple(A, A, A)), Just(_), Nothing)
+  Thruple(Just(Thruple(A, A, A)), Nothing, Just(_))
+  Thruple(Just(Thruple(A, A, B)), Just(_), Just(_))
+  Thruple(Just(Thruple(A, A, B)), Just(_), Nothing)
+  Thruple(Just(Thruple(A, A, B)), Nothing, Just(_))
+  Thruple(Just(Thruple(A, A, B)), Nothing, Nothing)
+  Thruple(Just(Thruple(A, A, C)), Just(_), Just(_))
+  Thruple(Just(Thruple(A, A, C)), Just(_), Nothing)
+  Thruple(Just(Thruple(A, A, C)), Nothing, Just(_))
+  Thruple(Just(Thruple(A, A, C)), Nothing, Nothing)
+  Thruple(Just(Thruple(A, B, A)), Just(_), Just(_))
+  Thruple(Just(Thruple(A, B, A)), Just(_), Nothing)
+  Thruple(Just(Thruple(A, B, A)), Nothing, Just(_))
+  Thruple(Just(Thruple(A, B, A)), Nothing, Nothing)
+  Thruple(Just(Thruple(A, B, B)), Just(_), Just(_))
+  Thruple(Just(Thruple(A, B, B)), Just(_), Nothing)
+  Thruple(Just(Thruple(A, B, B)), Nothing, Just(_))
+  Thruple(Just(Thruple(A, B, B)), Nothing, Nothing)
+  Thruple(Just(Thruple(A, B, C)), Just(_), Just(_))
+  Thruple(Just(Thruple(A, B, C)), Just(_), Nothing)
+  Thruple(Just(Thruple(A, B, C)), Nothing, Just(_))
+  Thruple(Just(Thruple(A, B, C)), Nothing, Nothing)
+  Thruple(Just(Thruple(A, C, A)), Just(_), Just(_))
+  Thruple(Just(Thruple(A, C, A)), Just(_), Nothing)
+  Thruple(Just(Thruple(A, C, A)), Nothing, Just(_))
+  Thruple(Just(Thruple(A, C, A)), Nothing, Nothing)
+  Thruple(Just(Thruple(A, C, B)), Just(_), Just(_))
+  Thruple(Just(Thruple(A, C, B)), Just(_), Nothing)
+  Thruple(Just(Thruple(A, C, B)), Nothing, Just(_))
+  Thruple(Just(Thruple(A, C, B)), Nothing, Nothing)
+  Thruple(Just(Thruple(A, C, C)), Just(_), Just(_))
+  Thruple(Just(Thruple(A, C, C)), Just(_), Nothing)
+  Thruple(Just(Thruple(A, C, C)), Nothing, Just(_))
+  Thruple(Just(Thruple(A, C, C)), Nothing, Nothing)
+  Thruple(Just(Thruple(B, A, A)), Just(_), Just(_))
+  Thruple(Just(Thruple(B, A, A)), Just(_), Nothing)
+  Thruple(Just(Thruple(B, A, A)), Nothing, Just(_))
+  Thruple(Just(Thruple(B, A, A)), Nothing, Nothing)
+  Thruple(Just(Thruple(B, A, B)), Just(_), Just(_))
+  Thruple(Just(Thruple(B, A, B)), Just(_), Nothing)
+  Thruple(Just(Thruple(B, A, B)), Nothing, Just(_))
+  Thruple(Just(Thruple(B, A, B)), Nothing, Nothing)
+  Thruple(Just(Thruple(B, A, C)), Just(_), Just(_))
+  Thruple(Just(Thruple(B, A, C)), Just(_), Nothing)
+  Thruple(Just(Thruple(B, A, C)), Nothing, Just(_))
+  Thruple(Just(Thruple(B, A, C)), Nothing, Nothing)
+  Thruple(Just(Thruple(B, B, A)), Just(_), Just(_))
+  Thruple(Just(Thruple(B, B, A)), Just(_), Nothing)
+  Thruple(Just(Thruple(B, B, A)), Nothing, Just(_))
+  Thruple(Just(Thruple(B, B, A)), Nothing, Nothing)
+  Thruple(Just(Thruple(B, B, B)), Just(_), Just(_))
+  Thruple(Just(Thruple(B, B, B)), Just(_), Nothing)
+  Thruple(Just(Thruple(B, B, B)), Nothing, Just(_))
+  Thruple(Just(Thruple(B, B, B)), Nothing, Nothing)
+  Thruple(Just(Thruple(B, B, C)), Just(_), Just(_))
+  Thruple(Just(Thruple(B, B, C)), Just(_), Nothing)
+  Thruple(Just(Thruple(B, B, C)), Nothing, Just(_))
+  Thruple(Just(Thruple(B, B, C)), Nothing, Nothing)
+  Thruple(Just(Thruple(B, C, A)), Just(_), Just(_))
+  Thruple(Just(Thruple(B, C, A)), Just(_), Nothing)
+  Thruple(Just(Thruple(B, C, A)), Nothing, Just(_))
+  Thruple(Just(Thruple(B, C, A)), Nothing, Nothing)
+  Thruple(Just(Thruple(B, C, B)), Just(_), Just(_))
+  Thruple(Just(Thruple(B, C, B)), Just(_), Nothing)
+  Thruple(Just(Thruple(B, C, B)), Nothing, Just(_))
+  Thruple(Just(Thruple(B, C, B)), Nothing, Nothing)
+  Thruple(Just(Thruple(B, C, C)), Just(_), Just(_))
+  Thruple(Just(Thruple(B, C, C)), Just(_), Nothing)
+  Thruple(Just(Thruple(B, C, C)), Nothing, Just(_))
+  Thruple(Just(Thruple(B, C, C)), Nothing, Nothing)
+  Thruple(Just(Thruple(C, A, A)), Just(_), Just(_))
+  Thruple(Just(Thruple(C, A, A)), Just(_), Nothing)
+  Thruple(Just(Thruple(C, A, A)), Nothing, Just(_))
+  Thruple(Just(Thruple(C, A, A)), Nothing, Nothing)
+  Thruple(Just(Thruple(C, A, B)), Just(_), Just(_))
+  Thruple(Just(Thruple(C, A, B)), Just(_), Nothing)
+  Thruple(Just(Thruple(C, A, B)), Nothing, Just(_))
+  Thruple(Just(Thruple(C, A, B)), Nothing, Nothing)
+  Thruple(Just(Thruple(C, A, C)), Just(_), Just(_))
+  Thruple(Just(Thruple(C, A, C)), Just(_), Nothing)
+  Thruple(Just(Thruple(C, A, C)), Nothing, Just(_))
+  Thruple(Just(Thruple(C, A, C)), Nothing, Nothing)
+  Thruple(Just(Thruple(C, B, A)), Just(_), Just(_))
+  Thruple(Just(Thruple(C, B, A)), Just(_), Nothing)
+  Thruple(Just(Thruple(C, B, A)), Nothing, Just(_))
+  Thruple(Just(Thruple(C, B, A)), Nothing, Nothing)
+  Thruple(Just(Thruple(C, B, B)), Just(_), Just(_))
+  Thruple(Just(Thruple(C, B, B)), Just(_), Nothing)
+  Thruple(Just(Thruple(C, B, B)), Nothing, Just(_))
+  Thruple(Just(Thruple(C, B, B)), Nothing, Nothing)
+  Thruple(Just(Thruple(C, B, C)), Just(_), Just(_))
+  Thruple(Just(Thruple(C, B, C)), Just(_), Nothing)
+  Thruple(Just(Thruple(C, B, C)), Nothing, Just(_))
+  Thruple(Just(Thruple(C, B, C)), Nothing, Nothing)
+  Thruple(Just(Thruple(C, C, A)), Just(_), Just(_))
+  Thruple(Just(Thruple(C, C, A)), Just(_), Nothing)
+  Thruple(Just(Thruple(C, C, A)), Nothing, Just(_))
+  Thruple(Just(Thruple(C, C, A)), Nothing, Nothing)
+  Thruple(Just(Thruple(C, C, B)), Just(_), Just(_))
+  Thruple(Just(Thruple(C, C, B)), Just(_), Nothing)
+  Thruple(Just(Thruple(C, C, B)), Nothing, Just(_))
+  Thruple(Just(Thruple(C, C, B)), Nothing, Nothing)
+  Thruple(Just(Thruple(C, C, C)), Just(_), Just(_))
+  Thruple(Just(Thruple(C, C, C)), Just(_), Nothing)
+  Thruple(Just(Thruple(C, C, C)), Nothing, Just(_))
+  Thruple(Just(Thruple(C, C, C)), Nothing, Nothing)
+  Thruple(Nothing, Just(_), Just(_))
+  Thruple(Nothing, Just(_), Nothing)
+  Thruple(Nothing, Nothing, Just(_))
+  Thruple(Nothing, Nothing, Nothing)
