@@ -27,6 +27,13 @@ impl Span {
     }
 }
 
+#[allow(clippy::from_over_into)]
+impl Into<miette::SourceSpan> for Span {
+    fn into(self) -> miette::SourceSpan {
+        miette::SourceSpan::from((self.start_offset, self.end_offset - self.start_offset))
+    }
+}
+
 /// A syntactic element.
 ///
 /// Each token consists of its source location, surrounding comments, and
