@@ -163,7 +163,7 @@ async fn try_main() -> Result<()> {
 
         let mut fmt_layer = tracing_subscriber::fmt::Layer::new().with_writer(non_blocking);
         fmt_layer.set_ansi(false);
-        Some(fmt_layer)
+        Some(fmt_layer.with_span_events(tracing_subscriber::fmt::format::FmtSpan::CLOSE))
     } else {
         None
     };
