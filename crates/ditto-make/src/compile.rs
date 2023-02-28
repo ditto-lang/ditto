@@ -96,7 +96,7 @@ pub struct WarningsBundle {
     pub warnings: Vec<checker::WarningReport>,
 }
 
-#[tracing::instrument(skip_all)]
+#[tracing::instrument(level = "trace", skip_all)]
 fn run_ast(build_dir: &str, inputs: Vec<String>, outputs: Vec<String>) -> Result<()> {
     let mut ditto_input = None;
     let mut everything = checker::Everything::default();
@@ -251,7 +251,7 @@ fn check_module(
     Ok((module, warnings))
 }
 
-#[tracing::instrument(skip_all)]
+#[tracing::instrument(level = "trace", skip_all)]
 fn run_js(inputs: Vec<String>, outputs: Vec<String>) -> Result<()> {
     let mut ditto_input_path = None;
     let mut ast = None;
@@ -330,13 +330,13 @@ fn run_js(inputs: Vec<String>, outputs: Vec<String>) -> Result<()> {
     Ok(())
 }
 
-#[tracing::instrument(skip_all)]
+#[tracing::instrument(level = "trace", skip_all)]
 fn generate_javascript(config: &js::Config, ast: ast::Module) -> String {
     js::codegen(config, ast)
 }
 
 /// Generates a `package.json` from a `ditto.toml` input.
-#[tracing::instrument(skip_all)]
+#[tracing::instrument(level = "trace", skip_all)]
 fn run_package_json(input: &str, output: &str) -> Result<()> {
     use serde_json::{json, Map, Value};
 

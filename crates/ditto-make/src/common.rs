@@ -23,7 +23,7 @@ pub fn module_name_to_file_stem(module_name: ModuleName) -> PathBuf {
 }
 
 /// Serialize a value using a JSON if this is a debug build, and CBOR otherwise.
-#[tracing::instrument(skip_all)]
+#[tracing::instrument(level = "trace", skip_all)]
 pub fn serialize<W: Write, T: Serialize>(writer: W, value: &T) -> Result<()> {
     if cfg!(debug_assertions) {
         serde_json::to_writer_pretty(writer, value).into_diagnostic()
@@ -33,7 +33,7 @@ pub fn serialize<W: Write, T: Serialize>(writer: W, value: &T) -> Result<()> {
 }
 
 /// Deserialize a value using a JSON if this is a debug build, and CBOR otherwise.
-#[tracing::instrument]
+#[tracing::instrument(level = "trace")]
 pub fn deserialize<T: DeserializeOwned>(path: &Path) -> Result<T> {
     let file = File::open(path).into_diagnostic()?;
     let reader = BufReader::new(file);

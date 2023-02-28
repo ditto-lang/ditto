@@ -14,6 +14,7 @@ use clap::{
     ArgMatches, Command,
 };
 use miette::{IntoDiagnostic, Result};
+use tracing::Instrument;
 use tracing_flame::FlameLayer;
 use tracing_subscriber::{prelude::*, registry::Registry};
 use version::Version;
@@ -166,7 +167,9 @@ async fn try_main() -> Result<()> {
             Ok(guard),
         );
 
-        let mut fmt_layer = tracing_subscriber::fmt::Layer::new().with_writer(non_blocking);
+        let mut fmt_layer = tracing_subscriber::fmt::Layer::new()
+            .json()
+            .with_writer(non_blocking);
         fmt_layer.set_ansi(false);
         Some(fmt_layer.with_span_events(tracing_subscriber::fmt::format::FmtSpan::CLOSE))
     } else {
@@ -177,12 +180,14 @@ async fn try_main() -> Result<()> {
     tracing::subscriber::set_global_default(subscriber).into_diagnostic()?;
 
     if !running_in_ninja {
-        tracing::debug!("{:?}", version);
+        tracing::debug!(version = version.render_short());
+        run(cmd, &matches, &version).await
+    } else {
+        let args = std::env::args().skip(1).collect::<Vec<_>>().join(" ");
+        run(cmd, &matches, &version)
+            .instrument(tracing::trace_span!("args", args = args))
+            .await
     }
-
-    // tracing::debug!("{}", std::env::args().collect::<Vec<_>>().join(" "));
-
-    run(cmd, &matches, &version).await
 }
 
 fn calculate_hash<T: std::hash::Hash>(t: &T) -> u64 {
