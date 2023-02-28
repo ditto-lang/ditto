@@ -71,14 +71,6 @@ async fn run(mut cmd: Command, matches: &ArgMatches, version: &Version) -> Resul
 
 #[tokio::main]
 async fn main() {
-    if let Err(err) = try_main().await {
-        eprintln!("{:?}", err);
-        std::process::exit(1);
-    }
-    std::process::exit(0);
-}
-
-async fn try_main() -> Result<()> {
     // NOTE: this is here to catch any "internal compiler errors",
     // `unwrap`, `expect` (etc) which aren't _supposed_ to blow up
     std::panic::set_hook(Box::new(|panic_info| {
@@ -100,6 +92,14 @@ async fn try_main() -> Result<()> {
     }))
     .expect("Error installing miette hook");
 
+    if let Err(err) = try_main().await {
+        eprintln!("{:?}", err);
+        std::process::exit(1);
+    }
+    std::process::exit(0);
+}
+
+async fn try_main() -> Result<()> {
     let version = Version::from_env();
     let version_short = version.render_short();
     let version_long = version.render_long();
