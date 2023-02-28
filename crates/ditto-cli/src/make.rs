@@ -353,6 +353,7 @@ async fn run_once(
         // Crash if we fail to release the lock otherwise things are likely to misbehave...
         .expect("Error releasing lock on build directory");
 
+    // FIXME: this isn't always logged - do we need to await something from tracing_subscriber?
     debug!("make ran in {}ms", now.elapsed().as_millis());
 
     result
@@ -581,7 +582,7 @@ async fn make(
     }
 }
 
-#[tracing::instrument(skip_all)]
+#[tracing::instrument(level = "trace", skip_all)]
 fn generate_build_ninja(
     config_path: &Path,
     config: &Config,

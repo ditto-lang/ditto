@@ -27,7 +27,7 @@ pub type GetWarnings = impl FnOnce() -> Result<Vec<miette::Report>>;
 
 /// Generates a [build.ninja](https://ninja-build.org/manual.html#_writing_your_own_ninja_files)
 /// file and also returns a function for retrieving compiler warnings once `ninja` has run.
-#[tracing::instrument(skip_all)]
+#[tracing::instrument(level = "trace", skip_all)]
 pub fn generate_build_ninja(
     build_dir: PathBuf,
     ditto_bin: PathBuf,
