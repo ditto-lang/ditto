@@ -111,6 +111,8 @@ async fn main() {
 }
 
 async fn try_main() -> Result<()> {
+    let running_in_ninja = std::env::var("NINJA_STATUS").is_ok(); // NOTE: we set this! see make.rs
+
     let version = Version::from_env();
     let version_short = version.render_short();
     let version_long = version.render_long();
@@ -137,25 +139,28 @@ async fn try_main() -> Result<()> {
         None
     };
 
-    let fmt_layer = if let Ok(log_dir) = std::env::var("DITTO_LOG_DIR") {
-        let log_dir = std::path::PathBuf::from(log_dir);
-        if !log_dir.exists() {
-            std::fs::create_dir_all(&log_dir).into_diagnostic()?;
-        }
-        let mut log_file = log_dir;
-        let subcommand = matches
-            .subcommand_name()
-            .map_or(String::from("ditto"), |subcmd| format!("ditto_{}", subcmd));
-
-        log_file.push(subcommand);
-        log_file.set_extension(
-            time::OffsetDateTime::now_utc()
-                .format(&time::format_description::well_known::Rfc3339)
-                .unwrap(),
-        );
-
-        let log_file = std::fs::File::create(log_file).into_diagnostic()?;
-        let (non_blocking, guard) = tracing_appender::non_blocking(log_file);
+    let fmt_layer = if let Ok(log_file) = std::env::var("DITTO_LOG_FILE") {
+        let log_file = std::path::PathBuf::from(log_file);
+        let log_file = if !running_in_ninja {
+            if let Some(log_dir) = log_file.parent() {
+                if !log_dir.exists() {
+                    std::fs::create_dir_all(log_dir).into_diagnostic()?;
+                }
+            }
+            std::fs::OpenOptions::new()
+                .create(true)
+                .write(true)
+                .append(true)
+                .open(log_file)
+                .into_diagnostic()?
+        } else {
+            std::fs::OpenOptions::new()
+                .write(true)
+                .append(true)
+                .open(log_file)
+                .into_diagnostic()?
+        };
+        let (non_blocking, guard) = tracing_appender::non_blocking(LogFile(log_file));
         guards.push(
             // NOTE: using `Result` as a quick and easy `Either`
             Ok(guard),
@@ -171,8 +176,11 @@ async fn try_main() -> Result<()> {
     let subscriber = Registry::default().with(fmt_layer).with(flame_layer);
     tracing::subscriber::set_global_default(subscriber).into_diagnostic()?;
 
-    tracing::debug!("{}", std::env::args().collect::<Vec<_>>().join(" "));
-    tracing::debug!("{:?}", version);
+    if !running_in_ninja {
+        tracing::debug!("{:?}", version);
+    }
+
+    // tracing::debug!("{}", std::env::args().collect::<Vec<_>>().join(" "));
 
     run(cmd, &matches, &version).await
 }
@@ -181,4 +189,24 @@ fn calculate_hash<T: std::hash::Hash>(t: &T) -> u64 {
     let mut s = std::collections::hash_map::DefaultHasher::new();
     t.hash(&mut s);
     std::hash::Hasher::finish(&s)
+}
+
+struct LogFile(std::fs::File);
+
+impl std::io::Write for LogFile {
+    fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+        // NOTE: you only pay the price for this locking if DITTO_LOG_FILE is set!
+        fs2::FileExt::lock_exclusive(&self.0)?;
+        let result = self.0.write(bytes);
+        fs2::FileExt::unlock(&self.0)?;
+        result
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        // NOTE: you only pay the price for this locking if DITTO_LOG_FILE is set!
+        fs2::FileExt::lock_exclusive(&self.0)?;
+        let result = self.0.flush();
+        fs2::FileExt::unlock(&self.0)?;
+        result
+    }
 }
