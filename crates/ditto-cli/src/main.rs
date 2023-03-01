@@ -121,7 +121,7 @@ async fn try_main() -> Result<()> {
     let mut cmd = command(&version_short, &version_long);
     let matches = cmd.get_matches_mut();
 
-    let mut guards = Vec::new();
+    let _flame_layer_guard;
     let flame_layer = if let Ok(trace_dir) = std::env::var("DITTO_TRACE_DIR") {
         let trace_dir = std::path::PathBuf::from(trace_dir);
         if !trace_dir.exists() {
@@ -131,15 +131,13 @@ async fn try_main() -> Result<()> {
         let mut trace_file = trace_dir;
         trace_file.push(calculate_hash(&args).to_string());
         let (flame_layer, guard) = FlameLayer::with_file(trace_file).into_diagnostic()?;
-        guards.push(
-            // NOTE: using `Result` as a quick and easy `Either`
-            Err(guard),
-        );
+        _flame_layer_guard = guard;
         Some(flame_layer.with_file_and_line(false))
     } else {
         None
     };
 
+    let _fmt_layer_guard;
     let fmt_layer = if let Ok(log_file) = std::env::var("DITTO_LOG_FILE") {
         let log_file = std::path::PathBuf::from(log_file);
         let log_file = if !running_in_ninja {
@@ -162,11 +160,7 @@ async fn try_main() -> Result<()> {
                 .into_diagnostic()?
         };
         let (non_blocking, guard) = tracing_appender::non_blocking(LogFile(log_file));
-        guards.push(
-            // NOTE: using `Result` as a quick and easy `Either`
-            Ok(guard),
-        );
-
+        _fmt_layer_guard = guard;
         let mut fmt_layer = tracing_subscriber::fmt::Layer::new()
             .json()
             .with_writer(non_blocking);
