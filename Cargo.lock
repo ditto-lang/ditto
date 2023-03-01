@@ -804,6 +804,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "ditto-pkg"
+version = "0.0.1"
+dependencies = [
+ "ditto-config",
+ "tracing",
+]
+
+[[package]]
 name = "ditto-tree-sitter"
 version = "0.0.1"
 dependencies = [

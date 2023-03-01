@@ -10,4 +10,5 @@ members = [
   "crates/ditto-lsp",
   "crates/ditto-tree-sitter",
   "crates/ditto-highlight",
+  "crates/ditto-pkg",
 ]
