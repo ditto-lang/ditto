@@ -5,7 +5,7 @@
 $ ditto --help
 putting the fun in functional
 
-Usage: ditto <COMMAND>
+Usage: ditto [COMMAND]
 
 Commands:
   bootstrap  Bootstrap a new project
