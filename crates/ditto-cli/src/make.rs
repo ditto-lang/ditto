@@ -1,6 +1,6 @@
 use crate::{common, ninja::get_ninja_exe, pkg, spinner::Spinner, version::Version};
 use clap::{arg, ArgMatches, Command};
-use console::Style;
+use console::{Emoji, Style};
 use ditto_config::{read_config, Config, PackageName, CONFIG_FILE_NAME};
 use ditto_make::{self as make, BuildNinja, GetWarnings, PackageSources, Sources};
 use fs2::FileExt;
@@ -13,7 +13,7 @@ use std::{
     io::{BufRead, BufReader, Write},
     path::{Path, PathBuf},
     process::{self, ExitStatus, Stdio},
-    time::Instant,
+    time::{Duration, Instant},
 };
 use tracing::{debug, trace};
 
@@ -73,8 +73,21 @@ pub async fn run(matches: &ArgMatches, ditto_version: &Version) -> Result<()> {
     if args.watch {
         run_watch(&args, ditto_version, &config_path, config).await
     } else {
-        let what_happened = run_once(&args, ditto_version, &config_path, &config, true).await?;
+        let (what_happened, duration) =
+            run_once(&args, ditto_version, &config_path, &config, true).await?;
         if !what_happened.is_error() {
+            // Print how long this run took.
+            // Unless this is a test (because the timing isn't deterministic)
+            if std::env::var("DITTO_TEST_VERSION").is_err() {
+                println!(
+                    "{}{}",
+                    Emoji::new("✨ ", ""),
+                    Style::new()
+                        .black()
+                        .bright()
+                        .apply_to(format!("built in {}ms", duration.as_millis()))
+                );
+            }
             run_execs(&args.execs)
         }
         what_happened.exit()
@@ -257,7 +270,7 @@ async fn run_watch(
                 // print the error but don't exit!
                 eprintln!("{:?}", err);
             }
-            Ok(what_happened) => {
+            Ok((what_happened, _duration)) => {
                 if what_happened.is_error() {
                     // If there was an error, stop here.
                     return;
@@ -328,7 +341,7 @@ async fn run_once(
     config_path: &Path,
     config: &Config,
     install_packages: bool,
-) -> Result<WhatHappened> {
+) -> Result<(WhatHappened, Duration)> {
     // Need to acquire a lock on the build directory as lots of `ditto make`
     // processes running concurrently will cause problems!
     let lock = acquire_lock(config)?;
@@ -349,13 +362,13 @@ async fn run_once(
     // Do the thing
     let result = make(config_path, config, ditto_version, include_test_stuff).await;
 
+    let duration = now.elapsed();
+
     lock.unlock()
         // Crash if we fail to release the lock otherwise things are likely to misbehave...
         .expect("Error releasing lock on build directory");
 
-    debug!("make ran in {}ms", now.elapsed().as_millis());
-
-    result
+    result.map(|what_happened| (what_happened, duration))
 }
 
 fn run_execs(execs: &Execs) {
