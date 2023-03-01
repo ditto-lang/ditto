@@ -9,6 +9,7 @@ mod spinner;
 mod version;
 
 use clap::{
+    arg,
     builder::{IntoResettable, Str},
     ArgMatches, Command,
 };
@@ -31,8 +32,8 @@ fn command(
         .bin_name("ditto")
         .version(version_short)
         .long_version(version_long)
+        .arg(arg!(--"version-json").hide(true))
         .disable_help_subcommand(true)
-        .subcommand_required(true)
         .about("putting the fun in functional")
         .subcommand(bootstrap::command(SUBCOMMAND_BOOTSTRAP).display_order(0))
         .subcommand(make::command(SUBCOMMAND_MAKE).display_order(1))
@@ -65,7 +66,17 @@ async fn run(mut cmd: Command, matches: &ArgMatches, version: &Version) -> Resul
             .unwrap();
         bootstrap::run(cmd, matches, version)
     } else {
-        unreachable!()
+        // Print JSON version information if called like
+        // `ditto --version-json`
+        if matches.get_flag("version-json") {
+            println!("{}", serde_json::to_string_pretty(version).unwrap());
+            return Ok(());
+        }
+        // Otherwise print help and exit
+        cmd.print_help().unwrap();
+        std::process::exit(1)
+        // Or could do this...
+        // clap::Error::new(clap::error::ErrorKind::MissingSubcommand).with_cmd(&cmd).exit();
     }
 }
 
