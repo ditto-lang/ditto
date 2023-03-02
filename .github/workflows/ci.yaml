@@ -152,7 +152,7 @@ jobs:
         run: npm install --omit optional --ignore-scripts
 
       - name: Setup Nix
-        uses: cachix/install-nix-action@v18
+        uses: cachix/install-nix-action@v19
 
       - name: treefmt --fail-on-change
         run: nix-shell --arg ci-treefmt true --run 'treefmt --clear-cache --fail-on-change'
