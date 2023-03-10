@@ -182,16 +182,4 @@ impl Type {
             Self::Function { .. } => Kind::Type,
         }
     }
-
-    /// Remove any aliasing, returning the canonical [Type].
-    pub fn unalias(self) -> Self {
-        match self {
-            Self::Call {
-                function: box Self::ConstructorAlias { aliased_type, .. },
-                ..
-            }
-            | Self::ConstructorAlias { aliased_type, .. } => aliased_type.unalias(),
-            _ => self,
-        }
-    }
 }
