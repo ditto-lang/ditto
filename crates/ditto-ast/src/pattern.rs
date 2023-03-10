@@ -37,3 +37,15 @@ pub enum Pattern {
         unused_name: UnusedName,
     },
 }
+
+impl Pattern {
+    /// Get the source span.
+    pub fn get_span(&self) -> Span {
+        match self {
+            Self::LocalConstructor { span, .. } => *span,
+            Self::ImportedConstructor { span, .. } => *span,
+            Self::Variable { span, .. } => *span,
+            Self::Unused { span, .. } => *span,
+        }
+    }
+}
