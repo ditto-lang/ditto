@@ -33,22 +33,6 @@ let
     doCheck = false;
   };
 
-  cargo-llvm-cov = pkgs.rustPlatform.buildRustPackage rec {
-    pname = "cargo-llvm-cov";
-    version = "0.5.0";
-    src = pkgs.fetchFromGitHub {
-      owner = "taiki-e";
-      repo = pname;
-      rev = "v${version}";
-      sha256 = "sha256-2O0MyL4SF/2AUpgWYUDWQ5dDpa84pwmnKGtAaWi5bwQ=";
-    };
-    cargoSha256 = "sha256-zQ1wgeKvc7q0pIx7ZWAQIayP/JVQGyFbLB3Iv81mbx0=";
-    cargoPatches = [
-      ./cargo-llvm-cov-cargo-lock.patch
-    ];
-    doCheck = false;
-  };
-
   # Don't forget to update .github/actions/setup-haskell
   stack = pkgs.symlinkJoin {
     name = "stack-with-system-ghc";
@@ -80,7 +64,6 @@ pkgs.mkShell {
     rustToolchain
     rust-analyzer
     pkgs.cargo-nextest
-    cargo-llvm-cov
     pkgs.cargo-watch
     pkgs.cargo-udeps
     pkgs.cargo-audit
