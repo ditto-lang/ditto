@@ -1,0 +1,23 @@
+[package]
+name = "ditto-benchmarks"
+version = "0.0.1"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[lib]
+doctest = false
+
+[dependencies]
+ditto-cst = { path = "../ditto-cst" }
+ditto-ast = { path = "../ditto-ast" }
+ditto-checker = { path = "../ditto-checker" }
+ditto-codegen-js = { path = "../ditto-codegen-js" }
+serde_json = "1.0"
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "vdom-html"
+# path = "benches/vdom-Html/criterion.rs"
+harness = false

@@ -85,6 +85,7 @@ pkgs.mkShell {
     pkgs.cargo-udeps
     pkgs.cargo-audit
     pkgs.cargo-outdated
+    pkgs.cargo-criterion
     cargo-benchcmp
     pkgs.inferno
 

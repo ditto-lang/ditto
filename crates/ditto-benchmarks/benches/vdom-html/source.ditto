@@ -1,0 +1,450 @@
+module Html exports (
+    Html,
+    Attributes,
+    Children,
+    text,
+    empty,
+    node,
+    map,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    div,
+    p,
+    hr,
+    pre,
+    blockquote,
+    span,
+    a,
+    code,
+    em,
+    strong,
+    i,
+    b,
+    u,
+    sub,
+    sup,
+    br,
+    ol,
+    ul,
+    li,
+    dl,
+    dt,
+    dd,
+    img,
+    iframe,
+    canvas,
+    math,
+    form,
+    input,
+    textarea,
+    button,
+    select,
+    option,
+    section,
+    nav,
+    article,
+    aside,
+    header,
+    footer,
+    address,
+    main,
+    figure,
+    figcaption,
+    table,
+    caption,
+    colgroup,
+    col,
+    tbody,
+    thead,
+    tfoot,
+    tr,
+    td,
+    th,
+    fieldset,
+    legend,
+    label,
+    datalist,
+    optgroup,
+    output,
+    progress,
+    meter,
+    audio,
+    video,
+    source,
+    track,
+    embed,
+    object,
+    param,
+    ins,
+    del,
+    small,
+    cite,
+    dfn,
+    abbr,
+    time,
+    var,
+    samp,
+    kbd,
+    s,
+    q,
+    mark,
+    ruby,
+    rt,
+    rp,
+    bdi,
+    bdo,
+    wbr,
+    details,
+    summary,
+    menuitem,
+    menu,
+)
+
+import Attributes (
+    Attribute,
+)
+
+
+type Html(event)
+
+type alias Attributes(event) = Array(Attribute(event))
+
+type alias Children(event) = Array(Html(event))
+
+text = text_impl
+
+node = fn (
+    tag: String,
+    attrs: Attributes(event),
+    children: Children(event),
+): Html(event) -> node_impl(tag, attrs, children)
+
+map = map_impl
+
+empty = text("")
+
+h1 = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("h1", attrs, children)
+
+h2 = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("h2", attrs, children)
+
+h3 = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("h3", attrs, children)
+
+h4 = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("h4", attrs, children)
+
+h5 = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("h5", attrs, children)
+
+h6 = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("h6", attrs, children)
+
+div = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("div", attrs, children)
+
+p = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("p", attrs, children)
+
+hr = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("hr", attrs, children)
+
+pre = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("pre", attrs, children)
+
+blockquote = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("blockquote", attrs, children)
+
+span = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("span", attrs, children)
+
+a = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("a", attrs, children)
+
+code = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("code", attrs, children)
+
+em = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("em", attrs, children)
+
+strong = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("strong", attrs, children)
+
+i = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("i", attrs, children)
+
+b = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("b", attrs, children)
+
+u = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("u", attrs, children)
+
+sub = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("sub", attrs, children)
+
+sup = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("sup", attrs, children)
+
+br = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("br", attrs, children)
+
+ol = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("ol", attrs, children)
+
+ul = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("ul", attrs, children)
+
+li = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("li", attrs, children)
+
+dl = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("dl", attrs, children)
+
+dt = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("dt", attrs, children)
+
+dd = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("dd", attrs, children)
+
+img = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("img", attrs, children)
+
+iframe = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("iframe", attrs, children)
+
+canvas = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("canvas", attrs, children)
+
+math = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("math", attrs, children)
+
+form = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("form", attrs, children)
+
+input = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("input", attrs, children)
+
+textarea = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("textarea", attrs, children)
+
+button = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("button", attrs, children)
+
+select = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("select", attrs, children)
+
+option = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("option", attrs, children)
+
+section = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("section", attrs, children)
+
+nav = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("nav", attrs, children)
+
+article = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("article", attrs, children)
+
+aside = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("aside", attrs, children)
+
+header = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("header", attrs, children)
+
+footer = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("footer", attrs, children)
+
+address = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("address", attrs, children)
+
+main = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("main", attrs, children)
+
+figure = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("figure", attrs, children)
+
+figcaption = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("figcaption", attrs, children)
+
+table = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("table", attrs, children)
+
+caption = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("caption", attrs, children)
+
+colgroup = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("colgroup", attrs, children)
+
+col = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("col", attrs, children)
+
+tbody = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("tbody", attrs, children)
+
+thead = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("thead", attrs, children)
+
+tfoot = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("tfoot", attrs, children)
+
+tr = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("tr", attrs, children)
+
+td = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("td", attrs, children)
+
+th = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("th", attrs, children)
+
+fieldset = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("fieldset", attrs, children)
+
+legend = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("legend", attrs, children)
+
+label = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("label", attrs, children)
+
+datalist = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("datalist", attrs, children)
+
+optgroup = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("optgroup", attrs, children)
+
+output = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("output", attrs, children)
+
+progress = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("progress", attrs, children)
+
+meter = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("meter", attrs, children)
+
+audio = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("audio", attrs, children)
+
+video = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("video", attrs, children)
+
+source = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("source", attrs, children)
+
+track = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("track", attrs, children)
+
+embed = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("embed", attrs, children)
+
+object = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("object", attrs, children)
+
+param = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("param", attrs, children)
+
+ins = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("ins", attrs, children)
+
+del = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("del", attrs, children)
+
+small = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("small", attrs, children)
+
+cite = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("cite", attrs, children)
+
+dfn = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("dfn", attrs, children)
+
+abbr = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("abbr", attrs, children)
+
+time = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("time", attrs, children)
+
+var = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("var", attrs, children)
+
+samp = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("samp", attrs, children)
+
+kbd = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("kbd", attrs, children)
+
+s = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("s", attrs, children)
+
+q = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("q", attrs, children)
+
+mark = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("mark", attrs, children)
+
+ruby = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("ruby", attrs, children)
+
+rt = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("rt", attrs, children)
+
+rp = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("rp", attrs, children)
+
+bdi = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("bdi", attrs, children)
+
+bdo = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("bdo", attrs, children)
+
+wbr = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("wbr", attrs, children)
+
+details = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("details", attrs, children)
+
+summary = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("summary", attrs, children)
+
+menuitem = fn (attrs: Attributes(event), children: Children(event)): Html(
+    event,
+) -> node("menuitem", attrs, children)
+
+menu = fn (attrs: Attributes(event), children: Children(event)): Html(event) ->
+    node("menu", attrs, children)
+
+foreign node_impl: (String, Attributes(event), Children(event)) -> Html(event)
+
+foreign text_impl: (String) -> Html(event)
+
+foreign map_impl: (Html(a), (a) -> b) -> Html(b)
