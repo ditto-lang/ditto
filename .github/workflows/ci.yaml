@@ -86,8 +86,7 @@ jobs:
           release-version: v1.10.2
           platform: ${{matrix.ninja-platform}}
 
-      # Build the Haskell lsp-test in its own step rather than as part of
-      # the integration test because tarpaulin will timeout
+      # Build the Haskell lsp-test in its own step so the stdout isn't swallowed by nextest.
       #
       # We don't currently run this test on Windows because I've not been able to
       # get GitHub actions to properly cache Haskell stuff there and it takes
@@ -96,8 +95,7 @@ jobs:
         if: matrix.os != 'windows-latest'
         run: stack build ditto-lsp-test
 
-      - name: Run tests (without coverage)
-        if: matrix.os != 'ubuntu-latest'
+      - name: Run tests
         uses: actions-rs/cargo@v1
         with:
           command: nextest
@@ -105,30 +103,6 @@ jobs:
         env:
           DITTO_BUILD_GIT_DESCRIBE: "0.0.0-test"
           DITTO_NINJA: ${{steps.install-ninja.outputs.which}}
-
-      - name: Install cargo-llvm-cov
-        # Only run tests with coverage if running on Linux
-        if: matrix.os == 'ubuntu-latest'
-        uses: taiki-e/install-action@cargo-llvm-cov
-
-      - name: Run tests (with coverage)
-        # Only run tests with coverage if running on Linux
-        if: matrix.os == 'ubuntu-latest'
-        uses: actions-rs/cargo@v1
-        with:
-          command: llvm-cov
-          args: --lcov --output-path lcov.info nextest --workspace
-        env:
-          DITTO_BUILD_GIT_DESCRIBE: "0.0.0-test"
-          DITTO_NINJA: ${{steps.install-ninja.outputs.which}}
-
-      - name: Upload coverage results to codecov.io 📡
-        if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v3.1.0
-        with:
-          token: ${{secrets.CODECOV_TOKEN}}
-          files: lcov.info
-          fail_ci_if_error: true
 
   treefmt:
     name: treefmt 💅

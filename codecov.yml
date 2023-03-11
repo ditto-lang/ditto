@@ -1,8 +1,0 @@
-coverage:
-  status:
-    project:
-      default:
-        threshold: 1%
-comment:
-  # Only comment on PRs if there are coverage changes
-  require_changes: true

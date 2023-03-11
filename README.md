@@ -12,9 +12,6 @@
   <a href="https://github.com/ditto-lang/ditto/actions/workflows/security-audit.yaml">
     <img src="https://github.com/ditto-lang/ditto/actions/workflows/security-audit.yaml/badge.svg?branch=main" alt="Security audit status">
   </a>
-  <a href="https://codecov.io/gh/ditto-lang/ditto">
-    <img src="https://codecov.io/gh/ditto-lang/ditto/branch/main/graph/badge.svg?token=6TTRJO2KK0" alt="Code coverage badge"/>
-  </a>
   <br><br>
   <img src="./images/hello-ditto.svg" alt="Hello world program in ditto">
   <br>
