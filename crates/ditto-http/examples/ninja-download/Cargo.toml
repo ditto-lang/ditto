@@ -1,0 +1,11 @@
+[package]
+name = "ditto-http-example-ninja-download"
+version = "0.0.1"
+edition = "2021"
+publish = false
+
+[dependencies]
+ditto-http = { path = "../.." }
+tokio = { version = "1.25  ", features = ["full"] }
+miette = { version = "5.5", features = ["fancy"] }
+reqwest = "0.11"
