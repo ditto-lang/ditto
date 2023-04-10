@@ -14,7 +14,7 @@ miette = { version = "5.5", features = ["fancy"] }
 thiserror = "1.0"
 lalrpop-util = "0.19.8"
 regex = "1"
-logos = "0.12"
+logos = "0.13"
 #simsearch = "xx"   <-- for suggestions
 #unindent = "xx"  <-- might come in useful for smart multi-line strings (like Nix)
 #codespan = "xx" <-- might be a good replacement for our `Span` type
