@@ -12,7 +12,7 @@ itertools = "0.10"
 serde = { version = "1.0", features = ["derive"] }
 miette = { version = "5.5", features = ["fancy"] }
 thiserror = "1.0"
-lalrpop-util = "0.19.8"
+lalrpop-util = "0.20.0"
 regex = "1"
 logos = "0.12"
 #simsearch = "xx"   <-- for suggestions

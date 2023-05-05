@@ -723,7 +723,7 @@ dependencies = [
  "datatest-stable",
  "itertools",
  "lalrpop",
- "lalrpop-util",
+ "lalrpop-util 0.20.0",
  "logos",
  "miette",
  "regex",
@@ -1472,7 +1472,7 @@ dependencies = [
  "diff",
  "ena",
  "itertools",
- "lalrpop-util",
+ "lalrpop-util 0.19.8",
  "petgraph",
  "pico-args",
  "regex",
@@ -1491,6 +1491,12 @@ checksum = "bcf796c978e9b4d983414f4caedc9273aa33ee214c5b887bd55fde84c85d2dc4"
 dependencies = [
  "regex",
 ]
+
+[[package]]
+name = "lalrpop-util"
+version = "0.20.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3f35c735096c0293d313e8f2a641627472b83d01b937177fe76e5e2708d31e0d"
 
 [[package]]
 name = "lazy_static"
