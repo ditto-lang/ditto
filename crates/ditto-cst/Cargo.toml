@@ -24,7 +24,7 @@ similar-asserts = "1.4"
 datatest-stable = "0.1"
 
 [build-dependencies]
-lalrpop = "0.19.8"
+lalrpop = "0.20.0"
 
 [[test]]
 name = "golden_tests"
