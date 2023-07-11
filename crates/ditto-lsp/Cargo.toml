@@ -25,7 +25,7 @@ serde = "1.0"
 serde_json = "1.0"
 log = { version = "0.4", features = ["std"] }
 lsp-document = "0.6"
-dashmap = "5.4"
+dashmap = "5.5"
 
 [dev-dependencies]
 assert_cmd = "2.0"
