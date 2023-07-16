@@ -10,7 +10,7 @@ doctest = false
 [dependencies]
 itertools = "0.10"
 serde = { version = "1.0", features = ["derive"] }
-miette = { version = "5.5", features = ["fancy"] }
+miette = { version = "5.10", features = ["fancy"] }
 thiserror = "1.0"
 lalrpop-util = "0.19.8"
 regex = "1"

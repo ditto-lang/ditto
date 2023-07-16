@@ -20,7 +20,7 @@ ditto-make = { path = "../ditto-make" }
 ditto-fmt = { path = "../ditto-fmt" }
 ditto-tree-sitter = { path = "../ditto-tree-sitter" }
 ditto-highlight = { path = "../ditto-highlight" }
-miette = { version = "5.5", features = ["fancy"] }
+miette = { version = "5.10", features = ["fancy"] }
 serde = "1.0"
 serde_json = "1.0"
 log = { version = "0.4", features = ["std"] }
