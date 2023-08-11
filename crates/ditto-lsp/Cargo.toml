@@ -9,7 +9,7 @@ doctest = false
 
 [dependencies]
 salsa = { package = "salsa-2022", git = "https://github.com/salsa-rs/salsa", rev = "20c7834ff34fd00a41b59bec61f3d5c85ea3abd4" }
-tower-lsp = "0.18"
+tower-lsp = "0.20"
 ropey = "1.6"
 tokio = { version = "1.25", features = ["full"] }
 ditto-cst = { path = "../ditto-cst" }
