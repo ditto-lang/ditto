@@ -12,7 +12,7 @@ ditto-tree-sitter = { path = "../ditto-tree-sitter" }
 ropey = "1.6"
 
 [dev-dependencies]
-similar-asserts = "1.4"
+similar-asserts = "1.5"
 datatest-stable = "0.1"
 
 [[test]]

@@ -13,7 +13,7 @@ dprint-core = "0.60"
 similar = "2.2"
 
 [dev-dependencies]
-similar-asserts = "1.4"
+similar-asserts = "1.5"
 datatest-stable = "0.1"
 
 [[test]]

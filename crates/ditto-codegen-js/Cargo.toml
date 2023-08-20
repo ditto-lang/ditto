@@ -17,7 +17,7 @@ indexmap = "1.9"
 ditto-checker = { path = "../ditto-checker" }
 ditto-cst = { path = "../ditto-cst" }
 non-empty-vec = { version = "0.2" }
-similar-asserts = "1.4"
+similar-asserts = "1.5"
 quickcheck = "1.0"
 datatest-stable = "0.1"
 path-slash = "0.2"
