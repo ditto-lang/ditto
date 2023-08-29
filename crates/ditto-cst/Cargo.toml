@@ -21,7 +21,7 @@ logos = "0.12"
 
 [dev-dependencies]
 similar-asserts = "1.4"
-datatest-stable = "0.1"
+datatest-stable = "0.2"
 
 [build-dependencies]
 lalrpop = "0.19.8"

@@ -12,7 +12,7 @@ tree-sitter = "0.20"
 tree-sitter-ditto = { git = "https://github.com/ditto-lang/tree-sitter-ditto", rev = "8ef1dd94a722c846cf5f3538bc610cdda8a57a74" }
 
 [dev-dependencies]
-datatest-stable = "0.1"
+datatest-stable = "0.2"
 
 [[test]]
 name = "parsing_tests"

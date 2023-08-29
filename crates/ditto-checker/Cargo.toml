@@ -23,7 +23,7 @@ serde_json = "1.0"
 similar-asserts = "1.4"
 serde_json = "1.0"
 trycmd = "0.14"
-datatest-stable = "0.1"
+datatest-stable = "0.2"
 
 [[test]]
 name = "golden_warning_tests"
