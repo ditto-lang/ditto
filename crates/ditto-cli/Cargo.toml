@@ -53,7 +53,7 @@ async-recursion = "1.0"
 [dev-dependencies]
 assert_cmd = "2.0"
 trycmd = "0.14"
-walkdir = "2.3"
+walkdir = "2.4"
 predicates = "2.1"
 assert_fs = "1.0"
 similar-asserts = "1.4"
