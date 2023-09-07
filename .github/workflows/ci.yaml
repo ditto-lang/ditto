@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Rust 🦀
         uses: ./.github/actions/setup-rust
@@ -46,7 +46,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # https://github.com/actions/cache/blob/5c79b3fd6c0e87c9444fe7b18edafe7d9ba61531/workarounds.md#improving-cache-restore-performance-on-windowsusing-cross-os-caching
       - name: Use GNU tar
@@ -109,7 +109,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Rust 🦀
         uses: ./.github/actions/setup-rust
@@ -137,7 +137,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Rust 🦀
         uses: ./.github/actions/setup-rust
