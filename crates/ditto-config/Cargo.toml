@@ -8,7 +8,7 @@ license = "BSD-3-Clause"
 doctest = false
 
 [dependencies]
-toml = "0.5"
+toml = "0.8"
 miette = { version = "5.5", features = ["fancy"] }
 thiserror = "1.0"
 serde = { version = "1.0", features = ["derive"] }

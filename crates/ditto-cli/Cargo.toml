@@ -22,7 +22,7 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["json"] }
 tracing-appender = "0.2"
 tracing-flame = "0.2"
-toml = "0.5"
+toml = "0.8"
 # https://github.com/notify-rs/notify/issues/249
 notify = "5.0.0"
 clearscreen = "2.0"
