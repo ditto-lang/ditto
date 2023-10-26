@@ -67,7 +67,7 @@ jobs:
 
       # Some tests depend on Nodejs + npm dependencies
       - name: Setup Nodejs
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: "npm"
@@ -117,7 +117,7 @@ jobs:
           components: rustfmt
 
       - name: Setup Nodejs
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: "npm"
