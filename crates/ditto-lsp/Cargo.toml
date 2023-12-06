@@ -9,9 +9,9 @@ doctest = false
 
 [dependencies]
 salsa = { package = "salsa-2022", git = "https://github.com/salsa-rs/salsa", rev = "20c7834ff34fd00a41b59bec61f3d5c85ea3abd4" }
-tower-lsp = "0.18"
-ropey = "1.6"
-tokio = { version = "1.25", features = ["full"] }
+tower-lsp = "=0.18.0"
+ropey = "=1.6.0"
+tokio = { version = "=1.25.0", features = ["full"] }
 ditto-cst = { path = "../ditto-cst" }
 ditto-ast = { path = "../ditto-ast" }
 ditto-checker = { path = "../ditto-checker" }
@@ -20,12 +20,12 @@ ditto-make = { path = "../ditto-make" }
 ditto-fmt = { path = "../ditto-fmt" }
 ditto-tree-sitter = { path = "../ditto-tree-sitter" }
 ditto-highlight = { path = "../ditto-highlight" }
-miette = { version = "5.5", features = ["fancy"] }
-serde = "1.0"
-serde_json = "1.0"
-log = { version = "0.4", features = ["std"] }
-lsp-document = "0.6"
-dashmap = "5.4"
+miette = { version = "=5.5.0", features = ["fancy"] }
+serde = "=1.0.147"
+serde_json = "=1.0.87"
+log = { version = "=0.4.17", features = ["std"] }
+lsp-document = "=0.6.0"
+dashmap = "=5.4.0"
 
 [dev-dependencies]
-assert_cmd = "2.0"
+assert_cmd = "=2.0.5"

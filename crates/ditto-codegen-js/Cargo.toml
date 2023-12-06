@@ -9,18 +9,18 @@ doctest = false
 
 [dependencies]
 ditto-ast = { path = "../ditto-ast" }
-lazy_static = "1.4"
-egg = "0.9"
-indexmap = "1.9"
+lazy_static = "=1.4.0"
+egg = "=0.9.1"
+indexmap = "=1.9.2"
 
 [dev-dependencies]
 ditto-checker = { path = "../ditto-checker" }
 ditto-cst = { path = "../ditto-cst" }
-non-empty-vec = { version = "0.2" }
-similar-asserts = "1.4"
-quickcheck = "1.0"
-datatest-stable = "0.1"
-path-slash = "0.2"
+non-empty-vec = { version = "=0.2.3" }
+similar-asserts = "=1.4.2"
+quickcheck = "=1.0.3"
+datatest-stable = "=0.1.3"
+path-slash = "=0.2.1"
 
 [[test]]
 name = "golden_tests"

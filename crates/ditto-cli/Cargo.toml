@@ -15,48 +15,48 @@ ditto-ast = { path = "../ditto-ast" }
 ditto-cst = { path = "../ditto-cst" }
 ditto-config = { path = "../ditto-config" }
 ditto-fmt = { path = "../ditto-fmt" }
-clap = "4.0"
-time = { version = "0.3", features = ["serde-human-readable"] }
-miette = { version = "5.5", features = ["fancy"] }
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["json"] }
-tracing-appender = "0.2"
-tracing-flame = "0.2"
-toml = "0.5"
+clap = "=4.0.26"
+time = { version = "=0.3.17", features = ["serde-human-readable"] }
+miette = { version = "=5.5.0", features = ["fancy"] }
+tracing = "=0.1.37"
+tracing-subscriber = { version = "=0.3.16", features = ["json"] }
+tracing-appender = "=0.2.2"
+tracing-flame = "=0.2.0"
+toml = "=0.5.9"
 # https://github.com/notify-rs/notify/issues/249
-notify = "5.0.0"
-clearscreen = "2.0"
-symlink = "0.1.0"
-tokio = { version = "1.25", features = ["full"] }
-dirs = "4.0"
-tempfile = "3.3"
-convert_case = "0.6"
-reqwest = { version = "0.11", features = ["stream"] }
-zip = { version = "0.6", default-features = false, features = [
+notify = "=5.0.0"
+clearscreen = "=2.0.0"
+symlink = "=0.1.0"
+tokio = { version = "=1.25.0", features = ["full"] }
+dirs = "=4.0.0"
+tempfile = "=3.3.0"
+convert_case = "=0.6.0"
+reqwest = { version = "=0.11.12", features = ["stream"] }
+zip = { version = "=0.6.3", default-features = false, features = [
   # don't want the `time` feature
   "deflate",
 ] }
-indicatif = "0.17"
-futures-util = "0.3"
-console = "0.15"
-serde = "1.0"
-serde_json = "1.0"
-pathdiff = "0.2"
-fs2 = "0.4"
-atty = "0.2"
-semver = "1.0"
-shlex = "1.1"
-crossbeam-channel = "0.5"
-sha256 = "1.1"
-async-recursion = "1.0"
+indicatif = "=0.17.2"
+futures-util = "=0.3.25"
+console = "=0.15.2"
+serde = "=1.0.147"
+serde_json = "=1.0.87"
+pathdiff = "=0.2.1"
+fs2 = "=0.4.3"
+atty = "=0.2.14"
+semver = "=1.0.14"
+shlex = "=1.1.0"
+crossbeam-channel = "=0.5.6"
+sha256 = "=1.1.1"
+async-recursion = "=1.0.0"
 
 [dev-dependencies]
-assert_cmd = "2.0"
-trycmd = "0.14"
-walkdir = "2.3"
-predicates = "2.1"
-assert_fs = "1.0"
-similar-asserts = "1.4"
+assert_cmd = "=2.0.5"
+trycmd = "=0.14.0"
+walkdir = "=2.3.2"
+predicates = "=2.1.1"
+assert_fs = "=1.0.7"
+similar-asserts = "=1.4.2"
 
 [build-dependencies]
-time = "0.3"
+time = "=0.3.17"

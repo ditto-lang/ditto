@@ -8,26 +8,26 @@ license = "BSD-3-Clause"
 doctest = false
 
 [dependencies]
-clap = {version = "4.0", features = ["string"] }
-miette = { version = "5.5", features = ["fancy"] }
+clap = {version = "=4.0.26", features = ["string"] }
+miette = { version = "=5.5.0", features = ["fancy"] }
 ditto-cst = { path = "../ditto-cst" }
 ditto-ast = { path = "../ditto-ast" }
 ditto-checker = { path = "../ditto-checker" }
 ditto-codegen-js = { path = "../ditto-codegen-js" }
 ditto-config = { path = "../ditto-config" }
-walkdir = "2.3"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-petgraph = "0.6"
-ciborium = "0.2"
-pathdiff = "0.2"
-path-slash = "0.2"
-semver = { version = "1.0", features = ["serde"] }
-thiserror = "1.0"
-tracing = "0.1"
+walkdir = "=2.3.2"
+serde = { version = "=1.0.147", features = ["derive"] }
+serde_json = "=1.0.87"
+petgraph = "=0.6.2"
+ciborium = "=0.2.0"
+pathdiff = "=0.2.1"
+path-slash = "=0.2.1"
+semver = { version = "=1.0.14", features = ["serde"] }
+thiserror = "=1.0.38"
+tracing = "=0.1.37"
 # camino = "xx"  <-- start using this ASAP, it's made for exactly this purpose (see the "makefile problem")
 # rayon = "xx"   <-- more concurrency?
 
 [dev-dependencies]
-similar-asserts = "1.4"
-trycmd = "0.14"
+similar-asserts = "=1.4.2"
+trycmd = "=0.14.0"

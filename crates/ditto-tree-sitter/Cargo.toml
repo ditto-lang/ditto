@@ -8,11 +8,11 @@ license = "BSD-3-Clause"
 doctest = false
 
 [dependencies]
-tree-sitter = "0.20"
+tree-sitter = "=0.20.9"
 tree-sitter-ditto = { git = "https://github.com/ditto-lang/tree-sitter-ditto", rev = "8ef1dd94a722c846cf5f3538bc610cdda8a57a74" }
 
 [dev-dependencies]
-datatest-stable = "0.1"
+datatest-stable = "=0.1.3"
 
 [[test]]
 name = "parsing_tests"
