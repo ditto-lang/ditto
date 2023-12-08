@@ -11,7 +11,7 @@ doctest = false
 salsa = { package = "salsa-2022", git = "https://github.com/salsa-rs/salsa", rev = "20c7834ff34fd00a41b59bec61f3d5c85ea3abd4" }
 tower-lsp = "0.18"
 ropey = "1.6"
-tokio = { version = "1.25", features = ["full"] }
+tokio = { version = "1.35", features = ["full"] }
 ditto-cst = { path = "../ditto-cst" }
 ditto-ast = { path = "../ditto-ast" }
 ditto-checker = { path = "../ditto-checker" }

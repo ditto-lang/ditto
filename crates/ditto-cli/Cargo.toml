@@ -27,7 +27,7 @@ toml = "0.5"
 notify = "5.0.0"
 clearscreen = "2.0"
 symlink = "0.1.0"
-tokio = { version = "1.25", features = ["full"] }
+tokio = { version = "1.35", features = ["full"] }
 dirs = "4.0"
 tempfile = "3.3"
 convert_case = "0.6"
