@@ -11,7 +11,7 @@ doctest = false
 ditto-ast = { path = "../ditto-ast" }
 lazy_static = "1.4"
 egg = "0.9"
-indexmap = "1.9"
+indexmap = "2.0"
 
 [dev-dependencies]
 ditto-checker = { path = "../ditto-checker" }

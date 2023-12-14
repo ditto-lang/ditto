@@ -16,7 +16,7 @@ serde = { version = "1.0", features = ["derive"] }
 miette = { version = "5.5", features = ["fancy"] }
 thiserror = "1.0"
 simsearch = "0.2"
-indexmap = "1.9"
+indexmap = "2.0"
 serde_json = "1.0"
 
 [dev-dependencies]
