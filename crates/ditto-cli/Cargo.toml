@@ -55,7 +55,7 @@ assert_cmd = "2.0"
 trycmd = "0.14"
 walkdir = "2.3"
 predicates = "2.1"
-assert_fs = "1.0"
+assert_fs = "1.1"
 similar-asserts = "1.4"
 
 [build-dependencies]
