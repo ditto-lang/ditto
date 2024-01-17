@@ -7,7 +7,9 @@ pub mod graph;
 mod kind;
 mod module;
 mod name;
+mod pattern;
 mod r#type;
+pub mod utils;
 mod var;
 
 pub use ditto_cst::Span;
@@ -15,5 +17,6 @@ pub use expression::*;
 pub use kind::*;
 pub use module::*;
 pub use name::*;
+pub use pattern::*;
 pub use r#type::*;
 pub use var::Var;

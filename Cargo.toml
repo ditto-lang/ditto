@@ -10,4 +10,6 @@ members = [
   "crates/ditto-lsp",
   "crates/ditto-tree-sitter",
   "crates/ditto-highlight",
+  "crates/ditto-pattern-checker",
+  "crates/ditto-type-checker",
 ]

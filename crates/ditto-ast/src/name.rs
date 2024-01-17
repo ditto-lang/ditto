@@ -1,11 +1,12 @@
 use ditto_cst as cst;
-use non_empty_vec::NonEmpty;
+use nonempty::NonEmpty;
 use serde::{Deserialize, Serialize};
+use smol_str::SmolStr;
 use std::fmt;
 
 /// A "name" begins with a lower case letter.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub struct Name(pub String);
+pub struct Name(pub SmolStr);
 
 impl fmt::Display for Name {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -21,7 +22,7 @@ impl From<cst::Name> for Name {
 
 /// An "unused name" begins with a single underscore.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub struct UnusedName(pub String);
+pub struct UnusedName(pub SmolStr);
 
 impl fmt::Display for UnusedName {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -37,7 +38,7 @@ impl From<cst::UnusedName> for UnusedName {
 
 /// A "proper name" begins with an upper case letter.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub struct ProperName(pub String);
+pub struct ProperName(pub SmolStr);
 
 impl fmt::Display for ProperName {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -53,7 +54,7 @@ impl From<cst::ProperName> for ProperName {
 
 /// A package name consists of lower case letters, numbers and hyphens. It must start with a letter.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub struct PackageName(pub String);
+pub struct PackageName(pub SmolStr);
 
 impl fmt::Display for PackageName {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -92,7 +93,7 @@ impl From<cst::ModuleName> for ModuleName {
             .map(|(proper_name, _dot)| proper_name.into())
             .collect::<Vec<_>>();
         proper_names.push(module_name.last.into());
-        unsafe { Self(NonEmpty::new_unchecked(proper_names)) }
+        Self(NonEmpty::from_vec(proper_names).unwrap())
     }
 }
 
@@ -104,7 +105,7 @@ impl std::cmp::PartialEq for ModuleName {
 
 impl std::hash::Hash for ModuleName {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.0.as_slice().hash(state);
+        self.0.hash(state);
     }
 }
 
@@ -113,7 +114,7 @@ impl fmt::Display for ModuleName {
         let len = self.0.len();
         for (i, proper_name) in self.0.iter().enumerate() {
             proper_name.fmt(f)?;
-            if i + 1 != len.into() {
+            if i + 1 != len {
                 write!(f, ".")?;
             }
         }
@@ -129,7 +130,7 @@ impl From<cst::QualifiedProperName> for ModuleName {
             .map(|(proper_name, _dot)| proper_name.into())
             .collect::<Vec<_>>();
         proper_names.push(qualified.value.into());
-        unsafe { ModuleName(NonEmpty::new_unchecked(proper_names)) }
+        Self(NonEmpty::from_vec(proper_names).unwrap())
     }
 }
 
@@ -213,43 +214,3 @@ pub type FullyQualifiedName = FullyQualified<Name>;
 
 /// A [FullyQualified] [ProperName], i.e. a canonical constructor or type name.
 pub type FullyQualifiedProperName = FullyQualified<ProperName>;
-
-/// Macro for constructing [Name]s.
-///
-/// This isn't checked for syntax correctness, so use with care.
-#[macro_export]
-macro_rules! name {
-    ($string_like:expr) => {
-        $crate::Name(String::from($string_like))
-    };
-}
-
-/// Macro for constructing [ProperName]s.
-///
-/// This isn't checked for syntax correctness, so use with care.
-#[macro_export]
-macro_rules! proper_name {
-    ($string_like:expr) => {
-        $crate::ProperName(String::from($string_like))
-    };
-}
-
-/// Macro for constructing [PackageName]s.
-///
-/// This isn't checked for syntax correctness, so use with care.
-#[macro_export]
-macro_rules! package_name {
-    ($string_like:expr) => {
-        $crate::PackageName(String::from($string_like))
-    };
-}
-
-/// Macro for constructing [ModuleName]s.
-///
-/// This isn't checked for syntax correctness, so use with care.
-#[macro_export]
-macro_rules! module_name {
-    ($($proper_name:expr),+) => {{
-        $crate::ModuleName(non_empty_vec::ne_vec![$($crate::proper_name!($proper_name)),+])
-    }};
-}

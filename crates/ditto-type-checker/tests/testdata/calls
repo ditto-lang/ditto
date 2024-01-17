@@ -1,0 +1,134 @@
+typecheck
+(fn () -> 2)()
+----
+Int
+
+typecheck
+(fn (a: a) -> a)(5)
+----
+Int
+
+typecheck
+(fn (a): a -> a)(5)
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ (fn (a): a -> a)(5)
+   ·                  ┬
+   ·                  ╰── here
+   ╰────
+  help: expected a$5!
+        got Int
+
+----
+----
+
+
+typecheck
+(fn (a) -> a)(2.0)
+----
+Float
+
+
+typecheck
+(fn (_a, b) -> b)(2.0, true)
+----
+Bool
+
+
+typecheck
+(fn (f) -> [f(1, 2, 3)])
+----
+((Int, Int, Int) -> $6) -> Array($6)
+
+
+typecheck
+(fn (x) -> fn (y) -> [x, y, 5.5])(1.1)
+----
+(Float) -> Array(Float)
+
+
+typecheck
+(fn (f, g, x) -> f(x, g(x)))
+----
+(($7, $8) -> $9, ($7) -> $8, $7) -> $9
+
+
+typecheck
+(fn (_f : (a) -> a): Int -> 5)(fn (x: b): b -> x)
+----
+Int
+
+
+# Note GHC also won't accept this...
+# Try
+#   f :: (a -> a) -> Int
+#   f g = g 5
+#
+typecheck
+(fn (f : (a) -> a): Int -> f(5))(fn (x) -> x)
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ (fn (f : (a) -> a): Int -> f(5))(fn (x) -> x)
+   ·                              ┬
+   ·                              ╰── here
+   ╰────
+  help: expected a$5!
+        got Int
+
+----
+----
+
+
+typecheck
+(fn () -> 2)(5, 5)
+----
+----
+
+  × wrong number of arguments
+   ╭────
+ 1 │ (fn () -> 2)(5, 5)
+   ·  ─────┬────
+   ·       ╰── this expects 0 args
+   ╰────
+
+----
+----
+
+
+typecheck
+(fn (x) -> x)(5, 5)
+----
+----
+
+  × wrong number of arguments
+   ╭────
+ 1 │ (fn (x) -> x)(5, 5)
+   ·  ─────┬─────
+   ·       ╰── this expects 1 arg
+   ╰────
+
+----
+----
+
+
+typecheck
+[]()
+----
+----
+
+  × expression isn't callable
+   ╭────
+ 1 │ []()
+   · ─┬
+   ·  ╰── can't call this
+   ╰────
+  help: expression has type Array($5)
+
+----
+----

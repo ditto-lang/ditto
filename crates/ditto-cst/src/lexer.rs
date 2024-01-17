@@ -1,5 +1,6 @@
 use crate::{Comment, Span};
 use logos::{Logos, SpannedIter};
+use smol_str::SmolStr;
 
 pub struct Lexer<'input> {
     pub comments: Vec<Comment>,
@@ -116,7 +117,7 @@ impl<'input> Iterator for Lexer<'input> {
             RawToken::String(string) => Token::String((
                 self.collect_comments(),
                 // Remove the surrounding quotes
-                string[1..string.len() - 1].to_owned(),
+                string[1..string.len() - 1].into(),
             )),
             RawToken::Number(string) => {
                 if string.contains('.') {
@@ -169,13 +170,13 @@ pub enum Token {
     EndKeyword(Comments),
     AliasKeyword(Comments),
     RightPizzaOperator(Comments),
-    Name((Comments, String)),
-    ProperName((Comments, String)),
-    UnusedName((Comments, String)),
-    PackageName((Comments, String)),
-    String((Comments, String)),
-    Int((Comments, String)),
-    Float((Comments, String)),
+    Name((Comments, SmolStr)),
+    ProperName((Comments, SmolStr)),
+    UnusedName((Comments, SmolStr)),
+    PackageName((Comments, SmolStr)),
+    String((Comments, SmolStr)),
+    Int((Comments, SmolStr)),
+    Float((Comments, SmolStr)),
 }
 
 #[derive(Debug, Clone)]
@@ -263,26 +264,26 @@ enum RawToken {
     RightPizzaOperator,
 
     #[regex(r"[a-z]\w*", priority = 2, callback = |lex| lex.slice().parse())]
-    Name(String), //     ^^ Needs to be higher priority than PackageName
+    Name(SmolStr), //     ^^ Needs to be higher priority than PackageName
 
     #[regex(r"[A-Z]\w*", callback = |lex| lex.slice().parse())]
-    ProperName(String),
+    ProperName(SmolStr),
 
     #[regex(r"_(?:[a-z]\w*)?", callback = |lex| lex.slice().parse())]
-    UnusedName(String),
+    UnusedName(SmolStr),
 
     #[regex(r"[a-z][a-z0-9-]*", callback = |lex| lex.slice().parse())]
-    PackageName(String),
+    PackageName(SmolStr),
 
     #[regex(r"--[^\n]*", callback = |lex| lex.slice().parse())]
-    Comment(String),
+    Comment(SmolStr),
 
     #[regex(r"\d[\d_]*(?:\.\d[\d_]*)?", callback = |lex| lex.slice().parse())]
-    Number(String),
+    Number(SmolStr),
 
     // Regex credit: https://stackoverflow.com/a/10786066
     #[regex(r#""([^"\\]*(\\.[^"\\]*)*)""#, callback = |lex| lex.slice().parse())]
-    String(String),
+    String(SmolStr),
 
     #[regex(r"\r?\n")]
     Newline,

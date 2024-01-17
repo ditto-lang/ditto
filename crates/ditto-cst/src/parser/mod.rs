@@ -2,8 +2,8 @@
 mod tests;
 
 use crate::{
-    lexer, Expression, ForeignValueDeclaration, Header, ImportLine, Module, ModuleName, Span, Type,
-    TypeAliasDeclaration, TypeDeclaration, ValueDeclaration,
+    lexer, Expression, ForeignValueDeclaration, Header, ImportLine, Module, ModuleName, Pattern,
+    Span, Type, TypeAliasDeclaration, TypeDeclaration, ValueDeclaration,
 };
 use miette::{Diagnostic, NamedSource, SourceSpan};
 use thiserror::Error;
@@ -277,5 +277,15 @@ impl Expression {
         let parser = ditto::ExpressionParser::new();
         let expression = parser.parse(lexer)?;
         Ok(expression)
+    }
+}
+
+impl Pattern {
+    /// Parse a single [Pattern].
+    pub fn parse(input: &str) -> Result<Self> {
+        let lexer = lexer::Lexer::new(input);
+        let parser = ditto::PatternParser::new();
+        let pattern = parser.parse(lexer)?;
+        Ok(pattern)
     }
 }

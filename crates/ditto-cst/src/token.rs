@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use smol_str::SmolStr;
 
 /// A source span.
 /// TODO: use stdlib Range here as it's basically the same thing and surely brings some optimizations with it
@@ -23,6 +24,13 @@ impl Span {
     /// Returns `true` if the given `offset` falls within this [Span].
     pub fn contains(&self, offset: usize) -> bool {
         offset >= self.start_offset && offset < self.end_offset
+    }
+}
+
+#[allow(clippy::from_over_into)]
+impl Into<miette::SourceSpan> for Span {
+    fn into(self) -> miette::SourceSpan {
+        miette::SourceSpan::from((self.start_offset, self.end_offset - self.start_offset))
     }
 }
 
@@ -74,10 +82,10 @@ impl<Value> Token<Value> {
 
 /// A string token prefixed with `"--"`.
 #[derive(Debug, Clone, PartialEq)]
-pub struct Comment(pub String);
+pub struct Comment(pub SmolStr);
 
 /// A [String] syntax node.
-pub type StringToken = Token<String>;
+pub type StringToken = Token<SmolStr>;
 
 /// An empty syntax node.
 ///

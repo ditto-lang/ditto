@@ -1,0 +1,19 @@
+[package]
+name = "ditto-pattern-checker"
+version = "0.0.1"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[lib]
+doctest = false
+
+[dependencies]
+ditto-ast = { path = "../ditto-ast" }
+nonempty = "0.8"
+smol_str = "0.1"
+halfbrown = "0.1"
+thiserror = "1.0"
+
+[dev-dependencies]
+ditto-cst = { path = "../ditto-cst" }
+datadriven = "0.6"

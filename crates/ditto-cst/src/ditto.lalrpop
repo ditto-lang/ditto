@@ -1,6 +1,6 @@
-// vi: syntax=rust
 use crate as cst;
 use crate::lexer::{Error, Token, Comments};
+use smol_str::SmolStr;
 
 // NOTE: An LR(1) parser only uses a single token of lookahead (that's what the 1 in LR(1) means).
 // https://github.com/lalrpop/lalrpop/issues/552
@@ -203,7 +203,7 @@ MatchArm: cst::MatchArm = {
   <pipe: Pipe> <pattern: Pattern> <right_arrow: RightArrow> <expression: Box<Expression>> => cst::MatchArm { pipe, pattern, right_arrow, expression }
 }
 
-Pattern: cst::Pattern = {
+pub Pattern: cst::Pattern = {
   <constructor: QualifiedProperName> <arguments: ParensList1<Box<Pattern>>> => cst::Pattern::Constructor { constructor, arguments },
   <constructor: QualifiedProperName> => cst::Pattern::NullaryConstructor { constructor },
   <name: Name> => cst::Pattern::Variable { name },
@@ -375,13 +375,13 @@ extern {
     "end" => Token::EndKeyword(<Comments>),
     "alias" => Token::AliasKeyword(<Comments>),
     "|>" => Token::RightPizzaOperator(<Comments>),
-    "name" => Token::Name(<(Comments, String)>),
-    "ProperName" => Token::ProperName(<(Comments, String)>),
-    "_unused_name" => Token::UnusedName(<(Comments, String)>),
-    "package-name" => Token::PackageName(<(Comments, String)>),
-    "string" => Token::String(<(Comments, String)>),
-    "integer" => Token::Int(<(Comments, String)>),
-    "float" => Token::Float(<(Comments, String)>),
+    "name" => Token::Name(<(Comments, SmolStr)>),
+    "ProperName" => Token::ProperName(<(Comments, SmolStr)>),
+    "_unused_name" => Token::UnusedName(<(Comments, SmolStr)>),
+    "package-name" => Token::PackageName(<(Comments, SmolStr)>),
+    "string" => Token::String(<(Comments, SmolStr)>),
+    "integer" => Token::Int(<(Comments, SmolStr)>),
+    "float" => Token::Float(<(Comments, SmolStr)>),
   }
 }
 

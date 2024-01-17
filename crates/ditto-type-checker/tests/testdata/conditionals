@@ -1,0 +1,90 @@
+typecheck
+if true then "yea" else "nay"
+----
+String
+
+
+typecheck
+if false then 0 else 1
+----
+Int
+
+
+typecheck
+if true then false else true  
+----
+Bool
+
+
+typecheck
+if true then [] else []
+----
+Array($5)
+
+
+typecheck 
+if true then 1 else "false"
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ if true then 1 else "false"
+   ·                     ───┬───
+   ·                        ╰── here
+   ╰────
+  help: expected Int
+        got String
+
+----
+----
+
+
+typecheck 
+if "true" then "???" else "what"
+----
+----
+
+  × types don't unify
+   ╭────
+ 1 │ if "true" then "???" else "what"
+   ·    ───┬──
+   ·       ╰── here
+   ╰────
+  help: expected Bool
+        got String
+
+----
+----
+
+
+typecheck
+fn () -> if true then if false then [] else [1] else [2]
+----
+() -> Array(Int)
+
+
+typecheck
+fn (p: Bool): Int -> if p then 5 else 10
+----
+(Bool) -> Int
+
+
+typecheck
+fn (p, x) -> if p then fn () -> true else (fn () -> fn () -> false)()
+----
+----
+(Bool, $6) -> () -> Bool
+
+  ⚠ warnings
+
+Warning: 
+  ⚠ unused binder
+   ╭────
+ 1 │ fn (p, x) -> if p then fn () -> true else (fn () -> fn () -> false)()
+   ·        ┬
+   ·        ╰── this isn't referenced
+   ╰────
+
+----
+----

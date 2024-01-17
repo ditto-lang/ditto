@@ -1,9 +1,8 @@
-use crate::{
-    FullyQualifiedName, FullyQualifiedProperName, Name, ProperName, Span, Type, UnusedName,
-};
+use crate::{FullyQualifiedName, FullyQualifiedProperName, Name, Pattern, ProperName, Span, Type};
 use indexmap::IndexMap;
-use non_empty_vec::NonEmpty;
+use nonempty::NonEmpty;
 use serde::{Deserialize, Serialize};
+use smol_str::SmolStr;
 
 /// The real business value.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -43,7 +42,7 @@ pub enum Expression {
         function: Box<Self>,
 
         /// Arguments to pass to the function expression.
-        arguments: Vec<Argument>,
+        arguments: Vec<Self>,
     },
     /// A conditional expression.
     ///
@@ -81,7 +80,7 @@ pub enum Expression {
         expression: Box<Self>,
 
         /// Patterns to be matched against and their corresponding expressions.
-        arms: NonEmpty<(Pattern, Self)>,
+        arms: Box<NonEmpty<(Pattern, Self)>>,
     },
     /// A value constructor local to the current module, e.g. `Just` and `Ok`.
     LocalConstructor {
@@ -107,6 +106,9 @@ pub enum Expression {
     },
     /// A value local to the current module, e.g. `foo`.
     LocalVariable {
+        /// Where this variable was introduced.
+        introduction: Span,
+
         /// The source span for this expression.
         span: Span,
 
@@ -118,6 +120,9 @@ pub enum Expression {
     },
     /// A foreign value.
     ForeignVariable {
+        /// Where this variable was introduced.
+        introduction: Span,
+
         /// The source span for this expression.
         span: Span,
         /// The type of this variable.
@@ -127,6 +132,9 @@ pub enum Expression {
     },
     /// A value that has been imported
     ImportedVariable {
+        /// Where this variable was introduced.
+        introduction: Span,
+
         /// The source span for this expression.
         span: Span,
 
@@ -166,7 +174,7 @@ pub enum Expression {
         /// The source span for this expression.
         span: Span,
         /// `"string"`
-        value: String,
+        value: SmolStr,
         /// The type of this string literal.
         ///
         /// Generally this will be `PrimType::String`, but it might have been aliased.
@@ -184,7 +192,7 @@ pub enum Expression {
         /// For example, if the integer appears in ditto source as "005" we want to preserve that in the
         /// generated code.
         /// 2. Storing as a string avoids overflow issues.
-        value: String,
+        value: SmolStr,
         /// The type of this integer literal.
         /// Generally this will be `PrimType::Int`, but it might have been aliased.
         value_type: Type,
@@ -201,7 +209,7 @@ pub enum Expression {
         /// For example, if the float appears in ditto source as "5.00" we want to preserve that in the
         /// generated code.
         /// 2. Storing as a string avoids float overflow and precision issues.
-        value: String,
+        value: SmolStr,
         /// The type of this float literal.
         /// Generally this will be `PrimType::Float`, but it might have been aliased.
         value_type: Type,
@@ -226,7 +234,7 @@ pub enum Expression {
         /// The expression being updated.
         target: Box<Self>,
         /// The record updates.
-        fields: IndexMap<Name, Self>,
+        fields: RecordFields,
     },
     /// An array literal.
     Array {
@@ -251,7 +259,7 @@ pub enum Expression {
         record_type: Type,
 
         /// Record fields.
-        fields: IndexMap<Name, Self>,
+        fields: RecordFields,
     },
     /// `true`
     True {
@@ -279,245 +287,42 @@ pub enum Expression {
     },
 }
 
+/// The type of record fields, for convenience.
+pub type RecordFields = IndexMap<Name, Expression>;
+
 impl Expression {
     /// Return the [Type] of this [Expression].
-    pub fn get_type(&self) -> Type {
+    pub fn get_type(&self) -> &Type {
         // It'd be nice if we could call this `typeof` but that's a keyword in rust, sad face
         match self {
-            Self::Call { call_type, .. } => call_type.clone(),
-            Self::Function { function_type, .. } => function_type.clone(),
-            Self::If { output_type, .. } => output_type.clone(),
-            Self::Match { match_type, .. } => match_type.clone(),
-            Self::Effect { effect_type, .. } => effect_type.clone(),
+            Self::Call { call_type, .. } => call_type,
+            Self::Function { function_type, .. } => function_type,
+            Self::If { output_type, .. } => output_type,
+            Self::Match { match_type, .. } => match_type,
+            Self::Effect { effect_type, .. } => effect_type,
             Self::LocalConstructor {
                 constructor_type, ..
-            } => constructor_type.clone(),
+            } => constructor_type,
             Self::ImportedConstructor {
                 constructor_type, ..
-            } => constructor_type.clone(),
-            Self::LocalVariable { variable_type, .. } => variable_type.clone(),
-            Self::ForeignVariable { variable_type, .. } => variable_type.clone(),
-            Self::ImportedVariable { variable_type, .. } => variable_type.clone(),
-            Self::RecordAccess { field_type, .. } => field_type.clone(),
-            Self::RecordUpdate { record_type, .. } => record_type.clone(),
-            Self::Array { value_type, .. } => value_type.clone(),
-            Self::Record { record_type, .. } => record_type.clone(),
+            } => constructor_type,
+            Self::LocalVariable { variable_type, .. } => variable_type,
+            Self::ForeignVariable { variable_type, .. } => variable_type,
+            Self::ImportedVariable { variable_type, .. } => variable_type,
+            Self::RecordAccess { field_type, .. } => field_type,
+            Self::RecordUpdate { record_type, .. } => record_type,
+            Self::Array { value_type, .. } => value_type,
+            Self::Record { record_type, .. } => record_type,
             Self::Let { expression, .. } => expression.get_type(),
-            Self::String { value_type, .. } => value_type.clone(),
-            Self::Int { value_type, .. } => value_type.clone(),
-            Self::Float { value_type, .. } => value_type.clone(),
-            Self::True { value_type, .. } => value_type.clone(),
-            Self::False { value_type, .. } => value_type.clone(),
-            Self::Unit { value_type, .. } => value_type.clone(),
+            Self::String { value_type, .. } => value_type,
+            Self::Int { value_type, .. } => value_type,
+            Self::Float { value_type, .. } => value_type,
+            Self::True { value_type, .. } => value_type,
+            Self::False { value_type, .. } => value_type,
+            Self::Unit { value_type, .. } => value_type,
         }
     }
-    /// Set the type of this expression.
-    /// Useful when checking against source type annotations that use aliases.
-    pub fn set_type(self, t: Type) -> Self {
-        match self {
-            Self::Call {
-                span,
-                call_type: _,
-                function,
-                arguments,
-            } => Self::Call {
-                span,
-                call_type: t,
-                function,
-                arguments,
-            },
-            Self::Function {
-                span,
-                function_type: _,
-                binders,
-                body,
-            } => Self::Function {
-                span,
-                function_type: t,
-                binders,
-                body,
-            },
-            Self::If {
-                span,
-                output_type: _,
-                condition,
-                true_clause,
-                false_clause,
-            } => Self::If {
-                span,
-                output_type: t,
-                condition,
-                true_clause,
-                false_clause,
-            },
-            Self::Match {
-                span,
-                match_type: _,
-                expression,
-                arms,
-            } => Self::Match {
-                span,
-                match_type: t,
-                expression,
-                arms,
-            },
-            Self::Effect {
-                span,
-                effect_type: _,
-                return_type,
-                effect,
-            } => Self::Effect {
-                span,
-                effect_type: t,
-                return_type,
-                effect,
-            },
-            Self::Record {
-                span,
-                record_type: _,
-                fields,
-            } => Self::Record {
-                span,
-                record_type: t,
-                fields,
-            },
-            Self::LocalConstructor {
-                span,
-                constructor_type: _,
-                constructor,
-            } => Self::LocalConstructor {
-                span,
-                constructor_type: t,
-                constructor,
-            },
-            Self::ImportedConstructor {
-                span,
-                constructor_type: _,
-                constructor,
-            } => Self::ImportedConstructor {
-                span,
-                constructor_type: t,
-                constructor,
-            },
-            Self::LocalVariable {
-                span,
-                variable_type: _,
-                variable,
-            } => Self::LocalVariable {
-                span,
-                variable_type: t,
-                variable,
-            },
-            Self::ForeignVariable {
-                span,
-                variable_type: _,
-                variable,
-            } => Self::ForeignVariable {
-                span,
-                variable_type: t,
-                variable,
-            },
-            Self::ImportedVariable {
-                span,
-                variable_type: _,
-                variable,
-            } => Self::ImportedVariable {
-                span,
-                variable_type: t,
-                variable,
-            },
-            Self::Let {
-                span,
-                declaration,
-                box expression,
-            } => Self::Let {
-                span,
-                declaration,
-                expression: Box::new(expression.set_type(t)),
-            },
-            Self::RecordAccess {
-                span,
-                field_type: _,
-                target,
-                label,
-            } => Self::RecordAccess {
-                span,
-                field_type: t,
-                target,
-                label,
-            },
-            Self::RecordUpdate {
-                span,
-                record_type: _,
-                target,
-                fields,
-            } => Self::RecordUpdate {
-                span,
-                record_type: t,
-                target,
-                fields,
-            },
-            Self::Array {
-                span,
-                element_type,
-                elements,
-                value_type: _,
-            } => Self::Array {
-                span,
-                element_type,
-                elements,
-                value_type: t,
-            },
-            Self::String {
-                span,
-                value,
-                value_type: _,
-            } => Self::String {
-                span,
-                value,
-                value_type: t,
-            },
-            Self::Int {
-                span,
-                value,
-                value_type: _,
-            } => Self::Int {
-                span,
-                value,
-                value_type: t,
-            },
-            Self::Float {
-                span,
-                value,
-                value_type: _,
-            } => Self::Float {
-                span,
-                value,
-                value_type: t,
-            },
-            Self::True {
-                span,
-                value_type: _,
-            } => Self::True {
-                span,
-                value_type: t,
-            },
-            Self::False {
-                span,
-                value_type: _,
-            } => Self::False {
-                span,
-                value_type: t,
-            },
-            Self::Unit {
-                span,
-                value_type: _,
-            } => Self::Unit {
-                span,
-                value_type: t,
-            },
-        }
-    }
+
     /// Get the source span.
     pub fn get_span(&self) -> Span {
         match self {
@@ -544,70 +349,6 @@ impl Expression {
             Self::Unit { span, .. } => *span,
         }
     }
-}
-
-/// An "argument" is passed to a function call.
-///
-/// ```ditto
-/// some_function(argument)
-/// ```
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub enum Argument {
-    /// A standard expression argument.
-    /// Could be a variable, could be another function call.
-    Expression(Expression),
-}
-
-impl Argument {
-    /// Return the [Type] of this [Argument].
-    pub fn get_type(&self) -> Type {
-        match self {
-            Self::Expression(expression) => expression.get_type(),
-        }
-    }
-    /// Return the source [Span] for this [Argument].
-    pub fn get_span(&self) -> Span {
-        match self {
-            Self::Expression(expression) => expression.get_span(),
-        }
-    }
-}
-
-/// A pattern to be matched.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub enum Pattern {
-    /// A local constructor pattern.
-    LocalConstructor {
-        /// The source span for this pattern.
-        span: Span,
-        /// `Just`
-        constructor: ProperName,
-        /// Pattern arguments to the constructor.
-        arguments: Vec<Self>,
-    },
-    /// An imported constructor pattern.
-    ImportedConstructor {
-        /// The source span for this pattern.
-        span: Span,
-        /// `Maybe.Just`
-        constructor: FullyQualifiedProperName,
-        /// Pattern arguments to the constructor.
-        arguments: Vec<Self>,
-    },
-    /// A variable binding pattern.
-    Variable {
-        /// The source span for this pattern.
-        span: Span,
-        /// Name to bind.
-        name: Name,
-    },
-    /// An unused pattern.
-    Unused {
-        /// The source span for this pattern.
-        span: Span,
-        /// The unused name.
-        unused_name: UnusedName,
-    },
 }
 
 /// A chain of Effect statements.
