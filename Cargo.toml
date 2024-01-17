@@ -3,6 +3,7 @@ members = [
   "crates/ditto-cst",
   "crates/ditto-ast",
   "crates/ditto-checker",
+  "crates/ditto-benchmarks",
   "crates/ditto-config",
   "crates/ditto-codegen-js",
   "crates/ditto-fmt",

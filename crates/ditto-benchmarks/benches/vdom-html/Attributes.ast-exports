@@ -1,0 +1,4935 @@
+[
+  [
+    "Attributes"
+  ],
+  {
+    "types": {
+      "Attribute": {
+        "Type": {
+          "doc_comments": [],
+          "doc_position": 0,
+          "kind": {
+            "Function": {
+              "parameters": [
+                {
+                  "Variable": 1
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "constructors": {},
+    "values": {
+      "map": {
+        "doc_comments": [],
+        "doc_position": 1,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "Constructor",
+                    "data": {
+                      "constructor_kind": {
+                        "Function": {
+                          "parameters": [
+                            {
+                              "Variable": 1
+                            }
+                          ]
+                        }
+                      },
+                      "canonical_value": {
+                        "module_name": [
+                          null,
+                          [
+                            "Attributes"
+                          ]
+                        ],
+                        "value": "Attribute"
+                      },
+                      "source_value": {
+                        "module_name": null,
+                        "value": "Attribute"
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 3,
+                        "source_name": null
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Function",
+                "data": {
+                  "parameters": [
+                    {
+                      "type": "Variable",
+                      "data": {
+                        "variable_kind": "Type",
+                        "var": 3,
+                        "source_name": null
+                      }
+                    }
+                  ],
+                  "return_type": {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 4,
+                      "source_name": null
+                    }
+                  }
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": "Type",
+                      "var": 4,
+                      "source_name": null
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "classes": {
+        "doc_comments": [],
+        "doc_position": 2,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "Call",
+                "data": {
+                  "function": {
+                    "type": "PrimConstructor",
+                    "data": "Array"
+                  },
+                  "arguments": [
+                    {
+                      "type": "PrimConstructor",
+                      "data": "String"
+                    }
+                  ]
+                }
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "id": {
+        "doc_comments": [],
+        "doc_position": 3,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "title": {
+        "doc_comments": [],
+        "doc_position": 4,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "hidden": {
+        "doc_comments": [],
+        "doc_position": 5,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "type_": {
+        "doc_comments": [],
+        "doc_position": 6,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "value": {
+        "doc_comments": [],
+        "doc_position": 7,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "checked": {
+        "doc_comments": [],
+        "doc_position": 8,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "placeholder": {
+        "doc_comments": [],
+        "doc_position": 9,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "selected": {
+        "doc_comments": [],
+        "doc_position": 10,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "accept": {
+        "doc_comments": [],
+        "doc_position": 11,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "acceptCharset": {
+        "doc_comments": [],
+        "doc_position": 12,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "action": {
+        "doc_comments": [],
+        "doc_position": 13,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "autocomplete": {
+        "doc_comments": [],
+        "doc_position": 14,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "autofocus": {
+        "doc_comments": [],
+        "doc_position": 15,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "disabled": {
+        "doc_comments": [],
+        "doc_position": 16,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "enctype": {
+        "doc_comments": [],
+        "doc_position": 17,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "list": {
+        "doc_comments": [],
+        "doc_position": 18,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "maxlength": {
+        "doc_comments": [],
+        "doc_position": 19,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "minlength": {
+        "doc_comments": [],
+        "doc_position": 20,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "method": {
+        "doc_comments": [],
+        "doc_position": 21,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "multiple": {
+        "doc_comments": [],
+        "doc_position": 22,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "name": {
+        "doc_comments": [],
+        "doc_position": 23,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "novalidate": {
+        "doc_comments": [],
+        "doc_position": 24,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "pattern": {
+        "doc_comments": [],
+        "doc_position": 25,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "readonly": {
+        "doc_comments": [],
+        "doc_position": 26,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "required": {
+        "doc_comments": [],
+        "doc_position": 27,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "size": {
+        "doc_comments": [],
+        "doc_position": 28,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "for": {
+        "doc_comments": [],
+        "doc_position": 29,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "form": {
+        "doc_comments": [],
+        "doc_position": 30,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "max": {
+        "doc_comments": [],
+        "doc_position": 31,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "min": {
+        "doc_comments": [],
+        "doc_position": 32,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "step": {
+        "doc_comments": [],
+        "doc_position": 33,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "cols": {
+        "doc_comments": [],
+        "doc_position": 34,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "rows": {
+        "doc_comments": [],
+        "doc_position": 35,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "wrap": {
+        "doc_comments": [],
+        "doc_position": 36,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "href": {
+        "doc_comments": [],
+        "doc_position": 37,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "target": {
+        "doc_comments": [],
+        "doc_position": 38,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "download": {
+        "doc_comments": [],
+        "doc_position": 39,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "hreflang": {
+        "doc_comments": [],
+        "doc_position": 40,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "media": {
+        "doc_comments": [],
+        "doc_position": 41,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "ping": {
+        "doc_comments": [],
+        "doc_position": 42,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "rel": {
+        "doc_comments": [],
+        "doc_position": 43,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "ismap": {
+        "doc_comments": [],
+        "doc_position": 44,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "usemap": {
+        "doc_comments": [],
+        "doc_position": 45,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "shape": {
+        "doc_comments": [],
+        "doc_position": 46,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "coords": {
+        "doc_comments": [],
+        "doc_position": 47,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "src": {
+        "doc_comments": [],
+        "doc_position": 48,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "height": {
+        "doc_comments": [],
+        "doc_position": 49,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "width": {
+        "doc_comments": [],
+        "doc_position": 50,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "alt": {
+        "doc_comments": [],
+        "doc_position": 51,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "autoplay": {
+        "doc_comments": [],
+        "doc_position": 52,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "controls": {
+        "doc_comments": [],
+        "doc_position": 53,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "loop": {
+        "doc_comments": [],
+        "doc_position": 54,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "preload": {
+        "doc_comments": [],
+        "doc_position": 55,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "poster": {
+        "doc_comments": [],
+        "doc_position": 56,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "default": {
+        "doc_comments": [],
+        "doc_position": 57,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "kind": {
+        "doc_comments": [],
+        "doc_position": 58,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "srclang": {
+        "doc_comments": [],
+        "doc_position": 59,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "sandbox": {
+        "doc_comments": [],
+        "doc_position": 60,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "srcdoc": {
+        "doc_comments": [],
+        "doc_position": 61,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "reversed": {
+        "doc_comments": [],
+        "doc_position": 62,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "start": {
+        "doc_comments": [],
+        "doc_position": 63,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "align": {
+        "doc_comments": [],
+        "doc_position": 64,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "colspan": {
+        "doc_comments": [],
+        "doc_position": 65,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "rowspan": {
+        "doc_comments": [],
+        "doc_position": 66,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "headers": {
+        "doc_comments": [],
+        "doc_position": 67,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "scope": {
+        "doc_comments": [],
+        "doc_position": 68,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "accesskey": {
+        "doc_comments": [],
+        "doc_position": 69,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "contenteditable": {
+        "doc_comments": [],
+        "doc_position": 70,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "contextmenu": {
+        "doc_comments": [],
+        "doc_position": 71,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "dir": {
+        "doc_comments": [],
+        "doc_position": 72,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "draggable": {
+        "doc_comments": [],
+        "doc_position": 73,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "dropzone": {
+        "doc_comments": [],
+        "doc_position": 74,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "itemprop": {
+        "doc_comments": [],
+        "doc_position": 75,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "lang": {
+        "doc_comments": [],
+        "doc_position": 76,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "spellcheck": {
+        "doc_comments": [],
+        "doc_position": 77,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Bool"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "tabindex": {
+        "doc_comments": [],
+        "doc_position": 78,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "Int"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "cite": {
+        "doc_comments": [],
+        "doc_position": 79,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "datetime": {
+        "doc_comments": [],
+        "doc_position": 80,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "pubdate": {
+        "doc_comments": [],
+        "doc_position": 81,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "manifest": {
+        "doc_comments": [],
+        "doc_position": 82,
+        "value_type": {
+          "type": "Function",
+          "data": {
+            "parameters": [
+              {
+                "type": "PrimConstructor",
+                "data": "String"
+              }
+            ],
+            "return_type": {
+              "type": "Call",
+              "data": {
+                "function": {
+                  "type": "Constructor",
+                  "data": {
+                    "constructor_kind": {
+                      "Function": {
+                        "parameters": [
+                          {
+                            "Variable": 1
+                          }
+                        ]
+                      }
+                    },
+                    "canonical_value": {
+                      "module_name": [
+                        null,
+                        [
+                          "Attributes"
+                        ]
+                      ],
+                      "value": "Attribute"
+                    },
+                    "source_value": {
+                      "module_name": null,
+                      "value": "Attribute"
+                    }
+                  }
+                },
+                "arguments": [
+                  {
+                    "type": "Variable",
+                    "data": {
+                      "variable_kind": {
+                        "Variable": 1
+                      },
+                      "var": 0,
+                      "source_name": "event"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+]
